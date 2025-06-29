@@ -41,8 +41,9 @@ export const StoryProvider: React.FC<StoryProviderProps> = ({ children }) => {
   const [isStoryViewerOpen, setIsStoryViewerOpen] = useState(false);
   const [currentStory, setCurrentStory] = useState<Story | null>(null);
   
+  // 🚫 STORIES FEATURE DISABLED
   const [featureFlags] = useState<FeatureFlags>({
-    enableStoryBanner: true,
+    enableStoryBanner: false, // ← Disabled
     enableChairReservation: true,
     enablePushNotifications: false,
     customCtaButtons: true,
@@ -58,8 +59,14 @@ export const StoryProvider: React.FC<StoryProviderProps> = ({ children }) => {
     viewedMedia: new Set(),
   });
 
-  // Load stories on mount
+  // Load stories on mount (only if feature is enabled)
   useEffect(() => {
+    if (!featureFlags.enableStoryBanner) {
+      console.log('📚 Stories feature disabled - not loading stories');
+      setStories([]);
+      return;
+    }
+
     try {
       const activeStories = getActiveStories();
       console.log('📚 Loading stories:', activeStories.length);
@@ -68,10 +75,12 @@ export const StoryProvider: React.FC<StoryProviderProps> = ({ children }) => {
       console.error('Error loading stories:', error);
       setStories([]);
     }
-  }, []);
+  }, [featureFlags.enableStoryBanner]);
 
   // Load/save viewed stories from localStorage
   useEffect(() => {
+    if (!featureFlags.enableStoryBanner) return;
+
     try {
       const saved = localStorage.getItem('ccc_viewedStories');
       if (saved) {
@@ -86,17 +95,24 @@ export const StoryProvider: React.FC<StoryProviderProps> = ({ children }) => {
     } catch (error) {
       console.error('Error loading viewed stories:', error);
     }
-  }, []);
+  }, [featureFlags.enableStoryBanner]);
 
   useEffect(() => {
+    if (!featureFlags.enableStoryBanner) return;
+
     try {
       localStorage.setItem('ccc_viewedStories', JSON.stringify([...viewState.viewedStories]));
     } catch (error) {
       console.error('Error saving viewed stories:', error);
     }
-  }, [viewState.viewedStories]);
+  }, [viewState.viewedStories, featureFlags.enableStoryBanner]);
 
   const openStoryViewer = (storyId: string) => {
+    if (!featureFlags.enableStoryBanner) {
+      console.log('📚 Stories feature disabled - cannot open viewer');
+      return;
+    }
+
     console.log('🎬 Opening story:', storyId);
     
     const storyIndex = stories.findIndex(story => story.id === storyId);
