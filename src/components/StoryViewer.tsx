@@ -24,10 +24,12 @@ const StoryViewer: React.FC = () => {
   const [touchStart, setTouchStart] = useState<{ x: number; y: number } | null>(null);
   const [touchEnd, setTouchEnd] = useState<{ x: number; y: number } | null>(null);
   
+  // Use refs for timer management to avoid stale closures
   const progressTimerRef = useRef<NodeJS.Timeout | null>(null);
   const mediaRef = useRef<HTMLImageElement | HTMLVideoElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const isTimerActiveRef = useRef(false);
+  const startTimeRef = useRef<number>(0);
+  const lastProgressRef = useRef<number>(0);
 
   // Get current media safely
   const currentMedia = currentStory?.media?.[viewState.currentMediaIndex];
@@ -45,84 +47,78 @@ const StoryViewer: React.FC = () => {
     progress: viewState.progress,
     isLoading,
     loadError,
-    timerActive: isTimerActiveRef.current
+    storyDuration
   });
 
-  // Stable progress management function
-  const startProgressTimer = useCallback(() => {
-    // Don't start if already active
-    if (isTimerActiveRef.current) {
-      console.log('⚠️ Timer already active, skipping start');
-      return;
-    }
-
-    // Clear any existing timer first
+  // Clear timer function
+  const clearTimer = useCallback(() => {
     if (progressTimerRef.current) {
+      console.log('🛑 Clearing timer');
       clearInterval(progressTimerRef.current);
       progressTimerRef.current = null;
     }
+  }, []);
 
-    // Check all conditions
-    if (!viewState.isPlaying || viewState.isPaused || !currentMedia || isLoading || loadError) {
-      console.log('❌ Not starting timer:', { 
+  // Start progress timer with better state management
+  const startTimer = useCallback(() => {
+    // Clear any existing timer first
+    clearTimer();
+
+    // Validate conditions
+    if (!viewState.isPlaying || viewState.isPaused || isLoading || loadError || !currentMedia) {
+      console.log('❌ Cannot start timer:', { 
         isPlaying: viewState.isPlaying, 
         isPaused: viewState.isPaused, 
-        hasMedia: !!currentMedia,
         isLoading,
-        loadError
+        loadError,
+        hasMedia: !!currentMedia
       });
       return;
     }
 
-    console.log('🚀 Starting progress timer for duration:', storyDuration, 'ms');
-    isTimerActiveRef.current = true;
+    console.log('🚀 Starting timer - Duration:', storyDuration, 'ms, Current progress:', viewState.progress);
     
-    const startTime = Date.now();
-    const startProgress = viewState.progress;
+    // Store start time and initial progress
+    startTimeRef.current = Date.now();
+    lastProgressRef.current = viewState.progress;
 
     progressTimerRef.current = setInterval(() => {
-      const elapsed = Date.now() - startTime;
-      const newProgress = startProgress + (elapsed / storyDuration) * 100;
+      const elapsed = Date.now() - startTimeRef.current;
+      const progressIncrement = (elapsed / storyDuration) * 100;
+      const newProgress = lastProgressRef.current + progressIncrement;
       
-      console.log('⏱️ Progress:', Math.round(newProgress) + '%');
+      console.log('⏱️ Timer tick:', {
+        elapsed: Math.round(elapsed),
+        progressIncrement: Math.round(progressIncrement),
+        newProgress: Math.round(newProgress),
+        duration: storyDuration
+      });
       
       if (newProgress >= 100) {
-        console.log('✅ Story complete, advancing');
+        console.log('✅ Story complete! Advancing to next media');
         
-        // Clear timer first
-        if (progressTimerRef.current) {
-          clearInterval(progressTimerRef.current);
-          progressTimerRef.current = null;
-          isTimerActiveRef.current = false;
-        }
+        // Clear timer immediately
+        clearTimer();
         
+        // Update to 100% and advance
         updateProgress(100);
         
-        // Mark media as viewed and advance
+        // Mark current media as viewed
         if (currentMedia) {
           markMediaAsViewed(currentMedia.id);
         }
         
-        // Use setTimeout to avoid state conflicts
+        // Advance to next media with a small delay to ensure state updates
         setTimeout(() => {
           nextMedia();
-        }, 50);
+        }, 100);
       } else {
         updateProgress(newProgress);
       }
-    }, 100);
+    }, 100); // Update every 100ms for smooth progress
 
-    console.log('✅ Timer started with ID:', progressTimerRef.current);
-  }, [viewState.isPlaying, viewState.isPaused, viewState.progress, storyDuration, currentMedia?.id, isLoading, loadError, updateProgress, markMediaAsViewed, nextMedia]);
-
-  const stopProgressTimer = useCallback(() => {
-    if (progressTimerRef.current) {
-      console.log('⏹️ Stopping progress timer');
-      clearInterval(progressTimerRef.current);
-      progressTimerRef.current = null;
-      isTimerActiveRef.current = false;
-    }
-  }, []);
+    console.log('✅ Timer started successfully');
+  }, [viewState.isPlaying, viewState.isPaused, viewState.progress, isLoading, loadError, currentMedia, storyDuration, clearTimer, updateProgress, markMediaAsViewed, nextMedia]);
 
   // Handle media loading
   const handleMediaLoad = useCallback(() => {
@@ -135,8 +131,8 @@ const StoryViewer: React.FC = () => {
     console.error('❌ Media failed to load');
     setIsLoading(false);
     setLoadError(true);
-    stopProgressTimer();
-  }, [stopProgressTimer]);
+    clearTimer();
+  }, [clearTimer]);
 
   // Touch/gesture handling
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -232,37 +228,43 @@ const StoryViewer: React.FC = () => {
   // Reset when media changes
   useEffect(() => {
     console.log('🔄 Media changed, resetting state');
+    clearTimer();
     resetProgress();
     setIsLoading(true);
     setLoadError(false);
-    stopProgressTimer();
-  }, [currentMedia?.id, resetProgress, stopProgressTimer]);
+    lastProgressRef.current = 0;
+  }, [currentMedia?.id, clearTimer, resetProgress]);
 
-  // Start timer when conditions are met - FIXED: Separate effect with minimal dependencies
+  // Timer management effect - simplified and more reliable
   useEffect(() => {
-    if (!isStoryViewerOpen || !currentMedia) return;
+    if (!isStoryViewerOpen || !currentMedia) {
+      clearTimer();
+      return;
+    }
 
-    console.log('🎯 Timer condition check:', {
+    console.log('🎯 Timer management effect:', {
       isPlaying: viewState.isPlaying,
       isPaused: viewState.isPaused,
       isLoading,
       loadError,
-      timerActive: isTimerActiveRef.current
+      hasTimer: !!progressTimerRef.current
     });
 
-    if (viewState.isPlaying && !viewState.isPaused && !isLoading && !loadError && !isTimerActiveRef.current) {
-      console.log('▶️ Starting timer with delay');
-      // Small delay to ensure state is stable
-      const timeoutId = setTimeout(() => {
-        startProgressTimer();
-      }, 200);
-      
-      return () => clearTimeout(timeoutId);
-    } else if ((!viewState.isPlaying || viewState.isPaused) && isTimerActiveRef.current) {
-      console.log('⏸️ Stopping timer');
-      stopProgressTimer();
+    // Start timer if should be playing
+    if (viewState.isPlaying && !viewState.isPaused && !isLoading && !loadError) {
+      if (!progressTimerRef.current) {
+        console.log('▶️ Starting timer (conditions met)');
+        // Small delay to ensure state is stable
+        const timeoutId = setTimeout(startTimer, 100);
+        return () => clearTimeout(timeoutId);
+      }
+    } 
+    // Stop timer if should not be playing
+    else if (progressTimerRef.current) {
+      console.log('⏸️ Stopping timer (conditions not met)');
+      clearTimer();
     }
-  }, [viewState.isPlaying, viewState.isPaused, isLoading, loadError, isStoryViewerOpen, currentMedia?.id, startProgressTimer, stopProgressTimer]);
+  }, [viewState.isPlaying, viewState.isPaused, isLoading, loadError, isStoryViewerOpen, currentMedia?.id, startTimer, clearTimer]);
 
   // Mark story as viewed when opened
   useEffect(() => {
@@ -283,13 +285,9 @@ const StoryViewer: React.FC = () => {
   // Cleanup on unmount
   useEffect(() => {
     return () => {
-      if (progressTimerRef.current) {
-        clearInterval(progressTimerRef.current);
-        progressTimerRef.current = null;
-        isTimerActiveRef.current = false;
-      }
+      clearTimer();
     };
-  }, []);
+  }, [clearTimer]);
 
   if (!isStoryViewerOpen || !currentStory || !currentMedia) {
     return null;
@@ -450,7 +448,7 @@ const StoryViewer: React.FC = () => {
 
       {/* Enhanced Debug Info */}
       {process.env.NODE_ENV === 'development' && (
-        <div className="absolute bottom-4 left-4 z-30 bg-black/80 text-white p-3 rounded-lg text-xs font-mono space-y-1">
+        <div className="absolute bottom-4 left-4 z-30 bg-black/80 text-white p-3 rounded-lg text-xs font-mono space-y-1 max-w-xs">
           <div className="text-yellow-400 font-bold">🎬 Story Debug</div>
           <div>Story: {currentStory.barracaName}</div>
           <div>Media: {viewState.currentMediaIndex + 1}/{currentStory.media.length}</div>
@@ -459,9 +457,35 @@ const StoryViewer: React.FC = () => {
           <div>Paused: {viewState.isPaused ? '⏸️ YES' : '▶️ NO'}</div>
           <div>Loading: {isLoading ? '⏳ YES' : '✅ NO'}</div>
           <div>Error: {loadError ? '❌ YES' : '✅ NO'}</div>
-          <div>Timer: {isTimerActiveRef.current ? '🟢 ACTIVE' : '🔴 INACTIVE'}</div>
-          <div>Duration: {storyDuration}ms ({storyDuration/1000}s)</div>
-          <div className="text-blue-400">Timer ID: {progressTimerRef.current ? 'SET' : 'NULL'}</div>
+          <div>Timer: {progressTimerRef.current ? '🟢 ACTIVE' : '🔴 INACTIVE'}</div>
+          <div>Duration: {storyDuration}ms</div>
+          <div>Start Time: {startTimeRef.current}</div>
+          <div>Last Progress: {Math.round(lastProgressRef.current)}%</div>
+          
+          {/* Manual Controls for Testing */}
+          <div className="border-t border-gray-600 pt-2 mt-2">
+            <div className="text-blue-400 font-bold">Manual Controls:</div>
+            <div className="flex gap-1 mt-1">
+              <button 
+                onClick={startTimer}
+                className="bg-green-600 px-2 py-1 rounded text-xs"
+              >
+                Start Timer
+              </button>
+              <button 
+                onClick={clearTimer}
+                className="bg-red-600 px-2 py-1 rounded text-xs"
+              >
+                Stop Timer
+              </button>
+              <button 
+                onClick={nextMedia}
+                className="bg-blue-600 px-2 py-1 rounded text-xs"
+              >
+                Next
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
