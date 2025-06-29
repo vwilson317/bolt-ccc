@@ -18,86 +18,73 @@ const StoryViewer: React.FC = () => {
     resetProgress,
   } = useStory();
 
-  // Local state - simplified
+  // Simple local state
   const [isMuted, setIsMuted] = useState(false);
-  const [isMediaLoaded, setIsMediaLoaded] = useState(false);
+  const [isMediaReady, setIsMediaReady] = useState(false);
   const [loadError, setLoadError] = useState(false);
   
-  // Refs
-  const progressTimerRef = useRef<number | null>(null);
-  const startTimeRef = useRef<number>(0);
+  // Single timer ref
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const progressRef = useRef<number>(0);
   const mediaRef = useRef<HTMLImageElement | HTMLVideoElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   const currentMedia = currentStory?.media?.[viewState.currentMediaIndex];
   const isVideo = currentMedia?.type === 'video';
-  const STORY_DURATION = 5000; // 5 seconds for all stories
-
-  console.log('🎬 StoryViewer:', {
-    isOpen: isStoryViewerOpen,
-    story: currentStory?.barracaName,
-    mediaIndex: viewState.currentMediaIndex,
-    totalMedia: currentStory?.media?.length,
-    isLoaded: isMediaLoaded,
-    isPlaying: viewState.isPlaying,
-    isPaused: viewState.isPaused,
-    progress: Math.round(viewState.progress),
-    hasTimer: !!progressTimerRef.current
-  });
+  const STORY_DURATION = 5000; // 5 seconds
+  const UPDATE_INTERVAL = 50; // Update every 50ms for smooth progress
 
   // Clear timer utility
-  const clearProgressTimer = useCallback(() => {
-    if (progressTimerRef.current) {
-      cancelAnimationFrame(progressTimerRef.current);
-      progressTimerRef.current = null;
+  const clearTimer = useCallback(() => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
     }
   }, []);
 
-  // Start progress timer - COMPLETELY REWRITTEN
-  const startProgressTimer = useCallback(() => {
-    console.log('🚀 Starting progress timer');
+  // Start timer - ULTRA SIMPLIFIED
+  const startTimer = useCallback(() => {
+    console.log('🚀 Starting timer for:', currentStory?.barracaName);
     
-    clearProgressTimer();
-    startTimeRef.current = performance.now();
+    clearTimer();
+    progressRef.current = 0;
     
-    const animate = () => {
-      const elapsed = performance.now() - startTimeRef.current;
-      const progress = Math.min((elapsed / STORY_DURATION) * 100, 100);
+    timerRef.current = setInterval(() => {
+      progressRef.current += UPDATE_INTERVAL;
+      const progress = Math.min((progressRef.current / STORY_DURATION) * 100, 100);
       
       updateProgress(progress);
       
       if (progress >= 100) {
-        console.log('✅ Story complete - moving to next');
+        console.log('✅ Timer complete - advancing');
+        clearTimer();
+        
         if (currentMedia) {
           markMediaAsViewed(currentMedia.id);
         }
-        nextMedia();
-        return;
+        
+        // Small delay to ensure smooth transition
+        setTimeout(() => {
+          nextMedia();
+        }, 100);
       }
-      
-      if (viewState.isPlaying && !viewState.isPaused && isMediaLoaded) {
-        progressTimerRef.current = requestAnimationFrame(animate);
-      }
-    };
-    
-    progressTimerRef.current = requestAnimationFrame(animate);
-  }, [clearProgressTimer, updateProgress, currentMedia, markMediaAsViewed, nextMedia, viewState.isPlaying, viewState.isPaused, isMediaLoaded]);
+    }, UPDATE_INTERVAL);
+  }, [clearTimer, updateProgress, currentMedia, markMediaAsViewed, nextMedia, currentStory?.barracaName]);
 
   // Media loading handlers
   const handleMediaLoad = useCallback(() => {
-    console.log('📷 Media loaded successfully');
-    setIsMediaLoaded(true);
+    console.log('📷 Media loaded:', currentMedia?.url);
+    setIsMediaReady(true);
     setLoadError(false);
-  }, []);
+  }, [currentMedia?.url]);
 
   const handleMediaError = useCallback(() => {
-    console.error('❌ Media failed to load');
-    setIsMediaLoaded(false);
+    console.error('❌ Media error:', currentMedia?.url);
+    setIsMediaReady(false);
     setLoadError(true);
-    clearProgressTimer();
-  }, [clearProgressTimer]);
+  }, [currentMedia?.url]);
 
-  // Touch/gesture handlers
+  // Touch handlers
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
     const touch = e.touches[0];
     containerRef.current?.setAttribute('data-touch-start', `${touch.clientX},${touch.clientY}`);
@@ -115,9 +102,8 @@ const StoryViewer: React.FC = () => {
     const touch = e.changedTouches[0];
     const deltaX = touch.clientX - startX;
     const deltaY = touch.clientY - startY;
-    const minSwipeDistance = 50;
 
-    if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > minSwipeDistance) {
+    if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 50) {
       if (deltaX > 0) {
         previousMedia();
       } else {
@@ -130,16 +116,16 @@ const StoryViewer: React.FC = () => {
     containerRef.current?.removeAttribute('data-touch-start');
   }, [resumeStory, previousMedia, nextMedia]);
 
-  // Tap to pause/play
-  const handleContainerClick = useCallback((e: React.MouseEvent) => {
+  // Click to pause/play
+  const handleClick = useCallback((e: React.MouseEvent) => {
     if (!containerRef.current) return;
 
     const rect = containerRef.current.getBoundingClientRect();
-    const tapX = e.clientX - rect.left;
-    const containerWidth = rect.width;
+    const clickX = e.clientX - rect.left;
+    const width = rect.width;
 
-    // Only handle center taps
-    if (tapX > containerWidth / 3 && tapX < (containerWidth * 2) / 3) {
+    // Only center clicks toggle play/pause
+    if (clickX > width / 3 && clickX < (width * 2) / 3) {
       if (viewState.isPlaying && !viewState.isPaused) {
         pauseStory();
       } else {
@@ -180,47 +166,65 @@ const StoryViewer: React.FC = () => {
 
   // Reset when media changes
   useEffect(() => {
-    console.log('🔄 Media changed - resetting');
-    clearProgressTimer();
-    setIsMediaLoaded(false);
+    console.log('🔄 Media changed, resetting...');
+    clearTimer();
+    setIsMediaReady(false);
     setLoadError(false);
     resetProgress();
-  }, [currentMedia?.id, clearProgressTimer, resetProgress]);
+    progressRef.current = 0;
+  }, [currentMedia?.id, clearTimer, resetProgress]);
 
-  // MAIN TIMER CONTROL - SIMPLIFIED
+  // MAIN TIMER LOGIC - DEAD SIMPLE
   useEffect(() => {
-    if (!isStoryViewerOpen || !currentMedia) {
-      clearProgressTimer();
-      return;
-    }
+    const shouldStart = isStoryViewerOpen && 
+                      currentMedia && 
+                      isMediaReady && 
+                      viewState.isPlaying && 
+                      !viewState.isPaused && 
+                      !loadError;
 
-    const shouldRun = isMediaLoaded && viewState.isPlaying && !viewState.isPaused;
-    const isRunning = !!progressTimerRef.current;
+    console.log('🎯 Timer decision:', {
+      open: isStoryViewerOpen,
+      hasMedia: !!currentMedia,
+      ready: isMediaReady,
+      playing: viewState.isPlaying,
+      paused: viewState.isPaused,
+      error: loadError,
+      shouldStart,
+      hasTimer: !!timerRef.current
+    });
 
-    console.log('🎯 Timer control:', { shouldRun, isRunning, isLoaded: isMediaLoaded, playing: viewState.isPlaying, paused: viewState.isPaused });
-
-    if (shouldRun && !isRunning) {
-      console.log('▶️ Starting timer');
-      startProgressTimer();
-    } else if (!shouldRun && isRunning) {
+    if (shouldStart && !timerRef.current) {
+      console.log('▶️ Starting timer now!');
+      startTimer();
+    } else if (!shouldStart && timerRef.current) {
       console.log('⏸️ Stopping timer');
-      clearProgressTimer();
+      clearTimer();
     }
 
-    return clearProgressTimer;
-  }, [isStoryViewerOpen, currentMedia?.id, isMediaLoaded, viewState.isPlaying, viewState.isPaused, startProgressTimer, clearProgressTimer]);
+    return clearTimer;
+  }, [
+    isStoryViewerOpen,
+    currentMedia?.id,
+    isMediaReady,
+    viewState.isPlaying,
+    viewState.isPaused,
+    loadError,
+    startTimer,
+    clearTimer
+  ]);
 
-  // Mark story as viewed when opened
+  // Mark story as viewed
   useEffect(() => {
     if (currentStory && isStoryViewerOpen) {
       markStoryAsViewed(currentStory.id);
     }
   }, [currentStory?.id, isStoryViewerOpen, markStoryAsViewed]);
 
-  // Cleanup on unmount
+  // Cleanup
   useEffect(() => {
-    return clearProgressTimer;
-  }, [clearProgressTimer]);
+    return clearTimer;
+  }, [clearTimer]);
 
   if (!isStoryViewerOpen || !currentStory || !currentMedia) {
     return null;
@@ -265,7 +269,7 @@ const StoryViewer: React.FC = () => {
         </div>
 
         <div className="flex items-center space-x-2">
-          {/* Pause/Play Button */}
+          {/* Pause/Play */}
           <button
             onClick={viewState.isPlaying && !viewState.isPaused ? pauseStory : resumeStory}
             className="p-2 rounded-full bg-white/20 backdrop-blur-sm hover:bg-white/30 transition-colors border border-white/20"
@@ -277,7 +281,7 @@ const StoryViewer: React.FC = () => {
             )}
           </button>
 
-          {/* Mute Button (for videos) */}
+          {/* Mute (videos only) */}
           {isVideo && (
             <button
               onClick={() => setIsMuted(!isMuted)}
@@ -291,7 +295,7 @@ const StoryViewer: React.FC = () => {
             </button>
           )}
 
-          {/* Close Button */}
+          {/* Close */}
           <button
             onClick={closeStoryViewer}
             className="p-2 rounded-full bg-white/20 backdrop-blur-sm hover:bg-white/30 transition-colors border border-white/20"
@@ -305,25 +309,25 @@ const StoryViewer: React.FC = () => {
       <div
         ref={containerRef}
         className="relative w-full h-full flex items-center justify-center cursor-pointer"
-        onClick={handleContainerClick}
+        onClick={handleClick}
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
-        {/* Loading State */}
-        {!isMediaLoaded && !loadError && (
+        {/* Loading */}
+        {!isMediaReady && !loadError && (
           <div className="absolute inset-0 flex items-center justify-center bg-black/50">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
           </div>
         )}
 
-        {/* Error State */}
+        {/* Error */}
         {loadError && (
           <div className="absolute inset-0 flex items-center justify-center bg-black/50 text-white">
             <div className="text-center">
-              <p className="text-lg mb-2">Failed to load media</p>
+              <p className="text-lg mb-2">Failed to load</p>
               <button
                 onClick={nextMedia}
-                className="px-4 py-2 bg-white/20 rounded-lg hover:bg-white/30 transition-colors"
+                className="px-4 py-2 bg-white/20 rounded-lg hover:bg-white/30"
               >
                 Skip
               </button>
@@ -331,7 +335,7 @@ const StoryViewer: React.FC = () => {
           </div>
         )}
 
-        {/* Media Content */}
+        {/* Media */}
         {!loadError && (
           <>
             {isVideo ? (
@@ -379,19 +383,37 @@ const StoryViewer: React.FC = () => {
         </div>
       )}
 
-      {/* Simple Debug Info */}
+      {/* Debug Panel (Development Only) */}
       {import.meta.env.DEV && (
-        <div className="absolute bottom-4 left-4 z-30 bg-black/80 text-white p-2 rounded text-xs space-y-1">
+        <div className="absolute bottom-4 left-4 z-30 bg-black/90 text-white p-3 rounded text-xs font-mono space-y-1 max-w-xs">
+          <div className="text-yellow-400 font-bold">DEBUG PANEL</div>
           <div>Progress: {Math.round(viewState.progress)}%</div>
+          <div>Media Ready: {isMediaReady ? '✅' : '❌'}</div>
           <div>Playing: {viewState.isPlaying ? '▶️' : '⏸️'}</div>
-          <div>Loaded: {isMediaLoaded ? '✅' : '⏳'}</div>
-          <div>Timer: {progressTimerRef.current ? '🟢' : '🔴'}</div>
-          <button 
-            onClick={startProgressTimer}
-            className="bg-blue-600 px-2 py-1 rounded text-xs mt-1"
-          >
-            Force Start
-          </button>
+          <div>Paused: {viewState.isPaused ? '⏸️' : '▶️'}</div>
+          <div>Timer Active: {timerRef.current ? '🟢' : '🔴'}</div>
+          <div>Load Error: {loadError ? '❌' : '✅'}</div>
+          <div>Media: {viewState.currentMediaIndex + 1}/{currentStory?.media.length}</div>
+          <div className="pt-2 border-t border-gray-600">
+            <button 
+              onClick={() => {
+                console.log('🔧 Force starting timer');
+                startTimer();
+              }}
+              className="bg-blue-600 px-2 py-1 rounded text-xs mr-2"
+            >
+              Force Start
+            </button>
+            <button 
+              onClick={() => {
+                console.log('🔧 Force next media');
+                nextMedia();
+              }}
+              className="bg-green-600 px-2 py-1 rounded text-xs"
+            >
+              Force Next
+            </button>
+          </div>
         </div>
       )}
     </div>
