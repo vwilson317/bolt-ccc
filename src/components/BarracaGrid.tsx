@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MapPin, Clock, MessageCircle, Instagram, Wifi, Umbrella, Hash, Users, Eye, Calendar } from 'lucide-react';
+import { MapPin, Clock, MessageCircle, Instagram, Wifi, Umbrella, Hash, Users, Eye, Calendar, ChevronDown, ChevronUp } from 'lucide-react';
 import { Barraca } from '../types';
 import StoryRing from './StoryRing';
 import { useStory } from '../contexts/StoryContext';
@@ -12,6 +12,7 @@ interface BarracaGridProps {
 const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
   const { t } = useTranslation();
   const { stories, featureFlags } = useStory();
+  const [expandedCards, setExpandedCards] = useState<Set<string>>(new Set());
 
   const getAmenityIcon = (amenity: string) => {
     switch (amenity.toLowerCase()) {
@@ -30,7 +31,6 @@ const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
   };
 
   const formatPhoneForWhatsApp = (phone: string) => {
-    // Remove all non-numeric characters and add Brazil country code if needed
     const cleaned = phone.replace(/\D/g, '');
     return cleaned.startsWith('55') ? cleaned : `55${cleaned}`;
   };
@@ -39,55 +39,59 @@ const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
     return stories.some(story => story.barracaId === barracaId);
   };
 
+  const toggleExpanded = (barracaId: string) => {
+    const newExpanded = new Set(expandedCards);
+    if (newExpanded.has(barracaId)) {
+      newExpanded.delete(barracaId);
+    } else {
+      newExpanded.add(barracaId);
+    }
+    setExpandedCards(newExpanded);
+  };
+
+  const isExpanded = (barracaId: string) => expandedCards.has(barracaId);
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
       {barracas.map((barraca) => (
-        <div key={barraca.id} className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex flex-col h-full">
-          {/* Image */}
-          <div className="relative h-48 overflow-hidden flex-shrink-0">
+        <div key={barraca.id} className="bg-white rounded-xl md:rounded-2xl shadow-md hover:shadow-lg transition-all duration-200 overflow-hidden">
+          {/* Mobile-Optimized Image Section */}
+          <div className="relative h-40 md:h-48 overflow-hidden">
             <img
               src={barraca.images[0]}
               alt={barraca.name}
               className="w-full h-full object-cover"
             />
-            <div className="absolute top-4 right-4">
-              <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
+            
+            {/* Simplified Overlay - Only Essential Info */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+            
+            {/* Status Badge - Larger for Mobile */}
+            <div className="absolute top-3 right-3">
+              <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
                 barraca.isOpen 
-                  ? 'bg-green-500/90 text-white' 
-                  : 'bg-red-500/90 text-white'
+                  ? 'bg-green-500 text-white' 
+                  : 'bg-red-500 text-white'
               }`}>
-                <div className={`w-2 h-2 rounded-full mr-2 ${
+                <div className={`w-1.5 h-1.5 rounded-full mr-1.5 ${
                   barraca.isOpen ? 'bg-green-200' : 'bg-red-200'
                 }`} />
-                {barraca.isOpen ? t('barraca.open') : t('barraca.closed')}
+                {barraca.isOpen ? 'Open' : 'Closed'}
               </span>
             </div>
-            {barraca.weatherDependent && (
-              <div className="absolute top-4 left-4">
-                <span className="bg-blue-500/90 text-white px-2 py-1 rounded-full text-xs font-medium">
-                  {t('barraca.weatherDependent')}
-                </span>
-              </div>
-            )}
+
+            {/* Barraca Number - Bottom Left */}
             {barraca.barracaNumber && (
-              <div className="absolute bottom-4 left-4">
-                <span className="bg-black/70 text-white px-2 py-1 rounded-lg text-xs font-medium flex items-center">
-                  <Hash className="h-3 w-3 mr-1" />
-                  {barraca.barracaNumber}
+              <div className="absolute bottom-3 left-3">
+                <span className="bg-black/70 text-white px-2 py-1 rounded-md text-xs font-medium">
+                  #{barraca.barracaNumber}
                 </span>
               </div>
             )}
-            {/* Loyalty Member Badge */}
-            <div className="absolute bottom-4 right-4">
-              <span className="bg-yellow-500/90 text-white px-2 py-1 rounded-lg text-xs font-medium flex items-center">
-                <Users className="h-3 w-3 mr-1" />
-                Member Perks
-              </span>
-            </div>
-            
-            {/* Story Ring - Only show if feature is enabled and barraca has stories */}
+
+            {/* Story Ring - Top Center (Mobile Optimized) */}
             {featureFlags.enableStoryBanner && hasStories(barraca.id) && (
-              <div className="absolute top-4 left-1/2 transform -translate-x-1/2">
+              <div className="absolute top-3 left-1/2 transform -translate-x-1/2">
                 <StoryRing
                   barracaId={barraca.id}
                   barracaName={barraca.name}
@@ -99,86 +103,133 @@ const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
             )}
           </div>
 
-          {/* Content - Flexible area that grows */}
-          <div className="p-6 flex flex-col flex-grow">
-            {/* Header Info */}
-            <div className="mb-4">
-              <h3 className="text-xl font-bold text-gray-900 mb-2">
-                {barraca.name}
-              </h3>
-              <div className="flex items-center text-gray-600 mb-2">
-                <MapPin className="h-4 w-4 mr-1" />
-                <span className="text-sm">{barraca.location}</span>
+          {/* Content Section - Mobile Optimized */}
+          <div className="p-4 md:p-6">
+            {/* Header - Clean and Scannable */}
+            <div className="mb-3">
+              <div className="flex items-start justify-between mb-2">
+                <h3 className="text-lg md:text-xl font-bold text-gray-900 leading-tight">
+                  {barraca.name}
+                </h3>
+                {/* Member Badge - Smaller, Right Aligned */}
+                <span className="bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded-md text-xs font-medium ml-2 flex-shrink-0">
+                  Member
+                </span>
               </div>
-              <div className="flex items-center text-gray-600">
-                <Clock className="h-4 w-4 mr-1" />
-                <span className="text-sm">{barraca.typicalHours}</span>
+              
+              {/* Location & Hours - Simplified */}
+              <div className="space-y-1">
+                <div className="flex items-center text-gray-600">
+                  <MapPin className="h-3.5 w-3.5 mr-1.5 flex-shrink-0" />
+                  <span className="text-sm">{barraca.location}</span>
+                </div>
+                <div className="flex items-center text-gray-600">
+                  <Clock className="h-3.5 w-3.5 mr-1.5 flex-shrink-0" />
+                  <span className="text-sm">{barraca.typicalHours}</span>
+                </div>
               </div>
             </div>
 
-            {/* Description */}
-            <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-              {barraca.description}
-            </p>
-
-            {/* Menu Preview */}
-            {barraca.menuPreview.length > 0 && (
-              <div className="mb-4">
-                <h4 className="text-sm font-semibold text-gray-900 mb-2">
-                  {t('barraca.menuPreview')}
-                </h4>
-                <div className="flex flex-wrap gap-1">
-                  {barraca.menuPreview.slice(0, 3).map((item, index) => (
-                    <span
-                      key={index}
-                      className="bg-sky-50 text-sky-700 px-2 py-1 rounded-full text-xs"
-                    >
-                      {item}
-                    </span>
-                  ))}
-                  {barraca.menuPreview.length > 3 && (
-                    <span className="text-xs text-gray-500 px-2 py-1">
-                      +{barraca.menuPreview.length - 3} more
-                    </span>
-                  )}
-                </div>
-              </div>
-            )}
-
-            {/* Amenities */}
-            {barraca.amenities.length > 0 && (
-              <div className="mb-6">
-                <div className="flex flex-wrap gap-2">
-                  {barraca.amenities.slice(0, 4).map((amenity, index) => {
-                    const Icon = getAmenityIcon(amenity);
-                    return (
-                      <div
+            {/* Collapsible Details for Mobile */}
+            <div className="md:block">
+              {/* Always Visible: Top Menu Items */}
+              {barraca.menuPreview.length > 0 && (
+                <div className="mb-3">
+                  <div className="flex flex-wrap gap-1">
+                    {barraca.menuPreview.slice(0, 2).map((item, index) => (
+                      <span
                         key={index}
-                        className="flex items-center bg-gray-100 text-gray-700 px-2 py-1 rounded-lg text-xs"
+                        className="bg-sky-50 text-sky-700 px-2 py-1 rounded-md text-xs font-medium"
                       >
-                        <Icon className="h-3 w-3 mr-1" />
-                        {amenity}
-                      </div>
-                    );
-                  })}
+                        {item}
+                      </span>
+                    ))}
+                    {barraca.menuPreview.length > 2 && (
+                      <button
+                        onClick={() => toggleExpanded(barraca.id)}
+                        className="text-xs text-gray-500 px-2 py-1 hover:text-gray-700 md:hidden"
+                      >
+                        +{barraca.menuPreview.length - 2} more
+                      </button>
+                    )}
+                  </div>
                 </div>
+              )}
+
+              {/* Expandable Content on Mobile */}
+              <div className={`md:block ${isExpanded(barraca.id) ? 'block' : 'hidden'}`}>
+                {/* Description */}
+                <p className="text-gray-600 text-sm mb-3 leading-relaxed">
+                  {barraca.description}
+                </p>
+
+                {/* Additional Menu Items */}
+                {barraca.menuPreview.length > 2 && (
+                  <div className="mb-3">
+                    <div className="flex flex-wrap gap-1">
+                      {barraca.menuPreview.slice(2).map((item, index) => (
+                        <span
+                          key={index}
+                          className="bg-sky-50 text-sky-700 px-2 py-1 rounded-md text-xs font-medium"
+                        >
+                          {item}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Amenities - Simplified */}
+                {barraca.amenities.length > 0 && (
+                  <div className="mb-3">
+                    <div className="flex flex-wrap gap-1">
+                      {barraca.amenities.slice(0, 3).map((amenity, index) => {
+                        const Icon = getAmenityIcon(amenity);
+                        return (
+                          <div
+                            key={index}
+                            className="flex items-center bg-gray-100 text-gray-700 px-2 py-1 rounded-md text-xs"
+                          >
+                            <Icon className="h-3 w-3 mr-1" />
+                            {amenity}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
               </div>
-            )}
 
-            {/* Spacer to push footer to bottom */}
-            <div className="flex-grow"></div>
+              {/* Mobile Expand/Collapse Button */}
+              <button
+                onClick={() => toggleExpanded(barraca.id)}
+                className="md:hidden w-full flex items-center justify-center py-2 text-sm text-gray-500 hover:text-gray-700 border-t border-gray-100 mt-3"
+              >
+                {isExpanded(barraca.id) ? (
+                  <>
+                    <span>Show Less</span>
+                    <ChevronUp className="h-4 w-4 ml-1" />
+                  </>
+                ) : (
+                  <>
+                    <span>Show More</span>
+                    <ChevronDown className="h-4 w-4 ml-1" />
+                  </>
+                )}
+              </button>
+            </div>
 
-            {/* Footer - Always at bottom with consistent height */}
-            <div className="mt-auto pt-4 border-t border-gray-100">
-              <div className="flex items-center justify-between h-10">
-                {/* Contact Icons */}
+            {/* Action Footer - Mobile Optimized */}
+            <div className="mt-4 pt-3 border-t border-gray-100">
+              <div className="flex items-center justify-between">
+                {/* Contact Icons - Larger Touch Targets */}
                 <div className="flex space-x-2">
                   {barraca.contact.phone && (
                     <a
                       href={`https://wa.me/${formatPhoneForWhatsApp(barraca.contact.phone)}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="p-2 bg-green-100 text-green-600 rounded-lg hover:bg-green-200 transition-colors"
+                      className="p-2.5 bg-green-100 text-green-600 rounded-lg hover:bg-green-200 transition-colors"
                       title="WhatsApp"
                     >
                       <MessageCircle className="h-4 w-4" />
@@ -189,7 +240,7 @@ const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
                       href={barraca.contact.website}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="p-2 bg-pink-100 text-pink-600 rounded-lg hover:bg-pink-200 transition-colors"
+                      className="p-2.5 bg-pink-100 text-pink-600 rounded-lg hover:bg-pink-200 transition-colors"
                       title="Instagram"
                     >
                       <Instagram className="h-4 w-4" />
@@ -197,17 +248,19 @@ const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
                   )}
                 </div>
                 
-                {/* Action Buttons - Always aligned */}
+                {/* Action Buttons - Mobile Optimized */}
                 <div className="flex space-x-2">
                   {barraca.isOpen && (
-                    <button className="flex items-center px-3 py-1.5 text-xs font-medium text-orange-700 bg-orange-50 hover:bg-orange-100 rounded-lg transition-colors">
-                      <Calendar className="h-3 w-3 mr-1" />
-                      Reserve
+                    <button className="flex items-center px-3 py-2 text-sm font-medium text-orange-700 bg-orange-50 hover:bg-orange-100 rounded-lg transition-colors">
+                      <Calendar className="h-4 w-4 mr-1.5" />
+                      <span className="hidden sm:inline">Reserve</span>
+                      <span className="sm:hidden">Book</span>
                     </button>
                   )}
-                  <button className="flex items-center px-3 py-1.5 text-xs font-medium text-sky-700 bg-sky-50 hover:bg-sky-100 rounded-lg transition-colors">
-                    <Eye className="h-3 w-3 mr-1" />
-                    Details
+                  <button className="flex items-center px-3 py-2 text-sm font-medium text-sky-700 bg-sky-50 hover:bg-sky-100 rounded-lg transition-colors">
+                    <Eye className="h-4 w-4 mr-1.5" />
+                    <span className="hidden sm:inline">Details</span>
+                    <span className="sm:hidden">View</span>
                   </button>
                 </div>
               </div>
