@@ -1,4 +1,60 @@
-import { Barraca, WeatherData } from '../types';
+import { Barraca, WeatherData, CTAButtonConfig } from '../types';
+
+// Sample custom CTA button configurations
+const sampleCTAButtons: CTAButtonConfig[] = [
+  {
+    id: 'reserve-premium',
+    text: 'Reserve VIP',
+    action: {
+      type: 'url',
+      value: '/reserve/vip',
+      target: '_blank',
+      trackingEvent: 'vip_reservation_clicked'
+    },
+    style: 'primary',
+    position: 1,
+    visibilityConditions: {
+      requiresOpen: true,
+      memberOnly: true
+    },
+    icon: 'Star',
+    enabled: true
+  },
+  {
+    id: 'menu-special',
+    text: 'Today\'s Menu',
+    action: {
+      type: 'url',
+      value: '/menu/daily',
+      target: '_blank',
+      trackingEvent: 'daily_menu_clicked'
+    },
+    style: 'secondary',
+    position: 2,
+    visibilityConditions: {
+      timeRestrictions: {
+        startTime: '11:00',
+        endTime: '22:00'
+      }
+    },
+    icon: 'Menu',
+    enabled: true
+  },
+  {
+    id: 'contact-whatsapp',
+    text: 'WhatsApp',
+    action: {
+      type: 'whatsapp',
+      value: '+55 21 99999-1234',
+      trackingEvent: 'whatsapp_contact_clicked'
+    },
+    style: 'outline',
+    position: 3,
+    visibilityConditions: {},
+    icon: 'MessageCircle',
+    enabled: true
+  }
+];
 
 export const mockBarracas: Barraca[] = [
   {
@@ -22,7 +78,8 @@ export const mockBarracas: Barraca[] = [
     amenities: ['WiFi', 'Umbrellas', 'Chairs', 'Bathrooms'],
     weatherDependent: true,
     createdAt: new Date('2024-01-15'),
-    updatedAt: new Date('2024-01-20')
+    updatedAt: new Date('2024-01-20'),
+    ctaButtons: sampleCTAButtons // Custom CTA configuration
   },
   {
     id: '2',
@@ -45,7 +102,45 @@ export const mockBarracas: Barraca[] = [
     amenities: ['WiFi', 'Charging Stations', 'Beach Volleyball', 'Yoga Classes'],
     weatherDependent: false,
     createdAt: new Date('2024-01-10'),
-    updatedAt: new Date('2024-01-18')
+    updatedAt: new Date('2024-01-18'),
+    ctaButtons: [
+      {
+        id: 'book-yoga',
+        text: 'Book Yoga',
+        action: {
+          type: 'url',
+          value: '/yoga/booking',
+          target: '_blank',
+          trackingEvent: 'yoga_booking_clicked'
+        },
+        style: 'secondary',
+        position: 1,
+        visibilityConditions: {
+          requiresOpen: true,
+          timeRestrictions: {
+            startTime: '06:00',
+            endTime: '10:00'
+          }
+        },
+        icon: 'Calendar',
+        enabled: true
+      },
+      {
+        id: 'view-menu',
+        text: 'Menu',
+        action: {
+          type: 'url',
+          value: '/menu',
+          target: '_blank',
+          trackingEvent: 'menu_view_clicked'
+        },
+        style: 'outline',
+        position: 2,
+        visibilityConditions: {},
+        icon: 'Menu',
+        enabled: true
+      }
+    ]
   },
   {
     id: '3',
@@ -70,6 +165,7 @@ export const mockBarracas: Barraca[] = [
     weatherDependent: true,
     createdAt: new Date('2024-01-12'),
     updatedAt: new Date('2024-01-19')
+    // No custom CTA buttons - will use defaults
   },
   {
     id: '4',

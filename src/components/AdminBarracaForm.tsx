@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Save, X, Plus, Trash2 } from 'lucide-react';
+import { Save, X, Plus, Trash2, Settings } from 'lucide-react';
 import { useApp } from '../contexts/AppContext';
-import { Barraca } from '../types';
+import { Barraca, CTAButtonConfig } from '../types';
 
 interface AdminBarracaFormProps {
   barracaId?: string | null;
@@ -30,10 +30,12 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
       website: ''
     },
     amenities: [''],
-    weatherDependent: false
+    weatherDependent: false,
+    ctaButtons: [] as CTAButtonConfig[]
   });
 
   const [isSaving, setIsSaving] = useState(false);
+  const [showCTAConfig, setShowCTAConfig] = useState(false);
 
   // Complete list of South Zone neighborhoods
   const southZoneNeighborhoods = [
@@ -54,6 +56,10 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
     'Pepino Beach'
   ];
 
+  const ctaButtonStyles = ['primary', 'secondary', 'outline', 'ghost'];
+  const ctaButtonTypes = ['url', 'phone', 'email', 'whatsapp', 'reservation', 'details', 'custom'];
+  const iconOptions = ['Calendar', 'Eye', 'MessageCircle', 'Menu', 'Phone', 'Mail', 'ExternalLink', 'Star'];
+
   useEffect(() => {
     if (barracaId) {
       const barraca = barracas.find(b => b.id === barracaId);
@@ -70,7 +76,8 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
           menuPreview: barraca.menuPreview,
           contact: barraca.contact,
           amenities: barraca.amenities,
-          weatherDependent: barraca.weatherDependent
+          weatherDependent: barraca.weatherDependent,
+          ctaButtons: barraca.ctaButtons || []
         });
       }
     }
@@ -85,7 +92,8 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
         ...formData,
         images: formData.images.filter(img => img.trim() !== ''),
         menuPreview: formData.menuPreview.filter(item => item.trim() !== ''),
-        amenities: formData.amenities.filter(amenity => amenity.trim() !== '')
+        amenities: formData.amenities.filter(amenity => amenity.trim() !== ''),
+        ctaButtons: formData.ctaButtons.filter(button => button.text.trim() !== '' && button.action.value.trim() !== '')
       };
 
       if (barracaId) {
@@ -120,6 +128,44 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
     setFormData(prev => ({
       ...prev,
       [field]: prev[field].filter((_, i) => i !== index)
+    }));
+  };
+
+  // CTA Button management functions
+  const addCTAButton = () => {
+    const newButton: CTAButtonConfig = {
+      id: `cta-${Date.now()}`,
+      text: '',
+      action: {
+        type: 'url',
+        value: '',
+        target: '_blank'
+      },
+      style: 'primary',
+      position: formData.ctaButtons.length + 1,
+      visibilityConditions: {},
+      enabled: true
+    };
+
+    setFormData(prev => ({
+      ...prev,
+      ctaButtons: [...prev.ctaButtons, newButton]
+    }));
+  };
+
+  const updateCTAButton = (index: number, updates: Partial<CTAButtonConfig>) => {
+    setFormData(prev => ({
+      ...prev,
+      ctaButtons: prev.ctaButtons.map((button, i) => 
+        i === index ? { ...button, ...updates } : button
+      )
+    }));
+  };
+
+  const removeCTAButton = (index: number) => {
+    setFormData(prev => ({
+      ...prev,
+      ctaButtons: prev.ctaButtons.filter((_, i) => i !== index)
     }));
   };
 
@@ -391,6 +437,225 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
               </button>
             </div>
           ))}
+        </div>
+
+        {/* CTA Buttons Configuration */}
+        <div>
+          <div className="flex justify-between items-center mb-4">
+            <h4 className="text-lg font-medium text-gray-900">Custom CTA Buttons</h4>
+            <button
+              type="button"
+              onClick={() => setShowCTAConfig(!showCTAConfig)}
+              className="flex items-center text-sky-600 hover:text-sky-800 text-sm"
+            >
+              <Settings className="h-4 w-4 mr-1" />
+              {showCTAConfig ? 'Hide' : 'Configure'}
+            </button>
+          </div>
+
+          {showCTAConfig && (
+            <div className="border border-gray-200 rounded-lg p-4 space-y-4">
+              <div className="flex justify-between items-center">
+                <p className="text-sm text-gray-600">
+                  Configure custom call-to-action buttons for this barraca. Leave empty to use default buttons.
+                </p>
+                <button
+                  type="button"
+                  onClick={addCTAButton}
+                  className="text-sky-600 hover:text-sky-800 flex items-center text-sm"
+                >
+                  <Plus className="h-4 w-4 mr-1" />
+                  Add Button
+                </button>
+              </div>
+
+              {formData.ctaButtons.map((button, index) => (
+                <div key={button.id} className="border border-gray-100 rounded-lg p-4 space-y-3">
+                  <div className="flex justify-between items-center">
+                    <h5 className="font-medium text-gray-900">Button {index + 1}</h5>
+                    <button
+                      type="button"
+                      onClick={() => removeCTAButton(index)}
+                      className="text-red-600 hover:text-red-800"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+                    <div>
+                      <label className="block text-xs font-medium text-gray-700 mb-1">
+                        Button Text *
+                      </label>
+                      <input
+                        type="text"
+                        value={button.text}
+                        onChange={(e) => updateCTAButton(index, { text: e.target.value })}
+                        placeholder="Reserve Now"
+                        className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-sky-500"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-medium text-gray-700 mb-1">
+                        Action Type *
+                      </label>
+                      <select
+                        value={button.action.type}
+                        onChange={(e) => updateCTAButton(index, { 
+                          action: { ...button.action, type: e.target.value as any }
+                        })}
+                        className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-sky-500"
+                      >
+                        {ctaButtonTypes.map(type => (
+                          <option key={type} value={type}>{type}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-medium text-gray-700 mb-1">
+                        Action Value *
+                      </label>
+                      <input
+                        type="text"
+                        value={button.action.value}
+                        onChange={(e) => updateCTAButton(index, { 
+                          action: { ...button.action, value: e.target.value }
+                        })}
+                        placeholder="URL, phone, etc."
+                        className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-sky-500"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-medium text-gray-700 mb-1">
+                        Style
+                      </label>
+                      <select
+                        value={button.style}
+                        onChange={(e) => updateCTAButton(index, { style: e.target.value as any })}
+                        className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-sky-500"
+                      >
+                        {ctaButtonStyles.map(style => (
+                          <option key={style} value={style}>{style}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <div>
+                      <label className="block text-xs font-medium text-gray-700 mb-1">
+                        Icon
+                      </label>
+                      <select
+                        value={button.icon || ''}
+                        onChange={(e) => updateCTAButton(index, { icon: e.target.value || undefined })}
+                        className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-sky-500"
+                      >
+                        <option value="">No Icon</option>
+                        {iconOptions.map(icon => (
+                          <option key={icon} value={icon}>{icon}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-medium text-gray-700 mb-1">
+                        Position
+                      </label>
+                      <input
+                        type="number"
+                        min="1"
+                        value={button.position}
+                        onChange={(e) => updateCTAButton(index, { position: parseInt(e.target.value) || 1 })}
+                        className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-sky-500"
+                      />
+                    </div>
+
+                    <div className="flex items-center">
+                      <label className="flex items-center">
+                        <input
+                          type="checkbox"
+                          checked={button.enabled}
+                          onChange={(e) => updateCTAButton(index, { enabled: e.target.checked })}
+                          className="h-3 w-3 text-sky-600 focus:ring-sky-500 border-gray-300 rounded"
+                        />
+                        <span className="ml-2 text-xs text-gray-700">Enabled</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  {/* Visibility Conditions */}
+                  <div className="border-t border-gray-100 pt-3">
+                    <h6 className="text-xs font-medium text-gray-700 mb-2">Visibility Conditions</h6>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                      <label className="flex items-center">
+                        <input
+                          type="checkbox"
+                          checked={button.visibilityConditions.requiresOpen || false}
+                          onChange={(e) => updateCTAButton(index, {
+                            visibilityConditions: {
+                              ...button.visibilityConditions,
+                              requiresOpen: e.target.checked || undefined
+                            }
+                          })}
+                          className="h-3 w-3 text-sky-600 focus:ring-sky-500 border-gray-300 rounded"
+                        />
+                        <span className="ml-1 text-xs text-gray-700">Requires Open</span>
+                      </label>
+
+                      <label className="flex items-center">
+                        <input
+                          type="checkbox"
+                          checked={button.visibilityConditions.requiresClosed || false}
+                          onChange={(e) => updateCTAButton(index, {
+                            visibilityConditions: {
+                              ...button.visibilityConditions,
+                              requiresClosed: e.target.checked || undefined
+                            }
+                          })}
+                          className="h-3 w-3 text-sky-600 focus:ring-sky-500 border-gray-300 rounded"
+                        />
+                        <span className="ml-1 text-xs text-gray-700">Requires Closed</span>
+                      </label>
+
+                      <label className="flex items-center">
+                        <input
+                          type="checkbox"
+                          checked={button.visibilityConditions.memberOnly || false}
+                          onChange={(e) => updateCTAButton(index, {
+                            visibilityConditions: {
+                              ...button.visibilityConditions,
+                              memberOnly: e.target.checked || undefined
+                            }
+                          })}
+                          className="h-3 w-3 text-sky-600 focus:ring-sky-500 border-gray-300 rounded"
+                        />
+                        <span className="ml-1 text-xs text-gray-700">Member Only</span>
+                      </label>
+
+                      <label className="flex items-center">
+                        <input
+                          type="checkbox"
+                          checked={button.visibilityConditions.weatherDependent || false}
+                          onChange={(e) => updateCTAButton(index, {
+                            visibilityConditions: {
+                              ...button.visibilityConditions,
+                              weatherDependent: e.target.checked || undefined
+                            }
+                          })}
+                          className="h-3 w-3 text-sky-600 focus:ring-sky-500 border-gray-300 rounded"
+                        />
+                        <span className="ml-1 text-xs text-gray-700">Weather Dependent</span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Form Actions */}

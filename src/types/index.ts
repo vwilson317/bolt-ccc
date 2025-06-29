@@ -21,6 +21,7 @@ export interface Barraca {
   weatherDependent: boolean;
   createdAt: Date;
   updatedAt: Date;
+  ctaButtons?: CTAButtonConfig[]; // New configurable CTA buttons
 }
 
 export interface WeatherData {
@@ -92,4 +93,45 @@ export interface FeatureFlags {
   enableStoryBanner: boolean;
   enableChairReservation: boolean;
   enablePushNotifications: boolean;
+  customCtaButtons: boolean; // New feature flag for configurable CTA buttons
+}
+
+// CTA Button Configuration Types
+export interface CTAButtonConfig {
+  id: string;
+  text: string;
+  action: CTAButtonAction;
+  style: 'primary' | 'secondary' | 'outline' | 'ghost';
+  position: number; // Order/priority (lower numbers appear first)
+  visibilityConditions: CTAVisibilityConditions;
+  icon?: string; // Lucide icon name
+  enabled: boolean;
+}
+
+export interface CTAButtonAction {
+  type: 'url' | 'phone' | 'email' | 'whatsapp' | 'reservation' | 'details' | 'custom';
+  value: string; // URL, phone number, email, etc.
+  target?: '_blank' | '_self'; // For URL actions
+  trackingEvent?: string; // Analytics tracking
+}
+
+export interface CTAVisibilityConditions {
+  requiresOpen?: boolean; // Only show when barraca is open
+  requiresClosed?: boolean; // Only show when barraca is closed
+  timeRestrictions?: {
+    startTime?: string; // HH:MM format
+    endTime?: string; // HH:MM format
+    daysOfWeek?: number[]; // 0-6 (Sunday-Saturday)
+  };
+  memberOnly?: boolean; // Only show for logged-in members
+  weatherDependent?: boolean; // Hide in bad weather
+  customCondition?: string; // Custom JavaScript condition
+}
+
+// Default CTA Button Configurations
+export interface DefaultCTAButtons {
+  reserve: CTAButtonConfig;
+  details: CTAButtonConfig;
+  contact: CTAButtonConfig;
+  menu: CTAButtonConfig;
 }

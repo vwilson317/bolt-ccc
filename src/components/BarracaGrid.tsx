@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MapPin, Clock, MessageCircle, Instagram, Wifi, Umbrella, Hash, Users, Eye, Calendar, ChevronDown, ChevronUp } from 'lucide-react';
+import { MapPin, Clock, MessageCircle, Instagram, Wifi, Umbrella, Hash, Users, ChevronDown, ChevronUp } from 'lucide-react';
 import { Barraca } from '../types';
 import StoryRing from './StoryRing';
+import CTAButtonGroup from './CTAButtonGroup';
 import { useStory } from '../contexts/StoryContext';
 
 interface BarracaGridProps {
@@ -219,7 +220,7 @@ const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
               </button>
             </div>
 
-            {/* Action Footer - Mobile Optimized */}
+            {/* Action Footer - Mobile Optimized with Configurable CTA Buttons */}
             <div className="mt-4 pt-3 border-t border-gray-100">
               <div className="flex items-center justify-between">
                 {/* Contact Icons - Larger Touch Targets */}
@@ -248,21 +249,17 @@ const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
                   )}
                 </div>
                 
-                {/* Action Buttons - Mobile Optimized */}
-                <div className="flex space-x-2">
-                  {barraca.isOpen && (
-                    <button className="flex items-center px-3 py-2 text-sm font-medium text-orange-700 bg-orange-50 hover:bg-orange-100 rounded-lg transition-colors">
-                      <Calendar className="h-4 w-4 mr-1.5" />
-                      <span className="hidden sm:inline">Reserve</span>
-                      <span className="sm:hidden">Book</span>
-                    </button>
-                  )}
-                  <button className="flex items-center px-3 py-2 text-sm font-medium text-sky-700 bg-sky-50 hover:bg-sky-100 rounded-lg transition-colors">
-                    <Eye className="h-4 w-4 mr-1.5" />
-                    <span className="hidden sm:inline">Details</span>
-                    <span className="sm:hidden">View</span>
-                  </button>
-                </div>
+                {/* Configurable CTA Buttons */}
+                <CTAButtonGroup 
+                  barraca={barraca}
+                  size="sm"
+                  maxButtons={2}
+                  context={{
+                    currentTime: new Date(),
+                    isLoggedIn: false, // This would come from your auth context
+                    weatherConditions: 'good' // This would come from your weather context
+                  }}
+                />
               </div>
             </div>
           </div>

@@ -45,6 +45,7 @@ export const StoryProvider: React.FC<StoryProviderProps> = ({ children }) => {
     enableStoryBanner: true,
     enableChairReservation: true,
     enablePushNotifications: false,
+    customCtaButtons: true, // Enable configurable CTA buttons
   });
 
   const [viewState, setViewState] = useState<StoryViewState>({
