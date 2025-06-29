@@ -9,22 +9,22 @@ const getEnvironmentConfig = () => {
     development: {
       url: import.meta.env.VITE_SUPABASE_URL_DEV || import.meta.env.VITE_SUPABASE_URL,
       anonKey: import.meta.env.VITE_SUPABASE_ANON_KEY_DEV || import.meta.env.VITE_SUPABASE_ANON_KEY,
-      schema: 'dev'
+      schema: 'public' // Always use public for client, we'll specify schema in queries
     },
     qa: {
       url: import.meta.env.VITE_SUPABASE_URL_QA || import.meta.env.VITE_SUPABASE_URL,
       anonKey: import.meta.env.VITE_SUPABASE_ANON_KEY_QA || import.meta.env.VITE_SUPABASE_ANON_KEY,
-      schema: 'qa'
+      schema: 'public'
     },
     uat: {
       url: import.meta.env.VITE_SUPABASE_URL_UAT || import.meta.env.VITE_SUPABASE_URL,
       anonKey: import.meta.env.VITE_SUPABASE_ANON_KEY_UAT || import.meta.env.VITE_SUPABASE_ANON_KEY,
-      schema: 'uat'
+      schema: 'public'
     },
     production: {
       url: import.meta.env.VITE_SUPABASE_URL_PROD || import.meta.env.VITE_SUPABASE_URL,
       anonKey: import.meta.env.VITE_SUPABASE_ANON_KEY_PROD || import.meta.env.VITE_SUPABASE_ANON_KEY,
-      schema: 'prod'
+      schema: 'public'
     }
   }
   
@@ -46,21 +46,19 @@ export const supabase = createClient<Database>(config.url, config.anonKey, {
     params: {
       eventsPerSecond: 10,
     },
-  },
-  db: {
-    schema: config.schema
   }
+  // Removed db.schema configuration - Supabase only accepts 'public' or 'graphql_public'
 })
 
 // Environment info for debugging
 export const environmentInfo = {
   environment: import.meta.env.VITE_APP_ENV || 'development',
-  schema: config.schema,
+  schema: 'public', // Always use public schema for client
   url: config.url,
-  isDevelopment: config.schema === 'dev',
-  isQA: config.schema === 'qa',
-  isUAT: config.schema === 'uat',
-  isProduction: config.schema === 'prod'
+  isDevelopment: (import.meta.env.VITE_APP_ENV || 'development') === 'development',
+  isQA: (import.meta.env.VITE_APP_ENV || 'development') === 'qa',
+  isUAT: (import.meta.env.VITE_APP_ENV || 'development') === 'uat',
+  isProduction: (import.meta.env.VITE_APP_ENV || 'development') === 'production'
 }
 
 // Helper function to handle Supabase errors
