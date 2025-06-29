@@ -62,7 +62,7 @@ export const StoryProvider: React.FC<StoryProviderProps> = ({ children }) => {
   useEffect(() => {
     try {
       const activeStories = getActiveStories();
-      console.log('Loading stories:', activeStories);
+      console.log('📚 Loading stories:', activeStories.length);
       setStories(activeStories);
     } catch (error) {
       console.error('Error loading stories:', error);
@@ -70,14 +70,12 @@ export const StoryProvider: React.FC<StoryProviderProps> = ({ children }) => {
     }
   }, []);
 
-  // Load viewed stories from localStorage with error handling
+  // Load/save viewed stories from localStorage
   useEffect(() => {
     try {
-      const savedViewedStories = localStorage.getItem('ccc_viewedStories');
-      const savedViewedMedia = localStorage.getItem('ccc_viewedMedia');
-      
-      if (savedViewedStories) {
-        const parsed = JSON.parse(savedViewedStories);
+      const saved = localStorage.getItem('ccc_viewedStories');
+      if (saved) {
+        const parsed = JSON.parse(saved);
         if (Array.isArray(parsed)) {
           setViewState(prev => ({
             ...prev,
@@ -85,71 +83,45 @@ export const StoryProvider: React.FC<StoryProviderProps> = ({ children }) => {
           }));
         }
       }
-
-      if (savedViewedMedia) {
-        const parsed = JSON.parse(savedViewedMedia);
-        if (Array.isArray(parsed)) {
-          setViewState(prev => ({
-            ...prev,
-            viewedMedia: new Set(parsed)
-          }));
-        }
-      }
     } catch (error) {
-      console.error('Error loading viewed stories from localStorage:', error);
-      localStorage.removeItem('ccc_viewedStories');
-      localStorage.removeItem('ccc_viewedMedia');
+      console.error('Error loading viewed stories:', error);
     }
   }, []);
 
-  // Save viewed stories to localStorage with error handling
   useEffect(() => {
     try {
       localStorage.setItem('ccc_viewedStories', JSON.stringify([...viewState.viewedStories]));
     } catch (error) {
-      console.error('Error saving viewed stories to localStorage:', error);
+      console.error('Error saving viewed stories:', error);
     }
   }, [viewState.viewedStories]);
 
-  useEffect(() => {
-    try {
-      localStorage.setItem('ccc_viewedMedia', JSON.stringify([...viewState.viewedMedia]));
-    } catch (error) {
-      console.error('Error saving viewed media to localStorage:', error);
-    }
-  }, [viewState.viewedMedia]);
-
   const openStoryViewer = (storyId: string) => {
-    console.log('Opening story viewer for:', storyId);
-    console.log('Available stories:', stories.map(s => ({ id: s.id, name: s.barracaName })));
+    console.log('🎬 Opening story:', storyId);
     
     const storyIndex = stories.findIndex(story => story.id === storyId);
-    console.log('Found story at index:', storyIndex);
-    
-    if (storyIndex !== -1) {
-      const story = stories[storyIndex];
-      console.log('Opening story:', story);
-      
-      setCurrentStory(story);
-      setViewState(prev => ({
-        ...prev,
-        currentStoryIndex: storyIndex,
-        currentMediaIndex: 0,
-        isPlaying: true,
-        isPaused: false,
-        progress: 0,
-      }));
-      setIsStoryViewerOpen(true);
-      
-      // Mark story as viewed immediately
-      markStoryAsViewed(storyId);
-    } else {
+    if (storyIndex === -1) {
       console.error('Story not found:', storyId);
+      return;
     }
+
+    const story = stories[storyIndex];
+    console.log('📖 Story found:', story.barracaName, 'with', story.media.length, 'media');
+    
+    setCurrentStory(story);
+    setViewState(prev => ({
+      ...prev,
+      currentStoryIndex: storyIndex,
+      currentMediaIndex: 0,
+      isPlaying: true,
+      isPaused: false,
+      progress: 0,
+    }));
+    setIsStoryViewerOpen(true);
   };
 
   const closeStoryViewer = () => {
-    console.log('Closing story viewer');
+    console.log('❌ Closing story viewer');
     setIsStoryViewerOpen(false);
     setCurrentStory(null);
     setViewState(prev => ({
@@ -161,12 +133,10 @@ export const StoryProvider: React.FC<StoryProviderProps> = ({ children }) => {
   };
 
   const nextStory = () => {
-    console.log('Moving to next story');
+    console.log('⏭️ Next story');
     const nextIndex = viewState.currentStoryIndex + 1;
     if (nextIndex < stories.length) {
       const nextStory = stories[nextIndex];
-      console.log('Next story:', nextStory);
-      
       setCurrentStory(nextStory);
       setViewState(prev => ({
         ...prev,
@@ -176,22 +146,16 @@ export const StoryProvider: React.FC<StoryProviderProps> = ({ children }) => {
         isPlaying: true,
         isPaused: false,
       }));
-      
-      // Mark new story as viewed
-      markStoryAsViewed(nextStory.id);
     } else {
-      console.log('No more stories, closing viewer');
       closeStoryViewer();
     }
   };
 
   const previousStory = () => {
-    console.log('Moving to previous story');
+    console.log('⏮️ Previous story');
     const prevIndex = viewState.currentStoryIndex - 1;
     if (prevIndex >= 0) {
       const prevStory = stories[prevIndex];
-      console.log('Previous story:', prevStory);
-      
       setCurrentStory(prevStory);
       setViewState(prev => ({
         ...prev,
@@ -205,16 +169,12 @@ export const StoryProvider: React.FC<StoryProviderProps> = ({ children }) => {
   };
 
   const nextMedia = () => {
-    if (!currentStory) {
-      console.log('No current story for next media');
-      return;
-    }
+    if (!currentStory) return;
     
-    console.log('Moving to next media. Current index:', viewState.currentMediaIndex, 'Total media:', currentStory.media.length);
+    console.log('⏭️ Next media:', viewState.currentMediaIndex + 1, '/', currentStory.media.length);
     
     const nextMediaIndex = viewState.currentMediaIndex + 1;
     if (nextMediaIndex < currentStory.media.length) {
-      console.log('Moving to media index:', nextMediaIndex);
       setViewState(prev => ({
         ...prev,
         currentMediaIndex: nextMediaIndex,
@@ -222,44 +182,29 @@ export const StoryProvider: React.FC<StoryProviderProps> = ({ children }) => {
         isPlaying: true,
         isPaused: false,
       }));
-      
-      // Mark current media as viewed
-      const currentMedia = currentStory.media[viewState.currentMediaIndex];
-      if (currentMedia) {
-        markMediaAsViewed(currentMedia.id);
-      }
     } else {
-      console.log('No more media, moving to next story');
-      // Mark current media as viewed before moving to next story
-      const currentMedia = currentStory.media[viewState.currentMediaIndex];
-      if (currentMedia) {
-        markMediaAsViewed(currentMedia.id);
-      }
       nextStory();
     }
   };
 
   const previousMedia = () => {
-    console.log('Moving to previous media. Current index:', viewState.currentMediaIndex);
+    console.log('⏮️ Previous media');
     
     if (viewState.currentMediaIndex > 0) {
-      const prevMediaIndex = viewState.currentMediaIndex - 1;
-      console.log('Moving to media index:', prevMediaIndex);
       setViewState(prev => ({
         ...prev,
-        currentMediaIndex: prevMediaIndex,
+        currentMediaIndex: prev.currentMediaIndex - 1,
         progress: 0,
         isPlaying: true,
         isPaused: false,
       }));
     } else {
-      console.log('At first media, moving to previous story');
       previousStory();
     }
   };
 
   const pauseStory = () => {
-    console.log('Pausing story');
+    console.log('⏸️ Pause story');
     setViewState(prev => ({
       ...prev,
       isPaused: true,
@@ -268,7 +213,7 @@ export const StoryProvider: React.FC<StoryProviderProps> = ({ children }) => {
   };
 
   const resumeStory = () => {
-    console.log('Resuming story');
+    console.log('▶️ Resume story');
     setViewState(prev => ({
       ...prev,
       isPaused: false,
@@ -277,20 +222,17 @@ export const StoryProvider: React.FC<StoryProviderProps> = ({ children }) => {
   };
 
   const markStoryAsViewed = (storyId: string) => {
-    console.log('Marking story as viewed:', storyId);
     setViewState(prev => ({
       ...prev,
       viewedStories: new Set([...prev.viewedStories, storyId])
     }));
     
-    // Update the story in the stories array
     setStories(prev => prev.map(story => 
       story.id === storyId ? { ...story, isViewed: true } : story
     ));
   };
 
   const markMediaAsViewed = (mediaId: string) => {
-    console.log('Marking media as viewed:', mediaId);
     setViewState(prev => ({
       ...prev,
       viewedMedia: new Set([...prev.viewedMedia, mediaId])
