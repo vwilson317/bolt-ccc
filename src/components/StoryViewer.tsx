@@ -41,17 +41,31 @@ const StoryViewer: React.FC = () => {
     currentMedia: currentMedia?.url,
     isPlaying: viewState.isPlaying,
     isPaused: viewState.isPaused,
-    progress: viewState.progress
+    progress: viewState.progress,
+    isLoading,
+    loadError
   });
 
-  // Progress management
+  // Progress management - Fixed to ensure timer starts properly
   const startProgress = useCallback(() => {
-    if (!viewState.isPlaying || viewState.isPaused || !currentMedia) {
-      console.log('Not starting progress:', { isPlaying: viewState.isPlaying, isPaused: viewState.isPaused, hasMedia: !!currentMedia });
+    // Clear any existing timer first
+    if (progressTimerRef.current) {
+      clearInterval(progressTimerRef.current);
+      progressTimerRef.current = null;
+    }
+
+    if (!viewState.isPlaying || viewState.isPaused || !currentMedia || isLoading || loadError) {
+      console.log('Not starting progress:', { 
+        isPlaying: viewState.isPlaying, 
+        isPaused: viewState.isPaused, 
+        hasMedia: !!currentMedia,
+        isLoading,
+        loadError
+      });
       return;
     }
 
-    console.log('Starting progress timer for duration:', storyDuration);
+    console.log('🚀 Starting progress timer for duration:', storyDuration, 'ms');
     const startTime = Date.now();
     const startProgress = viewState.progress;
 
@@ -59,47 +73,68 @@ const StoryViewer: React.FC = () => {
       const elapsed = Date.now() - startTime;
       const newProgress = startProgress + (elapsed / storyDuration) * 100;
       
+      console.log('⏱️ Progress update:', {
+        elapsed: Math.round(elapsed),
+        newProgress: Math.round(newProgress),
+        duration: storyDuration
+      });
+      
       if (newProgress >= 100) {
-        console.log('Progress complete, moving to next media');
+        console.log('✅ Progress complete, moving to next media');
         updateProgress(100);
         if (currentMedia) {
           markMediaAsViewed(currentMedia.id);
+        }
+        // Clear timer before moving to next
+        if (progressTimerRef.current) {
+          clearInterval(progressTimerRef.current);
+          progressTimerRef.current = null;
         }
         nextMedia();
       } else {
         updateProgress(newProgress);
       }
-    }, 50);
-  }, [viewState.isPlaying, viewState.isPaused, viewState.progress, storyDuration, currentMedia, updateProgress, markMediaAsViewed, nextMedia]);
+    }, 100); // Increased interval for better performance
+
+    console.log('✅ Progress timer started with ID:', progressTimerRef.current);
+  }, [viewState.isPlaying, viewState.isPaused, viewState.progress, storyDuration, currentMedia, isLoading, loadError, updateProgress, markMediaAsViewed, nextMedia]);
 
   const stopProgress = useCallback(() => {
     if (progressTimerRef.current) {
-      console.log('Stopping progress timer');
+      console.log('⏹️ Stopping progress timer');
       clearInterval(progressTimerRef.current);
       progressTimerRef.current = null;
     }
   }, []);
 
-  // Handle media loading
-  const handleMediaLoad = () => {
-    console.log('Media loaded successfully');
+  // Handle media loading - Fixed to properly trigger auto-play
+  const handleMediaLoad = useCallback(() => {
+    console.log('📷 Media loaded successfully');
     setIsLoading(false);
     setLoadError(false);
+    
+    // Start progress immediately after media loads if we should be playing
     if (viewState.isPlaying && !viewState.isPaused) {
-      startProgress();
+      console.log('🎬 Auto-starting progress after media load');
+      // Small delay to ensure state is updated
+      setTimeout(() => {
+        startProgress();
+      }, 100);
     }
-  };
+  }, [viewState.isPlaying, viewState.isPaused, startProgress]);
 
-  const handleMediaError = () => {
-    console.error('Media failed to load');
+  const handleMediaError = useCallback(() => {
+    console.error('❌ Media failed to load');
     setIsLoading(false);
     setLoadError(true);
-  };
+    stopProgress();
+  }, [stopProgress]);
 
   // Touch/gesture handling for swipe navigation
   const handleTouchStart = (e: React.TouchEvent) => {
     const touch = e.touches[0];
     setTouchStart({ x: touch.clientX, y: touch.clientY });
+    console.log('👆 Touch start - pausing');
     pauseStory();
   };
 
@@ -110,6 +145,7 @@ const StoryViewer: React.FC = () => {
 
   const handleTouchEnd = () => {
     if (!touchStart || !touchEnd) {
+      console.log('👆 Touch end - resuming');
       resumeStory();
       return;
     }
@@ -121,13 +157,14 @@ const StoryViewer: React.FC = () => {
     // Horizontal swipe
     if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > minSwipeDistance) {
       if (deltaX > 0) {
-        console.log('Swipe right - previous media');
+        console.log('👆 Swipe right - previous media');
         previousMedia();
       } else {
-        console.log('Swipe left - next media');
+        console.log('👆 Swipe left - next media');
         nextMedia();
       }
     } else {
+      console.log('👆 Touch end - resuming');
       resumeStory();
     }
 
@@ -146,10 +183,10 @@ const StoryViewer: React.FC = () => {
     // Only handle center taps (middle third)
     if (tapX > containerWidth / 3 && tapX < (containerWidth * 2) / 3) {
       if (viewState.isPlaying && !viewState.isPaused) {
-        console.log('Tap to pause');
+        console.log('👆 Tap to pause');
         pauseStory();
       } else {
-        console.log('Tap to resume');
+        console.log('👆 Tap to resume');
         resumeStory();
       }
     }
@@ -160,7 +197,7 @@ const StoryViewer: React.FC = () => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (!isStoryViewerOpen) return;
 
-      console.log('Key pressed:', e.key);
+      console.log('⌨️ Key pressed:', e.key);
       switch (e.key) {
         case 'Escape':
           closeStoryViewer();
@@ -186,29 +223,42 @@ const StoryViewer: React.FC = () => {
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [isStoryViewerOpen, viewState.isPlaying, viewState.isPaused, closeStoryViewer, previousMedia, nextMedia, pauseStory, resumeStory]);
 
-  // Progress timer management
+  // Progress timer management - Fixed logic
   useEffect(() => {
-    if (viewState.isPlaying && !viewState.isPaused && !isLoading && !loadError) {
+    console.log('🔄 Progress timer effect triggered:', {
+      isPlaying: viewState.isPlaying,
+      isPaused: viewState.isPaused,
+      isLoading,
+      loadError,
+      hasMedia: !!currentMedia
+    });
+
+    if (viewState.isPlaying && !viewState.isPaused && !isLoading && !loadError && currentMedia) {
+      console.log('▶️ Starting progress timer');
       startProgress();
     } else {
+      console.log('⏸️ Stopping progress timer');
       stopProgress();
     }
 
-    return stopProgress;
-  }, [viewState.isPlaying, viewState.isPaused, isLoading, loadError, startProgress, stopProgress]);
+    return () => {
+      stopProgress();
+    };
+  }, [viewState.isPlaying, viewState.isPaused, isLoading, loadError, currentMedia, startProgress, stopProgress]);
 
   // Reset progress when media changes
   useEffect(() => {
-    console.log('Media changed, resetting progress');
+    console.log('🔄 Media changed, resetting progress and loading state');
     resetProgress();
     setIsLoading(true);
     setLoadError(false);
-  }, [currentMedia?.id, resetProgress]);
+    stopProgress(); // Stop any existing timer
+  }, [currentMedia?.id, resetProgress, stopProgress]);
 
   // Mark story as viewed when opened
   useEffect(() => {
     if (currentStory && isStoryViewerOpen) {
-      console.log('Marking story as viewed:', currentStory.id);
+      console.log('👁️ Marking story as viewed:', currentStory.id);
       markStoryAsViewed(currentStory.id);
     }
   }, [currentStory?.id, isStoryViewerOpen, markStoryAsViewed]);
@@ -216,10 +266,20 @@ const StoryViewer: React.FC = () => {
   // Auto-close if no story or media
   useEffect(() => {
     if (isStoryViewerOpen && (!currentStory || !currentMedia)) {
-      console.log('No story or media available, closing viewer');
+      console.log('❌ No story or media available, closing viewer');
       closeStoryViewer();
     }
   }, [isStoryViewerOpen, currentStory, currentMedia, closeStoryViewer]);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (progressTimerRef.current) {
+        clearInterval(progressTimerRef.current);
+        progressTimerRef.current = null;
+      }
+    };
+  }, []);
 
   if (!isStoryViewerOpen || !currentStory || !currentMedia) {
     return null;
@@ -380,13 +440,15 @@ const StoryViewer: React.FC = () => {
 
       {/* Debug Info (only in development) */}
       {process.env.NODE_ENV === 'development' && (
-        <div className="absolute bottom-4 left-4 z-30 bg-black/70 text-white p-2 rounded text-xs">
+        <div className="absolute bottom-4 left-4 z-30 bg-black/70 text-white p-2 rounded text-xs font-mono">
           <div>Story: {currentStory.barracaName}</div>
           <div>Media: {viewState.currentMediaIndex + 1}/{currentStory.media.length}</div>
           <div>Progress: {Math.round(viewState.progress)}%</div>
-          <div>Playing: {viewState.isPlaying ? 'Yes' : 'No'}</div>
-          <div>Paused: {viewState.isPaused ? 'Yes' : 'No'}</div>
-          <div>Loading: {isLoading ? 'Yes' : 'No'}</div>
+          <div>Playing: {viewState.isPlaying ? '✅' : '❌'}</div>
+          <div>Paused: {viewState.isPaused ? '✅' : '❌'}</div>
+          <div>Loading: {isLoading ? '⏳' : '✅'}</div>
+          <div>Timer: {progressTimerRef.current ? '🟢 Active' : '🔴 Inactive'}</div>
+          <div>Duration: {storyDuration}ms</div>
         </div>
       )}
     </div>
