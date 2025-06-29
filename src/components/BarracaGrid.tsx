@@ -42,9 +42,9 @@ const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
       {barracas.map((barraca) => (
-        <div key={barraca.id} className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transform hover:scale-105 transition-all duration-200">
+        <div key={barraca.id} className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex flex-col h-full">
           {/* Image */}
-          <div className="relative h-48 overflow-hidden">
+          <div className="relative h-48 overflow-hidden flex-shrink-0">
             <img
               src={barraca.images[0]}
               alt={barraca.name}
@@ -99,8 +99,9 @@ const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
             )}
           </div>
 
-          {/* Content */}
-          <div className="p-6">
+          {/* Content - Flexible area that grows */}
+          <div className="p-6 flex flex-col flex-grow">
+            {/* Header Info */}
             <div className="mb-4">
               <h3 className="text-xl font-bold text-gray-900 mb-2">
                 {barraca.name}
@@ -115,6 +116,7 @@ const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
               </div>
             </div>
 
+            {/* Description */}
             <p className="text-gray-600 text-sm mb-4 line-clamp-2">
               {barraca.description}
             </p>
@@ -145,7 +147,7 @@ const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
 
             {/* Amenities */}
             {barraca.amenities.length > 0 && (
-              <div className="mb-4">
+              <div className="mb-6">
                 <div className="flex flex-wrap gap-2">
                   {barraca.amenities.slice(0, 4).map((amenity, index) => {
                     const Icon = getAmenityIcon(amenity);
@@ -163,46 +165,51 @@ const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
               </div>
             )}
 
-            {/* Contact Info & Actions */}
-            <div className="flex items-center justify-between">
-              {/* Contact Icons */}
-              <div className="flex space-x-2">
-                {barraca.contact.phone && (
-                  <a
-                    href={`https://wa.me/${formatPhoneForWhatsApp(barraca.contact.phone)}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-2 bg-green-100 text-green-600 rounded-lg hover:bg-green-200 transition-colors"
-                    title="WhatsApp"
-                  >
-                    <MessageCircle className="h-4 w-4" />
-                  </a>
-                )}
-                {barraca.contact.website && (
-                  <a
-                    href={barraca.contact.website}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-2 bg-pink-100 text-pink-600 rounded-lg hover:bg-pink-200 transition-colors"
-                    title="Instagram"
-                  >
-                    <Instagram className="h-4 w-4" />
-                  </a>
-                )}
-              </div>
-              
-              {/* Minimal Action Buttons */}
-              <div className="flex space-x-2">
-                {barraca.isOpen && (
-                  <button className="flex items-center px-3 py-1.5 text-xs font-medium text-orange-700 bg-orange-50 hover:bg-orange-100 rounded-lg transition-colors">
-                    <Calendar className="h-3 w-3 mr-1" />
-                    Reserve
+            {/* Spacer to push footer to bottom */}
+            <div className="flex-grow"></div>
+
+            {/* Footer - Always at bottom with consistent height */}
+            <div className="mt-auto pt-4 border-t border-gray-100">
+              <div className="flex items-center justify-between h-10">
+                {/* Contact Icons */}
+                <div className="flex space-x-2">
+                  {barraca.contact.phone && (
+                    <a
+                      href={`https://wa.me/${formatPhoneForWhatsApp(barraca.contact.phone)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-2 bg-green-100 text-green-600 rounded-lg hover:bg-green-200 transition-colors"
+                      title="WhatsApp"
+                    >
+                      <MessageCircle className="h-4 w-4" />
+                    </a>
+                  )}
+                  {barraca.contact.website && (
+                    <a
+                      href={barraca.contact.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-2 bg-pink-100 text-pink-600 rounded-lg hover:bg-pink-200 transition-colors"
+                      title="Instagram"
+                    >
+                      <Instagram className="h-4 w-4" />
+                    </a>
+                  )}
+                </div>
+                
+                {/* Action Buttons - Always aligned */}
+                <div className="flex space-x-2">
+                  {barraca.isOpen && (
+                    <button className="flex items-center px-3 py-1.5 text-xs font-medium text-orange-700 bg-orange-50 hover:bg-orange-100 rounded-lg transition-colors">
+                      <Calendar className="h-3 w-3 mr-1" />
+                      Reserve
+                    </button>
+                  )}
+                  <button className="flex items-center px-3 py-1.5 text-xs font-medium text-sky-700 bg-sky-50 hover:bg-sky-100 rounded-lg transition-colors">
+                    <Eye className="h-3 w-3 mr-1" />
+                    Details
                   </button>
-                )}
-                <button className="flex items-center px-3 py-1.5 text-xs font-medium text-sky-700 bg-sky-50 hover:bg-sky-100 rounded-lg transition-colors">
-                  <Eye className="h-3 w-3 mr-1" />
-                  Details
-                </button>
+                </div>
               </div>
             </div>
           </div>
