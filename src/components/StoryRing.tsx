@@ -23,7 +23,19 @@ const StoryRing: React.FC<StoryRingProps> = ({
   const hasStories = barracaStories.length > 0;
   const isViewed = barracaStories.every(story => viewState.viewedStories.has(story.id));
 
-  if (!hasStories) return null;
+  console.log('StoryRing render:', {
+    barracaId,
+    barracaName,
+    hasStories,
+    isViewed,
+    storiesCount: barracaStories.length,
+    storyIds: barracaStories.map(s => s.id)
+  });
+
+  if (!hasStories) {
+    console.log('No stories for barraca:', barracaId);
+    return null;
+  }
 
   const sizeClasses = {
     sm: 'w-12 h-12',
@@ -33,7 +45,11 @@ const StoryRing: React.FC<StoryRingProps> = ({
 
   const handleClick = () => {
     if (barracaStories.length > 0) {
-      openStoryViewer(barracaStories[0].id);
+      const storyToOpen = barracaStories[0];
+      console.log('StoryRing clicked, opening story:', storyToOpen.id);
+      openStoryViewer(storyToOpen.id);
+    } else {
+      console.warn('No stories available to open for barraca:', barracaId);
     }
   };
 
@@ -44,6 +60,7 @@ const StoryRing: React.FC<StoryRingProps> = ({
         className={`relative ${sizeClasses[size]} rounded-full overflow-hidden hover:scale-105 transition-all duration-300 story-ring-hover ${
           isViewed ? 'story-ring-viewed' : 'story-ring-unviewed'
         }`}
+        aria-label={`View ${barracaName} stories`}
       >
         {/* Beach Sunset Gradient Ring - Different gradients for different times/moods */}
         <div className={`absolute inset-0 rounded-full p-0.5 ${
@@ -58,6 +75,11 @@ const StoryRing: React.FC<StoryRingProps> = ({
               className={`w-full h-full object-cover rounded-full transition-all duration-300 ${
                 isViewed ? 'grayscale-[20%] opacity-80' : 'grayscale-0 opacity-100'
               }`}
+              onError={(e) => {
+                console.error('Story ring image failed to load:', imageUrl);
+                // Fallback to a default image or hide the component
+                e.currentTarget.src = 'https://images.pexels.com/photos/1002703/pexels-photo-1002703.jpeg';
+              }}
             />
           </div>
         </div>

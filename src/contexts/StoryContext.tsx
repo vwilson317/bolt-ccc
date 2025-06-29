@@ -45,7 +45,7 @@ export const StoryProvider: React.FC<StoryProviderProps> = ({ children }) => {
     enableStoryBanner: true,
     enableChairReservation: true,
     enablePushNotifications: false,
-    customCtaButtons: true, // Enable configurable CTA buttons
+    customCtaButtons: true,
   });
 
   const [viewState, setViewState] = useState<StoryViewState>({
@@ -60,8 +60,14 @@ export const StoryProvider: React.FC<StoryProviderProps> = ({ children }) => {
 
   // Load stories on mount
   useEffect(() => {
-    const activeStories = getActiveStories();
-    setStories(activeStories);
+    try {
+      const activeStories = getActiveStories();
+      console.log('Loading stories:', activeStories);
+      setStories(activeStories);
+    } catch (error) {
+      console.error('Error loading stories:', error);
+      setStories([]);
+    }
   }, []);
 
   // Load viewed stories from localStorage with error handling
@@ -91,7 +97,6 @@ export const StoryProvider: React.FC<StoryProviderProps> = ({ children }) => {
       }
     } catch (error) {
       console.error('Error loading viewed stories from localStorage:', error);
-      // Clear corrupted data
       localStorage.removeItem('ccc_viewedStories');
       localStorage.removeItem('ccc_viewedMedia');
     }
@@ -115,9 +120,17 @@ export const StoryProvider: React.FC<StoryProviderProps> = ({ children }) => {
   }, [viewState.viewedMedia]);
 
   const openStoryViewer = (storyId: string) => {
+    console.log('Opening story viewer for:', storyId);
+    console.log('Available stories:', stories.map(s => ({ id: s.id, name: s.barracaName })));
+    
     const storyIndex = stories.findIndex(story => story.id === storyId);
+    console.log('Found story at index:', storyIndex);
+    
     if (storyIndex !== -1) {
-      setCurrentStory(stories[storyIndex]);
+      const story = stories[storyIndex];
+      console.log('Opening story:', story);
+      
+      setCurrentStory(story);
       setViewState(prev => ({
         ...prev,
         currentStoryIndex: storyIndex,
@@ -127,10 +140,16 @@ export const StoryProvider: React.FC<StoryProviderProps> = ({ children }) => {
         progress: 0,
       }));
       setIsStoryViewerOpen(true);
+      
+      // Mark story as viewed immediately
+      markStoryAsViewed(storyId);
+    } else {
+      console.error('Story not found:', storyId);
     }
   };
 
   const closeStoryViewer = () => {
+    console.log('Closing story viewer');
     setIsStoryViewerOpen(false);
     setCurrentStory(null);
     setViewState(prev => ({
@@ -142,61 +161,105 @@ export const StoryProvider: React.FC<StoryProviderProps> = ({ children }) => {
   };
 
   const nextStory = () => {
+    console.log('Moving to next story');
     const nextIndex = viewState.currentStoryIndex + 1;
     if (nextIndex < stories.length) {
-      setCurrentStory(stories[nextIndex]);
+      const nextStory = stories[nextIndex];
+      console.log('Next story:', nextStory);
+      
+      setCurrentStory(nextStory);
       setViewState(prev => ({
         ...prev,
         currentStoryIndex: nextIndex,
         currentMediaIndex: 0,
         progress: 0,
+        isPlaying: true,
+        isPaused: false,
       }));
+      
+      // Mark new story as viewed
+      markStoryAsViewed(nextStory.id);
     } else {
+      console.log('No more stories, closing viewer');
       closeStoryViewer();
     }
   };
 
   const previousStory = () => {
+    console.log('Moving to previous story');
     const prevIndex = viewState.currentStoryIndex - 1;
     if (prevIndex >= 0) {
-      setCurrentStory(stories[prevIndex]);
+      const prevStory = stories[prevIndex];
+      console.log('Previous story:', prevStory);
+      
+      setCurrentStory(prevStory);
       setViewState(prev => ({
         ...prev,
         currentStoryIndex: prevIndex,
         currentMediaIndex: 0,
         progress: 0,
+        isPlaying: true,
+        isPaused: false,
       }));
     }
   };
 
   const nextMedia = () => {
-    if (!currentStory) return;
+    if (!currentStory) {
+      console.log('No current story for next media');
+      return;
+    }
+    
+    console.log('Moving to next media. Current index:', viewState.currentMediaIndex, 'Total media:', currentStory.media.length);
     
     const nextMediaIndex = viewState.currentMediaIndex + 1;
     if (nextMediaIndex < currentStory.media.length) {
+      console.log('Moving to media index:', nextMediaIndex);
       setViewState(prev => ({
         ...prev,
         currentMediaIndex: nextMediaIndex,
         progress: 0,
+        isPlaying: true,
+        isPaused: false,
       }));
+      
+      // Mark current media as viewed
+      const currentMedia = currentStory.media[viewState.currentMediaIndex];
+      if (currentMedia) {
+        markMediaAsViewed(currentMedia.id);
+      }
     } else {
+      console.log('No more media, moving to next story');
+      // Mark current media as viewed before moving to next story
+      const currentMedia = currentStory.media[viewState.currentMediaIndex];
+      if (currentMedia) {
+        markMediaAsViewed(currentMedia.id);
+      }
       nextStory();
     }
   };
 
   const previousMedia = () => {
+    console.log('Moving to previous media. Current index:', viewState.currentMediaIndex);
+    
     if (viewState.currentMediaIndex > 0) {
+      const prevMediaIndex = viewState.currentMediaIndex - 1;
+      console.log('Moving to media index:', prevMediaIndex);
       setViewState(prev => ({
         ...prev,
-        currentMediaIndex: prev.currentMediaIndex - 1,
+        currentMediaIndex: prevMediaIndex,
         progress: 0,
+        isPlaying: true,
+        isPaused: false,
       }));
     } else {
+      console.log('At first media, moving to previous story');
       previousStory();
     }
   };
 
   const pauseStory = () => {
+    console.log('Pausing story');
     setViewState(prev => ({
       ...prev,
       isPaused: true,
@@ -205,6 +268,7 @@ export const StoryProvider: React.FC<StoryProviderProps> = ({ children }) => {
   };
 
   const resumeStory = () => {
+    console.log('Resuming story');
     setViewState(prev => ({
       ...prev,
       isPaused: false,
@@ -213,6 +277,7 @@ export const StoryProvider: React.FC<StoryProviderProps> = ({ children }) => {
   };
 
   const markStoryAsViewed = (storyId: string) => {
+    console.log('Marking story as viewed:', storyId);
     setViewState(prev => ({
       ...prev,
       viewedStories: new Set([...prev.viewedStories, storyId])
@@ -225,6 +290,7 @@ export const StoryProvider: React.FC<StoryProviderProps> = ({ children }) => {
   };
 
   const markMediaAsViewed = (mediaId: string) => {
+    console.log('Marking media as viewed:', mediaId);
     setViewState(prev => ({
       ...prev,
       viewedMedia: new Set([...prev.viewedMedia, mediaId])
@@ -232,9 +298,10 @@ export const StoryProvider: React.FC<StoryProviderProps> = ({ children }) => {
   };
 
   const updateProgress = (progress: number) => {
+    const clampedProgress = Math.max(0, Math.min(100, progress));
     setViewState(prev => ({
       ...prev,
-      progress: Math.max(0, Math.min(100, progress))
+      progress: clampedProgress
     }));
   };
 

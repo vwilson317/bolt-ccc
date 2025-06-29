@@ -28,14 +28,30 @@ const StoryViewer: React.FC = () => {
   const mediaRef = useRef<HTMLImageElement | HTMLVideoElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
-  const currentMedia = currentStory?.media[viewState.currentMediaIndex];
+  // Get current media safely
+  const currentMedia = currentStory?.media?.[viewState.currentMediaIndex];
   const isVideo = currentMedia?.type === 'video';
   const storyDuration = isVideo ? (currentMedia?.duration || 10) * 1000 : 5000;
 
+  console.log('StoryViewer render:', {
+    isOpen: isStoryViewerOpen,
+    currentStory: currentStory?.barracaName,
+    currentMediaIndex: viewState.currentMediaIndex,
+    totalMedia: currentStory?.media?.length,
+    currentMedia: currentMedia?.url,
+    isPlaying: viewState.isPlaying,
+    isPaused: viewState.isPaused,
+    progress: viewState.progress
+  });
+
   // Progress management
   const startProgress = useCallback(() => {
-    if (!viewState.isPlaying || viewState.isPaused) return;
+    if (!viewState.isPlaying || viewState.isPaused || !currentMedia) {
+      console.log('Not starting progress:', { isPlaying: viewState.isPlaying, isPaused: viewState.isPaused, hasMedia: !!currentMedia });
+      return;
+    }
 
+    console.log('Starting progress timer for duration:', storyDuration);
     const startTime = Date.now();
     const startProgress = viewState.progress;
 
@@ -44,17 +60,21 @@ const StoryViewer: React.FC = () => {
       const newProgress = startProgress + (elapsed / storyDuration) * 100;
       
       if (newProgress >= 100) {
+        console.log('Progress complete, moving to next media');
         updateProgress(100);
-        markMediaAsViewed(currentMedia?.id || '');
+        if (currentMedia) {
+          markMediaAsViewed(currentMedia.id);
+        }
         nextMedia();
       } else {
         updateProgress(newProgress);
       }
     }, 50);
-  }, [viewState.isPlaying, viewState.isPaused, viewState.progress, storyDuration, currentMedia?.id, updateProgress, markMediaAsViewed, nextMedia]);
+  }, [viewState.isPlaying, viewState.isPaused, viewState.progress, storyDuration, currentMedia, updateProgress, markMediaAsViewed, nextMedia]);
 
   const stopProgress = useCallback(() => {
     if (progressTimerRef.current) {
+      console.log('Stopping progress timer');
       clearInterval(progressTimerRef.current);
       progressTimerRef.current = null;
     }
@@ -62,6 +82,7 @@ const StoryViewer: React.FC = () => {
 
   // Handle media loading
   const handleMediaLoad = () => {
+    console.log('Media loaded successfully');
     setIsLoading(false);
     setLoadError(false);
     if (viewState.isPlaying && !viewState.isPaused) {
@@ -70,6 +91,7 @@ const StoryViewer: React.FC = () => {
   };
 
   const handleMediaError = () => {
+    console.error('Media failed to load');
     setIsLoading(false);
     setLoadError(true);
   };
@@ -99,8 +121,10 @@ const StoryViewer: React.FC = () => {
     // Horizontal swipe
     if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > minSwipeDistance) {
       if (deltaX > 0) {
+        console.log('Swipe right - previous media');
         previousMedia();
       } else {
+        console.log('Swipe left - next media');
         nextMedia();
       }
     } else {
@@ -122,8 +146,10 @@ const StoryViewer: React.FC = () => {
     // Only handle center taps (middle third)
     if (tapX > containerWidth / 3 && tapX < (containerWidth * 2) / 3) {
       if (viewState.isPlaying && !viewState.isPaused) {
+        console.log('Tap to pause');
         pauseStory();
       } else {
+        console.log('Tap to resume');
         resumeStory();
       }
     }
@@ -134,6 +160,7 @@ const StoryViewer: React.FC = () => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (!isStoryViewerOpen) return;
 
+      console.log('Key pressed:', e.key);
       switch (e.key) {
         case 'Escape':
           closeStoryViewer();
@@ -161,17 +188,18 @@ const StoryViewer: React.FC = () => {
 
   // Progress timer management
   useEffect(() => {
-    if (viewState.isPlaying && !viewState.isPaused && !isLoading) {
+    if (viewState.isPlaying && !viewState.isPaused && !isLoading && !loadError) {
       startProgress();
     } else {
       stopProgress();
     }
 
     return stopProgress;
-  }, [viewState.isPlaying, viewState.isPaused, isLoading, startProgress, stopProgress]);
+  }, [viewState.isPlaying, viewState.isPaused, isLoading, loadError, startProgress, stopProgress]);
 
   // Reset progress when media changes
   useEffect(() => {
+    console.log('Media changed, resetting progress');
     resetProgress();
     setIsLoading(true);
     setLoadError(false);
@@ -180,9 +208,18 @@ const StoryViewer: React.FC = () => {
   // Mark story as viewed when opened
   useEffect(() => {
     if (currentStory && isStoryViewerOpen) {
+      console.log('Marking story as viewed:', currentStory.id);
       markStoryAsViewed(currentStory.id);
     }
   }, [currentStory?.id, isStoryViewerOpen, markStoryAsViewed]);
+
+  // Auto-close if no story or media
+  useEffect(() => {
+    if (isStoryViewerOpen && (!currentStory || !currentMedia)) {
+      console.log('No story or media available, closing viewer');
+      closeStoryViewer();
+    }
+  }, [isStoryViewerOpen, currentStory, currentMedia, closeStoryViewer]);
 
   if (!isStoryViewerOpen || !currentStory || !currentMedia) {
     return null;
@@ -213,7 +250,7 @@ const StoryViewer: React.FC = () => {
         <div className="flex items-center space-x-3 text-white">
           <div className="w-8 h-8 rounded-full border-2 border-gradient-to-r from-orange-400 to-pink-500 overflow-hidden">
             <img
-              src={currentStory.media[0].url}
+              src={currentStory.media[0]?.url || currentMedia.url}
               alt={currentStory.barracaName}
               className="w-full h-full object-cover"
             />
@@ -295,27 +332,31 @@ const StoryViewer: React.FC = () => {
         )}
 
         {/* Media Content */}
-        {isVideo ? (
-          <video
-            ref={mediaRef as React.RefObject<HTMLVideoElement>}
-            src={currentMedia.url}
-            className="max-w-full max-h-full object-contain"
-            autoPlay
-            muted={isMuted}
-            playsInline
-            onLoadedData={handleMediaLoad}
-            onError={handleMediaError}
-            onEnded={nextMedia}
-          />
-        ) : (
-          <img
-            ref={mediaRef as React.RefObject<HTMLImageElement>}
-            src={currentMedia.url}
-            alt={currentMedia.caption || ''}
-            className="max-w-full max-h-full object-contain"
-            onLoad={handleMediaLoad}
-            onError={handleMediaError}
-          />
+        {!loadError && (
+          <>
+            {isVideo ? (
+              <video
+                ref={mediaRef as React.RefObject<HTMLVideoElement>}
+                src={currentMedia.url}
+                className="max-w-full max-h-full object-contain"
+                autoPlay
+                muted={isMuted}
+                playsInline
+                onLoadedData={handleMediaLoad}
+                onError={handleMediaError}
+                onEnded={nextMedia}
+              />
+            ) : (
+              <img
+                ref={mediaRef as React.RefObject<HTMLImageElement>}
+                src={currentMedia.url}
+                alt={currentMedia.caption || ''}
+                className="max-w-full max-h-full object-contain"
+                onLoad={handleMediaLoad}
+                onError={handleMediaError}
+              />
+            )}
+          </>
         )}
       </div>
 
@@ -334,6 +375,18 @@ const StoryViewer: React.FC = () => {
           <div className="bg-gradient-to-r from-orange-500/20 to-pink-500/20 backdrop-blur-sm rounded-full p-4 border border-white/20">
             <Play className="h-8 w-8 text-white fill-current" />
           </div>
+        </div>
+      )}
+
+      {/* Debug Info (only in development) */}
+      {process.env.NODE_ENV === 'development' && (
+        <div className="absolute bottom-4 left-4 z-30 bg-black/70 text-white p-2 rounded text-xs">
+          <div>Story: {currentStory.barracaName}</div>
+          <div>Media: {viewState.currentMediaIndex + 1}/{currentStory.media.length}</div>
+          <div>Progress: {Math.round(viewState.progress)}%</div>
+          <div>Playing: {viewState.isPlaying ? 'Yes' : 'No'}</div>
+          <div>Paused: {viewState.isPaused ? 'Yes' : 'No'}</div>
+          <div>Loading: {isLoading ? 'Yes' : 'No'}</div>
         </div>
       )}
     </div>
