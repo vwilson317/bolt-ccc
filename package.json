@@ -4,10 +4,19 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "VITE_APP_ENV=development vite",
+    "dev:qa": "VITE_APP_ENV=qa vite",
+    "dev:uat": "VITE_APP_ENV=uat vite",
     "build": "vite build",
+    "build:dev": "VITE_APP_ENV=development vite build",
+    "build:qa": "VITE_APP_ENV=qa vite build",
+    "build:uat": "VITE_APP_ENV=uat vite build",
+    "build:prod": "VITE_APP_ENV=production vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "preview:qa": "VITE_APP_ENV=qa vite preview",
+    "preview:uat": "VITE_APP_ENV=uat vite preview",
+    "preview:prod": "VITE_APP_ENV=production vite preview"
   },
   "dependencies": {
     "lucide-react": "^0.344.0",

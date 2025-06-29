@@ -5,11 +5,24 @@ import { StoryProvider } from './contexts/StoryContext';
 import Header from './components/Header';
 import WeatherBar from './components/WeatherBar';
 import StoryViewer from './components/StoryViewer';
+import EnvironmentBadge from './components/EnvironmentBadge';
+import EnvironmentInfo from './components/EnvironmentInfo';
 import Home from './pages/Home';
 import Discover from './pages/Discover';
 import About from './pages/About';
 import Admin from './pages/Admin';
+import { logEnvironmentInfo, checkSupabaseConnection } from './lib/supabase';
 import './i18n';
+
+// Log environment info on app start
+logEnvironmentInfo();
+
+// Check Supabase connection
+checkSupabaseConnection().then(connected => {
+  if (!connected) {
+    console.warn('⚠️ Supabase connection check failed - app may not function properly');
+  }
+});
 
 function App() {
   return (
@@ -28,6 +41,8 @@ function App() {
               </Routes>
             </main>
             <StoryViewer />
+            <EnvironmentBadge />
+            <EnvironmentInfo />
           </div>
         </Router>
       </StoryProvider>

@@ -1,14 +1,43 @@
 import { createClient } from '@supabase/supabase-js'
 import type { Database } from '../types/database'
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
-
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error('Missing Supabase environment variables. Please check your .env file.')
+// Environment configuration
+const getEnvironmentConfig = () => {
+  const env = import.meta.env.VITE_APP_ENV || 'development'
+  
+  const configs = {
+    development: {
+      url: import.meta.env.VITE_SUPABASE_URL_DEV || import.meta.env.VITE_SUPABASE_URL,
+      anonKey: import.meta.env.VITE_SUPABASE_ANON_KEY_DEV || import.meta.env.VITE_SUPABASE_ANON_KEY,
+      schema: 'dev'
+    },
+    qa: {
+      url: import.meta.env.VITE_SUPABASE_URL_QA || import.meta.env.VITE_SUPABASE_URL,
+      anonKey: import.meta.env.VITE_SUPABASE_ANON_KEY_QA || import.meta.env.VITE_SUPABASE_ANON_KEY,
+      schema: 'qa'
+    },
+    uat: {
+      url: import.meta.env.VITE_SUPABASE_URL_UAT || import.meta.env.VITE_SUPABASE_URL,
+      anonKey: import.meta.env.VITE_SUPABASE_ANON_KEY_UAT || import.meta.env.VITE_SUPABASE_ANON_KEY,
+      schema: 'uat'
+    },
+    production: {
+      url: import.meta.env.VITE_SUPABASE_URL_PROD || import.meta.env.VITE_SUPABASE_URL,
+      anonKey: import.meta.env.VITE_SUPABASE_ANON_KEY_PROD || import.meta.env.VITE_SUPABASE_ANON_KEY,
+      schema: 'prod'
+    }
+  }
+  
+  return configs[env as keyof typeof configs] || configs.development
 }
 
-export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
+const config = getEnvironmentConfig()
+
+if (!config.url || !config.anonKey) {
+  throw new Error(`Missing Supabase environment variables for ${import.meta.env.VITE_APP_ENV || 'development'} environment. Please check your .env file.`)
+}
+
+export const supabase = createClient<Database>(config.url, config.anonKey, {
   auth: {
     persistSession: true,
     autoRefreshToken: true,
@@ -18,11 +47,25 @@ export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
       eventsPerSecond: 10,
     },
   },
+  db: {
+    schema: config.schema
+  }
 })
+
+// Environment info for debugging
+export const environmentInfo = {
+  environment: import.meta.env.VITE_APP_ENV || 'development',
+  schema: config.schema,
+  url: config.url,
+  isDevelopment: config.schema === 'dev',
+  isQA: config.schema === 'qa',
+  isUAT: config.schema === 'uat',
+  isProduction: config.schema === 'prod'
+}
 
 // Helper function to handle Supabase errors
 export const handleSupabaseError = (error: any, context: string) => {
-  console.error(`Supabase error in ${context}:`, error)
+  console.error(`Supabase error in ${context} (${environmentInfo.environment}):`, error)
   
   if (error?.code === 'PGRST116') {
     throw new Error('No data found')
@@ -44,13 +87,14 @@ export const checkSupabaseConnection = async (): Promise<boolean> => {
       .limit(1)
     
     if (error) {
-      console.error('Supabase connection check failed:', error)
+      console.error(`Supabase connection check failed (${environmentInfo.environment}):`, error)
       return false
     }
     
+    console.log(`✅ Connected to Supabase ${environmentInfo.environment} environment (${environmentInfo.schema} schema)`)
     return true
   } catch (error) {
-    console.error('Supabase connection check failed:', error)
+    console.error(`Supabase connection check failed (${environmentInfo.environment}):`, error)
     return false
   }
 }
@@ -58,12 +102,12 @@ export const checkSupabaseConnection = async (): Promise<boolean> => {
 // Real-time subscription helpers
 export const subscribeToBarracas = (callback: (payload: any) => void) => {
   return supabase
-    .channel('barracas-changes')
+    .channel(`barracas-changes-${environmentInfo.schema}`)
     .on(
       'postgres_changes',
       {
         event: '*',
-        schema: 'public',
+        schema: environmentInfo.schema,
         table: 'barracas'
       },
       callback
@@ -73,12 +117,12 @@ export const subscribeToBarracas = (callback: (payload: any) => void) => {
 
 export const subscribeToStories = (callback: (payload: any) => void) => {
   return supabase
-    .channel('stories-changes')
+    .channel(`stories-changes-${environmentInfo.schema}`)
     .on(
       'postgres_changes',
       {
         event: '*',
-        schema: 'public',
+        schema: environmentInfo.schema,
         table: 'stories'
       },
       callback
@@ -91,4 +135,14 @@ export const unsubscribeFromChannel = (subscription: any) => {
   if (subscription) {
     supabase.removeChannel(subscription)
   }
+}
+
+// Environment-specific logging
+export const logEnvironmentInfo = () => {
+  console.log('🌍 Environment Configuration:', {
+    environment: environmentInfo.environment,
+    schema: environmentInfo.schema,
+    isDevelopment: environmentInfo.isDevelopment,
+    isProduction: environmentInfo.isProduction
+  })
 }
