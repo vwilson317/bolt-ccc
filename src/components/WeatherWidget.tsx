@@ -1,0 +1,139 @@
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import { Cloud, Droplets, Wind, Thermometer, RefreshCw } from 'lucide-react';
+import { useApp } from '../contexts/AppContext';
+
+const WeatherWidget: React.FC = () => {
+  const { t } = useTranslation();
+  const { weather, isLoading, refreshWeather } = useApp();
+
+  if (!weather) {
+    return (
+      <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 animate-pulse">
+        <div className="h-6 bg-white/20 rounded mb-4"></div>
+        <div className="h-4 bg-white/20 rounded mb-2"></div>
+        <div className="h-4 bg-white/20 rounded w-2/3"></div>
+      </div>
+    );
+  }
+
+  const getBeachConditionColor = (condition: string) => {
+    switch (condition) {
+      case 'excellent':
+        return 'bg-green-500';
+      case 'good':
+        return 'bg-blue-500';
+      case 'fair':
+        return 'bg-yellow-500';
+      case 'poor':
+        return 'bg-red-500';
+      default:
+        return 'bg-gray-500';
+    }
+  };
+
+  const getBeachConditionText = (condition: string) => {
+    switch (condition) {
+      case 'excellent':
+        return 'Excellent for beach activities';
+      case 'good':
+        return 'Good beach conditions';
+      case 'fair':
+        return 'Fair conditions, some limitations';
+      case 'poor':
+        return 'Poor conditions, consider indoor activities';
+      default:
+        return 'Unknown conditions';
+    }
+  };
+
+  return (
+    <div className="bg-gradient-to-br from-sky-400 to-blue-500 rounded-2xl p-6 text-white shadow-lg">
+      <div className="flex justify-between items-start mb-6">
+        <div>
+          <h3 className="text-xl font-semibold mb-1">Rio de Janeiro</h3>
+          <p className="text-sky-100 text-sm">{t('weather.current')}</p>
+        </div>
+        <button
+          onClick={refreshWeather}
+          disabled={isLoading}
+          className="p-2 rounded-lg bg-white/20 hover:bg-white/30 transition-colors disabled:opacity-50"
+        >
+          <RefreshCw className={`h-5 w-5 ${isLoading ? 'animate-spin' : ''}`} />
+        </button>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Temperature */}
+        <div className="col-span-1 md:col-span-1">
+          <div className="flex items-center mb-2">
+            <Thermometer className="h-5 w-5 mr-2 text-sky-200" />
+            <span className="text-sm text-sky-100">Temperature</span>
+          </div>
+          <div className="text-3xl font-bold">
+            {weather.temperature}°C
+          </div>
+          <div className="text-sm text-sky-200">
+            {t('weather.feelsLike')} {weather.feelsLike}°C
+          </div>
+        </div>
+
+        {/* Weather Details */}
+        <div className="col-span-1 md:col-span-1 space-y-3">
+          <div className="flex items-center">
+            <Droplets className="h-4 w-4 mr-2 text-sky-200" />
+            <span className="text-sm">{t('weather.humidity')}: {weather.humidity}%</span>
+          </div>
+          <div className="flex items-center">
+            <Wind className="h-4 w-4 mr-2 text-sky-200" />
+            <span className="text-sm">{t('weather.wind')}: {weather.windSpeed} km/h</span>
+          </div>
+          <div className="flex items-center">
+            <Cloud className="h-4 w-4 mr-2 text-sky-200" />
+            <span className="text-sm">{weather.description}</span>
+          </div>
+        </div>
+
+        {/* Beach Conditions */}
+        <div className="col-span-1 md:col-span-1">
+          <div className="text-sm text-sky-100 mb-2">
+            {t('weather.beachConditions')}
+          </div>
+          <div className={`inline-flex items-center px-3 py-2 rounded-full text-sm font-medium text-white ${getBeachConditionColor(weather.beachConditions)}`}>
+            <div className="w-2 h-2 rounded-full bg-white mr-2" />
+            {weather.beachConditions.charAt(0).toUpperCase() + weather.beachConditions.slice(1)}
+          </div>
+          <div className="text-xs text-sky-200 mt-1">
+            {getBeachConditionText(weather.beachConditions)}
+          </div>
+        </div>
+      </div>
+
+      {/* Beach Recommendation */}
+      <div className="mt-6 p-4 bg-white/10 rounded-xl border border-white/20">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="font-medium mb-1">
+              {weather.beachConditions === 'excellent' || weather.beachConditions === 'good' 
+                ? '🏖️ Perfect beach day!' 
+                : weather.beachConditions === 'fair'
+                ? '⛅ Decent beach conditions'
+                : '🌧️ Consider indoor alternatives'
+              }
+            </p>
+            <p className="text-sm text-sky-100">
+              {weather.beachConditions === 'excellent' || weather.beachConditions === 'good'
+                ? 'Great weather for visiting your favorite barraca'
+                : weather.beachConditions === 'fair'
+                ? 'Still good for a quick beach visit'
+                : 'Check back later for better conditions'
+              }
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default WeatherWidget;

@@ -1,0 +1,74 @@
+{
+  "nav": {
+    "home": "Inicio",
+    "discover": "Encontrar Barracas",
+    "about": "Acerca de",
+    "admin": "Admin"
+  },
+  "hero": {
+    "title": "Tu Barraca Favorita Te Espera",
+    "subtitle": "Verifica si tu lugar preferido está abierto, reserva sillas y recibe actualizaciones exclusivas",
+    "cta": "Encontrar Mi Barraca",
+    "earlyAccess": "Unirse al Programa"
+  },
+  "weather": {
+    "current": "Clima Actual",
+    "feelsLike": "Sensación térmica",
+    "humidity": "Humedad",
+    "wind": "Viento",
+    "beachConditions": "Condiciones de la Playa"
+  },
+  "search": {
+    "placeholder": "Buscar por nombre, número o barrio...",
+    "filters": "Filtros",
+    "openNow": "Abierto Ahora",
+    "location": "Ubicación",
+    "clear": "Limpiar Filtros"
+  },
+  "barraca": {
+    "open": "Abierto",
+    "closed": "Cerrado",
+    "typicalHours": "Horario",
+    "location": "Ubicación",
+    "menuPreview": "Especialidades",
+    "comingSoon": "Próximamente",
+    "weatherDependent": "Dependiente del Clima",
+    "viewDetails": "Ver Detalles",
+    "reserveChairs": "Reservar Sillas",
+    "loyaltyPerks": "Beneficios de Miembro"
+  },
+  "admin": {
+    "login": "Inicio de Sesión Admin",
+    "dashboard": "Panel de Admin",
+    "email": "Correo",
+    "password": "Contraseña",
+    "signIn": "Iniciar Sesión",
+    "addBarraca": "Agregar Nueva Barraca",
+    "editBarraca": "Editar Barraca",
+    "deleteBarraca": "Eliminar Barraca",
+    "manageBarracas": "Gestionar Barracas"
+  },
+  "email": {
+    "subscribe": "Unirse al Programa de Lealtad",
+    "placeholder": "Ingresa tu email para actualizaciones",
+    "submit": "Unirse Ahora",
+    "success": "¡Bienvenido a Carioca Coastal Club!",
+    "error": "Por favor, ingresa una dirección de correo válida"
+  },
+  "loyalty": {
+    "benefits": "Beneficios de Miembro",
+    "chairReservation": "Reserva de Sillas",
+    "exclusiveOffers": "Ofertas Exclusivas",
+    "newBarracas": "Nuevas Barracas"
+  },
+  "common": {
+    "loading": "Cargando...",
+    "error": "Algo salió mal",
+    "retry": "Intentar de Nuevo",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "add": "Agregar"
+  }
+}

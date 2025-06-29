@@ -1,0 +1,257 @@
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import { Heart, Users, MapPin, Smartphone, MessageCircle, Instagram, Calendar, Gift } from 'lucide-react';
+import EmailSubscription from '../components/EmailSubscription';
+
+const About: React.FC = () => {
+  const { t } = useTranslation();
+
+  const values = [
+    {
+      icon: Heart,
+      title: 'Passion for Rio',
+      description: 'We love Rio de Janeiro and want to connect beach lovers with their favorite barracas.'
+    },
+    {
+      icon: Users,
+      title: 'Community First', 
+      description: 'Building loyalty between customers and barracas through better communication and service.'
+    },
+    {
+      icon: Calendar,
+      title: 'Convenience',
+      description: 'Reserve chairs, get updates, and enjoy exclusive perks at participating barracas.'
+    },
+    {
+      icon: Gift,
+      title: 'Member Benefits',
+      description: 'Exclusive offers, priority service, and special events for loyal customers.'
+    }
+  ];
+
+  const stats = [
+    { number: '50+', label: 'Partner Barracas' },
+    { number: '5K+', label: 'Active Members' },
+    { number: '24/7', label: 'Status Updates' },
+    { number: '12', label: 'Neighborhoods' }
+  ];
+
+  const team = [
+    {
+      name: 'Carlos Silva',
+      role: 'Founder & CEO',
+      bio: 'Born and raised in Rio, Carlos has spent over 20 years building relationships with barraca owners across the city.',
+      image: 'https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg'
+    },
+    {
+      name: 'Ana Santos', 
+      role: 'Head of Partnerships',
+      bio: 'Former barraca manager with deep connections to Rio\'s beach vendor community and customer service expertise.',
+      image: 'https://images.pexels.com/photos/1181690/pexels-photo-1181690.jpeg'
+    },
+    {
+      name: 'Miguel Rodriguez',
+      role: 'Lead Developer',
+      bio: 'Tech enthusiast focused on creating seamless experiences for both barraca owners and their loyal customers.',
+      image: 'https://images.pexels.com/photos/1181319/pexels-photo-1181319.jpeg'
+    }
+  ];
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Hero Section */}
+      <section className="bg-gradient-to-r from-sky-500 to-blue-600 pt-16 pb-20">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
+            About Carioca Coastal Club
+          </h1>
+          <p className="text-xl text-sky-100 max-w-3xl mx-auto leading-relaxed">
+            We're the loyalty platform connecting Rio's beach lovers with their favorite barracas. 
+            Check if your spot is open, reserve chairs, and enjoy exclusive member benefits.
+          </p>
+        </div>
+      </section>
+
+      {/* Mission Section */}
+      <section className="py-16 bg-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-8">
+            Our Mission
+          </h2>
+          <p className="text-lg text-gray-600 leading-relaxed mb-8">
+            To strengthen the bond between Rio's beach community and their favorite barracas. 
+            We believe loyal customers deserve better service, and barraca owners deserve loyal customers 
+            who keep coming back.
+          </p>
+          <div className="bg-gradient-to-r from-sky-50 to-blue-50 rounded-2xl p-8 border border-sky-100">
+            <p className="text-xl font-semibold text-gray-900 mb-4">
+              "Every barraca has its regulars - we help strengthen those relationships."
+            </p>
+            <p className="text-gray-600">
+              Through chair reservations, real-time updates, and exclusive member perks, 
+              we make it easier for you to enjoy your favorite beach spots while helping 
+              barracas build stronger customer loyalty.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Stats Section */}
+      <section className="py-16 bg-gradient-to-r from-sky-500 to-blue-600">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+            {stats.map((stat, index) => (
+              <div key={index}>
+                <div className="text-4xl md:text-5xl font-bold text-white mb-2">
+                  {stat.number}
+                </div>
+                <div className="text-sky-100 font-medium">
+                  {stat.label}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Values Section */}
+      <section className="py-16 bg-gray-50">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              What We Stand For
+            </h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              The values that drive our loyalty platform and community
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {values.map((value, index) => {
+              const Icon = value.icon;
+              return (
+                <div key={index} className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-200">
+                  <div className="bg-gradient-to-r from-sky-500 to-blue-600 w-12 h-12 rounded-xl flex items-center justify-center mb-4">
+                    <Icon className="h-6 w-6 text-white" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                    {value.title}
+                  </h3>
+                  <p className="text-gray-600 leading-relaxed">
+                    {value.description}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Team Section */}
+      <section className="py-16 bg-white">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Meet Our Team
+            </h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Beach enthusiasts and tech experts working to strengthen Rio's beach community
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {team.map((member, index) => (
+              <div key={index} className="text-center">
+                <div className="mb-6">
+                  <img
+                    src={member.image}
+                    alt={member.name}
+                    className="w-32 h-32 rounded-full mx-auto object-cover shadow-lg"
+                  />
+                </div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-1">
+                  {member.name}
+                </h3>
+                <p className="text-sky-600 font-medium mb-3">
+                  {member.role}
+                </p>
+                <p className="text-gray-600 leading-relaxed">
+                  {member.bio}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Contact Section */}
+      <section className="py-16 bg-gradient-to-b from-gray-50 to-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Get in Touch
+            </h2>
+            <p className="text-lg text-gray-600">
+              Questions about membership? Want to partner with us? We'd love to hear from you.
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+            <div className="bg-white rounded-2xl p-8 shadow-lg">
+              <div className="flex items-center mb-4">
+                <div className="bg-green-100 p-3 rounded-lg mr-4">
+                  <MessageCircle className="h-6 w-6 text-green-600" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-gray-900">WhatsApp</h3>
+                  <p className="text-gray-600">Quick responses via WhatsApp</p>
+                </div>
+              </div>
+              <a 
+                href="https://wa.me/5521999990000" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-green-600 font-medium hover:text-green-700"
+              >
+                +55 21 99999-0000
+              </a>
+            </div>
+            
+            <div className="bg-white rounded-2xl p-8 shadow-lg">
+              <div className="flex items-center mb-4">
+                <div className="bg-pink-100 p-3 rounded-lg mr-4">
+                  <Instagram className="h-6 w-6 text-pink-600" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-gray-900">Instagram</h3>
+                  <p className="text-gray-600">Follow us for daily updates</p>
+                </div>
+              </div>
+              <a 
+                href="https://instagram.com/cariocacoastal" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-pink-600 font-medium hover:text-pink-700"
+              >
+                @cariocacoastal
+              </a>
+            </div>
+          </div>
+
+          {/* Newsletter Signup */}
+          <div className="bg-gradient-to-r from-sky-500 to-blue-600 rounded-2xl p-8 text-center">
+            <h3 className="text-2xl font-bold text-white mb-4">
+              Join Our Community
+            </h3>
+            <p className="text-sky-100 mb-6">
+              Get member updates, chair reservation alerts, and exclusive offers from partner barracas
+            </p>
+            <EmailSubscription />
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+};
+
+export default About;

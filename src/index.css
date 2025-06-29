@@ -1,0 +1,185 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Hide scrollbar for story carousel */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Line clamp utility */
+.line-clamp-2 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+/* Smooth transitions for story elements */
+.story-transition {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Beach-themed gradient for story rings */
+.story-ring-gradient {
+  background: linear-gradient(45deg, #f97316, #f59e0b, #eab308, #84cc16, #06b6d4, #3b82f6);
+  background-size: 300% 300%;
+  animation: beach-gradient-shift 4s ease infinite;
+}
+
+@keyframes beach-gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Beach sunset gradient animation */
+@keyframes sunset-glow {
+  0%, 100% { 
+    background: linear-gradient(45deg, #f97316, #f59e0b, #eab308);
+  }
+  50% { 
+    background: linear-gradient(45deg, #ec4899, #f97316, #f59e0b);
+  }
+}
+
+.sunset-gradient {
+  animation: sunset-glow 3s ease-in-out infinite;
+}
+
+/* Touch feedback for story interactions */
+.story-touch-feedback {
+  transition: transform 0.1s ease;
+}
+
+.story-touch-feedback:active {
+  transform: scale(0.95);
+}
+
+/* Wave-like progress bar animation */
+.story-progress {
+  transition: width 0.1s linear;
+  background: linear-gradient(90deg, #f97316, #f59e0b, #eab308);
+}
+
+/* Fade in animation for story content */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* Story viewer backdrop blur with beach theme */
+.story-backdrop {
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  background: linear-gradient(135deg, rgba(249, 115, 22, 0.1), rgba(236, 72, 153, 0.1));
+}
+
+/* Custom focus styles for accessibility */
+.story-focus:focus {
+  outline: 2px solid #f97316;
+  outline-offset: 2px;
+}
+
+/* Loading spinner for story media with beach colors */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.story-loading {
+  animation: spin 1s linear infinite;
+}
+
+/* Smooth drag cursor for story carousel */
+.cursor-grab {
+  cursor: grab;
+}
+
+.cursor-grab:active {
+  cursor: grabbing;
+}
+
+/* Prevent text selection during drag */
+.select-none {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Enhanced story ring animations with beach theme */
+.story-ring-viewed {
+  opacity: 0.6;
+  filter: grayscale(20%);
+}
+
+.story-ring-unviewed {
+  opacity: 1;
+  filter: none;
+}
+
+/* Smooth hover effects for story rings */
+.story-ring-hover {
+  transition: transform 0.3s ease, opacity 0.3s ease, filter 0.3s ease, box-shadow 0.3s ease;
+}
+
+.story-ring-hover:hover {
+  transform: scale(1.05);
+  filter: brightness(1.1);
+}
+
+/* Beach-themed glow effects */
+.beach-glow {
+  box-shadow: 0 0 20px rgba(249, 115, 22, 0.3);
+}
+
+.beach-glow-pink {
+  box-shadow: 0 0 20px rgba(236, 72, 153, 0.3);
+}
+
+/* Ripple effect for story interactions */
+@keyframes ripple {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+.ripple-effect {
+  position: relative;
+  overflow: hidden;
+}
+
+.ripple-effect::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(249, 115, 22, 0.5);
+  transform: translate(-50%, -50%);
+  animation: ripple 0.6s linear;
+}

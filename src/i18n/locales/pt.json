@@ -1,0 +1,74 @@
+{
+  "nav": {
+    "home": "Início",
+    "discover": "Encontrar Barracas",
+    "about": "Sobre",
+    "admin": "Admin"
+  },
+  "hero": {
+    "title": "Sua Barraca Favorita Te Espera",
+    "subtitle": "Veja se seu local preferido está aberto, reserve cadeiras e receba atualizações exclusivas",
+    "cta": "Encontrar Minha Barraca",
+    "earlyAccess": "Entrar no Programa"
+  },
+  "weather": {
+    "current": "Clima Atual",
+    "feelsLike": "Sensação térmica",
+    "humidity": "Umidade",
+    "wind": "Vento",
+    "beachConditions": "Condições da Praia"
+  },
+  "search": {
+    "placeholder": "Buscar por nome, número ou bairro...",
+    "filters": "Filtros",
+    "openNow": "Aberto Agora",
+    "location": "Localização",
+    "clear": "Limpar Filtros"
+  },
+  "barraca": {
+    "open": "Aberto",
+    "closed": "Fechado",
+    "typicalHours": "Horário",
+    "location": "Localização",
+    "menuPreview": "Especialidades",
+    "comingSoon": "Em Breve",
+    "weatherDependent": "Dependente do Clima",
+    "viewDetails": "Ver Detalhes",
+    "reserveChairs": "Reservar Cadeiras",
+    "loyaltyPerks": "Benefícios de Membro"
+  },
+  "admin": {
+    "login": "Login Admin",
+    "dashboard": "Painel Admin",
+    "email": "Email",
+    "password": "Senha",
+    "signIn": "Entrar",
+    "addBarraca": "Adicionar Nova Barraca",
+    "editBarraca": "Editar Barraca",
+    "deleteBarraca": "Excluir Barraca",
+    "manageBarracas": "Gerenciar Barracas"
+  },
+  "email": {
+    "subscribe": "Entrar no Programa de Fidelidade",
+    "placeholder": "Digite seu email para atualizações",
+    "submit": "Entrar Agora",
+    "success": "Bem-vindo ao Carioca Coastal Club!",
+    "error": "Por favor, digite um endereço de email válido"
+  },
+  "loyalty": {
+    "benefits": "Benefícios de Membro",
+    "chairReservation": "Reserva de Cadeiras",
+    "exclusiveOffers": "Ofertas Exclusivas",
+    "newBarracas": "Novas Barracas"
+  },
+  "common": {
+    "loading": "Carregando...",
+    "error": "Algo deu errado",
+    "retry": "Tentar Novamente",
+    "save": "Salvar",
+    "cancel": "Cancelar",
+    "delete": "Excluir",
+    "edit": "Editar",
+    "add": "Adicionar"
+  }
+}

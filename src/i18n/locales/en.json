@@ -1,0 +1,74 @@
+{
+  "nav": {
+    "home": "Home",
+    "discover": "Find Barracas",
+    "about": "About",
+    "admin": "Admin"
+  },
+  "hero": {
+    "title": "Your Favorite Barraca Awaits",
+    "subtitle": "Check if your go-to spot is open, reserve chairs, and get exclusive member updates",
+    "cta": "Find My Barraca",
+    "earlyAccess": "Join Loyalty Program"
+  },
+  "weather": {
+    "current": "Current Weather",
+    "feelsLike": "Feels like",
+    "humidity": "Humidity",
+    "wind": "Wind",
+    "beachConditions": "Beach Conditions"
+  },
+  "search": {
+    "placeholder": "Search by name, number, or neighborhood...",
+    "filters": "Filters",
+    "openNow": "Open Now",
+    "location": "Location",
+    "clear": "Clear Filters"
+  },
+  "barraca": {
+    "open": "Open",
+    "closed": "Closed",
+    "typicalHours": "Hours",
+    "location": "Location",
+    "menuPreview": "Specialties",
+    "comingSoon": "Coming Soon",
+    "weatherDependent": "Weather Dependent",
+    "viewDetails": "View Details",
+    "reserveChairs": "Reserve Chairs",
+    "loyaltyPerks": "Member Perks Available"
+  },
+  "admin": {
+    "login": "Admin Login",
+    "dashboard": "Admin Dashboard",
+    "email": "Email",
+    "password": "Password",
+    "signIn": "Sign In",
+    "addBarraca": "Add New Barraca",
+    "editBarraca": "Edit Barraca",
+    "deleteBarraca": "Delete Barraca",
+    "manageBarracas": "Manage Barracas"
+  },
+  "email": {
+    "subscribe": "Join Loyalty Program",
+    "placeholder": "Enter your email for member updates",
+    "submit": "Join Now",
+    "success": "Welcome to Carioca Coastal Club!",
+    "error": "Please enter a valid email address"
+  },
+  "loyalty": {
+    "benefits": "Member Benefits",
+    "chairReservation": "Chair Reservation",
+    "exclusiveOffers": "Exclusive Offers",
+    "newBarracas": "New Barraca Updates"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "retry": "Try Again",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add"
+  }
+}
