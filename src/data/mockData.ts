@@ -1,4 +1,5 @@
 import { Barraca, WeatherData, CTAButtonConfig } from '../types';
+import { barracaUruguayData } from './barracaUruguayData';
 
 // Sample custom CTA button configurations
 const sampleCTAButtons: CTAButtonConfig[] = [
@@ -57,6 +58,8 @@ const sampleCTAButtons: CTAButtonConfig[] = [
 ];
 
 export const mockBarracas: Barraca[] = [
+  // Include Barraca Uruguay as the first entry
+  barracaUruguayData,
   {
     id: '1',
     name: 'Barraca do Zeca',
