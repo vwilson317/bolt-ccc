@@ -28,8 +28,7 @@ const StoryViewer: React.FC = () => {
   const progressTimerRef = useRef<NodeJS.Timeout | null>(null);
   const mediaRef = useRef<HTMLImageElement | HTMLVideoElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const startTimeRef = useRef<number>(0);
-  const lastProgressRef = useRef<number>(0);
+  const isTimerActiveRef = useRef(false);
 
   // Get current media safely
   const currentMedia = currentStory?.media?.[viewState.currentMediaIndex];
@@ -47,7 +46,8 @@ const StoryViewer: React.FC = () => {
     progress: viewState.progress,
     isLoading,
     loadError,
-    storyDuration
+    storyDuration,
+    isTimerActive: isTimerActiveRef.current
   });
 
   // Clear timer function
@@ -56,15 +56,22 @@ const StoryViewer: React.FC = () => {
       console.log('🛑 Clearing timer');
       clearInterval(progressTimerRef.current);
       progressTimerRef.current = null;
+      isTimerActiveRef.current = false;
     }
   }, []);
 
-  // Start progress timer with better state management
+  // Start progress timer - simplified and more reliable
   const startTimer = useCallback(() => {
+    // Don't start if already active
+    if (isTimerActiveRef.current) {
+      console.log('⚠️ Timer already active, skipping start');
+      return;
+    }
+
     // Clear any existing timer first
     clearTimer();
 
-    // Validate conditions
+    // Validate all conditions
     if (!viewState.isPlaying || viewState.isPaused || isLoading || loadError || !currentMedia) {
       console.log('❌ Cannot start timer:', { 
         isPlaying: viewState.isPlaying, 
@@ -78,14 +85,13 @@ const StoryViewer: React.FC = () => {
 
     console.log('🚀 Starting timer - Duration:', storyDuration, 'ms, Current progress:', viewState.progress);
     
-    // Store start time and initial progress
-    startTimeRef.current = Date.now();
-    lastProgressRef.current = viewState.progress;
-
+    const startTime = Date.now();
+    const initialProgress = viewState.progress;
+    
     progressTimerRef.current = setInterval(() => {
-      const elapsed = Date.now() - startTimeRef.current;
+      const elapsed = Date.now() - startTime;
       const progressIncrement = (elapsed / storyDuration) * 100;
-      const newProgress = lastProgressRef.current + progressIncrement;
+      const newProgress = initialProgress + progressIncrement;
       
       console.log('⏱️ Timer tick:', {
         elapsed: Math.round(elapsed),
@@ -108,24 +114,31 @@ const StoryViewer: React.FC = () => {
           markMediaAsViewed(currentMedia.id);
         }
         
-        // Advance to next media with a small delay to ensure state updates
-        setTimeout(() => {
-          nextMedia();
-        }, 100);
+        // Advance to next media
+        nextMedia();
       } else {
         updateProgress(newProgress);
       }
-    }, 100); // Update every 100ms for smooth progress
+    }, 50); // Faster updates for smoother progress
 
+    isTimerActiveRef.current = true;
     console.log('✅ Timer started successfully');
   }, [viewState.isPlaying, viewState.isPaused, viewState.progress, isLoading, loadError, currentMedia, storyDuration, clearTimer, updateProgress, markMediaAsViewed, nextMedia]);
 
-  // Handle media loading
+  // Handle media loading - CRITICAL: This must trigger timer start
   const handleMediaLoad = useCallback(() => {
-    console.log('📷 Media loaded successfully');
+    console.log('📷 Media loaded successfully - will start timer');
     setIsLoading(false);
     setLoadError(false);
-  }, []);
+    
+    // Start timer immediately after loading if conditions are met
+    setTimeout(() => {
+      if (viewState.isPlaying && !viewState.isPaused) {
+        console.log('🎯 Auto-starting timer after media load');
+        startTimer();
+      }
+    }, 100);
+  }, [viewState.isPlaying, viewState.isPaused, startTimer]);
 
   const handleMediaError = useCallback(() => {
     console.error('❌ Media failed to load');
@@ -232,10 +245,9 @@ const StoryViewer: React.FC = () => {
     resetProgress();
     setIsLoading(true);
     setLoadError(false);
-    lastProgressRef.current = 0;
   }, [currentMedia?.id, clearTimer, resetProgress]);
 
-  // Timer management effect - simplified and more reliable
+  // Timer management effect - SIMPLIFIED
   useEffect(() => {
     if (!isStoryViewerOpen || !currentMedia) {
       clearTimer();
@@ -247,20 +259,16 @@ const StoryViewer: React.FC = () => {
       isPaused: viewState.isPaused,
       isLoading,
       loadError,
-      hasTimer: !!progressTimerRef.current
+      isTimerActive: isTimerActiveRef.current
     });
 
-    // Start timer if should be playing
-    if (viewState.isPlaying && !viewState.isPaused && !isLoading && !loadError) {
-      if (!progressTimerRef.current) {
-        console.log('▶️ Starting timer (conditions met)');
-        // Small delay to ensure state is stable
-        const timeoutId = setTimeout(startTimer, 100);
-        return () => clearTimeout(timeoutId);
-      }
+    // Start timer if should be playing and not already active
+    if (viewState.isPlaying && !viewState.isPaused && !isLoading && !loadError && !isTimerActiveRef.current) {
+      console.log('▶️ Starting timer (conditions met)');
+      startTimer();
     } 
     // Stop timer if should not be playing
-    else if (progressTimerRef.current) {
+    else if ((!viewState.isPlaying || viewState.isPaused) && isTimerActiveRef.current) {
       console.log('⏸️ Stopping timer (conditions not met)');
       clearTimer();
     }
@@ -457,32 +465,59 @@ const StoryViewer: React.FC = () => {
           <div>Paused: {viewState.isPaused ? '⏸️ YES' : '▶️ NO'}</div>
           <div>Loading: {isLoading ? '⏳ YES' : '✅ NO'}</div>
           <div>Error: {loadError ? '❌ YES' : '✅ NO'}</div>
-          <div>Timer: {progressTimerRef.current ? '🟢 ACTIVE' : '🔴 INACTIVE'}</div>
+          <div>Timer: {isTimerActiveRef.current ? '🟢 ACTIVE' : '🔴 INACTIVE'}</div>
           <div>Duration: {storyDuration}ms</div>
-          <div>Start Time: {startTimeRef.current}</div>
-          <div>Last Progress: {Math.round(lastProgressRef.current)}%</div>
           
           {/* Manual Controls for Testing */}
           <div className="border-t border-gray-600 pt-2 mt-2">
             <div className="text-blue-400 font-bold">Manual Controls:</div>
             <div className="flex gap-1 mt-1">
               <button 
-                onClick={startTimer}
+                onClick={() => {
+                  console.log('🔧 Manual timer start');
+                  startTimer();
+                }}
                 className="bg-green-600 px-2 py-1 rounded text-xs"
               >
                 Start Timer
               </button>
               <button 
-                onClick={clearTimer}
+                onClick={() => {
+                  console.log('🔧 Manual timer stop');
+                  clearTimer();
+                }}
                 className="bg-red-600 px-2 py-1 rounded text-xs"
               >
                 Stop Timer
               </button>
               <button 
-                onClick={nextMedia}
+                onClick={() => {
+                  console.log('🔧 Manual next media');
+                  nextMedia();
+                }}
                 className="bg-blue-600 px-2 py-1 rounded text-xs"
               >
                 Next
+              </button>
+            </div>
+            <div className="flex gap-1 mt-1">
+              <button 
+                onClick={() => {
+                  console.log('🔧 Manual resume');
+                  resumeStory();
+                }}
+                className="bg-purple-600 px-2 py-1 rounded text-xs"
+              >
+                Resume
+              </button>
+              <button 
+                onClick={() => {
+                  console.log('🔧 Manual pause');
+                  pauseStory();
+                }}
+                className="bg-orange-600 px-2 py-1 rounded text-xs"
+              >
+                Pause
               </button>
             </div>
           </div>
