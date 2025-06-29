@@ -26,10 +26,8 @@ const StoryViewer: React.FC = () => {
   
   // Timer management with refs to avoid stale closures
   const timerRef = useRef<NodeJS.Timeout | null>(null);
-  const startTimeRef = useRef<number>(0);
   const mediaRef = useRef<HTMLImageElement | HTMLVideoElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const readyCheckTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const currentMedia = currentStory?.media?.[viewState.currentMediaIndex];
   const isVideo = currentMedia?.type === 'video';
@@ -57,7 +55,7 @@ const StoryViewer: React.FC = () => {
     }
   }, []);
 
-  // Start timer function
+  // Start timer function - FIXED VERSION
   const startTimer = useCallback(() => {
     console.log('🚀 Starting timer attempt:', {
       isMediaReady,
@@ -67,7 +65,7 @@ const StoryViewer: React.FC = () => {
       currentProgress: viewState.progress
     });
 
-    // Clear any existing timer
+    // Clear any existing timer first
     clearTimer();
 
     // Check all conditions
@@ -78,17 +76,24 @@ const StoryViewer: React.FC = () => {
 
     console.log('✅ Starting timer - all conditions met');
     
-    // Record start time and current progress
-    startTimeRef.current = Date.now();
-    const initialProgress = viewState.progress;
+    // Start from current progress
+    const startProgress = viewState.progress;
+    const startTime = Date.now();
     
     timerRef.current = setInterval(() => {
-      const now = Date.now();
-      const elapsed = now - startTimeRef.current;
-      const progressFromElapsed = (elapsed / storyDuration) * 100;
-      const totalProgress = initialProgress + progressFromElapsed;
+      const elapsed = Date.now() - startTime;
+      const progressIncrement = (elapsed / storyDuration) * 100;
+      const newProgress = startProgress + progressIncrement;
       
-      if (totalProgress >= 100) {
+      console.log('⏱️ Timer tick:', {
+        elapsed,
+        progressIncrement,
+        newProgress,
+        startProgress,
+        storyDuration
+      });
+      
+      if (newProgress >= 100) {
         console.log('✅ Story complete! Moving to next');
         clearTimer();
         updateProgress(100);
@@ -98,79 +103,22 @@ const StoryViewer: React.FC = () => {
           markMediaAsViewed(currentMedia.id);
         }
         
-        // Move to next media
-        setTimeout(() => nextMedia(), 100);
+        // Move to next media after a brief delay
+        setTimeout(() => {
+          console.log('🔄 Triggering nextMedia()');
+          nextMedia();
+        }, 100);
       } else {
-        updateProgress(totalProgress);
+        updateProgress(newProgress);
       }
-    }, 100);
+    }, 100); // Update every 100ms for smooth progress
     
-    console.log('✅ Timer started successfully');
+    console.log('✅ Timer started successfully with ID:', timerRef.current);
   }, [isMediaReady, viewState.isPlaying, viewState.isPaused, viewState.progress, currentMedia, storyDuration, clearTimer, updateProgress, markMediaAsViewed, nextMedia]);
 
-  // Enhanced media ready detection for production
-  const checkMediaReady = useCallback(() => {
-    if (!mediaRef.current || !currentMedia) return;
-
-    const element = mediaRef.current;
-    
-    if (isVideo) {
-      const video = element as HTMLVideoElement;
-      // For videos, check if we have enough data to play
-      const isVideoReady = video.readyState >= 2; // HAVE_CURRENT_DATA or higher
-      console.log('📹 Video ready check:', {
-        readyState: video.readyState,
-        isReady: isVideoReady,
-        duration: video.duration,
-        currentTime: video.currentTime
-      });
-      
-      if (isVideoReady) {
-        setIsMediaReady(true);
-        setLoadError(false);
-      }
-    } else {
-      const img = element as HTMLImageElement;
-      // For images, check if complete and has dimensions
-      const isImageReady = img.complete && img.naturalWidth > 0;
-      console.log('🖼️ Image ready check:', {
-        complete: img.complete,
-        naturalWidth: img.naturalWidth,
-        naturalHeight: img.naturalHeight,
-        isReady: isImageReady
-      });
-      
-      if (isImageReady) {
-        setIsMediaReady(true);
-        setLoadError(false);
-      }
-    }
-  }, [currentMedia, isVideo]);
-
-  // Fallback ready check for local testing
-  const scheduleReadyCheck = useCallback(() => {
-    // Clear any existing timeout
-    if (readyCheckTimeoutRef.current) {
-      clearTimeout(readyCheckTimeoutRef.current);
-    }
-
-    // Immediate check
-    checkMediaReady();
-
-    // Fallback check after 100ms (for local testing where images load instantly)
-    readyCheckTimeoutRef.current = setTimeout(() => {
-      console.log('⏰ Fallback ready check triggered');
-      if (!isMediaReady) {
-        console.log('🔧 Forcing media ready for local testing');
-        setIsMediaReady(true);
-        setLoadError(false);
-      }
-    }, 100);
-  }, [checkMediaReady, isMediaReady]);
-
-  // Media load handlers
-  const handleMediaLoad = useCallback(() => {
-    console.log('📷 Media load event fired');
+  // Enhanced media ready detection
+  const handleMediaReady = useCallback(() => {
+    console.log('📷 Media ready event fired');
     setIsMediaReady(true);
     setLoadError(false);
   }, []);
@@ -181,19 +129,6 @@ const StoryViewer: React.FC = () => {
     setLoadError(true);
     clearTimer();
   }, [clearTimer]);
-
-  // Video-specific handlers
-  const handleVideoCanPlay = useCallback(() => {
-    console.log('📹 Video can play event fired');
-    setIsMediaReady(true);
-    setLoadError(false);
-  }, []);
-
-  const handleVideoLoadedData = useCallback(() => {
-    console.log('📹 Video loaded data event fired');
-    setIsMediaReady(true);
-    setLoadError(false);
-  }, []);
 
   // Touch handlers
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -285,46 +220,54 @@ const StoryViewer: React.FC = () => {
     setIsMediaReady(false);
     setLoadError(false);
     resetProgress();
-    startTimeRef.current = 0;
-    
-    // Clear ready check timeout
-    if (readyCheckTimeoutRef.current) {
-      clearTimeout(readyCheckTimeoutRef.current);
-    }
+  }, [currentMedia?.id, clearTimer, resetProgress]);
 
-    // Schedule ready check for new media
-    if (currentMedia) {
-      scheduleReadyCheck();
-    }
-  }, [currentMedia?.id, clearTimer, resetProgress, scheduleReadyCheck]);
-
-  // MAIN TIMER CONTROL EFFECT
+  // SIMPLIFIED TIMER CONTROL - This is the key fix!
   useEffect(() => {
-    console.log('🎯 Timer control effect triggered:', {
+    console.log('🎯 Timer control effect:', {
+      isStoryViewerOpen,
+      hasCurrentMedia: !!currentMedia,
       isMediaReady,
       isPlaying: viewState.isPlaying,
       isPaused: viewState.isPaused,
-      hasTimer: !!timerRef.current,
-      isOpen: isStoryViewerOpen
+      hasTimer: !!timerRef.current
     });
 
+    // Only run if story viewer is open and we have media
     if (!isStoryViewerOpen || !currentMedia) {
       clearTimer();
       return;
     }
 
-    // Should timer be running?
-    const shouldRun = isMediaReady && viewState.isPlaying && !viewState.isPaused;
-    const isRunning = !!timerRef.current;
+    // Should the timer be running?
+    const shouldTimerRun = isMediaReady && viewState.isPlaying && !viewState.isPaused;
+    const isTimerRunning = !!timerRef.current;
 
-    if (shouldRun && !isRunning) {
-      console.log('▶️ Should start timer');
+    console.log('🎯 Timer decision:', { shouldTimerRun, isTimerRunning });
+
+    if (shouldTimerRun && !isTimerRunning) {
+      console.log('▶️ Starting timer');
       startTimer();
-    } else if (!shouldRun && isRunning) {
-      console.log('⏸️ Should stop timer');
+    } else if (!shouldTimerRun && isTimerRunning) {
+      console.log('⏸️ Stopping timer');
       clearTimer();
     }
-  }, [isMediaReady, viewState.isPlaying, viewState.isPaused, isStoryViewerOpen, currentMedia?.id, startTimer, clearTimer]);
+
+    // Cleanup function
+    return () => {
+      if (!shouldTimerRun) {
+        clearTimer();
+      }
+    };
+  }, [
+    isStoryViewerOpen,
+    currentMedia?.id,
+    isMediaReady,
+    viewState.isPlaying,
+    viewState.isPaused,
+    startTimer,
+    clearTimer
+  ]);
 
   // Mark story as viewed when opened
   useEffect(() => {
@@ -337,9 +280,6 @@ const StoryViewer: React.FC = () => {
   useEffect(() => {
     return () => {
       clearTimer();
-      if (readyCheckTimeoutRef.current) {
-        clearTimeout(readyCheckTimeoutRef.current);
-      }
     };
   }, [clearTimer]);
 
@@ -464,8 +404,8 @@ const StoryViewer: React.FC = () => {
                 autoPlay
                 muted={isMuted}
                 playsInline
-                onLoadedData={handleVideoLoadedData}
-                onCanPlay={handleVideoCanPlay}
+                onLoadedData={handleMediaReady}
+                onCanPlay={handleMediaReady}
                 onError={handleMediaError}
                 onEnded={nextMedia}
               />
@@ -475,7 +415,7 @@ const StoryViewer: React.FC = () => {
                 src={currentMedia.url}
                 alt={currentMedia.caption || ''}
                 className="max-w-full max-h-full object-contain"
-                onLoad={handleMediaLoad}
+                onLoad={handleMediaReady}
                 onError={handleMediaError}
               />
             )}
@@ -504,7 +444,7 @@ const StoryViewer: React.FC = () => {
       {/* Debug Panel - Only in Development */}
       {process.env.NODE_ENV === 'development' && (
         <div className="absolute bottom-4 left-4 z-30 bg-black/90 text-white p-3 rounded-lg text-xs font-mono space-y-1 max-w-xs">
-          <div className="text-yellow-400 font-bold">🎬 Story Debug v3</div>
+          <div className="text-yellow-400 font-bold">🎬 Story Debug v4</div>
           <div>Story: {currentStory.barracaName}</div>
           <div>Media: {viewState.currentMediaIndex + 1}/{currentStory.media.length}</div>
           <div>Progress: {Math.round(viewState.progress)}%</div>
@@ -532,12 +472,12 @@ const StoryViewer: React.FC = () => {
               </button>
               <button 
                 onClick={() => {
-                  console.log('🔧 Manual: Check ready state');
-                  checkMediaReady();
+                  console.log('🔧 Manual: Start timer');
+                  startTimer();
                 }}
                 className="bg-blue-600 px-2 py-1 rounded text-xs"
               >
-                Check Ready
+                Start Timer
               </button>
               <button 
                 onClick={() => {
