@@ -135,3 +135,18 @@ export interface DefaultCTAButtons {
   contact: CTAButtonConfig;
   menu: CTAButtonConfig;
 }
+
+// Unique Visitor Tracking Types
+export interface VisitorData {
+  uniqueVisitors: number;
+  lastUpdated: number;
+  visitorId: string;
+}
+
+export interface VisitorMetrics {
+  totalUniqueVisitors: number;
+  dailyVisitors: number;
+  weeklyVisitors: number;
+  monthlyVisitors: number;
+  lastUpdated: Date;
+}

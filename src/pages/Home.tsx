@@ -6,6 +6,7 @@ import HeroCarousel from '../components/HeroCarousel';
 import BarracaGrid from '../components/BarracaGrid';
 import EmailSubscription from '../components/EmailSubscription';
 import StoryCarousel from '../components/StoryCarousel';
+import UniqueVisitorCounter from '../components/UniqueVisitorCounter';
 import { useApp } from '../contexts/AppContext';
 import { useStory } from '../contexts/StoryContext';
 
@@ -82,16 +83,13 @@ const Home: React.FC = () => {
             </button>
           </div>
 
-          {/* Quick Stats */}
+          {/* Quick Stats with Unique Visitor Counter */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-12">
             <div className="text-center">
               <div className="text-3xl font-bold text-sky-600 mb-2">{barracas.length}+</div>
               <div className="text-sm text-gray-600">Partner Barracas</div>
             </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-sky-600 mb-2">5K+</div>
-              <div className="text-sm text-gray-600">Active Members</div>
-            </div>
+            <UniqueVisitorCounter />
             <div className="text-center">
               <div className="text-3xl font-bold text-sky-600 mb-2">24/7</div>
               <div className="text-sm text-gray-600">Availability Updates</div>
