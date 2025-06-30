@@ -1,27 +1,22 @@
 /*
-  # Complete Database Schema and Initial Data
+  # Clean Database Schema for Carioca Coastal Club
   
   1. New Tables
-    - `barracas` - Main barraca data with location, status, and configuration
-    - `stories` - 24-hour expiring story content
-    - `email_subscriptions` - Newsletter and notification subscriptions
-    - `weather_cache` - Cached weather data with 15-minute expiration
-    - `visitor_analytics` - Unique visitor tracking and analytics
-    
+    - `barracas` - Main barraca data
+    - `business_hours` - Detailed business hours by day of week
+    - `stories` - Story content and media
+    - `email_subscriptions` - Newsletter subscriptions
+    - `weather_cache` - Weather data caching
+    - `visitor_analytics` - Unique visitor tracking
+    - `translations` - Multi-language content
+
   2. Security
     - Enable RLS on all tables
-    - Add policies for authenticated and public access as appropriate
-    - Secure sensitive data while allowing public read access for barracas
+    - Add policies for authenticated and public access
     
   3. Performance
     - Add indexes for common queries
     - Enable real-time subscriptions
-    - Add geospatial support for location-based queries
-    
-  4. Data Integrity
-    - Foreign key constraints
-    - Check constraints for data validation
-    - Automatic cleanup functions for expired data
 */
 
 -- Enable required extensions
@@ -44,8 +39,28 @@ CREATE TABLE IF NOT EXISTS barracas (
   amenities text[] DEFAULT '{}',
   weather_dependent boolean DEFAULT false,
   cta_buttons jsonb DEFAULT '[]',
+  open_time_utc time,
+  close_time_utc time,
+  timezone text DEFAULT 'America/Sao_Paulo',
+  business_hours jsonb DEFAULT '{}',
   created_at timestamptz DEFAULT now(),
   updated_at timestamptz DEFAULT now()
+);
+
+-- Create business hours table
+CREATE TABLE IF NOT EXISTS business_hours (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  barraca_id text NOT NULL REFERENCES barracas(id) ON DELETE CASCADE,
+  day_of_week integer NOT NULL CHECK (day_of_week >= 0 AND day_of_week <= 6), -- 0 = Sunday, 6 = Saturday
+  is_open boolean DEFAULT true,
+  open_time_utc time,
+  close_time_utc time,
+  break_start_utc time,
+  break_end_utc time,
+  notes text,
+  created_at timestamptz DEFAULT now(),
+  updated_at timestamptz DEFAULT now(),
+  UNIQUE(barraca_id, day_of_week)
 );
 
 -- Create stories table
@@ -100,11 +115,42 @@ CREATE TABLE IF NOT EXISTS visitor_analytics (
   created_at timestamptz DEFAULT now()
 );
 
+-- Create translations table
+CREATE TABLE IF NOT EXISTS translations (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  entity_type varchar(50) NOT NULL, -- 'barraca', 'story', etc.
+  entity_id varchar(255) NOT NULL, -- ID of the entity being translated
+  field_name varchar(100) NOT NULL, -- 'name', 'description', etc.
+  language_code varchar(10) NOT NULL, -- 'en', 'pt', 'es', etc.
+  translated_text text NOT NULL,
+  created_at timestamptz DEFAULT now(),
+  updated_at timestamptz DEFAULT now(),
+  created_by uuid, -- User who created the translation
+  is_approved boolean DEFAULT false,
+  is_primary boolean DEFAULT false,
+  UNIQUE(entity_type, entity_id, field_name, language_code)
+);
+
+-- Create translation keys table
+CREATE TABLE IF NOT EXISTS translation_keys (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  key_name varchar(255) UNIQUE NOT NULL,
+  category varchar(100) NOT NULL, -- 'ui', 'error', 'email', etc.
+  description text,
+  is_dynamic boolean DEFAULT true, -- Whether this key can be edited in the UI
+  created_at timestamptz DEFAULT now(),
+  updated_at timestamptz DEFAULT now()
+);
+
 -- Create indexes for performance
 CREATE INDEX IF NOT EXISTS idx_barracas_location ON barracas(location);
 CREATE INDEX IF NOT EXISTS idx_barracas_is_open ON barracas(is_open);
 CREATE INDEX IF NOT EXISTS idx_barracas_coordinates ON barracas USING GIN(coordinates);
 CREATE INDEX IF NOT EXISTS idx_barracas_search ON barracas USING GIN(to_tsvector('portuguese', name || ' ' || description));
+
+CREATE INDEX IF NOT EXISTS idx_business_hours_barraca_id ON business_hours(barraca_id);
+CREATE INDEX IF NOT EXISTS idx_business_hours_day_of_week ON business_hours(day_of_week);
+CREATE INDEX IF NOT EXISTS idx_business_hours_is_open ON business_hours(is_open);
 
 CREATE INDEX IF NOT EXISTS idx_stories_barraca_id ON stories(barraca_id);
 CREATE INDEX IF NOT EXISTS idx_stories_created_at ON stories(created_at DESC);
@@ -119,12 +165,21 @@ CREATE INDEX IF NOT EXISTS idx_weather_cache_expires_at ON weather_cache(expires
 CREATE INDEX IF NOT EXISTS idx_visitor_analytics_visitor_id ON visitor_analytics(visitor_id);
 CREATE INDEX IF NOT EXISTS idx_visitor_analytics_last_visit ON visitor_analytics(last_visit DESC);
 
+CREATE INDEX IF NOT EXISTS idx_translations_entity ON translations(entity_type, entity_id);
+CREATE INDEX IF NOT EXISTS idx_translations_language ON translations(language_code);
+CREATE INDEX IF NOT EXISTS idx_translations_field ON translations(field_name);
+
+CREATE INDEX IF NOT EXISTS idx_translation_keys_category ON translation_keys(category);
+
 -- Enable Row Level Security
 ALTER TABLE barracas ENABLE ROW LEVEL SECURITY;
+ALTER TABLE business_hours ENABLE ROW LEVEL SECURITY;
 ALTER TABLE stories ENABLE ROW LEVEL SECURITY;
 ALTER TABLE email_subscriptions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE weather_cache ENABLE ROW LEVEL SECURITY;
 ALTER TABLE visitor_analytics ENABLE ROW LEVEL SECURITY;
+ALTER TABLE translations ENABLE ROW LEVEL SECURITY;
+ALTER TABLE translation_keys ENABLE ROW LEVEL SECURITY;
 
 -- Create RLS policies
 
@@ -133,6 +188,13 @@ CREATE POLICY "Public can read barracas" ON barracas
   FOR SELECT TO public USING (true);
 
 CREATE POLICY "Authenticated users can manage barracas" ON barracas
+  FOR ALL TO authenticated USING (true);
+
+-- Business hours: Public read access, authenticated write access
+CREATE POLICY "Public can read business hours" ON business_hours
+  FOR SELECT TO public USING (true);
+
+CREATE POLICY "Authenticated users can manage business hours" ON business_hours
   FOR ALL TO authenticated USING (true);
 
 -- Stories: Public read access for active stories, authenticated write access
@@ -160,23 +222,33 @@ CREATE POLICY "Public can insert visitor analytics" ON visitor_analytics
 CREATE POLICY "Authenticated users can read visitor analytics" ON visitor_analytics
   FOR SELECT TO authenticated USING (true);
 
+-- Translations: Public can read approved translations, authenticated can manage
+CREATE POLICY "Allow public read access to approved translations" ON translations
+  FOR SELECT TO public USING (is_approved = true);
+
+CREATE POLICY "Allow authenticated users to create translations" ON translations
+  FOR INSERT TO public WITH CHECK (role() = 'authenticated');
+
+CREATE POLICY "Allow users to update their own translations" ON translations
+  FOR UPDATE TO public USING (uid() = created_by);
+
+-- Translation keys: Public can read, authenticated can create
+CREATE POLICY "Allow public read access to translation keys" ON translation_keys
+  FOR SELECT TO public USING (true);
+
+CREATE POLICY "Allow authenticated users to create translation keys" ON translation_keys
+  FOR INSERT TO public WITH CHECK (role() = 'authenticated');
+
 -- Create functions for data management
 
--- Function to clean up expired stories
-CREATE OR REPLACE FUNCTION cleanup_expired_stories()
-RETURNS void AS $$
+-- Function to update updated_at timestamp
+CREATE OR REPLACE FUNCTION update_updated_at_column()
+RETURNS trigger AS $$
 BEGIN
-  DELETE FROM stories WHERE expires_at < now();
+  NEW.updated_at = now();
+  RETURN NEW;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
-
--- Function to clean up expired weather cache
-CREATE OR REPLACE FUNCTION cleanup_expired_weather()
-RETURNS void AS $$
-BEGIN
-  DELETE FROM weather_cache WHERE expires_at < now();
-END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql;
 
 -- Function to update barraca updated_at timestamp
 CREATE OR REPLACE FUNCTION update_barraca_updated_at()
@@ -187,22 +259,162 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Create trigger for barraca updates
+-- Function to update business hours updated_at timestamp
+CREATE OR REPLACE FUNCTION update_business_hours_updated_at()
+RETURNS trigger AS $$
+BEGIN
+  NEW.updated_at = now();
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Create triggers
 CREATE TRIGGER update_barracas_updated_at
   BEFORE UPDATE ON barracas
   FOR EACH ROW
   EXECUTE FUNCTION update_barraca_updated_at();
 
--- Function to get nearby barracas (geospatial query)
+CREATE TRIGGER update_business_hours_updated_at
+  BEFORE UPDATE ON business_hours
+  FOR EACH ROW
+  EXECUTE FUNCTION update_business_hours_updated_at();
+
+CREATE TRIGGER update_translations_updated_at
+  BEFORE UPDATE ON translations
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TRIGGER update_translation_keys_updated_at
+  BEFORE UPDATE ON translation_keys
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at_column();
+
+-- Function to convert local time to UTC
+CREATE OR REPLACE FUNCTION convert_local_to_utc(
+  local_time time,
+  timezone_name text DEFAULT 'America/Sao_Paulo'
+)
+RETURNS time AS $$
+DECLARE
+  utc_time time;
+  local_timestamp timestamptz;
+  utc_timestamp timestamptz;
+BEGIN
+  -- Create a timestamp for today with the local time
+  local_timestamp := (CURRENT_DATE + local_time) AT TIME ZONE timezone_name;
+  
+  -- Convert to UTC
+  utc_timestamp := local_timestamp AT TIME ZONE 'UTC';
+  
+  -- Extract just the time part
+  utc_time := utc_timestamp::time;
+  
+  RETURN utc_time;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Function to convert UTC time to local time
+CREATE OR REPLACE FUNCTION convert_utc_to_local(
+  utc_time time,
+  timezone_name text DEFAULT 'America/Sao_Paulo'
+)
+RETURNS time AS $$
+DECLARE
+  local_time time;
+  utc_timestamp timestamptz;
+  local_timestamp timestamptz;
+BEGIN
+  -- Create a UTC timestamp for today with the UTC time
+  utc_timestamp := (CURRENT_DATE + utc_time) AT TIME ZONE 'UTC';
+  
+  -- Convert to local timezone
+  local_timestamp := utc_timestamp AT TIME ZONE timezone_name;
+  
+  -- Extract just the time part
+  local_time := local_timestamp::time;
+  
+  RETURN local_time;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Function to check if barraca is currently open
+CREATE OR REPLACE FUNCTION is_barraca_open_now(
+  barraca_id_param text,
+  check_time timestamptz DEFAULT now()
+)
+RETURNS boolean AS $$
+DECLARE
+  current_day integer;
+  current_time_utc time;
+  hours_record business_hours%ROWTYPE;
+  is_currently_open boolean := false;
+BEGIN
+  -- Get current day of week (0 = Sunday)
+  current_day := EXTRACT(dow FROM check_time AT TIME ZONE 'UTC');
+  
+  -- Get current time in UTC
+  current_time_utc := (check_time AT TIME ZONE 'UTC')::time;
+  
+  -- Get business hours for current day
+  SELECT * INTO hours_record
+  FROM business_hours
+  WHERE barraca_id = barraca_id_param
+    AND day_of_week = current_day
+    AND is_open = true;
+  
+  -- If no specific hours found, check barraca's general status
+  IF NOT FOUND THEN
+    SELECT is_open INTO is_currently_open
+    FROM barracas
+    WHERE id = barraca_id_param;
+    
+    RETURN COALESCE(is_currently_open, false);
+  END IF;
+  
+  -- Check if current time is within business hours
+  IF hours_record.open_time_utc IS NOT NULL AND hours_record.close_time_utc IS NOT NULL THEN
+    -- Handle same-day hours
+    IF hours_record.open_time_utc <= hours_record.close_time_utc THEN
+      is_currently_open := current_time_utc >= hours_record.open_time_utc 
+                          AND current_time_utc <= hours_record.close_time_utc;
+    ELSE
+      -- Handle overnight hours (e.g., 22:00 - 02:00)
+      is_currently_open := current_time_utc >= hours_record.open_time_utc 
+                          OR current_time_utc <= hours_record.close_time_utc;
+    END IF;
+    
+    -- Check if we're in break time
+    IF is_currently_open AND hours_record.break_start_utc IS NOT NULL AND hours_record.break_end_utc IS NOT NULL THEN
+      IF hours_record.break_start_utc <= hours_record.break_end_utc THEN
+        -- Same-day break
+        IF current_time_utc >= hours_record.break_start_utc AND current_time_utc <= hours_record.break_end_utc THEN
+          is_currently_open := false;
+        END IF;
+      ELSE
+        -- Overnight break
+        IF current_time_utc >= hours_record.break_start_utc OR current_time_utc <= hours_record.break_end_utc THEN
+          is_currently_open := false;
+        END IF;
+      END IF;
+    END IF;
+  END IF;
+  
+  RETURN is_currently_open;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Function to get nearby barracas
 CREATE OR REPLACE FUNCTION get_nearby_barracas(
   user_lat numeric,
   user_lng numeric,
-  radius_km numeric DEFAULT 5
+  radius_km numeric DEFAULT 5,
+  limit_count integer DEFAULT 20
 )
 RETURNS TABLE(
   id text,
   name text,
   location text,
+  is_open boolean,
   distance_km numeric
 ) AS $$
 BEGIN
@@ -211,6 +423,7 @@ BEGIN
     b.id,
     b.name,
     b.location,
+    is_barraca_open_now(b.id) as is_open,
     ROUND(
       (6371 * acos(
         cos(radians(user_lat)) * 
@@ -230,17 +443,23 @@ BEGIN
       sin(radians((b.coordinates->>'lat')::numeric))
     )
   ) <= radius_km
-  ORDER BY distance_km;
+  ORDER BY distance_km
+  LIMIT limit_count;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 -- Function for full-text search
-CREATE OR REPLACE FUNCTION search_barracas(search_query text)
+CREATE OR REPLACE FUNCTION search_barracas(
+  search_query text,
+  location_filter text DEFAULT NULL,
+  open_only boolean DEFAULT false,
+  limit_count integer DEFAULT 20
+)
 RETURNS TABLE(
   id text,
   name text,
   location text,
-  description text,
+  is_open boolean,
   rank real
 ) AS $$
 BEGIN
@@ -249,24 +468,33 @@ BEGIN
     b.id,
     b.name,
     b.location,
-    b.description,
+    CASE 
+      WHEN open_only THEN is_barraca_open_now(b.id)
+      ELSE b.is_open
+    END as is_open,
     ts_rank(to_tsvector('portuguese', b.name || ' ' || b.description), plainto_tsquery('portuguese', search_query)) as rank
   FROM barracas b
-  WHERE to_tsvector('portuguese', b.name || ' ' || b.description) @@ plainto_tsquery('portuguese', search_query)
-  ORDER BY rank DESC;
+  WHERE 
+    (search_query IS NULL OR to_tsvector('portuguese', b.name || ' ' || b.description) @@ plainto_tsquery('portuguese', search_query))
+    AND (location_filter IS NULL OR b.location ILIKE '%' || location_filter || '%')
+    AND (NOT open_only OR is_barraca_open_now(b.id))
+  ORDER BY rank DESC
+  LIMIT limit_count;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 -- Enable real-time subscriptions
 ALTER PUBLICATION supabase_realtime ADD TABLE barracas;
+ALTER PUBLICATION supabase_realtime ADD TABLE business_hours;
 ALTER PUBLICATION supabase_realtime ADD TABLE stories;
 ALTER PUBLICATION supabase_realtime ADD TABLE email_subscriptions;
 ALTER PUBLICATION supabase_realtime ADD TABLE weather_cache;
 ALTER PUBLICATION supabase_realtime ADD TABLE visitor_analytics;
+ALTER PUBLICATION supabase_realtime ADD TABLE translations;
+ALTER PUBLICATION supabase_realtime ADD TABLE translation_keys;
 
--- Insert barracas data (migrated from mock data)
+-- Insert sample data
 INSERT INTO barracas (id, name, barraca_number, location, coordinates, is_open, typical_hours, description, images, menu_preview, contact, amenities, weather_dependent, cta_buttons, created_at, updated_at) VALUES
-
 -- Barraca Uruguay (Premium retail)
 ('barraca-uruguay', 'Barraca Uruguay', '203', 'Ipanema', 
  '{"lat": -22.9838, "lng": -43.2096}', 
@@ -384,6 +612,17 @@ INSERT INTO barracas (id, name, barraca_number, location, coordinates, is_open, 
  '[]',
  '2024-01-02 09:00:00+00', '2024-01-13 16:00:00+00');
 
+-- Insert sample business hours
+INSERT INTO business_hours (barraca_id, day_of_week, is_open, open_time_utc, close_time_utc, notes) VALUES
+-- Barraca Uruguay - Closed Sundays, shorter hours on Saturday
+('barraca-uruguay', 0, false, NULL, NULL, 'Closed on Sundays'),
+('barraca-uruguay', 1, true, convert_local_to_utc('09:00'::time), convert_local_to_utc('19:00'::time), 'Monday - Regular hours'),
+('barraca-uruguay', 2, true, convert_local_to_utc('09:00'::time), convert_local_to_utc('19:00'::time), 'Tuesday - Regular hours'),
+('barraca-uruguay', 3, true, convert_local_to_utc('09:00'::time), convert_local_to_utc('19:00'::time), 'Wednesday - Regular hours'),
+('barraca-uruguay', 4, true, convert_local_to_utc('09:00'::time), convert_local_to_utc('19:00'::time), 'Thursday - Regular hours'),
+('barraca-uruguay', 5, true, convert_local_to_utc('09:00'::time), convert_local_to_utc('20:00'::time), 'Friday - Extended hours'),
+('barraca-uruguay', 6, true, convert_local_to_utc('09:00'::time), convert_local_to_utc('20:00'::time), 'Saturday - Extended hours');
+
 -- Insert sample stories
 INSERT INTO stories (id, barraca_id, media_url, media_type, caption, created_at, expires_at) VALUES
 ('story-1', '1', 'https://images.pexels.com/photos/1002703/pexels-photo-1002703.jpeg', 'image', 'Fresh seafood just arrived! 🦐🐟', NOW() - INTERVAL '30 minutes', NOW() + INTERVAL '23.5 hours'),
@@ -416,3 +655,54 @@ INSERT INTO visitor_analytics (visitor_id, first_visit, last_visit, visit_count,
 ('visitor_003', NOW() - INTERVAL '2 weeks', NOW() - INTERVAL '1 week', 8, 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)', 'BR', 'São Paulo'),
 ('visitor_004', NOW() - INTERVAL '1 day', NOW() - INTERVAL '30 minutes', 2, 'Mozilla/5.0 (Android 12; Mobile)', 'AR', 'Buenos Aires'),
 ('visitor_005', NOW() - INTERVAL '5 days', NOW() - INTERVAL '1 hour', 4, 'Mozilla/5.0 (iPad; CPU OS 15_0 like Mac OS X)', 'FR', 'Paris');
+
+-- Insert sample translation keys
+INSERT INTO translation_keys (key_name, category, description, is_dynamic) VALUES
+('nav.home', 'ui', 'Navigation home link', true),
+('nav.discover', 'ui', 'Navigation discover link', true),
+('nav.about', 'ui', 'Navigation about link', true),
+('nav.admin', 'ui', 'Navigation admin link', true),
+('hero.title', 'ui', 'Hero section title', true),
+('hero.subtitle', 'ui', 'Hero section subtitle', true),
+('email.subscribe', 'email', 'Email subscription button text', true),
+('email.placeholder', 'email', 'Email input placeholder', true),
+('email.success', 'email', 'Email subscription success message', true),
+('email.error', 'email', 'Email subscription error message', true);
+
+-- Insert sample translations
+INSERT INTO translations (entity_type, entity_id, field_name, language_code, translated_text, is_approved, is_primary) VALUES
+-- English translations
+('ui', 'nav.home', 'text', 'en', 'Home', true, true),
+('ui', 'nav.discover', 'text', 'en', 'Find Barracas', true, true),
+('ui', 'nav.about', 'text', 'en', 'About', true, true),
+('ui', 'nav.admin', 'text', 'en', 'Admin', true, true),
+('ui', 'hero.title', 'text', 'en', 'Your Favorite Barraca Awaits', true, true),
+('ui', 'hero.subtitle', 'text', 'en', 'Check if your go-to spot is open, reserve chairs, and get exclusive member updates', true, true),
+
+-- Portuguese translations
+('ui', 'nav.home', 'text', 'pt', 'Início', true, false),
+('ui', 'nav.discover', 'text', 'pt', 'Encontrar Barracas', true, false),
+('ui', 'nav.about', 'text', 'pt', 'Sobre', true, false),
+('ui', 'nav.admin', 'text', 'pt', 'Admin', true, false),
+('ui', 'hero.title', 'text', 'pt', 'Sua Barraca Favorita Te Espera', true, false),
+('ui', 'hero.subtitle', 'text', 'pt', 'Veja se seu local preferido está aberto, reserve cadeiras e receba atualizações exclusivas', true, false),
+
+-- Spanish translations
+('ui', 'nav.home', 'text', 'es', 'Inicio', true, false),
+('ui', 'nav.discover', 'text', 'es', 'Encontrar Barracas', true, false),
+('ui', 'nav.about', 'text', 'es', 'Acerca de', true, false),
+('ui', 'nav.admin', 'text', 'es', 'Admin', true, false),
+('ui', 'hero.title', 'text', 'es', 'Tu Barraca Favorita Te Espera', true, false),
+('ui', 'hero.subtitle', 'text', 'es', 'Verifica si tu lugar preferido está abierto, reserva sillas y recibe actualizaciones exclusivas', true, false);
+
+-- Add comments
+COMMENT ON TABLE business_hours IS 'Detailed business hours for each barraca by day of week, stored in UTC for consistency across timezones';
+COMMENT ON COLUMN business_hours.day_of_week IS '0=Sunday, 1=Monday, 2=Tuesday, 3=Wednesday, 4=Thursday, 5=Friday, 6=Saturday';
+COMMENT ON COLUMN business_hours.open_time_utc IS 'Opening time in UTC';
+COMMENT ON COLUMN business_hours.close_time_utc IS 'Closing time in UTC (can be next day for late night venues)';
+COMMENT ON COLUMN business_hours.break_start_utc IS 'Break/lunch start time in UTC (optional)';
+COMMENT ON COLUMN business_hours.break_end_utc IS 'Break/lunch end time in UTC (optional)';
+
+COMMENT ON FUNCTION is_barraca_open_now IS 'Check if a barraca is currently open based on current UTC time and business hours';
+COMMENT ON FUNCTION convert_local_to_utc IS 'Convert local time to UTC based on timezone';
+COMMENT ON FUNCTION convert_utc_to_local IS 'Convert UTC time to local time based on timezone';
