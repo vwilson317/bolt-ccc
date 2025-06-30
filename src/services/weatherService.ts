@@ -7,10 +7,10 @@ type WeatherCacheInsert = Database['public']['Tables']['weather_cache']['Insert'
 
 // Transform database row to application type
 const transformWeatherFromDB = (row: WeatherCacheRow): WeatherData => ({
-  temperature: row.temperature || 0,
-  feelsLike: row.feels_like || 0,
+  temperature: Number(row.temperature) || 0,
+  feelsLike: Number(row.feels_like) || 0,
   humidity: row.humidity || 0,
-  windSpeed: row.wind_speed || 0,
+  windSpeed: Number(row.wind_speed) || 0,
   windDirection: row.wind_direction || 0,
   description: row.description || '',
   icon: row.icon || '',
@@ -27,10 +27,12 @@ export class WeatherService {
       // First, try to get from cache
       const cachedWeather = await this.getCachedWeather(location)
       if (cachedWeather) {
+        console.log(`🌤️ Using cached weather data for ${location}`)
         return cachedWeather
       }
 
       // If not in cache or expired, fetch from API
+      console.log(`🌤️ Fetching fresh weather data for ${location}`)
       const freshWeather = await this.fetchWeatherFromAPI(location)
       
       // Cache the fresh data
@@ -281,5 +283,21 @@ export class WeatherService {
     )
 
     return weatherData
+  }
+
+  // Update weather-dependent barracas based on current conditions
+  static async updateWeatherDependentBarracas(): Promise<number> {
+    try {
+      const { data, error } = await supabase.rpc('update_weather_dependent_barracas')
+      
+      if (error) {
+        handleSupabaseError(error, 'update weather-dependent barracas')
+      }
+      
+      return data || 0
+    } catch (error) {
+      console.error('Error updating weather-dependent barracas:', error)
+      return 0
+    }
   }
 }

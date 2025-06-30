@@ -1,11 +1,11 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Cloud, Droplets, Wind, Thermometer, RefreshCw } from 'lucide-react';
-import { useApp } from '../contexts/AppContext';
+import { useWeather } from '../contexts/WeatherContext';
 
 const WeatherWidget: React.FC = () => {
   const { t } = useTranslation();
-  const { weather, isLoading, refreshWeather } = useApp();
+  const { weather, isLoading, refreshWeather } = useWeather();
 
   if (!weather) {
     return (
@@ -58,7 +58,7 @@ const WeatherWidget: React.FC = () => {
         <div className="col-span-1 md:col-span-1">
           <div className="flex items-center mb-2">
             <Thermometer className="h-5 w-5 mr-2 text-orange-200" />
-            <span className="text-sm text-orange-100">{t('weather.temperature')}</span>
+            <span className="text-sm text-orange-100">Temperature</span>
           </div>
           <div className="text-3xl font-bold">
             {weather.temperature}°C

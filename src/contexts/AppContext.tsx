@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { Barraca, WeatherData, SearchFilters, EmailSubscription } from '../types';
-import { mockBarracas, fetchWeatherData } from '../data/mockData';
+import { mockBarracas } from '../data/mockData';
+import { WeatherService } from '../services/weatherService';
 
 interface AppContextType {
   barracas: Barraca[];
@@ -139,8 +140,36 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const refreshWeather = async () => {
     setIsLoading(true);
     try {
-      const weatherData = await fetchWeatherData();
+      const weatherData = await WeatherService.getCurrentWeather();
       setWeather(weatherData);
+      
+      // Update weather-dependent barracas if needed
+      if (weatherData) {
+        const updatedCount = await WeatherService.updateWeatherDependentBarracas();
+        if (updatedCount > 0) {
+          console.log(`🌤️ Updated ${updatedCount} weather-dependent barracas based on conditions`);
+          
+          // Refresh barracas from database (mock implementation)
+          // In a real app, this would fetch from the database
+          setBarracas(prev => prev.map(barraca => {
+            if (barraca.weatherDependent) {
+              // Update open status based on weather conditions
+              const shouldBeOpen = 
+                weatherData.beachConditions === 'excellent' || 
+                weatherData.beachConditions === 'good';
+              
+              if (barraca.isOpen !== shouldBeOpen) {
+                return {
+                  ...barraca,
+                  isOpen: shouldBeOpen,
+                  updatedAt: new Date()
+                };
+              }
+            }
+            return barraca;
+          }));
+        }
+      }
     } catch (error) {
       console.error('Failed to fetch weather data:', error);
     } finally {

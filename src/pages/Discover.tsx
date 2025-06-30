@@ -3,13 +3,16 @@ import { useTranslation } from 'react-i18next';
 import { Search, Filter, MapPin, X, Hash, CheckCircle, XCircle } from 'lucide-react';
 import { useApp } from '../contexts/AppContext';
 import { useStory } from '../contexts/StoryContext';
+import { useWeather } from '../contexts/WeatherContext';
 import BarracaGrid from '../components/BarracaGrid';
 import StoryCarousel from '../components/StoryCarousel';
+import WeatherWidget from '../components/WeatherWidget';
 
 const Discover: React.FC = () => {
   const { t } = useTranslation();
   const { filteredBarracas, searchFilters, updateSearchFilters } = useApp();
   const { featureFlags } = useStory();
+  const { weather } = useWeather();
   const [showFilters, setShowFilters] = useState(false);
 
   // Complete list of South Zone beaches
@@ -105,6 +108,13 @@ const Discover: React.FC = () => {
       {featureFlags.enableStoryBanner && <StoryCarousel />}
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Weather Widget */}
+        {weather && (
+          <div className="mb-8">
+            <WeatherWidget />
+          </div>
+        )}
+        
         {/* Results Header & Filters */}
         <div className="mb-8">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">

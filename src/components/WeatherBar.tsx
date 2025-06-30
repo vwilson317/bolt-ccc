@@ -1,11 +1,11 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Thermometer, Droplets, Wind, RefreshCw } from 'lucide-react';
-import { useApp } from '../contexts/AppContext';
+import { useWeather } from '../contexts/WeatherContext';
 
 const WeatherBar: React.FC = () => {
   const { t } = useTranslation();
-  const { weather, isLoading, refreshWeather } = useApp();
+  const { weather, isLoading, refreshWeather } = useWeather();
 
   if (!weather) return null;
 
@@ -52,7 +52,7 @@ const WeatherBar: React.FC = () => {
           <div className="flex items-center space-x-3">
             <div className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium text-white ${getBeachConditionColor(weather.beachConditions)}`}>
               <div className="w-2 h-2 rounded-full bg-white mr-2" />
-              {getBeachConditionText(weather.beachConditions)}
+              {weather.beachConditions.charAt(0).toUpperCase() + weather.beachConditions.slice(1)}
             </div>
             <button
               onClick={refreshWeather}
