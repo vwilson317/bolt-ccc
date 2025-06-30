@@ -37,49 +37,61 @@ export const useAnalytics = () => {
 
   // Initialize analytics on mount
   useEffect(() => {
-    initAnalytics();
-    trackDeviceType();
-    trackScreenSize();
+    try {
+      initAnalytics();
+      trackDeviceType();
+      trackScreenSize();
+    } catch (error) {
+      console.warn('⚠️ Analytics initialization failed:', error);
+    }
   }, []);
 
   // Track page views on route changes
   useEffect(() => {
-    const currentTime = Date.now();
-    const timeSpent = currentTime - pageStartTime.current;
-    
-    // Track time spent on previous page
-    if (pageStartTime.current > 0) {
-      trackTimeOnPage(location.pathname, timeSpent);
+    try {
+      const currentTime = Date.now();
+      const timeSpent = currentTime - pageStartTime.current;
+      
+      // Track time spent on previous page
+      if (pageStartTime.current > 0) {
+        trackTimeOnPage(location.pathname, timeSpent);
+      }
+      
+      // Track new page view
+      trackPageView(location.pathname);
+      
+      // Reset for new page
+      pageStartTime.current = Date.now();
+      scrollDepth.current = 0;
+    } catch (error) {
+      console.warn('⚠️ Page tracking failed:', error);
     }
-    
-    // Track new page view
-    trackPageView(location.pathname);
-    
-    // Reset for new page
-    pageStartTime.current = Date.now();
-    scrollDepth.current = 0;
   }, [location]);
 
   // Track scroll depth
   useEffect(() => {
     const handleScroll = () => {
-      const scrollTop = window.pageYOffset;
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const scrollPercent = Math.round((scrollTop / docHeight) * 100);
-      
-      // Track scroll depth at 25%, 50%, 75%, and 100%
-      if (scrollPercent >= 25 && scrollDepth.current < 25) {
-        trackScrollDepth(location.pathname, 25);
-        scrollDepth.current = 25;
-      } else if (scrollPercent >= 50 && scrollDepth.current < 50) {
-        trackScrollDepth(location.pathname, 50);
-        scrollDepth.current = 50;
-      } else if (scrollPercent >= 75 && scrollDepth.current < 75) {
-        trackScrollDepth(location.pathname, 75);
-        scrollDepth.current = 75;
-      } else if (scrollPercent >= 100 && scrollDepth.current < 100) {
-        trackScrollDepth(location.pathname, 100);
-        scrollDepth.current = 100;
+      try {
+        const scrollTop = window.pageYOffset;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const scrollPercent = Math.round((scrollTop / docHeight) * 100);
+        
+        // Track scroll depth at 25%, 50%, 75%, and 100%
+        if (scrollPercent >= 25 && scrollDepth.current < 25) {
+          trackScrollDepth(location.pathname, 25);
+          scrollDepth.current = 25;
+        } else if (scrollPercent >= 50 && scrollDepth.current < 50) {
+          trackScrollDepth(location.pathname, 50);
+          scrollDepth.current = 50;
+        } else if (scrollPercent >= 75 && scrollDepth.current < 75) {
+          trackScrollDepth(location.pathname, 75);
+          scrollDepth.current = 75;
+        } else if (scrollPercent >= 100 && scrollDepth.current < 100) {
+          trackScrollDepth(location.pathname, 100);
+          scrollDepth.current = 100;
+        }
+      } catch (error) {
+        console.warn('⚠️ Scroll tracking failed:', error);
       }
     };
 
@@ -89,31 +101,43 @@ export const useAnalytics = () => {
 
   // Track performance metrics
   useEffect(() => {
-    if ('performance' in window) {
-      const observer = new PerformanceObserver((list) => {
-        for (const entry of list.getEntries()) {
-          if (entry.entryType === 'navigation') {
-            const navEntry = entry as PerformanceNavigationTiming;
-            trackPerformance('Page Load Time', navEntry.loadEventEnd - navEntry.loadEventStart);
-            trackPerformance('DOM Content Loaded', navEntry.domContentLoadedEventEnd - navEntry.domContentLoadedEventStart);
+    try {
+      if ('performance' in window) {
+        const observer = new PerformanceObserver((list) => {
+          for (const entry of list.getEntries()) {
+            if (entry.entryType === 'navigation') {
+              const navEntry = entry as PerformanceNavigationTiming;
+              trackPerformance('Page Load Time', navEntry.loadEventEnd - navEntry.loadEventStart);
+              trackPerformance('DOM Content Loaded', navEntry.domContentLoadedEventEnd - navEntry.domContentLoadedEventStart);
+            }
           }
-        }
-      });
-      
-      observer.observe({ entryTypes: ['navigation'] });
-      
-      return () => observer.disconnect();
+        });
+        
+        observer.observe({ entryTypes: ['navigation'] });
+        
+        return () => observer.disconnect();
+      }
+    } catch (error) {
+      console.warn('⚠️ Performance tracking failed:', error);
     }
   }, []);
 
   // Track errors
   useEffect(() => {
     const handleError = (event: ErrorEvent) => {
-      trackError(event.message, event.filename);
+      try {
+        trackError(event.message, event.filename);
+      } catch (error) {
+        console.warn('⚠️ Error tracking failed:', error);
+      }
     };
 
     const handleUnhandledRejection = (event: PromiseRejectionEvent) => {
-      trackError(event.reason, 'Unhandled Promise Rejection');
+      try {
+        trackError(event.reason, 'Unhandled Promise Rejection');
+      } catch (error) {
+        console.warn('⚠️ Error tracking failed:', error);
+      }
     };
 
     window.addEventListener('error', handleError);
@@ -125,58 +149,79 @@ export const useAnalytics = () => {
     };
   }, []);
 
-  // Return tracking functions
+  // Return tracking functions with error handling
+  const createSafeTrackingFunction = (trackingFunction: Function) => {
+    return useCallback((...args: any[]) => {
+      try {
+        return trackingFunction(...args);
+      } catch (error) {
+        console.warn('⚠️ Analytics tracking failed:', error);
+      }
+    }, [trackingFunction]);
+  };
+
   return {
     // Basic tracking
-    trackEvent: useCallback(trackEvent, []),
-    trackPageView: useCallback(trackPageView, []),
+    trackEvent: createSafeTrackingFunction(trackEvent),
+    trackPageView: createSafeTrackingFunction(trackPageView),
     
     // Barraca tracking
-    trackBarracaView: useCallback(trackBarracaView, []),
-    trackBarracaFilter: useCallback(trackBarracaFilter, []),
-    trackBarracaSearch: useCallback(trackBarracaSearch, []),
+    trackBarracaView: createSafeTrackingFunction(trackBarracaView),
+    trackBarracaFilter: createSafeTrackingFunction(trackBarracaFilter),
+    trackBarracaSearch: createSafeTrackingFunction(trackBarracaSearch),
     
     // Weather tracking
-    trackWeatherView: useCallback(trackWeatherView, []),
-    trackWeatherRefresh: useCallback(trackWeatherRefresh, []),
+    trackWeatherView: createSafeTrackingFunction(trackWeatherView),
+    trackWeatherRefresh: createSafeTrackingFunction(trackWeatherRefresh),
     
     // Story tracking
-    trackStoryView: useCallback(trackStoryView, []),
-    trackStoryShare: useCallback(trackStoryShare, []),
+    trackStoryView: createSafeTrackingFunction(trackStoryView),
+    trackStoryShare: createSafeTrackingFunction(trackStoryShare),
     
     // User tracking
-    trackEmailSubscription: useCallback(trackEmailSubscription, []),
-    trackLanguageChange: useCallback(trackLanguageChange, []),
-    trackUserJourney: useCallback(trackUserJourney, []),
+    trackEmailSubscription: createSafeTrackingFunction(trackEmailSubscription),
+    trackLanguageChange: createSafeTrackingFunction(trackLanguageChange),
+    trackUserJourney: createSafeTrackingFunction(trackUserJourney),
     
     // Admin tracking
-    trackAdminLogin: useCallback(trackAdminLogin, []),
-    trackAdminAction: useCallback(trackAdminAction, []),
+    trackAdminLogin: createSafeTrackingFunction(trackAdminLogin),
+    trackAdminAction: createSafeTrackingFunction(trackAdminAction),
     
     // Performance tracking
-    trackPerformance: useCallback(trackPerformance, []),
-    trackError: useCallback(trackError, []),
+    trackPerformance: createSafeTrackingFunction(trackPerformance),
+    trackError: createSafeTrackingFunction(trackError),
     
     // Device tracking
-    trackDeviceType: useCallback(trackDeviceType, []),
-    trackScreenSize: useCallback(trackScreenSize, []),
+    trackDeviceType: createSafeTrackingFunction(trackDeviceType),
+    trackScreenSize: createSafeTrackingFunction(trackScreenSize),
     
     // Engagement tracking
-    trackTimeOnPage: useCallback(trackTimeOnPage, []),
-    trackScrollDepth: useCallback(trackScrollDepth, []),
-    trackCTAClick: useCallback(trackCTAClick, []),
+    trackTimeOnPage: createSafeTrackingFunction(trackTimeOnPage),
+    trackScrollDepth: createSafeTrackingFunction(trackScrollDepth),
+    trackCTAClick: createSafeTrackingFunction(trackCTAClick),
     
     // Link tracking
-    trackExternalLink: useCallback(trackExternalLink, []),
-    trackSocialShare: useCallback(trackSocialShare, []),
+    trackExternalLink: createSafeTrackingFunction(trackExternalLink),
+    trackSocialShare: createSafeTrackingFunction(trackSocialShare),
     
     // Form tracking
-    trackFormSubmission: useCallback(trackFormSubmission, []),
+    trackFormSubmission: createSafeTrackingFunction(trackFormSubmission),
     
     // PWA tracking
-    trackPWAInstall: useCallback(trackPWAInstall, []),
+    trackPWAInstall: createSafeTrackingFunction(trackPWAInstall),
     
     // Status
-    getStatus: useCallback(getAnalyticsStatus, [])
+    getStatus: useCallback(() => {
+      try {
+        return getAnalyticsStatus();
+      } catch (error) {
+        console.warn('⚠️ Analytics status check failed:', error);
+        return {
+          isInitialized: false,
+          measurementId: 'Error',
+          environment: 'unknown'
+        };
+      }
+    }, [])
   };
 }; 

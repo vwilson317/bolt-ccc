@@ -6,13 +6,20 @@ class AnalyticsService {
   private measurementId: string;
 
   constructor() {
-    this.measurementId = import.meta.env.VITE_GA_MEASUREMENT_ID || '';
+    // Safely get the measurement ID with fallback
+    try {
+      this.measurementId = import.meta.env.VITE_GA_MEASUREMENT_ID || '';
+    } catch (error) {
+      console.warn('⚠️ Could not access VITE_GA_MEASUREMENT_ID:', error);
+      this.measurementId = '';
+    }
   }
 
   // Initialize Google Analytics
   init() {
     if (!this.measurementId) {
       console.warn('⚠️ Google Analytics Measurement ID not found. Analytics will be disabled.');
+      console.warn('💡 Set VITE_GA_MEASUREMENT_ID environment variable to enable analytics.');
       return;
     }
 
@@ -189,8 +196,18 @@ class AnalyticsService {
   }
 }
 
-// Create singleton instance
-export const analytics = new AnalyticsService();
+// Create singleton instance with error handling
+let analyticsInstance: AnalyticsService;
+
+try {
+  analyticsInstance = new AnalyticsService();
+} catch (error) {
+  console.error('❌ Failed to create analytics instance:', error);
+  // Create a fallback instance
+  analyticsInstance = new AnalyticsService();
+}
+
+export const analytics = analyticsInstance;
 
 // Export individual tracking functions for convenience
 export const {
