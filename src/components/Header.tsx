@@ -90,7 +90,7 @@ const Header: React.FC = () => {
               <img 
                 src="/white_circle_360x360.png" 
                 alt="Bolt" 
-                className="h-4 w-4 opacity-60 hover:opacity-100 transition-opacity"
+                className="h-5 w-5 opacity-60 hover:opacity-100 transition-opacity"
               />
               <span className="text-xs text-gray-500 opacity-60 hover:opacity-100 transition-opacity">
                 Built with Bolt
@@ -187,7 +187,7 @@ const Header: React.FC = () => {
                 <img 
                   src="/white_circle_360x360.png" 
                   alt="Bolt" 
-                  className="h-4 w-4 opacity-60"
+                  className="h-5 w-5 opacity-60"
                 />
                 <span className="text-xs text-gray-500 opacity-60">
                   Built with Bolt
