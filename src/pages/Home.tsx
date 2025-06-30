@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { ArrowRight, MapPin, Smartphone, Shield, Zap, Users, Calendar, Bell, Gift } from 'lucide-react';
+import { ArrowRight, MapPin, Smartphone, Shield, Zap, Users, Calendar, Bell, Gift, Waves } from 'lucide-react';
 import HeroCarousel from '../components/HeroCarousel';
 import BarracaGrid from '../components/BarracaGrid';
 import EmailSubscription from '../components/EmailSubscription';
