@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Menu, X, Waves, Globe } from 'lucide-react';
+import { Menu, X, Globe } from 'lucide-react';
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -23,19 +23,16 @@ const Header: React.FC = () => {
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-sky-100 shadow-sm">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-orange-100 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2 group">
-            <div className="p-2 bg-gradient-to-r from-sky-500 to-blue-600 rounded-lg group-hover:from-sky-600 group-hover:to-blue-700 transition-all duration-200">
-              <Waves className="h-6 w-6 text-white" />
-            </div>
-            <div className="hidden sm:block">
-              <h1 className="text-xl font-bold bg-gradient-to-r from-sky-600 to-blue-700 bg-clip-text text-transparent">
+          <Link to="/" className="flex items-center space-x-3 group">
+            <div className="text-center">
+              <h1 className="text-xl font-bold bg-gradient-to-r from-orange-600 to-red-700 bg-clip-text text-transparent">
                 Carioca Coastal Club
               </h1>
-              <p className="text-xs text-gray-500 -mt-1">Loyalty Program</p>
+              <p className="text-xs text-orange-500 -mt-1">Beach Loyalty Program</p>
             </div>
           </Link>
 
@@ -45,8 +42,8 @@ const Header: React.FC = () => {
               to="/"
               className={`font-medium transition-colors duration-200 ${
                 isActive('/') 
-                  ? 'text-sky-600 border-b-2 border-sky-600 pb-1' 
-                  : 'text-gray-700 hover:text-sky-600'
+                  ? 'text-orange-600 border-b-2 border-orange-600 pb-1' 
+                  : 'text-gray-700 hover:text-orange-600'
               }`}
             >
               {t('nav.home')}
@@ -55,8 +52,8 @@ const Header: React.FC = () => {
               to="/discover"
               className={`font-medium transition-colors duration-200 ${
                 isActive('/discover') 
-                  ? 'text-sky-600 border-b-2 border-sky-600 pb-1' 
-                  : 'text-gray-700 hover:text-sky-600'
+                  ? 'text-orange-600 border-b-2 border-orange-600 pb-1' 
+                  : 'text-gray-700 hover:text-orange-600'
               }`}
             >
               {t('nav.discover')}
@@ -65,8 +62,8 @@ const Header: React.FC = () => {
               to="/about"
               className={`font-medium transition-colors duration-200 ${
                 isActive('/about') 
-                  ? 'text-sky-600 border-b-2 border-sky-600 pb-1' 
-                  : 'text-gray-700 hover:text-sky-600'
+                  ? 'text-orange-600 border-b-2 border-orange-600 pb-1' 
+                  : 'text-gray-700 hover:text-orange-600'
               }`}
             >
               {t('nav.about')}
@@ -75,8 +72,8 @@ const Header: React.FC = () => {
               to="/admin"
               className={`font-medium transition-colors duration-200 ${
                 isActive('/admin') 
-                  ? 'text-sky-600 border-b-2 border-sky-600 pb-1' 
-                  : 'text-gray-700 hover:text-sky-600'
+                  ? 'text-orange-600 border-b-2 border-orange-600 pb-1' 
+                  : 'text-gray-700 hover:text-orange-600'
               }`}
             >
               {t('nav.admin')}
@@ -90,7 +87,7 @@ const Header: React.FC = () => {
               <img 
                 src="/white_circle_360x360.png" 
                 alt="Bolt" 
-                className="h-5 w-5 opacity-60 hover:opacity-100 transition-opacity"
+                className="h-6 w-6 opacity-60 hover:opacity-100 transition-opacity"
               />
               <span className="text-xs text-gray-500 opacity-60 hover:opacity-100 transition-opacity">
                 Built with Bolt
@@ -116,7 +113,7 @@ const Header: React.FC = () => {
                       key={lang.code}
                       onClick={() => changeLanguage(lang.code)}
                       className={`w-full px-4 py-2 text-left flex items-center space-x-3 hover:bg-gray-50 transition-colors ${
-                        i18n.language === lang.code ? 'bg-sky-50 text-sky-600' : 'text-gray-700'
+                        i18n.language === lang.code ? 'bg-orange-50 text-orange-600' : 'text-gray-700'
                       }`}
                     >
                       <span className="text-lg">{lang.flag}</span>
@@ -149,7 +146,7 @@ const Header: React.FC = () => {
                 to="/"
                 onClick={() => setIsMenuOpen(false)}
                 className={`font-medium transition-colors duration-200 ${
-                  isActive('/') ? 'text-sky-600' : 'text-gray-700'
+                  isActive('/') ? 'text-orange-600' : 'text-gray-700'
                 }`}
               >
                 {t('nav.home')}
@@ -158,7 +155,7 @@ const Header: React.FC = () => {
                 to="/discover"
                 onClick={() => setIsMenuOpen(false)}
                 className={`font-medium transition-colors duration-200 ${
-                  isActive('/discover') ? 'text-sky-600' : 'text-gray-700'
+                  isActive('/discover') ? 'text-orange-600' : 'text-gray-700'
                 }`}
               >
                 {t('nav.discover')}
@@ -167,7 +164,7 @@ const Header: React.FC = () => {
                 to="/about"
                 onClick={() => setIsMenuOpen(false)}
                 className={`font-medium transition-colors duration-200 ${
-                  isActive('/about') ? 'text-sky-600' : 'text-gray-700'
+                  isActive('/about') ? 'text-orange-600' : 'text-gray-700'
                 }`}
               >
                 {t('nav.about')}
@@ -176,7 +173,7 @@ const Header: React.FC = () => {
                 to="/admin"
                 onClick={() => setIsMenuOpen(false)}
                 className={`font-medium transition-colors duration-200 ${
-                  isActive('/admin') ? 'text-sky-600' : 'text-gray-700'
+                  isActive('/admin') ? 'text-orange-600' : 'text-gray-700'
                 }`}
               >
                 {t('nav.admin')}
@@ -187,7 +184,7 @@ const Header: React.FC = () => {
                 <img 
                   src="/white_circle_360x360.png" 
                   alt="Bolt" 
-                  className="h-5 w-5 opacity-60"
+                  className="h-6 w-6 opacity-60"
                 />
                 <span className="text-xs text-gray-500 opacity-60">
                   Built with Bolt
