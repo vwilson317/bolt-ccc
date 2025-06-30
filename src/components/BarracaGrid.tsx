@@ -52,12 +52,18 @@ const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
 
   const isExpanded = (barracaId: string) => expandedCards.has(barracaId);
 
+  // Helper function to truncate description for desktop
+  const getTruncatedDescription = (description: string, maxLength: number = 120) => {
+    if (description.length <= maxLength) return description;
+    return description.substring(0, maxLength).trim() + '...';
+  };
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
       {barracas.map((barraca) => (
-        <div key={barraca.id} className="bg-white rounded-xl md:rounded-2xl shadow-md hover:shadow-lg transition-all duration-200 overflow-hidden">
+        <div key={barraca.id} className="bg-white rounded-xl md:rounded-2xl shadow-md hover:shadow-lg transition-all duration-200 overflow-hidden flex flex-col">
           {/* Mobile-Optimized Image Section */}
-          <div className="relative h-40 md:h-48 overflow-hidden">
+          <div className="relative h-40 md:h-48 overflow-hidden flex-shrink-0">
             <img
               src={barraca.images[0]}
               alt={barraca.name}
@@ -104,10 +110,10 @@ const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
             )}
           </div>
 
-          {/* Content Section - Mobile Optimized */}
-          <div className="p-4 md:p-6">
+          {/* Content Section - Mobile Optimized with Flex Layout */}
+          <div className="p-4 md:p-6 flex flex-col flex-grow">
             {/* Header - Clean and Scannable */}
-            <div className="mb-3">
+            <div className="mb-3 flex-shrink-0">
               <div className="flex items-start justify-between mb-2">
                 <h3 className="text-lg md:text-xl font-bold text-gray-900 leading-tight">
                   {barraca.name}
@@ -131,8 +137,8 @@ const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
               </div>
             </div>
 
-            {/* Collapsible Details for Mobile */}
-            <div className="md:block">
+            {/* Collapsible Details for Mobile / Fixed Height for Desktop */}
+            <div className="md:block flex-grow">
               {/* Always Visible: Top Menu Items */}
               {barraca.menuPreview.length > 0 && (
                 <div className="mb-3">
@@ -157,13 +163,22 @@ const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
                 </div>
               )}
 
+              {/* Description - Truncated on Desktop, Expandable on Mobile */}
+              <div className="mb-3">
+                <p className="text-gray-600 text-sm leading-relaxed">
+                  {/* Desktop: Always show truncated */}
+                  <span className="hidden md:block">
+                    {getTruncatedDescription(barraca.description)}
+                  </span>
+                  {/* Mobile: Show full if expanded, truncated if not */}
+                  <span className="md:hidden">
+                    {isExpanded(barraca.id) ? barraca.description : getTruncatedDescription(barraca.description, 80)}
+                  </span>
+                </p>
+              </div>
+
               {/* Expandable Content on Mobile */}
               <div className={`md:block ${isExpanded(barraca.id) ? 'block' : 'hidden'}`}>
-                {/* Description */}
-                <p className="text-gray-600 text-sm mb-3 leading-relaxed">
-                  {barraca.description}
-                </p>
-
                 {/* Additional Menu Items */}
                 {barraca.menuPreview.length > 2 && (
                   <div className="mb-3">
@@ -220,8 +235,8 @@ const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
               </button>
             </div>
 
-            {/* Action Footer - Mobile Optimized with Configurable CTA Buttons */}
-            <div className="mt-4 pt-3 border-t border-gray-100">
+            {/* Action Footer - Mobile Optimized with Configurable CTA Buttons - Fixed at Bottom */}
+            <div className="mt-auto pt-3 border-t border-gray-100 flex-shrink-0">
               <div className="flex items-center justify-between">
                 {/* Contact Icons - Larger Touch Targets */}
                 <div className="flex space-x-2">
