@@ -24,6 +24,9 @@ VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
 # OpenWeather API
 VITE_OPENWEATHER_API_KEY=your_openweather_api_key
 
+# Google Analytics 4
+VITE_GA_MEASUREMENT_ID=G-XXXXXXXXXX
+
 # Lingo Translation (if using)
 GROQ_API_KEY=your_groq_api_key
 ```

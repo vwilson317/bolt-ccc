@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Lock, Plus, Edit2, Trash2, Eye, EyeOff, Users, Mail, BarChart3 } from 'lucide-react';
 import { useApp } from '../contexts/AppContext';
+import { useAnalytics } from '../hooks/useAnalytics';
 import AdminBarracaForm from '../components/AdminBarracaForm';
 import AdminStats from '../components/AdminStats';
+import AnalyticsDashboard from '../components/AnalyticsDashboard';
 
 const Admin: React.FC = () => {
   const { t } = useTranslation();
@@ -15,13 +17,14 @@ const Admin: React.FC = () => {
     deleteBarraca,
     emailSubscriptions 
   } = useApp();
+  const { trackAdminLogin, trackAdminAction } = useAnalytics();
   
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLogging, setIsLogging] = useState(false);
   const [loginError, setLoginError] = useState('');
-  const [activeTab, setActiveTab] = useState<'barracas' | 'stats' | 'emails'>('barracas');
+  const [activeTab, setActiveTab] = useState<'barracas' | 'stats' | 'emails' | 'analytics'>('barracas');
   const [editingBarraca, setEditingBarraca] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
 
@@ -32,10 +35,12 @@ const Admin: React.FC = () => {
 
     try {
       const success = await adminLogin(email, password);
+      trackAdminLogin(success);
       if (!success) {
         setLoginError('Invalid credentials. Try admin@cariocacoastal.com / admin123');
       }
     } catch (error) {
+      trackAdminLogin(false);
       setLoginError('Login failed. Please try again.');
     } finally {
       setIsLogging(false);
@@ -44,6 +49,7 @@ const Admin: React.FC = () => {
 
   const handleDeleteBarraca = (id: string) => {
     if (window.confirm('Are you sure you want to delete this barraca?')) {
+      trackAdminAction('Delete Barraca', `Barraca ID: ${id}`);
       deleteBarraca(id);
     }
   };
@@ -186,6 +192,17 @@ const Admin: React.FC = () => {
                 <Mail className="h-4 w-4 inline mr-2" />
                 {t('admin.emails')} ({emailSubscriptions.length})
               </button>
+              <button
+                onClick={() => setActiveTab('analytics')}
+                className={`py-2 px-1 border-b-2 font-medium text-sm transition-colors ${
+                  activeTab === 'analytics'
+                    ? 'border-orange-500 text-orange-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                }`}
+              >
+                <BarChart3 className="h-4 w-4 inline mr-2" />
+                Analytics
+              </button>
             </nav>
           </div>
         </div>
@@ -307,6 +324,8 @@ const Admin: React.FC = () => {
         )}
 
         {activeTab === 'stats' && <AdminStats />}
+
+        {activeTab === 'analytics' && <AnalyticsDashboard />}
 
         {activeTab === 'emails' && (
           <div className="bg-white rounded-2xl shadow-lg p-6">

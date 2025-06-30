@@ -441,6 +441,114 @@
         }
       }
     },
+    "components/AnalyticsDashboard.tsx": {
+      "scopes": {
+        "5/0/init/body/7/argument/11/1": {
+          "type": "element",
+          "hash": "921b00002003ffa2c81ecceb0a12155c",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Top Pages"
+        },
+        "5/0/init/body/7/argument/15/1": {
+          "type": "element",
+          "hash": "580f4b1c1b609349347a6b3717818030",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "<element:Globe></element:Globe> Device Types"
+        },
+        "5/0/init/body/7/argument/15/3/1/expression/0/body/3/3": {
+          "type": "element",
+          "hash": "5ffe4a4526d680df3dc6d6e7880cbc9a",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "{device.percentage}%"
+        },
+        "5/0/init/body/7/argument/19/1": {
+          "type": "element",
+          "hash": "e6cfdc9bd717aa9fcebbb3d8a2cc0077",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "<element:strong>Note:</element:strong> This is a demo dashboard. In production, you would integrate with the Google Analytics API to fetch real-time data."
+        },
+        "5/0/init/body/7/argument/3/1": {
+          "type": "element",
+          "hash": "e94c78216dfa594709de5b9ca5d8c499",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "<element:BarChart3></element:BarChart3> Analytics Status"
+        },
+        "5/0/init/body/7/argument/3/3/1/3": {
+          "type": "element",
+          "hash": "8b55d86bdca816bbe82c46dee55524d4",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Status: <expression/>"
+        },
+        "5/0/init/body/7/argument/3/3/3": {
+          "type": "element",
+          "hash": "bec34be3afcd747683e76f54b7963fdc",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "GA ID: {analyticsStatus.measurementId}"
+        },
+        "5/0/init/body/7/argument/3/3/5": {
+          "type": "element",
+          "hash": "cf9231945ef42b10f3f7366633239e8d",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Environment: {analyticsStatus.environment}"
+        },
+        "5/0/init/body/7/argument/7/1/1/3/1": {
+          "type": "element",
+          "hash": "b49116da58bb5d1c6723faae7b27b5da",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Page Views"
+        },
+        "5/0/init/body/7/argument/7/3/1/3/1": {
+          "type": "element",
+          "hash": "93717c9ca6c7ea32c5ebd1da76c00040",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Unique Visitors"
+        },
+        "5/0/init/body/7/argument/7/5/1/3/1": {
+          "type": "element",
+          "hash": "6a0439cc95c758e1e214502a6d5275fc",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Bounce Rate"
+        },
+        "5/0/init/body/7/argument/7/5/1/3/3": {
+          "type": "element",
+          "hash": "5ffe4a4526d680df3dc6d6e7880cbc9a",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "{data.bounceRate}%"
+        },
+        "5/0/init/body/7/argument/7/7/1/3/1": {
+          "type": "element",
+          "hash": "371acb1f74633ae106c7ab1137edf5a0",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Avg. Session"
+        }
+      }
+    },
     "components/BarracaGrid.tsx": {
       "scopes": {
         "8/0/init/body/9/argument/1/expression/0/body/3/13/expression/right/1": {
@@ -1828,6 +1936,70 @@
           "content": "Actions"
         },
         "6/0/init/body/13/argument/5/7/expression/right/5/1/1/3/1/expression/0/body/1/1/3/3/expression/right": {
+          "type": "element",
+          "hash": "9e258a2c32b9e481f5fae8bb56a1ff20",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "#{barraca.barracaNumber}"
+        },
+        "8/0/init/body/13/consequent/0/argument/1/1/5": {
+          "type": "element",
+          "hash": "2e3e579c4efc9ddd62edbfeb69dc9573",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Access the admin dashboard to manage barracas"
+        },
+        "8/0/init/body/13/consequent/0/argument/1/3/1/3-placeholder": {
+          "type": "attribute",
+          "hash": "224e03ab7cd6ba6e8ab365ba90e8808c",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "admin@cariocacoastal.com"
+        },
+        "8/0/init/body/13/consequent/0/argument/1/3/3/3/1-placeholder": {
+          "type": "attribute",
+          "hash": "64e2908105bcce82f297f1fe45e76fbe",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "admin123"
+        },
+        "8/0/init/body/14/argument/5/13/expression/right/3/1/3/1/expression/0/body/5/1/1/expression/right": {
+          "type": "element",
+          "hash": "a5fd1cd1fc4337db2b6b9f7e74da28ce",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "New Spots"
+        },
+        "8/0/init/body/14/argument/5/13/expression/right/3/1/3/1/expression/0/body/5/1/3/expression/right": {
+          "type": "element",
+          "hash": "4b53994e7beea47967ce263979756d53",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Offers"
+        },
+        "8/0/init/body/14/argument/5/3/1/1/5": {
+          "type": "element",
+          "hash": "ce78bf488d5443a19599cd295f9fde2e",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "<element:Mail></element:Mail><function:t/> ({emailSubscriptions.length})"
+        },
+        "8/0/init/body/14/argument/5/3/1/1/7": {
+          "type": "element",
+          "hash": "e19a94d1ccad40c1002320ea48316c25",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "<element:BarChart3></element:BarChart3> Analytics"
+        },
+        "8/0/init/body/14/argument/5/7/expression/right/5/1/1/3/1/expression/0/body/1/1/3/3/expression/right": {
           "type": "element",
           "hash": "9e258a2c32b9e481f5fae8bb56a1ff20",
           "context": "",
