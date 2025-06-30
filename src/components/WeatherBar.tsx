@@ -36,15 +36,15 @@ const WeatherBar: React.FC = () => {
           <div className="flex items-center space-x-4 text-sm">
             <div className="flex items-center space-x-1">
               <Thermometer className="h-4 w-4" />
-              <span className="font-medium">{weather.temperature}°C</span>
+              <span className="font-medium" data-lingo-skip>{weather.temperature}°C</span>
             </div>
             <div className="hidden sm:flex items-center space-x-1">
               <Droplets className="h-4 w-4" />
-              <span>{weather.humidity}%</span>
+              <span data-lingo-skip>{weather.humidity}%</span>
             </div>
             <div className="hidden md:flex items-center space-x-1">
               <Wind className="h-4 w-4" />
-              <span>{weather.windSpeed} km/h</span>
+              <span data-lingo-skip>{weather.windSpeed} km/h</span>
             </div>
           </div>
 

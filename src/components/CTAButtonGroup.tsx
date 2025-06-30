@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Barraca, CTAButtonConfig } from '../types';
 import { useStory } from '../contexts/StoryContext';
 import { 
@@ -27,12 +28,14 @@ const CTAButtonGroup: React.FC<CTAButtonGroupProps> = ({
   className = '',
   context = {}
 }) => {
+  const { t } = useTranslation();
   const { featureFlags } = useStory();
 
   // Get appropriate CTA buttons based on feature flag and configuration
   const ctaButtons = getCTAButtonsForBarraca(
     barraca, 
     featureFlags.customCtaButtons, 
+    t,
     context
   ).slice(0, maxButtons);
 

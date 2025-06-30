@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { ArrowRight, MapPin, Smartphone, Shield, Zap, Users, Calendar, Bell, Gift } from 'lucide-react';
+import { ArrowRight, MapPin, Users, Calendar, Bell, Gift } from 'lucide-react';
 import HeroCarousel from '../components/HeroCarousel';
 import BarracaGrid from '../components/BarracaGrid';
 import EmailSubscription from '../components/EmailSubscription';
@@ -18,23 +18,23 @@ const Home: React.FC = () => {
   const loyaltyFeatures = [
     {
       icon: Calendar,
-      title: 'Chair Reservations',
-      description: 'Reserve your favorite spot at participating barracas - never worry about finding a chair again'
+      title: t('home.features.chairReservations.title'),
+      description: t('home.features.chairReservations.description')
     },
     {
       icon: Bell,
-      title: 'Real-time Updates',
-      description: 'Get instant notifications when your favorite barraca opens, closes, or has special offers'
+      title: t('home.features.realTimeUpdates.title'),
+      description: t('home.features.realTimeUpdates.description')
     },
     {
       icon: Gift,
-      title: 'Exclusive Member Perks',
-      description: 'Access special discounts, priority service, and member-only events at partner barracas'
+      title: t('home.features.exclusivePerks.title'),
+      description: t('home.features.exclusivePerks.description')
     },
     {
       icon: MapPin,
-      title: 'Personalized Recommendations',
-      description: 'Discover new barracas based on your preferences and get insider tips from locals'
+      title: t('home.features.personalizedRecommendations.title'),
+      description: t('home.features.personalizedRecommendations.description')
     }
   ];
 
@@ -60,10 +60,10 @@ const Home: React.FC = () => {
       <section className="py-16 bg-gradient-to-b from-orange-50 to-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
-            Your Barraca, Your Way
+            {t('home.yourBarraca')}
           </h2>
           <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
-            Join thousands of loyal customers who use Carioca Coastal Club to stay connected with their favorite barracas
+            {t('home.joinThousands')}
           </p>
           
           {/* CTA Buttons */}
@@ -86,17 +86,17 @@ const Home: React.FC = () => {
           {/* Quick Stats with Unique Visitor Counter */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-12">
             <div className="text-center">
-              <div className="text-3xl font-bold text-orange-600 mb-2">{barracas.length}+</div>
-              <div className="text-sm text-gray-600">Partner Barracas</div>
+              <div className="text-3xl font-bold text-orange-600 mb-2">{barracas.length}<span data-lingo-skip>+</span></div>
+              <div className="text-sm text-gray-600"><span data-lingo-skip>{t('home.stats.partnerBarracas') || 'Partner Barracas'}</span></div>
             </div>
             <UniqueVisitorCounter />
             <div className="text-center">
-              <div className="text-3xl font-bold text-orange-600 mb-2">24/7</div>
-              <div className="text-sm text-gray-600">Availability Updates</div>
+              <div className="text-3xl font-bold text-orange-600 mb-2" data-lingo-skip>24/7</div>
+              <div className="text-sm text-gray-600" data-lingo-skip>{t('home.stats.availabilityUpdates') || 'Availability Updates'}</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-orange-600 mb-2">12</div>
-              <div className="text-sm text-gray-600">Neighborhoods</div>
+              <div className="text-3xl font-bold text-orange-600 mb-2" data-lingo-skip>12</div>
+              <div className="text-sm text-gray-600" data-lingo-skip>{t('home.stats.neighborhoods') || 'Neighborhoods'}</div>
             </div>
           </div>
         </div>
@@ -107,16 +107,16 @@ const Home: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Popular Member Barracas
+              {t('home.popularBarracas')}
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-8">
-              These barracas are loved by our community - check if your favorite is open and reserve your spot
+              {t('home.popularDescription')}
             </p>
             <Link
               to="/discover"
               className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-orange-500 to-red-600 text-white font-semibold rounded-xl hover:from-orange-600 hover:to-red-700 transform hover:scale-105 transition-all duration-200 shadow-lg"
             >
-              View All Partner Barracas
+              {t('home.viewAllPartners')}
               <ArrowRight className="ml-2 h-5 w-5" />
             </Link>
           </div>
@@ -129,10 +129,10 @@ const Home: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Why Join Carioca Coastal Club?
+              {t('home.whyJoin')}
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              More than just finding barracas - we're your connection to Rio's barraca culture
+              {t('home.whyJoinDescription')}
             </p>
           </div>
           
@@ -163,27 +163,27 @@ const Home: React.FC = () => {
           <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
             <Users className="h-16 w-16 text-white mx-auto mb-6" />
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              Exclusive Member Benefits
+              {t('home.exclusiveBenefits')}
             </h2>
             <p className="text-xl text-yellow-100 mb-8 max-w-2xl mx-auto">
-              Reserve chairs, get availability updates, discover new spots, and enjoy special offers from your favorite barracas
+              {t('home.exclusiveDescription')}
             </p>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
               <div className="text-center">
-                <div className="text-2xl font-bold text-white mb-1">Chair</div>
-                <div className="text-yellow-100 text-sm">Reservations</div>
+                <div className="text-2xl font-bold text-white mb-1">{t('home.memberBenefits.chair')}</div>
+                <div className="text-yellow-100 text-sm">{t('home.memberBenefits.reservations')}</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-white mb-1">Priority</div>
-                <div className="text-yellow-100 text-sm">Service</div>
+                <div className="text-2xl font-bold text-white mb-1">{t('home.memberBenefits.priority')}</div>
+                <div className="text-yellow-100 text-sm">{t('home.memberBenefits.service')}</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-white mb-1">Availability</div>
-                <div className="text-yellow-100 text-sm">Updates</div>
+                <div className="text-2xl font-bold text-white mb-1">{t('home.memberBenefits.availability')}</div>
+                <div className="text-yellow-100 text-sm">{t('home.memberBenefits.updates')}</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-white mb-1">Special</div>
-                <div className="text-yellow-100 text-sm">Offers</div>
+                <div className="text-2xl font-bold text-white mb-1">{t('home.memberBenefits.special')}</div>
+                <div className="text-yellow-100 text-sm">{t('home.memberBenefits.offers')}</div>
               </div>
             </div>
           </div>
@@ -194,10 +194,10 @@ const Home: React.FC = () => {
       <section id="loyalty-signup" className="py-16 bg-gradient-to-r from-orange-500 to-red-600">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Join the Club Today
+            {t('home.joinToday')}
           </h2>
           <p className="text-xl text-orange-100 mb-8 max-w-2xl mx-auto">
-            Start enjoying member benefits at your favorite barracas. Get updates, reserve chairs, and never miss out on the perfect barraca day.
+            {t('home.joinDescription')}
           </p>
           <EmailSubscription />
         </div>
@@ -210,43 +210,30 @@ const Home: React.FC = () => {
             {/* Company Info */}
             <div className="md:col-span-2">
               <div className="mb-4">
-                <h3 className="text-xl font-bold text-orange-400">Carioca Coastal Club</h3>
-                <p className="text-gray-400 text-sm">Barraca Loyalty Program</p>
+                <h3 className="text-xl font-bold text-orange-400" data-lingo-skip>Carioca Coastal Club</h3>
+                <p className="text-gray-400 text-sm" data-lingo-skip>Barraca Loyalty Program</p>
               </div>
               <p className="text-gray-300 mb-4 max-w-md">
-                Connecting Rio's barraca lovers with their favorite spots through chair reservations, 
-                real-time updates, and exclusive member benefits.
-              </p>
-              <div className="flex space-x-4">
-                <a href="#" className="text-gray-400 hover:text-white transition-colors">
-                  <span className="sr-only">Instagram</span>
-                  📱
-                </a>
-                <a href="#" className="text-gray-400 hover:text-white transition-colors">
-                  <span className="sr-only">WhatsApp</span>
-                  💬
-                </a>
-              </div>
+                {t('home.footer.description')}
+              </p> 
             </div>
 
             {/* Quick Links */}
             <div>
-              <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
+              <h4 className="text-lg font-semibold mb-4">{t('home.footer.quickLinks')}</h4>
               <ul className="space-y-2">
-                <li><Link to="/discover" className="text-gray-300 hover:text-white transition-colors">Find Barracas</Link></li>
-                <li><Link to="/about" className="text-gray-300 hover:text-white transition-colors">About Us</Link></li>
-                <li><a href="#loyalty-signup" className="text-gray-300 hover:text-white transition-colors">Join Club</a></li>
-                <li><Link to="/admin" className="text-gray-300 hover:text-white transition-colors">Admin</Link></li>
+                <li><Link to="/discover" className="text-gray-300 hover:text-white transition-colors">{t('nav.discover')}</Link></li>
+                <li><Link to="/about" className="text-gray-300 hover:text-white transition-colors">{t('nav.about')}</Link></li>
+                <li><a href="#loyalty-signup" className="text-gray-300 hover:text-white transition-colors">{t('email.subscribe')}</a></li>
+                <li><Link to="/admin" className="text-gray-300 hover:text-white transition-colors">{t('nav.admin')}</Link></li>
               </ul>
             </div>
 
             {/* Contact */}
             <div>
-              <h4 className="text-lg font-semibold mb-4">Contact</h4>
+              <h4 className="text-lg font-semibold mb-4">{t('home.footer.contact')}</h4>
               <ul className="space-y-2 text-gray-300">
-                <li>📧 hello@cariocacoastal.com</li>
-                <li>📱 +55 21 99999-0000</li>
-                <li>📍 Rio de Janeiro, RJ</li>
+                <li><span data-lingo-skip>CariocaCoastalClub@gmail.com</span></li>
               </ul>
             </div>
           </div>
@@ -254,7 +241,7 @@ const Home: React.FC = () => {
           {/* Bottom Bar */}
           <div className="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
             <p className="text-gray-400 text-sm">
-              © 2024 Carioca Coastal Club. All rights reserved.
+              {t('home.footer.copyright')}
             </p>
           </div>
         </div>

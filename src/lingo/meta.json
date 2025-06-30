@@ -1,0 +1,3021 @@
+{
+  "version": 0.1,
+  "files": {
+    "components/AdminBarracaForm.tsx": {
+      "scopes": {
+        "6/0/init/body/17/argument/3/13/1/1": {
+          "type": "element",
+          "hash": "329c00b9bb06865d73f280a93311864f",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Images (URLs)"
+        },
+        "6/0/init/body/17/argument/3/13/1/3": {
+          "type": "element",
+          "hash": "4855f5215b9afb561a482006fc5e89c7",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "<element:Plus></element:Plus> Add Image"
+        },
+        "6/0/init/body/17/argument/3/13/3/expression/0/body/1-placeholder": {
+          "type": "attribute",
+          "hash": "d1b2b456e31182476d63c8d3d5b135a2",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "https://example.com/image.jpg"
+        },
+        "6/0/init/body/17/argument/3/17/1/1": {
+          "type": "element",
+          "hash": "0b3a57f3f96052a76e6f14ce78fc1240",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Menu Preview Items"
+        },
+        "6/0/init/body/17/argument/3/17/1/3": {
+          "type": "element",
+          "hash": "a60db6b3346b661cf7ab0b50db0688e2",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "<element:Plus></element:Plus> Add Item"
+        },
+        "6/0/init/body/17/argument/3/17/3/expression/0/body/1-placeholder": {
+          "type": "attribute",
+          "hash": "9dac83c742f39aa65df12acee6fcdd39",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Menu item name"
+        },
+        "6/0/init/body/17/argument/3/21/1": {
+          "type": "element",
+          "hash": "e8b99a3bad79c22c9453e3d29e3a9fed",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Contact Information"
+        },
+        "6/0/init/body/17/argument/3/21/3/1/1": {
+          "type": "element",
+          "hash": "8007b019e131e5686f2b1eabf8cb0a9d",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "WhatsApp"
+        },
+        "6/0/init/body/17/argument/3/21/3/1/3-placeholder": {
+          "type": "attribute",
+          "hash": "5e926e5f2433732a5a2b2a47e1fb1b4b",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "+55 21 99999-0000"
+        },
+        "6/0/init/body/17/argument/3/21/3/3/1": {
+          "type": "element",
+          "hash": "5c3003ba6efa6297fda2e4453d0f5ec6",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Email"
+        },
+        "6/0/init/body/17/argument/3/21/3/5/1": {
+          "type": "element",
+          "hash": "141b07b897e00204623b6ae81493ef96",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Instagram"
+        },
+        "6/0/init/body/17/argument/3/21/3/5/3-placeholder": {
+          "type": "attribute",
+          "hash": "d80be178a623e028ee9e49d7cfa33740",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "https://instagram.com/barraca"
+        },
+        "6/0/init/body/17/argument/3/25/1/1": {
+          "type": "element",
+          "hash": "abbcbe2caa9f0e35a00325ea9e9bd8a3",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Amenities"
+        },
+        "6/0/init/body/17/argument/3/25/1/3": {
+          "type": "element",
+          "hash": "51782951c98e9ef35be8d121f3878e93",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "<element:Plus></element:Plus> Add Amenity"
+        },
+        "6/0/init/body/17/argument/3/25/3/expression/0/body/1-placeholder": {
+          "type": "attribute",
+          "hash": "68cc8f004f553328ed049975f4113749",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "WiFi, Umbrellas, etc."
+        },
+        "6/0/init/body/17/argument/3/29/1/1": {
+          "type": "element",
+          "hash": "eb5f282955d86226b7a4e4e8270cd8a8",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Custom CTA Buttons"
+        },
+        "6/0/init/body/17/argument/3/29/3/expression/right/1/1": {
+          "type": "element",
+          "hash": "48e82b78f25542cb81115e9244ed5e30",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Configure custom call-to-action buttons for this barraca. Leave empty to use default buttons."
+        },
+        "6/0/init/body/17/argument/3/29/3/expression/right/1/3": {
+          "type": "element",
+          "hash": "3b4b9ce1c9352448a94344901331692e",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "<element:Plus></element:Plus><function:t/> Button"
+        },
+        "6/0/init/body/17/argument/3/29/3/expression/right/3/expression/0/body/1/1": {
+          "type": "element",
+          "hash": "1542a452ec6f7c29285d60f9a856ae3a",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Button <expression/>"
+        },
+        "6/0/init/body/17/argument/3/29/3/expression/right/3/expression/0/body/3/1/1": {
+          "type": "element",
+          "hash": "8875f28782a010adfdc9c8b457455d36",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Button Text <function:t/>"
+        },
+        "6/0/init/body/17/argument/3/29/3/expression/right/3/expression/0/body/3/1/3-placeholder": {
+          "type": "attribute",
+          "hash": "4e0e081e0811f76edd1ad564864d021c",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Reserve Now"
+        },
+        "6/0/init/body/17/argument/3/29/3/expression/right/3/expression/0/body/3/3/1": {
+          "type": "element",
+          "hash": "6ce2376a51e23a76432c02ae00006c64",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Action Type <function:t/>"
+        },
+        "6/0/init/body/17/argument/3/29/3/expression/right/3/expression/0/body/3/5/1": {
+          "type": "element",
+          "hash": "0fb2b39afdff7f4e265f4337d13254f9",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Action Value <function:t/>"
+        },
+        "6/0/init/body/17/argument/3/29/3/expression/right/3/expression/0/body/3/5/3-placeholder": {
+          "type": "attribute",
+          "hash": "4386814ca0c88586596665c8c27d0c2a",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "URL, phone, etc."
+        },
+        "6/0/init/body/17/argument/3/29/3/expression/right/3/expression/0/body/3/7/1": {
+          "type": "element",
+          "hash": "a508d39d1555f64a2d0ac8775f7b1ef3",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Style"
+        },
+        "6/0/init/body/17/argument/3/29/3/expression/right/3/expression/0/body/5/1/1": {
+          "type": "element",
+          "hash": "a3f0e9541385a2303db5d4d916ec09c8",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Icon"
+        },
+        "6/0/init/body/17/argument/3/29/3/expression/right/3/expression/0/body/5/1/3/1": {
+          "type": "element",
+          "hash": "b7ab22d22fa88e35020185192ec1ae00",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "No Icon"
+        },
+        "6/0/init/body/17/argument/3/29/3/expression/right/3/expression/0/body/5/3/1": {
+          "type": "element",
+          "hash": "80ab4e65765505d166a1a97d3446b3aa",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Position"
+        },
+        "6/0/init/body/17/argument/3/29/3/expression/right/3/expression/0/body/5/5/1/3": {
+          "type": "element",
+          "hash": "20236664b7e62df0e767921b4450205f",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Enabled"
+        },
+        "6/0/init/body/17/argument/3/29/3/expression/right/3/expression/0/body/9/1": {
+          "type": "element",
+          "hash": "16849cc1a898a121a74324b1dcbac070",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Visibility Conditions"
+        },
+        "6/0/init/body/17/argument/3/29/3/expression/right/3/expression/0/body/9/3/1/3": {
+          "type": "element",
+          "hash": "1f1ca240966cdad08cf4e80ae4b04a75",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Requires Open"
+        },
+        "6/0/init/body/17/argument/3/29/3/expression/right/3/expression/0/body/9/3/3/3": {
+          "type": "element",
+          "hash": "c32fbdc4e7fef06a62fba4780d9d6237",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Requires Closed"
+        },
+        "6/0/init/body/17/argument/3/29/3/expression/right/3/expression/0/body/9/3/5/3": {
+          "type": "element",
+          "hash": "b32012a38ee2f15250f94936dc9c7a08",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Member Only"
+        },
+        "6/0/init/body/17/argument/3/29/3/expression/right/3/expression/0/body/9/3/7/3": {
+          "type": "element",
+          "hash": "58feeaf2016df37ec81772e170e64f3a",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Weather Dependent"
+        },
+        "6/0/init/body/17/argument/3/3/1/1": {
+          "type": "element",
+          "hash": "199809e359b335c456c53ba59f335e1a",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Name *"
+        },
+        "6/0/init/body/17/argument/3/3/3/1": {
+          "type": "element",
+          "hash": "993ec363aa35b04ae1b534cfce5aec2e",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Barraca Number"
+        },
+        "6/0/init/body/17/argument/3/3/3/3-placeholder": {
+          "type": "attribute",
+          "hash": "6839b81547b3e185a30525ebca434afd",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "e.g. 001"
+        },
+        "6/0/init/body/17/argument/3/3/5/1": {
+          "type": "element",
+          "hash": "b8161273673305520c24b7307ac43e48",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Location *"
+        },
+        "6/0/init/body/17/argument/3/3/5/3/1": {
+          "type": "element",
+          "hash": "33300efcb98763d8fbe5414d45b3482b",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Select neighborhood"
+        },
+        "6/0/init/body/17/argument/3/33/1": {
+          "type": "element",
+          "hash": "806df1c96f83121893c2a72a5ca8e443",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Cancel"
+        },
+        "6/0/init/body/17/argument/3/5/1": {
+          "type": "element",
+          "hash": "843146655d1358743e43988999fe1cac",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Description *"
+        },
+        "6/0/init/body/17/argument/3/9/1/1": {
+          "type": "element",
+          "hash": "48129ebaf1bd1bc5dc141371d1d719fd",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Availability"
+        },
+        "6/0/init/body/17/argument/3/9/1/3/1": {
+          "type": "element",
+          "hash": "9a8c3b16091ea6cef3f771fc6715ab67",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Open"
+        },
+        "6/0/init/body/17/argument/3/9/1/3/3": {
+          "type": "element",
+          "hash": "180560eb657a20f3d4edc44d5f7e7c2a",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Closed"
+        },
+        "6/0/init/body/17/argument/3/9/3/1": {
+          "type": "element",
+          "hash": "578fede7a0e5db537732183031853dc3",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Typical Hours"
+        },
+        "6/0/init/body/17/argument/3/9/5/1/3": {
+          "type": "element",
+          "hash": "58feeaf2016df37ec81772e170e64f3a",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Weather Dependent"
+        }
+      }
+    },
+    "components/AdminStats.tsx": {
+      "scopes": {
+        "4/0/init/body/8/argument/5/3/1/3": {
+          "type": "element",
+          "hash": "829638a27062769992557dc052f64368",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Barracas by Location"
+        },
+        "4/0/init/body/8/argument/5/7/1/3": {
+          "type": "element",
+          "hash": "d4b07b3b4faedbd20762ab8a665d979d",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Recent Activity"
+        },
+        "4/0/init/body/8/argument/9/1/3": {
+          "type": "element",
+          "hash": "b1da275f9002180a322472c8006bbe5b",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "System Health"
+        },
+        "4/0/init/body/8/argument/9/3/1/1": {
+          "type": "element",
+          "hash": "b07e776f2213b07587f8ba411718ad5d",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "98.5%"
+        },
+        "4/0/init/body/8/argument/9/3/1/3": {
+          "type": "element",
+          "hash": "635192ad4d63006b0fb3e9eda720ce4e",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Uptime"
+        },
+        "4/0/init/body/8/argument/9/3/3/1": {
+          "type": "element",
+          "hash": "5ffe4a4526d680df3dc6d6e7880cbc9a",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "<function:Math.round/>%"
+        },
+        "4/0/init/body/8/argument/9/3/3/3": {
+          "type": "element",
+          "hash": "5eabc51c2a6a6b5fd3c7a69860fd0f09",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Open Rate"
+        },
+        "4/0/init/body/8/argument/9/3/5/3": {
+          "type": "element",
+          "hash": "796febfb2e625cc041b4b9bac7b4e584",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Active Subscribers"
+        }
+      }
+    },
+    "components/BarracaGrid.tsx": {
+      "scopes": {
+        "8/0/init/body/9/argument/1/expression/0/body/3/13/expression/right/1": {
+          "type": "element",
+          "hash": "6b173982cd3b970771c9dc03f54868ce",
+          "context": "",
+          "skip": true,
+          "overrides": {},
+          "content": "#{barraca.barracaNumber}"
+        },
+        "8/0/init/body/9/argument/1/expression/0/body/7/11/1/3/1/expression/right-title": {
+          "type": "attribute",
+          "hash": "f342772a23e724418e684189a8951a30",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "WhatsApp"
+        },
+        "8/0/init/body/9/argument/1/expression/0/body/7/11/1/3/3/expression/right-title": {
+          "type": "attribute",
+          "hash": "c9555810826c30d571ffae869a236494",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Instagram"
+        },
+        "8/0/init/body/9/argument/1/expression/0/body/7/3/1/5": {
+          "type": "element",
+          "hash": "29c3c940efb9dd3a03c80524f83d037d",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Member"
+        },
+        "8/0/init/body/9/argument/1/expression/0/body/7/7/15/1/expression/alternate/1": {
+          "type": "element",
+          "hash": "ff34ef63bd1e0c74e8b9721941170ad4",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Show More"
+        },
+        "8/0/init/body/9/argument/1/expression/0/body/7/7/15/1/expression/consequent/1": {
+          "type": "element",
+          "hash": "3f179819f358ea3825b82e23b1066b6f",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Show Less"
+        },
+        "8/0/init/body/9/argument/1/expression/0/body/7/7/3/expression/right/1/3/expression/right": {
+          "type": "element",
+          "hash": "4f407a9ca7fd92528ddfc4c6c76c3e18",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "+<expression/> more"
+        }
+      }
+    },
+    "components/EmailSubscription.tsx": {
+      "scopes": {
+        "4/0/init/body/6/argument/5/1": {
+          "type": "element",
+          "hash": "f828197b0719186842393f3d431781e8",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Get chair reservations, status updates, and exclusive member offers"
+        }
+      }
+    },
+    "components/EnvironmentInfo.tsx": {
+      "scopes": {
+        "4/0/init/body/3/argument/3-title": {
+          "type": "attribute",
+          "hash": "d18e64d34b5eb88692cfb0679c0d652c",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Environment Info"
+        },
+        "4/0/init/body/3/argument/7/expression/right/1/1": {
+          "type": "element",
+          "hash": "aeb60236d9a579713779ebc85a85e27a",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "<element:Database></element:Database> Environment Info"
+        },
+        "4/0/init/body/3/argument/7/expression/right/1/3": {
+          "type": "element",
+          "hash": "f91395c4ebf3cbd35e633811858af628",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "×"
+        },
+        "4/0/init/body/3/argument/7/expression/right/3/11/1": {
+          "type": "element",
+          "hash": "f8f5f2aab7107fd967432f85c41e2747",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "<element:Shield></element:Shield> Data Retention"
+        },
+        "4/0/init/body/3/argument/7/expression/right/3/11/3/1/1": {
+          "type": "element",
+          "hash": "6353dd8674eeb398b86ebe5956190699",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Stories:"
+        },
+        "4/0/init/body/3/argument/7/expression/right/3/11/3/1/3": {
+          "type": "element",
+          "hash": "e0e7fcaefb962e7dbeee4d29cd911793",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "{config.dataRetention.stories} days"
+        },
+        "4/0/init/body/3/argument/7/expression/right/3/11/3/3/1": {
+          "type": "element",
+          "hash": "5cb451e0ccd5543b8360ed80d3b76443",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Weather Cache:"
+        },
+        "4/0/init/body/3/argument/7/expression/right/3/11/3/3/3": {
+          "type": "element",
+          "hash": "1ecb0758b7a2fcab1791674e2f781bee",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "{config.dataRetention.weatherCache} min"
+        },
+        "4/0/init/body/3/argument/7/expression/right/3/11/3/5/1": {
+          "type": "element",
+          "hash": "ac41ce12b0e00aa90feb1d60ecf3c234",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Visitor Data:"
+        },
+        "4/0/init/body/3/argument/7/expression/right/3/11/3/5/3": {
+          "type": "element",
+          "hash": "e0e7fcaefb962e7dbeee4d29cd911793",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "{config.dataRetention.visitorData} days"
+        },
+        "4/0/init/body/3/argument/7/expression/right/3/15/expression/right/1": {
+          "type": "element",
+          "hash": "17a9af780e0f910784a0efa33c75b09e",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Debug Actions"
+        },
+        "4/0/init/body/3/argument/7/expression/right/3/15/expression/right/3/1": {
+          "type": "element",
+          "hash": "8eae332a2cfb65f32ae9f623847bc3ef",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Log Environment to Console"
+        },
+        "4/0/init/body/3/argument/7/expression/right/3/15/expression/right/3/3": {
+          "type": "element",
+          "hash": "c53c6e71e968b289a47eb8f823e6ebf8",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Clear Storage & Reload"
+        },
+        "4/0/init/body/3/argument/7/expression/right/3/3/1": {
+          "type": "element",
+          "hash": "26cc3112dc09b5af26cbdd1bf4bf0d11",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Current Environment"
+        },
+        "4/0/init/body/3/argument/7/expression/right/3/3/3/1/1": {
+          "type": "element",
+          "hash": "bdea9a2106a3d0cedcced851872a1abc",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Name:"
+        },
+        "4/0/init/body/3/argument/7/expression/right/3/3/3/3/1": {
+          "type": "element",
+          "hash": "ddbcd2d3bd228c247e3fc805568b2375",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Schema:"
+        },
+        "4/0/init/body/3/argument/7/expression/right/3/3/3/5/1": {
+          "type": "element",
+          "hash": "bd8025df3db8d1a9de8e91864d2d4b8d",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "URL:"
+        },
+        "4/0/init/body/3/argument/7/expression/right/3/3/3/5/3": {
+          "type": "element",
+          "hash": "e6e8d482aaa65f3cd32906ca9daa3b2e",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "<expression/>..."
+        },
+        "4/0/init/body/3/argument/7/expression/right/3/7/1": {
+          "type": "element",
+          "hash": "cb81adbf918cb1e0924732ff00acc8e6",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "<element:Settings></element:Settings> Feature Flags"
+        },
+        "4/0/init/body/3/argument/7/expression/right/3/7/3/1/expression/0/body/1": {
+          "type": "element",
+          "hash": "9fdc25a53b19b2e1406292f95e66c60f",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "<function:feature.replace/>:"
+        },
+        "4/0/init/body/3/argument/7/expression/right/5/1": {
+          "type": "element",
+          "hash": "2009fa9bec0e029d7452b822e7a0f21d",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Environment info only visible in non-production"
+        }
+      }
+    },
+    "components/Header.tsx": {
+      "scopes": {
+        "4/0/init/body/7/argument/1/1/11/3/1-alt": {
+          "type": "attribute",
+          "hash": "c8c487ae2c8ac2629d6f0751766506db",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Bolt"
+        },
+        "4/0/init/body/7/argument/1/1/11/3/3": {
+          "type": "element",
+          "hash": "e4f24001da8c1b58d5013a846cb8d188",
+          "context": "",
+          "skip": true,
+          "overrides": {},
+          "content": "Built with Bolt"
+        },
+        "4/0/init/body/7/argument/1/1/3/1/1": {
+          "type": "element",
+          "hash": "91a9fac81330dce1eda9ec820ba2797b",
+          "context": "",
+          "skip": true,
+          "overrides": {},
+          "content": "Carioca Coastal Club"
+        },
+        "4/0/init/body/7/argument/1/1/3/1/3": {
+          "type": "element",
+          "hash": "be77894b8ad446b58fdc0bdd323002a4",
+          "context": "",
+          "skip": true,
+          "overrides": {},
+          "content": "Barraca Loyalty Program"
+        },
+        "4/0/init/body/7/argument/1/5/expression/right/1/11/1-alt": {
+          "type": "attribute",
+          "hash": "c8c487ae2c8ac2629d6f0751766506db",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Bolt"
+        },
+        "4/0/init/body/7/argument/1/5/expression/right/1/11/3": {
+          "type": "element",
+          "hash": "e66fac2a6c2691b87659e60328b12c48",
+          "context": "",
+          "skip": true,
+          "overrides": {},
+          "content": "Built with Bolt"
+        }
+      }
+    },
+    "components/StoryCarousel.tsx": {
+      "scopes": {
+        "4/0/init/body/15/argument/1/1/1": {
+          "type": "element",
+          "hash": "629a1f3359a164d9c1f8080d72b7b851",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Stories<element:span>( new)</element:span>"
+        },
+        "5/0/init/body/16/argument/1/1/1/3": {
+          "type": "element",
+          "hash": "54e6c2d30e1ba72a97c8cd3078de1145",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "( <function:t/>)"
+        }
+      }
+    },
+    "components/StoryViewer.tsx": {
+      "scopes": {
+        "3/0/init/body/25/argument/11/7/expression/right/1/1": {
+          "type": "element",
+          "hash": "0d08a74e226ff0686fafce0a07c88d5d",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Failed to load"
+        },
+        "3/0/init/body/25/argument/11/7/expression/right/1/3": {
+          "type": "element",
+          "hash": "b6a970ddf725f04868efa167dbb5744b",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Skip"
+        },
+        "3/0/init/body/25/argument/23/expression/right/1": {
+          "type": "element",
+          "hash": "75d55bc6c0ca250d094dee0d3fc48071",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "DEBUG PANEL"
+        },
+        "3/0/init/body/25/argument/23/expression/right/11": {
+          "type": "element",
+          "hash": "c6af59915cb253f902318df0b8d0a910",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Timer Active: <expression/>"
+        },
+        "3/0/init/body/25/argument/23/expression/right/13": {
+          "type": "element",
+          "hash": "d55a7f1d2af354da51c1e23a624e0c52",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Load Error: <expression/>"
+        },
+        "3/0/init/body/25/argument/23/expression/right/15": {
+          "type": "element",
+          "hash": "815e04689676006570a213370fe80b83",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Media: <expression/>/<expression/>"
+        },
+        "3/0/init/body/25/argument/23/expression/right/17/1": {
+          "type": "element",
+          "hash": "e7b0afc193ae6f95d18d65db935df323",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Force Start"
+        },
+        "3/0/init/body/25/argument/23/expression/right/17/3": {
+          "type": "element",
+          "hash": "efd67577b46e1953973f0ccedb87e332",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Force Next"
+        },
+        "3/0/init/body/25/argument/23/expression/right/3": {
+          "type": "element",
+          "hash": "0970ba0a84992c9479780be737f6d4f9",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Progress: <function:Math.round/>%"
+        },
+        "3/0/init/body/25/argument/23/expression/right/5": {
+          "type": "element",
+          "hash": "e22db496dc0f2419fe7423755aa0d53e",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Media Ready: <expression/>"
+        },
+        "3/0/init/body/25/argument/23/expression/right/7": {
+          "type": "element",
+          "hash": "2f50d34b3ceabd0019d2036bbf2d3205",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Playing: <expression/>"
+        },
+        "3/0/init/body/25/argument/23/expression/right/9": {
+          "type": "element",
+          "hash": "49ce8a087cfd4116301326aa50ba1492",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Paused: <expression/>"
+        },
+        "3/0/init/body/25/argument/7/1/3/3": {
+          "type": "element",
+          "hash": "722f65a5d4515c41f1b4656483423c34",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "<function:Math.floor/>h ago"
+        }
+      }
+    },
+    "components/TranslatedContent.tsx": {
+      "scopes": {
+        "10/declaration/body/0/argument": {
+          "type": "element",
+          "hash": "d28394558faccf26c28b934f3392f03c",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "<element:svg><element:circle></element:circle><element:path></element:path></element:svg> Loading..."
+        },
+        "11/declaration/body/0/argument": {
+          "type": "element",
+          "hash": "cbcc9f106e25b2c137c515ed75416290",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "<element:svg><element:path></element:path></element:svg> Error"
+        },
+        "4/declaration/body/3/argument/3/expression/right": {
+          "type": "element",
+          "hash": "c52c702299c6a8ba79c6d0478dea73ec",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "[{source}]"
+        },
+        "4/declaration/body/3/argument/5/expression/right": {
+          "type": "element",
+          "hash": "ef776ae890abeaf4ba10e5ea118370b0",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "[loading]"
+        },
+        "4/declaration/body/5/argument/3/expression/right": {
+          "type": "element",
+          "hash": "c52c702299c6a8ba79c6d0478dea73ec",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "[{source}]"
+        },
+        "4/declaration/body/5/argument/5/expression/right": {
+          "type": "element",
+          "hash": "ef776ae890abeaf4ba10e5ea118370b0",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "[loading]"
+        },
+        "5/declaration/body/3/argument/3/expression/right": {
+          "type": "element",
+          "hash": "c52c702299c6a8ba79c6d0478dea73ec",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "[{source}]"
+        },
+        "5/declaration/body/3/argument/5/expression/right": {
+          "type": "element",
+          "hash": "ef776ae890abeaf4ba10e5ea118370b0",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "[loading]"
+        }
+      }
+    },
+    "components/TranslationDemo.tsx": {
+      "scopes": {
+        "4/declaration/body/6/argument/1/1": {
+          "type": "element",
+          "hash": "96c2668216eda435fe39dc56a4ea2fec",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Hybrid Translation System Demo"
+        },
+        "4/declaration/body/6/argument/1/13/1": {
+          "type": "element",
+          "hash": "39b15a636d7762d5bb819e381d5fe808",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Add Translation"
+        },
+        "4/declaration/body/6/argument/1/13/3/1": {
+          "type": "element",
+          "hash": "923dd5a39263ffb7a280bec4bbf62370",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Click the button below to add a Spanish translation for the welcome message."
+        },
+        "4/declaration/body/6/argument/1/17/1": {
+          "type": "element",
+          "hash": "e963c581f295454740eba1a7d666c1a6",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Translation Statistics"
+        },
+        "4/declaration/body/6/argument/1/17/3/expression/alternate/1/1": {
+          "type": "element",
+          "hash": "51cf179c44bf7c99a3e136e1f7590752",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Total Keys"
+        },
+        "4/declaration/body/6/argument/1/17/3/expression/alternate/3/1": {
+          "type": "element",
+          "hash": "3671aed0686a3723c6175480c7138d9e",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Total Values"
+        },
+        "4/declaration/body/6/argument/1/17/3/expression/alternate/5/1": {
+          "type": "element",
+          "hash": "153db9cdd3b9f8151fae69a077edd759",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Coverage"
+        },
+        "4/declaration/body/6/argument/1/17/3/expression/alternate/5/3/1/expression/0/body/1": {
+          "type": "element",
+          "hash": "85187d9f080dfa98ed18f83e2ff12f89",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "<function:locale.toUpperCase/>:"
+        },
+        "4/declaration/body/6/argument/1/17/3/expression/alternate/5/3/1/expression/0/body/3": {
+          "type": "element",
+          "hash": "5ffe4a4526d680df3dc6d6e7880cbc9a",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "{coverage}%"
+        },
+        "4/declaration/body/6/argument/1/17/3/expression/consequent/1": {
+          "type": "element",
+          "hash": "9706f83f786a88a1e9c6145581b210a6",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Loading statistics..."
+        },
+        "4/declaration/body/6/argument/1/21/1": {
+          "type": "element",
+          "hash": "b41249281e6e8983c48c25117eec5dc7",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Translation Source Indicators"
+        },
+        "4/declaration/body/6/argument/1/21/5": {
+          "type": "element",
+          "hash": "35f7b85a803ef82defc2add3e9f176ff",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "These indicators show where each translation comes from."
+        },
+        "4/declaration/body/6/argument/1/25/1": {
+          "type": "element",
+          "hash": "52c3996b6a3f37c8334027372c1d9723",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "System Information"
+        },
+        "4/declaration/body/6/argument/1/25/3/1": {
+          "type": "element",
+          "hash": "98d3ff0358dd4506417a83a81849fc98",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "<element:strong>Translation System:</element:strong> Hybrid (Lingo.dev + Database)"
+        },
+        "4/declaration/body/6/argument/1/25/3/11": {
+          "type": "element",
+          "hash": "bd41dea7b2995702a25ebf0bac7ce858",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "<element:strong>Database Status:</element:strong> Connected and ready"
+        },
+        "4/declaration/body/6/argument/1/25/3/3/0": {
+          "type": "element",
+          "hash": "a4046779cb8955aafb5ed59d50486252",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Current Language:"
+        },
+        "4/declaration/body/6/argument/1/25/3/5/0": {
+          "type": "element",
+          "hash": "34a55c834cb8133a733fbeeb641a16fa",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "i18n Language:"
+        },
+        "4/declaration/body/6/argument/1/25/3/7/0": {
+          "type": "element",
+          "hash": "286d26a9bd1c09f93fdce17413a2f4f5",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Available Languages:"
+        },
+        "4/declaration/body/6/argument/1/25/3/9": {
+          "type": "element",
+          "hash": "1782b52d2e1c952ec83d99a584e3d887",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "<element:strong>Lingo Status:</element:strong> Configured and running"
+        },
+        "4/declaration/body/6/argument/1/5/1": {
+          "type": "element",
+          "hash": "42f0561cdfd402cc6a114a1cd33baa30",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Language Switcher"
+        },
+        "4/declaration/body/6/argument/1/5/5": {
+          "type": "element",
+          "hash": "6ed8c1c8af833c0fb31d4abee789d573",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Current locale: <element:strong>{currentLocale}</element:strong>"
+        },
+        "4/declaration/body/6/argument/1/9/1": {
+          "type": "element",
+          "hash": "24a733d7e6011719e4ff1afb6356a3de",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Translation Examples"
+        },
+        "4/declaration/body/6/argument/1/9/3/11/1": {
+          "type": "element",
+          "hash": "ebc33efbe24d0e582a905fe2a298dc28",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Barraca Content Example"
+        },
+        "4/declaration/body/6/argument/1/9/3/15/1": {
+          "type": "element",
+          "hash": "f6debfa004ff303dce351de1856e886b",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Custom Translation Key"
+        },
+        "4/declaration/body/6/argument/1/9/3/3/1": {
+          "type": "element",
+          "hash": "a9e8f4250a795291057680e30eed9aa1",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Static Content (Lingo)"
+        },
+        "4/declaration/body/6/argument/1/9/3/3/3": {
+          "type": "element",
+          "hash": "76af71edeeada752fd3f7009e2a27d5b",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "This content will be automatically translated by Lingo.dev Compiler at build time."
+        },
+        "4/declaration/body/6/argument/1/9/3/7/1": {
+          "type": "element",
+          "hash": "68351e7c2a5e0035a6921f0625a95835",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Dynamic Content (Database)"
+        }
+      }
+    },
+    "components/TranslationTest.tsx": {
+      "scopes": {
+        "2/declaration/0/init/body/1/argument/1": {
+          "type": "element",
+          "hash": "2abf7fe39b52980d7f81bff2d9a5bcb4",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Translation Test"
+        },
+        "2/declaration/0/init/body/1/argument/3/1/0": {
+          "type": "element",
+          "hash": "a4046779cb8955aafb5ed59d50486252",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Current Language:"
+        },
+        "2/declaration/0/init/body/1/argument/3/3/0": {
+          "type": "element",
+          "hash": "2cae92860de5e886abbdb4688877081b",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Partner Barracas:"
+        },
+        "2/declaration/0/init/body/1/argument/3/5/0": {
+          "type": "element",
+          "hash": "882aba6ee2965366c33440ffebae13cf",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Availability Updates:"
+        },
+        "2/declaration/0/init/body/1/argument/3/7/0": {
+          "type": "element",
+          "hash": "1c0b947b0556a86b51123e8fee551ca5",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Neighborhoods:"
+        },
+        "2/declaration/0/init/body/1/argument/3/9/0": {
+          "type": "element",
+          "hash": "f9c0a559a22cb585ec5d703ec5ec5bf2",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Simple Test:"
+        },
+        "2/declaration/body/3/argument/1": {
+          "type": "element",
+          "hash": "31951b44dfb087ee2304a9f22899d497",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Translation System Test"
+        },
+        "2/declaration/body/3/argument/5/expression/right/1": {
+          "type": "element",
+          "hash": "25df8eda87ce5fc34fd29d50af79eb69",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Database Stats:"
+        },
+        "2/declaration/body/3/argument/5/expression/right/3": {
+          "type": "element",
+          "hash": "f0be37f416f1ea3d822ef81a53bb0a41",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Total Keys: {stats.totalKeys}"
+        },
+        "2/declaration/body/3/argument/5/expression/right/5": {
+          "type": "element",
+          "hash": "6a5f948108e537dd0ebc108707a725c3",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Total Values: {stats.totalValues}"
+        },
+        "2/declaration/body/3/argument/5/expression/right/7": {
+          "type": "element",
+          "hash": "1fe1a8516790906e79e70bef001f88d8",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Coverage: <function:JSON.stringify/>"
+        },
+        "2/declaration/body/6/argument/1": {
+          "type": "element",
+          "hash": "31951b44dfb087ee2304a9f22899d497",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Translation System Test"
+        },
+        "2/declaration/body/6/argument/7/expression/right/1": {
+          "type": "element",
+          "hash": "25df8eda87ce5fc34fd29d50af79eb69",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Database Stats:"
+        },
+        "2/declaration/body/6/argument/7/expression/right/3": {
+          "type": "element",
+          "hash": "f0be37f416f1ea3d822ef81a53bb0a41",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Total Keys: {stats.totalKeys}"
+        },
+        "2/declaration/body/6/argument/7/expression/right/5": {
+          "type": "element",
+          "hash": "6a5f948108e537dd0ebc108707a725c3",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Total Values: {stats.totalValues}"
+        },
+        "2/declaration/body/6/argument/7/expression/right/7": {
+          "type": "element",
+          "hash": "1fe1a8516790906e79e70bef001f88d8",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Coverage: <function:JSON.stringify/>"
+        },
+        "2/declaration/body/6/argument/9/1": {
+          "type": "element",
+          "hash": "5c246cbdd0a9294da8c81080e6f9bb44",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Next Steps:"
+        },
+        "2/declaration/body/6/argument/9/3/1": {
+          "type": "element",
+          "hash": "0edac96aa6bb307bd6409ac1a41e3232",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "• Visit <element:a>/translation-demo</element:a> to see the full demo"
+        },
+        "2/declaration/body/6/argument/9/3/3": {
+          "type": "element",
+          "hash": "aac3f1e5b4c7eafe7ad4190ec3784765",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "• Try switching languages to see translations"
+        },
+        "2/declaration/body/6/argument/9/3/5": {
+          "type": "element",
+          "hash": "f0bbb4afe6df1b475ad33338b3dfbfa3",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "• Add more translations via the demo interface"
+        }
+      }
+    },
+    "components/UniqueVisitorCounter.tsx": {
+      "scopes": {
+        "3/0/init/body/9/argument/3": {
+          "type": "element",
+          "hash": "c424c62a04df82760c1ff78200b0e7b0",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Total Unique Visitors Since Launch"
+        },
+        "3/0/init/body/9/argument/5": {
+          "type": "element",
+          "hash": "212ab1ae7ca47ab9ab200304ee4ac71e",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Real-time counter"
+        }
+      }
+    },
+    "components/WeatherBar.tsx": {
+      "scopes": {
+        "4/0/init/body/5/argument/1/1/3/1/3": {
+          "type": "element",
+          "hash": "a66530092ee241af396297f182f8d566",
+          "context": "",
+          "skip": true,
+          "overrides": {},
+          "content": "{weather.temperature}°C"
+        },
+        "4/0/init/body/5/argument/1/1/3/3/3": {
+          "type": "element",
+          "hash": "5ffe4a4526d680df3dc6d6e7880cbc9a",
+          "context": "",
+          "skip": true,
+          "overrides": {},
+          "content": "{weather.humidity}%"
+        },
+        "4/0/init/body/5/argument/1/1/3/5/3": {
+          "type": "element",
+          "hash": "30529b7058da07481c2dd3d8bc186b74",
+          "context": "",
+          "skip": true,
+          "overrides": {},
+          "content": "{weather.windSpeed} km/h"
+        }
+      }
+    },
+    "components/WeatherWidget.tsx": {
+      "scopes": {
+        "4/0/init/body/5/argument/1/1/1": {
+          "type": "element",
+          "hash": "c9264a9335f9d310130716cd752f40a4",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Rio de Janeiro"
+        },
+        "4/0/init/body/5/argument/3/3/1/3": {
+          "type": "element",
+          "hash": "8636978f8f6086b141e66f53eb87e1ac",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Temperature"
+        },
+        "4/0/init/body/5/argument/3/3/3": {
+          "type": "element",
+          "hash": "b46490ecd9b3e449f7eb6b7f192f4565",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "{weather.temperature}°C"
+        },
+        "4/0/init/body/5/argument/3/3/5": {
+          "type": "element",
+          "hash": "5873278fb3f38bbf601a53a324972bff",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "<function:t/> {weather.feelsLike}°C"
+        },
+        "4/0/init/body/5/argument/3/7/1/3": {
+          "type": "element",
+          "hash": "8c63078f8a3c1d6e149bd80ecbc8dacc",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "<function:t/>: {weather.humidity}%"
+        },
+        "4/0/init/body/5/argument/3/7/3/3": {
+          "type": "element",
+          "hash": "ff6a5eae53c3e8fc4cdf311d3f65bf60",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "<function:t/>: {weather.windSpeed} km/h"
+        }
+      }
+    },
+    "pages/About.tsx": {
+      "scopes": {
+        "4/0/init/body/4/argument/15/1/1/1": {
+          "type": "element",
+          "hash": "eecbae2901416adf2539ee8cc3815c3e",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "What We Stand For"
+        },
+        "4/0/init/body/4/argument/15/1/1/3": {
+          "type": "element",
+          "hash": "a16a23fbf1d85a4dc74e20f3aa4a6d56",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "The values that drive our loyalty platform and community"
+        },
+        "4/0/init/body/4/argument/19/1/1/1": {
+          "type": "element",
+          "hash": "0ec73fab2bea1090e621eb93b6ac2ff4",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Meet Our Team"
+        },
+        "4/0/init/body/4/argument/19/1/1/3": {
+          "type": "element",
+          "hash": "4542282cc65db294e24e67433b6594e5",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Barraca enthusiasts and tech experts working to strengthen Rio's barraca community"
+        },
+        "4/0/init/body/4/argument/23/1/1/1": {
+          "type": "element",
+          "hash": "c51256ff4ebfb40daa32cb2cee28631e",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Get in Touch"
+        },
+        "4/0/init/body/4/argument/23/1/1/3": {
+          "type": "element",
+          "hash": "b4bccda8ec43918e855cc9dfd876c04d",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Questions about membership? Want to partner with us? We'd love to hear from you."
+        },
+        "4/0/init/body/4/argument/23/1/3/1/1/3/1": {
+          "type": "element",
+          "hash": "f342772a23e724418e684189a8951a30",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "WhatsApp"
+        },
+        "4/0/init/body/4/argument/23/1/3/1/1/3/3": {
+          "type": "element",
+          "hash": "3dd3b77ca5ffdca89d3f30b76a3ba6b1",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Quick responses via WhatsApp"
+        },
+        "4/0/init/body/4/argument/23/1/3/1/3": {
+          "type": "element",
+          "hash": "b297f3729f52cedbcd0c6709a43cd645",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "+55 21 99999-0000"
+        },
+        "4/0/init/body/4/argument/23/1/3/3/1/3/1": {
+          "type": "element",
+          "hash": "c9555810826c30d571ffae869a236494",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Instagram"
+        },
+        "4/0/init/body/4/argument/23/1/3/3/1/3/3": {
+          "type": "element",
+          "hash": "65a0b33092a4baf493b563312df11842",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Follow us for daily updates"
+        },
+        "4/0/init/body/4/argument/23/1/3/3/3": {
+          "type": "element",
+          "hash": "b49b2c5ea6b24bbcb8123da961b686b4",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "@cariocacoastal"
+        },
+        "4/0/init/body/4/argument/23/1/7/1": {
+          "type": "element",
+          "hash": "65090dac11c9cb75e86f2b6b809615e1",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Join Our Community"
+        },
+        "4/0/init/body/4/argument/23/1/7/3": {
+          "type": "element",
+          "hash": "b9fc0ae83c61a8275642ce7980752d93",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Get member updates, chair reservation alerts, and exclusive offers from partner barracas"
+        },
+        "4/0/init/body/4/argument/3/1/1": {
+          "type": "element",
+          "hash": "7f6dcf568bc60ca81972656d8e3a43c2",
+          "context": "",
+          "skip": true,
+          "overrides": {},
+          "content": "About Carioca Coastal Club"
+        },
+        "4/0/init/body/4/argument/3/1/3": {
+          "type": "element",
+          "hash": "8d5686256a776d4351d335085287bbc8",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "We're the loyalty platform connecting Rio's barraca lovers with their favorite spots. Check if your barraca is open, reserve chairs, and enjoy exclusive member benefits."
+        },
+        "4/0/init/body/4/argument/7/1/1": {
+          "type": "element",
+          "hash": "d09235992e400222a938171b25a3163f",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Our Mission"
+        },
+        "4/0/init/body/4/argument/7/1/3": {
+          "type": "element",
+          "hash": "3071ef44dd6b7d45e0a05f5385aa2070",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "To strengthen the bond between Rio's barraca community and their favorite spots. We believe loyal customers deserve better service, and barraca owners deserve loyal customers who keep coming back."
+        },
+        "4/0/init/body/4/argument/7/1/5/1": {
+          "type": "element",
+          "hash": "c53b0d3606b48feedace8405309cf509",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "\"Every barraca has its regulars - we help strengthen those relationships.\""
+        },
+        "4/0/init/body/4/argument/7/1/5/3": {
+          "type": "element",
+          "hash": "68b95466d22c5d6667e485f64000facd",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Through chair reservations, real-time updates, and exclusive member perks, we make it easier for you to enjoy your favorite barraca spots while helping barracas build stronger customer loyalty."
+        }
+      }
+    },
+    "pages/Admin.tsx": {
+      "scopes": {
+        "6/0/init/body/12/consequent/0/argument/1/1/5": {
+          "type": "element",
+          "hash": "2e3e579c4efc9ddd62edbfeb69dc9573",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Access the admin dashboard to manage barracas"
+        },
+        "6/0/init/body/12/consequent/0/argument/1/3/1/3-placeholder": {
+          "type": "attribute",
+          "hash": "224e03ab7cd6ba6e8ab365ba90e8808c",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "admin@cariocacoastal.com"
+        },
+        "6/0/init/body/12/consequent/0/argument/1/3/3/3/1-placeholder": {
+          "type": "attribute",
+          "hash": "64e2908105bcce82f297f1fe45e76fbe",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "admin123"
+        },
+        "6/0/init/body/12/consequent/0/argument/1/5/1": {
+          "type": "element",
+          "hash": "410002602fc5fe6919383b2f72055d16",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Demo credentials: admin@cariocacoastal.com / admin123"
+        },
+        "6/0/init/body/13/argument/3/1/1/3": {
+          "type": "element",
+          "hash": "b9a2fcc53be3b439bf5f48af30f83839",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Logout"
+        },
+        "6/0/init/body/13/argument/5/11/expression/right/1": {
+          "type": "element",
+          "hash": "edacfb562859fd023f2936e0d8ccbf3d",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Email Subscribers"
+        },
+        "6/0/init/body/13/argument/5/11/expression/right/3/1/1/1/1": {
+          "type": "element",
+          "hash": "0f2270232cc1a15781427530ba3c0326",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Email"
+        },
+        "6/0/init/body/13/argument/5/11/expression/right/3/1/1/1/3": {
+          "type": "element",
+          "hash": "e4afef43912b70c9a167fc997b410513",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Subscribed"
+        },
+        "6/0/init/body/13/argument/5/11/expression/right/3/1/1/1/5": {
+          "type": "element",
+          "hash": "c4c480a06d065cdbbd426ffbbf168e3e",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Preferences"
+        },
+        "6/0/init/body/13/argument/5/11/expression/right/3/1/3/1/expression/0/body/5/1/1/expression/right": {
+          "type": "element",
+          "hash": "a5fd1cd1fc4337db2b6b9f7e74da28ce",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "New Spots"
+        },
+        "6/0/init/body/13/argument/5/11/expression/right/3/1/3/1/expression/0/body/5/1/3/expression/right": {
+          "type": "element",
+          "hash": "4b53994e7beea47967ce263979756d53",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Offers"
+        },
+        "6/0/init/body/13/argument/5/3/1/1/1": {
+          "type": "element",
+          "hash": "644171ae3560723d331c362133df51e4",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "<element:Edit2></element:Edit2> Manage Barracas"
+        },
+        "6/0/init/body/13/argument/5/3/1/1/3": {
+          "type": "element",
+          "hash": "e19a94d1ccad40c1002320ea48316c25",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "<element:BarChart3></element:BarChart3> Analytics"
+        },
+        "6/0/init/body/13/argument/5/3/1/1/5": {
+          "type": "element",
+          "hash": "ce78bf488d5443a19599cd295f9fde2e",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "<element:Mail></element:Mail><function:t/> ({emailSubscriptions.length})"
+        },
+        "6/0/init/body/13/argument/5/7/expression/right/1/1": {
+          "type": "element",
+          "hash": "7c8e3f8ea509fb3b75858f04bf405a3b",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Barracas Management"
+        },
+        "6/0/init/body/13/argument/5/7/expression/right/1/3": {
+          "type": "element",
+          "hash": "9739e9386a38022bcd3dbcd31b57948e",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "<element:Plus></element:Plus> Add New Barraca"
+        },
+        "6/0/init/body/13/argument/5/7/expression/right/5/1/1/1/1/1": {
+          "type": "element",
+          "hash": "2861be783d8e2ffd5a2572abccfa2859",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Barraca"
+        },
+        "6/0/init/body/13/argument/5/7/expression/right/5/1/1/1/1/3": {
+          "type": "element",
+          "hash": "af9dfc767bda778706995a721e94a5fe",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Location"
+        },
+        "6/0/init/body/13/argument/5/7/expression/right/5/1/1/1/1/5": {
+          "type": "element",
+          "hash": "6cf93b0199c85b7ccedd33c7c3cd0d57",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Availability"
+        },
+        "6/0/init/body/13/argument/5/7/expression/right/5/1/1/1/1/7": {
+          "type": "element",
+          "hash": "89d3a915341b683941bb4113933833d3",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Updated"
+        },
+        "6/0/init/body/13/argument/5/7/expression/right/5/1/1/1/1/9": {
+          "type": "element",
+          "hash": "0bcb0d0bbd9bd01c760ef32eefdc8b39",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Actions"
+        },
+        "6/0/init/body/13/argument/5/7/expression/right/5/1/1/3/1/expression/0/body/1/1/3/3/expression/right": {
+          "type": "element",
+          "hash": "9e258a2c32b9e481f5fae8bb56a1ff20",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "#{barraca.barracaNumber}"
+        }
+      }
+    },
+    "pages/Discover.tsx": {
+      "scopes": {
+        "7/0/init/body/11/argument/3/1/1/1": {
+          "type": "element",
+          "hash": "19ac2120911213cc51bc67f1637f0544",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Find Your Barraca"
+        },
+        "7/0/init/body/11/argument/3/1/1/3": {
+          "type": "element",
+          "hash": "4dc85bf265dbe6bbb1433dbc4fad822d",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Check if your favorite spot is open, reserve chairs, and discover new member benefits"
+        },
+        "7/0/init/body/11/argument/3/1/5/1/3-placeholder": {
+          "type": "attribute",
+          "hash": "c42803553418c30f96907f21aade8f5b",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Search by name, barraca number (e.g. 001), or neighborhood..."
+        },
+        "7/0/init/body/11/argument/3/1/5/5/1": {
+          "type": "element",
+          "hash": "a767b53a61fbb018bbbe1af21c694f5a",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Try:"
+        },
+        "7/0/init/body/11/argument/9/11/expression/alternate/3": {
+          "type": "element",
+          "hash": "72a168980f3f4e687d4596000e4c17a2",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "No barracas found"
+        },
+        "7/0/init/body/11/argument/9/11/expression/alternate/7": {
+          "type": "element",
+          "hash": "f56bcc2db61ec6f102024e3047abff06",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Clear All Filters"
+        },
+        "7/0/init/body/11/argument/9/3/1/1": {
+          "type": "element",
+          "hash": "a6cdb8a1eec8fa461e1a1f574a78d97d",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "{filteredBarracas.length} Partner <expression/> Found"
+        },
+        "7/0/init/body/11/argument/9/3/1/3/1/expression/right": {
+          "type": "element",
+          "hash": "f9fe4334576d8ebd15e65514224ba25a",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "<element:X></element:X> Clear"
+        },
+        "7/0/init/body/11/argument/9/3/1/3/3": {
+          "type": "element",
+          "hash": "5d4f3fc2fca438a20dba7580e9ebb016",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "<element:Filter></element:Filter> Filters"
+        },
+        "7/0/init/body/11/argument/9/3/9/expression/right/1/expression/right": {
+          "type": "element",
+          "hash": "f2b7aa0e3fcbec3dc2dc314c26ff9e8d",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "<element:Search></element:Search> \"{searchFilters.query}\""
+        },
+        "7/0/init/body/11/argument/9/7/expression/right/1": {
+          "type": "element",
+          "hash": "f1f58ffa0d2522a38be75a9171783558",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Search Tips"
+        },
+        "7/0/init/body/11/argument/9/7/expression/right/3/1/3": {
+          "type": "element",
+          "hash": "d2709b1e0aa6c7ab77bfd6e722c0bd5e",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Number: 001"
+        },
+        "7/0/init/body/11/argument/9/7/expression/right/3/3/3": {
+          "type": "element",
+          "hash": "52aae8b925f96d74a8447400e237540a",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Beach: Ipanema"
+        },
+        "7/0/init/body/11/argument/9/7/expression/right/3/5/3": {
+          "type": "element",
+          "hash": "cf1d76e8b6be6b41947fbd44003a1021",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Name: Sol e Mar"
+        },
+        "7/0/init/body/11/argument/9/7/expression/right/3/7/3": {
+          "type": "element",
+          "hash": "70753b92da797d5edc5fc95796273b50",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Filter by availability"
+        },
+        "9/0/init/body/12/argument/9/7/9/expression/right/1/expression/right": {
+          "type": "element",
+          "hash": "f2b7aa0e3fcbec3dc2dc314c26ff9e8d",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "<element:Search></element:Search> \"{searchFilters.query}\""
+        }
+      }
+    },
+    "pages/Home.tsx": {
+      "scopes": {
+        "11/0/init/body/5/argument/11/1/1": {
+          "type": "element",
+          "hash": "bb46827875ec3e67bda53f32b48956d4",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Your Barraca, Your Way"
+        },
+        "11/0/init/body/5/argument/11/1/11/1/1": {
+          "type": "element",
+          "hash": "2286b28fa37112af76d6f5952c4b928e",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "{barracas.length}<element:span></element:span>+"
+        },
+        "11/0/init/body/5/argument/11/1/11/1/1/1": {
+          "type": "element",
+          "hash": "2286b28fa37112af76d6f5952c4b928e",
+          "context": "",
+          "skip": true,
+          "overrides": {},
+          "content": "+"
+        },
+        "11/0/init/body/5/argument/11/1/11/1/3": {
+          "type": "element",
+          "hash": "c54314212f900f1d5dc27454068505db",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "t('home.stats.partnerBarracas') || 'Partner Barracas'"
+        },
+        "11/0/init/body/5/argument/11/1/11/5/1": {
+          "type": "element",
+          "hash": "e7d5f033feb349d5fb8172f25ff7077d",
+          "context": "",
+          "skip": true,
+          "overrides": {},
+          "content": "24/7"
+        },
+        "11/0/init/body/5/argument/11/1/11/5/3": {
+          "type": "element",
+          "hash": "dd4c7243de68e85a71ea4d237a01b400",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Availability Updates"
+        },
+        "11/0/init/body/5/argument/11/1/11/7/1": {
+          "type": "element",
+          "hash": "d877598cb4fab5944dfbc84151a0f231",
+          "context": "",
+          "skip": true,
+          "overrides": {},
+          "content": "12"
+        },
+        "11/0/init/body/5/argument/11/1/11/7/3": {
+          "type": "element",
+          "hash": "4881c1cccb866e17e87f05d715536de9",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Neighborhoods"
+        },
+        "11/0/init/body/5/argument/11/1/3": {
+          "type": "element",
+          "hash": "619275f68b2bff6165f3dade220af102",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Join thousands of loyal customers who use Carioca Coastal Club to stay connected with their favorite barracas"
+        },
+        "11/0/init/body/5/argument/15/1/1/1": {
+          "type": "element",
+          "hash": "65c7031551490bdd49d1b04b81395024",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Popular Member Barracas"
+        },
+        "11/0/init/body/5/argument/15/1/1/3": {
+          "type": "element",
+          "hash": "bfe5a24b9f62a7e009203eb49af8c87b",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "These barracas are loved by our community - check if your favorite is open and reserve your spot"
+        },
+        "11/0/init/body/5/argument/15/1/1/5": {
+          "type": "element",
+          "hash": "892f33dc4c8d2f1e11ed7907b64e70de",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "View All Partner Barracas<element:ArrowRight></element:ArrowRight>"
+        },
+        "11/0/init/body/5/argument/19/1/1/1": {
+          "type": "element",
+          "hash": "f8d7c58dc5a731d90f33a7a9fe92622f",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Why Join Carioca Coastal Club?"
+        },
+        "11/0/init/body/5/argument/19/1/1/3": {
+          "type": "element",
+          "hash": "632a1a4acc8a56f77e435d39e11a403d",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "More than just finding barracas - we're your connection to Rio's barraca culture"
+        },
+        "11/0/init/body/5/argument/23/1/1/3": {
+          "type": "element",
+          "hash": "dd40250b91c402757a3ef673ac380ffb",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Exclusive Member Benefits"
+        },
+        "11/0/init/body/5/argument/23/1/1/5": {
+          "type": "element",
+          "hash": "366192f03dcb94a79d561a4471bd3c99",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Reserve chairs, get availability updates, discover new spots, and enjoy special offers from your favorite barracas"
+        },
+        "11/0/init/body/5/argument/23/1/1/7/1/1": {
+          "type": "element",
+          "hash": "970e21955eea03a4ce9b4d8d54e69d04",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Chair"
+        },
+        "11/0/init/body/5/argument/23/1/1/7/1/3": {
+          "type": "element",
+          "hash": "f97989c4e3df346b37d7a1048e5de323",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Reservations"
+        },
+        "11/0/init/body/5/argument/23/1/1/7/3/1": {
+          "type": "element",
+          "hash": "0b062687108df307445af848763e4ce5",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Priority"
+        },
+        "11/0/init/body/5/argument/23/1/1/7/3/3": {
+          "type": "element",
+          "hash": "570723a8d1f14c7303bd68aaec9d35ef",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Service"
+        },
+        "11/0/init/body/5/argument/23/1/1/7/5/1": {
+          "type": "element",
+          "hash": "f141aa3e9adb2179806cc1c909b5516a",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Availability"
+        },
+        "11/0/init/body/5/argument/23/1/1/7/5/3": {
+          "type": "element",
+          "hash": "c5f658a393f5d8d6e251a0fb5a0de394",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Updates"
+        },
+        "11/0/init/body/5/argument/23/1/1/7/7/1": {
+          "type": "element",
+          "hash": "59c9d9b1bffc40a84acdda1fdd958351",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Special"
+        },
+        "11/0/init/body/5/argument/23/1/1/7/7/3": {
+          "type": "element",
+          "hash": "74989876ee2909e441a33e87b21e5575",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Offers"
+        },
+        "11/0/init/body/5/argument/27/1/1": {
+          "type": "element",
+          "hash": "666b2771a84f3c9bb8f23c3268f3aea6",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Join the Club Today"
+        },
+        "11/0/init/body/5/argument/27/1/3": {
+          "type": "element",
+          "hash": "85c303ba2eb8f93cc7f113ac01221872",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Start enjoying member benefits at your favorite barracas. Get updates, reserve chairs, and never miss out on the perfect barraca day."
+        },
+        "11/0/init/body/5/argument/31/1/1/11/1": {
+          "type": "element",
+          "hash": "9afa39bc47019ee6dec6c74b6273967c",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Contact"
+        },
+        "11/0/init/body/5/argument/31/1/1/11/3/1": {
+          "type": "element",
+          "hash": "3a936ae5117f880f4d56835b8a10f68a",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "CariocaCoastalClub@gmail.com"
+        },
+        "11/0/init/body/5/argument/31/1/1/11/3/1/0": {
+          "type": "element",
+          "hash": "3a936ae5117f880f4d56835b8a10f68a",
+          "context": "",
+          "skip": true,
+          "overrides": {},
+          "content": "CariocaCoastalClub@gmail.com"
+        },
+        "11/0/init/body/5/argument/31/1/1/11/3/3": {
+          "type": "element",
+          "hash": "1e01b3311761ac56968a5f7e7d654340",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "📱 +55 21 99999-0000"
+        },
+        "11/0/init/body/5/argument/31/1/1/11/3/5": {
+          "type": "element",
+          "hash": "45bdd19b75e7eb1a225cd4577b1f5ece",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "📍 Rio de Janeiro, RJ"
+        },
+        "11/0/init/body/5/argument/31/1/1/3/1/1": {
+          "type": "element",
+          "hash": "f23fa7c651d25b29ab07d33477c378e2",
+          "context": "",
+          "skip": true,
+          "overrides": {},
+          "content": "Carioca Coastal Club"
+        },
+        "11/0/init/body/5/argument/31/1/1/3/1/3": {
+          "type": "element",
+          "hash": "be77894b8ad446b58fdc0bdd323002a4",
+          "context": "",
+          "skip": true,
+          "overrides": {},
+          "content": "Barraca Loyalty Program"
+        },
+        "11/0/init/body/5/argument/31/1/1/3/3": {
+          "type": "element",
+          "hash": "492859586a7b91afed245c7226582b18",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Connecting Rio's barraca lovers with their favorite spots through chair reservations, real-time updates, and exclusive member benefits."
+        },
+        "11/0/init/body/5/argument/31/1/1/3/5/1": {
+          "type": "element",
+          "hash": "6ff7eb82239605a92e11e4e3d6127309",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "<element:span><function:t/></element:span> 📱"
+        },
+        "11/0/init/body/5/argument/31/1/1/3/5/3": {
+          "type": "element",
+          "hash": "679e0f329d810f92e40c07ff08cc5d76",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "<element:span><function:t/></element:span> 💬"
+        },
+        "11/0/init/body/5/argument/31/1/1/7/1": {
+          "type": "element",
+          "hash": "08f01a139568423a460c7d664b2be95e",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Quick Links"
+        },
+        "11/0/init/body/5/argument/31/1/1/7/3/1/0": {
+          "type": "element",
+          "hash": "d7fc56677a6fcfc637e4b6fae117c955",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Find Barracas"
+        },
+        "11/0/init/body/5/argument/31/1/1/7/3/3/0": {
+          "type": "element",
+          "hash": "8f89131a66d4659be07cd5af2c7ea898",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "About Us"
+        },
+        "11/0/init/body/5/argument/31/1/1/7/3/5/0": {
+          "type": "element",
+          "hash": "28db44fe4a6b815bbb1965a5179c728b",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Join Club"
+        },
+        "11/0/init/body/5/argument/31/1/1/7/3/7/0": {
+          "type": "element",
+          "hash": "90eb20f1400db82ab874744e47836dc6",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Admin"
+        },
+        "11/0/init/body/5/argument/31/1/5/1": {
+          "type": "element",
+          "hash": "178a8ca0c3f2591906b3b14276f53298",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "© 2024 Carioca Coastal Club. All rights reserved."
+        },
+        "12/0/init/body/5/argument/11/1/11/1/1": {
+          "type": "element",
+          "hash": "2286b28fa37112af76d6f5952c4b928e",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "{barracas.length}+"
+        },
+        "12/0/init/body/5/argument/11/1/11/5/1": {
+          "type": "element",
+          "hash": "e7d5f033feb349d5fb8172f25ff7077d",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "24/7"
+        },
+        "12/0/init/body/5/argument/11/1/11/7/1": {
+          "type": "element",
+          "hash": "d877598cb4fab5944dfbc84151a0f231",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "12"
+        },
+        "12/0/init/body/5/argument/15/1/1": {
+          "type": "element",
+          "hash": "bb46827875ec3e67bda53f32b48956d4",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Your Barraca, Your Way"
+        },
+        "12/0/init/body/5/argument/15/1/11/1/1": {
+          "type": "element",
+          "hash": "2286b28fa37112af76d6f5952c4b928e",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "{barracas.length}+"
+        },
+        "12/0/init/body/5/argument/15/1/11/1/3": {
+          "type": "element",
+          "hash": "670629d5b157a586b264c0d3ca7527ba",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Partner Barracas"
+        },
+        "12/0/init/body/5/argument/15/1/11/5/1": {
+          "type": "element",
+          "hash": "e7d5f033feb349d5fb8172f25ff7077d",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "24/7"
+        },
+        "12/0/init/body/5/argument/15/1/11/5/3": {
+          "type": "element",
+          "hash": "dd4c7243de68e85a71ea4d237a01b400",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Availability Updates"
+        },
+        "12/0/init/body/5/argument/15/1/11/7/1": {
+          "type": "element",
+          "hash": "d877598cb4fab5944dfbc84151a0f231",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "12"
+        },
+        "12/0/init/body/5/argument/15/1/11/7/3": {
+          "type": "element",
+          "hash": "4881c1cccb866e17e87f05d715536de9",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Neighborhoods"
+        },
+        "12/0/init/body/5/argument/15/1/3": {
+          "type": "element",
+          "hash": "619275f68b2bff6165f3dade220af102",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Join thousands of loyal customers who use Carioca Coastal Club to stay connected with their favorite barracas"
+        },
+        "12/0/init/body/5/argument/19/1/1/1": {
+          "type": "element",
+          "hash": "65c7031551490bdd49d1b04b81395024",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Popular Member Barracas"
+        },
+        "12/0/init/body/5/argument/19/1/1/3": {
+          "type": "element",
+          "hash": "bfe5a24b9f62a7e009203eb49af8c87b",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "These barracas are loved by our community - check if your favorite is open and reserve your spot"
+        },
+        "12/0/init/body/5/argument/19/1/1/5": {
+          "type": "element",
+          "hash": "892f33dc4c8d2f1e11ed7907b64e70de",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "View All Partner Barracas<element:ArrowRight></element:ArrowRight>"
+        },
+        "12/0/init/body/5/argument/19/1/11/1/1": {
+          "type": "element",
+          "hash": "2286b28fa37112af76d6f5952c4b928e",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "{barracas.length}+"
+        },
+        "12/0/init/body/5/argument/19/1/11/5/1": {
+          "type": "element",
+          "hash": "e7d5f033feb349d5fb8172f25ff7077d",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "24/7"
+        },
+        "12/0/init/body/5/argument/19/1/11/7/1": {
+          "type": "element",
+          "hash": "d877598cb4fab5944dfbc84151a0f231",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "12"
+        },
+        "12/0/init/body/5/argument/23/1/1/1": {
+          "type": "element",
+          "hash": "f8d7c58dc5a731d90f33a7a9fe92622f",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Why Join Carioca Coastal Club?"
+        },
+        "12/0/init/body/5/argument/23/1/1/3": {
+          "type": "element",
+          "hash": "632a1a4acc8a56f77e435d39e11a403d",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "More than just finding barracas - we're your connection to Rio's barraca culture"
+        },
+        "12/0/init/body/5/argument/27/1/1/3": {
+          "type": "element",
+          "hash": "dd40250b91c402757a3ef673ac380ffb",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Exclusive Member Benefits"
+        },
+        "12/0/init/body/5/argument/27/1/1/5": {
+          "type": "element",
+          "hash": "366192f03dcb94a79d561a4471bd3c99",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Reserve chairs, get availability updates, discover new spots, and enjoy special offers from your favorite barracas"
+        },
+        "12/0/init/body/5/argument/27/1/1/7/1/1": {
+          "type": "element",
+          "hash": "970e21955eea03a4ce9b4d8d54e69d04",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Chair"
+        },
+        "12/0/init/body/5/argument/27/1/1/7/1/3": {
+          "type": "element",
+          "hash": "f97989c4e3df346b37d7a1048e5de323",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Reservations"
+        },
+        "12/0/init/body/5/argument/27/1/1/7/3/1": {
+          "type": "element",
+          "hash": "0b062687108df307445af848763e4ce5",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Priority"
+        },
+        "12/0/init/body/5/argument/27/1/1/7/3/3": {
+          "type": "element",
+          "hash": "570723a8d1f14c7303bd68aaec9d35ef",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Service"
+        },
+        "12/0/init/body/5/argument/27/1/1/7/5/1": {
+          "type": "element",
+          "hash": "f141aa3e9adb2179806cc1c909b5516a",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Availability"
+        },
+        "12/0/init/body/5/argument/27/1/1/7/5/3": {
+          "type": "element",
+          "hash": "c5f658a393f5d8d6e251a0fb5a0de394",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Updates"
+        },
+        "12/0/init/body/5/argument/27/1/1/7/7/1": {
+          "type": "element",
+          "hash": "59c9d9b1bffc40a84acdda1fdd958351",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Special"
+        },
+        "12/0/init/body/5/argument/27/1/1/7/7/3": {
+          "type": "element",
+          "hash": "74989876ee2909e441a33e87b21e5575",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Offers"
+        },
+        "12/0/init/body/5/argument/31/1/1": {
+          "type": "element",
+          "hash": "666b2771a84f3c9bb8f23c3268f3aea6",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Join the Club Today"
+        },
+        "12/0/init/body/5/argument/31/1/1/11/3/1": {
+          "type": "element",
+          "hash": "579fcdc26802eede02a758d93e4f6806",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "📧 <element:span>CariocaCoastalClub@gmail.com</element:span>"
+        },
+        "12/0/init/body/5/argument/31/1/1/3/1/1": {
+          "type": "element",
+          "hash": "f23fa7c651d25b29ab07d33477c378e2",
+          "context": "",
+          "skip": true,
+          "overrides": {},
+          "content": "Carioca Coastal Club"
+        },
+        "12/0/init/body/5/argument/31/1/1/3/1/3": {
+          "type": "element",
+          "hash": "be77894b8ad446b58fdc0bdd323002a4",
+          "context": "",
+          "skip": true,
+          "overrides": {},
+          "content": "Barraca Loyalty Program"
+        },
+        "12/0/init/body/5/argument/31/1/1/3/5/1": {
+          "type": "element",
+          "hash": "6ff7eb82239605a92e11e4e3d6127309",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "<element:span><function:t/></element:span> 📱"
+        },
+        "12/0/init/body/5/argument/31/1/1/3/5/3": {
+          "type": "element",
+          "hash": "679e0f329d810f92e40c07ff08cc5d76",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "<element:span><function:t/></element:span> 💬"
+        },
+        "12/0/init/body/5/argument/31/1/3": {
+          "type": "element",
+          "hash": "85c303ba2eb8f93cc7f113ac01221872",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Start enjoying member benefits at your favorite barracas. Get updates, reserve chairs, and never miss out on the perfect barraca day."
+        },
+        "12/0/init/body/5/argument/35/1/1/11/1": {
+          "type": "element",
+          "hash": "9afa39bc47019ee6dec6c74b6273967c",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Contact"
+        },
+        "12/0/init/body/5/argument/35/1/1/11/3/1": {
+          "type": "element",
+          "hash": "579fcdc26802eede02a758d93e4f6806",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "📧 <function:t/>"
+        },
+        "12/0/init/body/5/argument/35/1/1/11/3/3": {
+          "type": "element",
+          "hash": "dc4a776cf545dc0a2a727de30e7d19a2",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "📱 <function:t/>"
+        },
+        "12/0/init/body/5/argument/35/1/1/11/3/5": {
+          "type": "element",
+          "hash": "4035e73e2b11c682df61476b8152e63c",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "📍 <function:t/>"
+        },
+        "12/0/init/body/5/argument/35/1/1/3/1/1": {
+          "type": "element",
+          "hash": "f23fa7c651d25b29ab07d33477c378e2",
+          "context": "",
+          "skip": true,
+          "overrides": {},
+          "content": "Carioca Coastal Club"
+        },
+        "12/0/init/body/5/argument/35/1/1/3/1/3": {
+          "type": "element",
+          "hash": "be77894b8ad446b58fdc0bdd323002a4",
+          "context": "",
+          "skip": true,
+          "overrides": {},
+          "content": "Barraca Loyalty Program"
+        },
+        "12/0/init/body/5/argument/35/1/1/3/3": {
+          "type": "element",
+          "hash": "492859586a7b91afed245c7226582b18",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Connecting Rio's barraca lovers with their favorite spots through chair reservations, real-time updates, and exclusive member benefits."
+        },
+        "12/0/init/body/5/argument/35/1/1/3/5/1": {
+          "type": "element",
+          "hash": "6ff7eb82239605a92e11e4e3d6127309",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "<element:span><function:t/></element:span> 📱"
+        },
+        "12/0/init/body/5/argument/35/1/1/3/5/3": {
+          "type": "element",
+          "hash": "679e0f329d810f92e40c07ff08cc5d76",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "<element:span><function:t/></element:span> 💬"
+        },
+        "12/0/init/body/5/argument/35/1/1/7/1": {
+          "type": "element",
+          "hash": "08f01a139568423a460c7d664b2be95e",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Quick Links"
+        },
+        "12/0/init/body/5/argument/35/1/1/7/3/1/0": {
+          "type": "element",
+          "hash": "d7fc56677a6fcfc637e4b6fae117c955",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Find Barracas"
+        },
+        "12/0/init/body/5/argument/35/1/1/7/3/3/0": {
+          "type": "element",
+          "hash": "8f89131a66d4659be07cd5af2c7ea898",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "About Us"
+        },
+        "12/0/init/body/5/argument/35/1/1/7/3/5/0": {
+          "type": "element",
+          "hash": "28db44fe4a6b815bbb1965a5179c728b",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Join Club"
+        },
+        "12/0/init/body/5/argument/35/1/1/7/3/7/0": {
+          "type": "element",
+          "hash": "90eb20f1400db82ab874744e47836dc6",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Admin"
+        },
+        "12/0/init/body/5/argument/35/1/5/1": {
+          "type": "element",
+          "hash": "178a8ca0c3f2591906b3b14276f53298",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "© 2024 Carioca Coastal Club. All rights reserved."
+        },
+        "12/0/init/body/5/argument/39/1/1/11/3/1": {
+          "type": "element",
+          "hash": "579fcdc26802eede02a758d93e4f6806",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "📧 <function:t/>"
+        },
+        "12/0/init/body/5/argument/39/1/1/11/3/3": {
+          "type": "element",
+          "hash": "dc4a776cf545dc0a2a727de30e7d19a2",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "📱 <function:t/>"
+        },
+        "12/0/init/body/5/argument/39/1/1/11/3/5": {
+          "type": "element",
+          "hash": "4035e73e2b11c682df61476b8152e63c",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "📍 <function:t/>"
+        },
+        "12/0/init/body/5/argument/39/1/1/3/1/1": {
+          "type": "element",
+          "hash": "f23fa7c651d25b29ab07d33477c378e2",
+          "context": "",
+          "skip": true,
+          "overrides": {},
+          "content": "Carioca Coastal Club"
+        },
+        "12/0/init/body/5/argument/39/1/1/3/1/3": {
+          "type": "element",
+          "hash": "be77894b8ad446b58fdc0bdd323002a4",
+          "context": "",
+          "skip": true,
+          "overrides": {},
+          "content": "Barraca Loyalty Program"
+        },
+        "12/0/init/body/5/argument/39/1/1/3/5/1": {
+          "type": "element",
+          "hash": "6ff7eb82239605a92e11e4e3d6127309",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "<element:span><function:t/></element:span> 📱"
+        },
+        "12/0/init/body/5/argument/39/1/1/3/5/3": {
+          "type": "element",
+          "hash": "679e0f329d810f92e40c07ff08cc5d76",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "<element:span><function:t/></element:span> 💬"
+        },
+        "12/0/init/body/5/argument/7/1": {
+          "type": "element",
+          "hash": "ee368bf9561ce2a76b5d48f4b8054a85",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Translation Debug:"
+        },
+        "12/0/init/body/5/argument/7/3": {
+          "type": "element",
+          "hash": "2174834da0d9527da62e907d155dc79e",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Current language: {i18n.language}"
+        },
+        "12/0/init/body/5/argument/7/5": {
+          "type": "element",
+          "hash": "c26d7ba0359b4b568b96ab8b7cd6cbb7",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Partner Barracas: <function:t/>"
+        },
+        "12/0/init/body/5/argument/7/7": {
+          "type": "element",
+          "hash": "b2299d5d0cc5dc9a2e95fb4522ccb940",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Availability Updates: <function:t/>"
+        },
+        "12/0/init/body/5/argument/7/9": {
+          "type": "element",
+          "hash": "e271325187f9fc0816b893b4d7e1a369",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Neighborhoods: <function:t/>"
+        },
+        "13/0/init/body/5/argument/11/1/11/1/1": {
+          "type": "element",
+          "hash": "2286b28fa37112af76d6f5952c4b928e",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "{barracas.length}+"
+        },
+        "13/0/init/body/5/argument/11/1/11/5/1": {
+          "type": "element",
+          "hash": "e7d5f033feb349d5fb8172f25ff7077d",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "24/7"
+        },
+        "13/0/init/body/5/argument/11/1/11/7/1": {
+          "type": "element",
+          "hash": "d877598cb4fab5944dfbc84151a0f231",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "12"
+        },
+        "13/0/init/body/5/argument/15/1/11/1/1": {
+          "type": "element",
+          "hash": "2286b28fa37112af76d6f5952c4b928e",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "{barracas.length}+"
+        },
+        "13/0/init/body/5/argument/15/1/11/5/1": {
+          "type": "element",
+          "hash": "e7d5f033feb349d5fb8172f25ff7077d",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "24/7"
+        },
+        "13/0/init/body/5/argument/15/1/11/7/1": {
+          "type": "element",
+          "hash": "d877598cb4fab5944dfbc84151a0f231",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "12"
+        },
+        "13/0/init/body/5/argument/19/1/11/1/1": {
+          "type": "element",
+          "hash": "2286b28fa37112af76d6f5952c4b928e",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "{barracas.length}+"
+        },
+        "13/0/init/body/5/argument/19/1/11/5/1": {
+          "type": "element",
+          "hash": "e7d5f033feb349d5fb8172f25ff7077d",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "24/7"
+        },
+        "13/0/init/body/5/argument/19/1/11/7/1": {
+          "type": "element",
+          "hash": "d877598cb4fab5944dfbc84151a0f231",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "12"
+        },
+        "13/0/init/body/5/argument/31/1/1/11/3/1": {
+          "type": "element",
+          "hash": "579fcdc26802eede02a758d93e4f6806",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "📧 <element:span>CariocaCoastalClub@gmail.com</element:span>"
+        },
+        "13/0/init/body/5/argument/31/1/1/11/3/3": {
+          "type": "element",
+          "hash": "4035e73e2b11c682df61476b8152e63c",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "📍 <element:span><function:t/></element:span>"
+        },
+        "13/0/init/body/5/argument/31/1/1/11/3/5": {
+          "type": "element",
+          "hash": "4035e73e2b11c682df61476b8152e63c",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "📍 <element:span><function:t/></element:span>"
+        },
+        "13/0/init/body/5/argument/31/1/1/3/1/1": {
+          "type": "element",
+          "hash": "f23fa7c651d25b29ab07d33477c378e2",
+          "context": "",
+          "skip": true,
+          "overrides": {},
+          "content": "Carioca Coastal Club"
+        },
+        "13/0/init/body/5/argument/31/1/1/3/1/3": {
+          "type": "element",
+          "hash": "be77894b8ad446b58fdc0bdd323002a4",
+          "context": "",
+          "skip": true,
+          "overrides": {},
+          "content": "Barraca Loyalty Program"
+        },
+        "13/0/init/body/5/argument/31/1/1/3/5/1": {
+          "type": "element",
+          "hash": "6ff7eb82239605a92e11e4e3d6127309",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "<element:span><function:t/></element:span> 📱"
+        },
+        "13/0/init/body/5/argument/31/1/1/3/5/3": {
+          "type": "element",
+          "hash": "679e0f329d810f92e40c07ff08cc5d76",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "<element:span><function:t/></element:span> 💬"
+        },
+        "13/0/init/body/5/argument/35/1/1/11/3/1": {
+          "type": "element",
+          "hash": "579fcdc26802eede02a758d93e4f6806",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "📧 <function:t/>"
+        },
+        "13/0/init/body/5/argument/35/1/1/11/3/3": {
+          "type": "element",
+          "hash": "dc4a776cf545dc0a2a727de30e7d19a2",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "📱 <function:t/>"
+        },
+        "13/0/init/body/5/argument/35/1/1/11/3/5": {
+          "type": "element",
+          "hash": "4035e73e2b11c682df61476b8152e63c",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "📍 <function:t/>"
+        },
+        "13/0/init/body/5/argument/35/1/1/3/1/1": {
+          "type": "element",
+          "hash": "f23fa7c651d25b29ab07d33477c378e2",
+          "context": "",
+          "skip": true,
+          "overrides": {},
+          "content": "Carioca Coastal Club"
+        },
+        "13/0/init/body/5/argument/35/1/1/3/1/3": {
+          "type": "element",
+          "hash": "be77894b8ad446b58fdc0bdd323002a4",
+          "context": "",
+          "skip": true,
+          "overrides": {},
+          "content": "Barraca Loyalty Program"
+        },
+        "13/0/init/body/5/argument/35/1/1/3/5/1": {
+          "type": "element",
+          "hash": "6ff7eb82239605a92e11e4e3d6127309",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "<element:span><function:t/></element:span> 📱"
+        },
+        "13/0/init/body/5/argument/35/1/1/3/5/3": {
+          "type": "element",
+          "hash": "679e0f329d810f92e40c07ff08cc5d76",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "<element:span><function:t/></element:span> 💬"
+        },
+        "13/0/init/body/5/argument/39/1/1/11/3/1": {
+          "type": "element",
+          "hash": "579fcdc26802eede02a758d93e4f6806",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "📧 <function:t/>"
+        },
+        "13/0/init/body/5/argument/39/1/1/11/3/3": {
+          "type": "element",
+          "hash": "dc4a776cf545dc0a2a727de30e7d19a2",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "📱 <function:t/>"
+        },
+        "13/0/init/body/5/argument/39/1/1/11/3/5": {
+          "type": "element",
+          "hash": "4035e73e2b11c682df61476b8152e63c",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "📍 <function:t/>"
+        },
+        "13/0/init/body/5/argument/39/1/1/3/1/1": {
+          "type": "element",
+          "hash": "f23fa7c651d25b29ab07d33477c378e2",
+          "context": "",
+          "skip": true,
+          "overrides": {},
+          "content": "Carioca Coastal Club"
+        },
+        "13/0/init/body/5/argument/39/1/1/3/1/3": {
+          "type": "element",
+          "hash": "be77894b8ad446b58fdc0bdd323002a4",
+          "context": "",
+          "skip": true,
+          "overrides": {},
+          "content": "Barraca Loyalty Program"
+        },
+        "13/0/init/body/5/argument/39/1/1/3/5/1": {
+          "type": "element",
+          "hash": "6ff7eb82239605a92e11e4e3d6127309",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "<element:span><function:t/></element:span> 📱"
+        },
+        "13/0/init/body/5/argument/39/1/1/3/5/3": {
+          "type": "element",
+          "hash": "679e0f329d810f92e40c07ff08cc5d76",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "<element:span><function:t/></element:span> 💬"
+        },
+        "13/0/init/body/5/argument/7/1": {
+          "type": "element",
+          "hash": "ee368bf9561ce2a76b5d48f4b8054a85",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Translation Debug:"
+        },
+        "13/0/init/body/5/argument/7/3": {
+          "type": "element",
+          "hash": "2174834da0d9527da62e907d155dc79e",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Current language: {i18n.language}"
+        },
+        "13/0/init/body/5/argument/7/5": {
+          "type": "element",
+          "hash": "c26d7ba0359b4b568b96ab8b7cd6cbb7",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Partner Barracas: <function:t/>"
+        },
+        "13/0/init/body/5/argument/7/7": {
+          "type": "element",
+          "hash": "b2299d5d0cc5dc9a2e95fb4522ccb940",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Availability Updates: <function:t/>"
+        },
+        "13/0/init/body/5/argument/7/9": {
+          "type": "element",
+          "hash": "e271325187f9fc0816b893b4d7e1a369",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Neighborhoods: <function:t/>"
+        }
+      }
+    }
+  }
+}

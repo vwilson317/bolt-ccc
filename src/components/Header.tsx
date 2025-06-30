@@ -29,10 +29,10 @@ const Header: React.FC = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-3 group">
             <div className="text-center">
-              <h1 className="text-xl font-bold bg-gradient-to-r from-orange-600 to-red-700 bg-clip-text text-transparent">
+              <h1 className="text-xl font-bold bg-gradient-to-r from-orange-600 to-red-700 bg-clip-text text-transparent" data-lingo-skip>
                 Carioca Coastal Club
               </h1>
-              <p className="text-xs text-orange-500 -mt-1">Barraca Loyalty Program</p>
+              <p className="text-xs text-orange-500 -mt-1" data-lingo-skip>Barraca Loyalty Program</p>
             </div>
           </Link>
 
@@ -89,7 +89,7 @@ const Header: React.FC = () => {
                 alt="Bolt" 
                 className="h-6 w-6 opacity-60 hover:opacity-100 transition-opacity"
               />
-              <span className="text-xs text-gray-500 opacity-60 hover:opacity-100 transition-opacity">
+              <span className="text-xs text-gray-500 opacity-60 hover:opacity-100 transition-opacity" data-lingo-skip>
                 Built with Bolt
               </span>
             </div>
@@ -186,7 +186,7 @@ const Header: React.FC = () => {
                   alt="Bolt" 
                   className="h-6 w-6 opacity-60"
                 />
-                <span className="text-xs text-gray-500 opacity-60">
+                <span className="text-xs text-gray-500 opacity-60" data-lingo-skip>
                   Built with Bolt
                 </span>
               </div>

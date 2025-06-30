@@ -12,6 +12,7 @@ import Home from './pages/Home';
 import Discover from './pages/Discover';
 import About from './pages/About';
 import Admin from './pages/Admin';
+import { TranslationDemo } from './components/TranslationDemo';
 import { logEnvironmentInfo, checkSupabaseConnection } from './lib/supabase';
 import './i18n';
 
@@ -30,23 +31,24 @@ function App() {
     <AppProvider>
       <StoryProvider>
         <WeatherProvider>
-          <Router>
-            <div className="min-h-screen bg-gray-50">
-              <Header />
-              <WeatherBar />
-              <main className="pt-24">
-                <Routes>
-                  <Route path="/" element={<Home />} />
-                  <Route path="/discover" element={<Discover />} />
-                  <Route path="/about" element={<About />} />
-                  <Route path="/admin" element={<Admin />} />
-                </Routes>
-              </main>
-              <StoryViewer />
-              <EnvironmentBadge />
-              <EnvironmentInfo />
-            </div>
-          </Router>
+        <Router>
+          <div className="min-h-screen bg-gray-50">
+            <Header />
+            <WeatherBar />
+            <main className="pt-24">
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/discover" element={<Discover />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/admin" element={<Admin />} />
+                {/* <Route path="/translation-demo" element={<TranslationDemo />} /> */}
+              </Routes>
+            </main>
+            <StoryViewer />
+            <EnvironmentBadge />
+            <EnvironmentInfo />
+          </div>
+        </Router>
         </WeatherProvider>
       </StoryProvider>
     </AppProvider>

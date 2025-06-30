@@ -90,7 +90,7 @@ const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
             {/* Barraca Number - Bottom Left */}
             {barraca.barracaNumber && (
               <div className="absolute bottom-3 left-3">
-                <span className="bg-black/70 text-white px-2 py-1 rounded-md text-xs font-medium">
+                <span className="bg-black/70 text-white px-2 py-1 rounded-md text-xs font-medium" data-lingo-skip>
                   #{barraca.barracaNumber}
                 </span>
               </div>
@@ -156,7 +156,7 @@ const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
                         onClick={() => toggleExpanded(barraca.id)}
                         className="text-xs text-gray-500 px-2 py-1 hover:text-gray-700 md:hidden"
                       >
-                        +{barraca.menuPreview.length - 2} more
+                        {t('barraca.moreItems', { count: barraca.menuPreview.length - 2 })}
                       </button>
                     )}
                   </div>

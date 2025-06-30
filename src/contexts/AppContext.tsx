@@ -11,6 +11,7 @@ interface AppContextType {
   isLoading: boolean;
   isAdmin: boolean;
   emailSubscriptions: EmailSubscription[];
+  currentLanguage?: string;
   updateSearchFilters: (filters: Partial<SearchFilters>) => void;
   addBarraca: (barraca: Omit<Barraca, 'id' | 'createdAt' | 'updatedAt'>) => void;
   updateBarraca: (id: string, updates: Partial<Barraca>) => void;
@@ -22,6 +23,8 @@ interface AppContextType {
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
+
+export { AppContext };
 
 export const useApp = () => {
   const context = useContext(AppContext);
@@ -47,6 +50,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [emailSubscriptions, setEmailSubscriptions] = useState<EmailSubscription[]>([]);
+  const [currentLanguage, setCurrentLanguage] = useState<string>('en');
 
   // Enhanced filter logic for comprehensive search
   const filteredBarracas = barracas.filter(barraca => {
@@ -185,6 +189,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     isLoading,
     isAdmin,
     emailSubscriptions,
+    currentLanguage,
     updateSearchFilters,
     addBarraca,
     updateBarraca,

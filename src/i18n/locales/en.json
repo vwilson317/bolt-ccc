@@ -55,7 +55,8 @@
     "loyaltyPerks": "Member Perks Available",
     "member": "Member",
     "showMore": "Show More",
-    "showLess": "Show Less"
+    "showLess": "Show Less",
+    "moreItems": "+{count} more"
   },
   "admin": {
     "login": "Admin Login",
@@ -187,7 +188,10 @@
       "description": "Connecting Rio's barraca lovers with their favorite spots through chair reservations, real-time updates, and exclusive member benefits.",
       "quickLinks": "Quick Links",
       "contact": "Contact",
-      "copyright": "© 2024 Carioca Coastal Club. All rights reserved."
+      "copyright": "© 2024 Carioca Coastal Club. All rights reserved.",
+      "companyName": "Carioca Coastal Club",
+      "loyaltyProgram": "Barraca Loyalty Program",
+      "location": "Rio de Janeiro, RJ"
     }
   },
   "about": {

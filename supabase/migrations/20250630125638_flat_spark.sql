@@ -46,7 +46,7 @@ INSERT INTO barracas (id, name, barraca_number, location, coordinates, is_open, 
  '{"phone": "+55 21 99999-0001", "email": "premium@example.com", "website": "https://premium-example.com"}',
  ARRAY['Personal Service', 'WiFi', 'Premium Amenities'],
  false,
- '[]', '2024-01-01 09:00:00+00', NOW()),
+ '[{"text": "Book Now", "url": "https://premium-example.com/book"}]'::jsonb, '2024-01-01 09:00:00+00', NOW()),
 
 -- Traditional Example
 ('uat-traditional', 'Barraca Tradicional', '002', 'Copacabana', 
@@ -58,7 +58,7 @@ INSERT INTO barracas (id, name, barraca_number, location, coordinates, is_open, 
  '{"phone": "+55 21 99999-0002"}',
  ARRAY['Traditional Food', 'Beach Chairs', 'Umbrellas'],
  true,
- '[]', '2024-01-01 08:00:00+00', NOW()),
+ '[{"text": "Book Now", "url": "https://traditional-example.com/book"}]'::jsonb, '2024-01-01 08:00:00+00', NOW()),
 
 -- Modern Example
 ('uat-modern', 'Barraca Moderna', '003', 'Leblon', 
@@ -70,7 +70,7 @@ INSERT INTO barracas (id, name, barraca_number, location, coordinates, is_open, 
  '{"phone": "+55 21 99999-0003", "website": "https://modern-example.com"}',
  ARRAY['Modern Design', 'Healthy Options', 'Instagram-worthy'],
  false,
- '[]', '2024-01-01 10:00:00+00', NOW()),
+ '[{"text": "Book Now", "url": "https://modern-example.com/book"}]'::jsonb, '2024-01-01 10:00:00+00', NOW()),
 
 -- Family Example
 ('uat-family', 'Barraca Família', '004', 'Barra da Tijuca', 
@@ -82,7 +82,7 @@ INSERT INTO barracas (id, name, barraca_number, location, coordinates, is_open, 
  '{"phone": "+55 21 99999-0004"}',
  ARRAY['Kids Area', 'Family Tables', 'Safe Environment'],
  false,
- '[]', '2024-01-01 09:00:00+00', NOW());
+ '[{"text": "Book Now", "url": "https://family-example.com/book"}]'::jsonb, '2024-01-01 09:00:00+00', NOW());
 
 -- Insert essential business hours for UAT
 INSERT INTO business_hours (barraca_id, day_of_week, is_open, open_time_utc, close_time_utc, notes) VALUES

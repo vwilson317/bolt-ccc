@@ -5,10 +5,10 @@ import { Calendar, Eye, MessageCircle, Menu, Phone, Mail, ExternalLink, Star } f
  * Default CTA button configurations
  * These serve as fallbacks when custom buttons are not configured
  */
-export const getDefaultCTAButtons = (): DefaultCTAButtons => ({
+export const getDefaultCTAButtons = (t: (key: string) => string): DefaultCTAButtons => ({
   reserve: {
     id: 'default-reserve',
-    text: 'Reserve',
+    text: t('cta.reserve'),
     action: {
       type: 'reservation',
       value: '/reserve',
@@ -24,7 +24,7 @@ export const getDefaultCTAButtons = (): DefaultCTAButtons => ({
   },
   details: {
     id: 'default-details',
-    text: 'Details',
+    text: t('cta.details'),
     action: {
       type: 'details',
       value: '/details',
@@ -38,7 +38,7 @@ export const getDefaultCTAButtons = (): DefaultCTAButtons => ({
   },
   contact: {
     id: 'default-contact',
-    text: 'Contact',
+    text: t('cta.contact'),
     action: {
       type: 'whatsapp',
       value: '',
@@ -53,7 +53,7 @@ export const getDefaultCTAButtons = (): DefaultCTAButtons => ({
   },
   menu: {
     id: 'default-menu',
-    text: 'Menu',
+    text: t('cta.menu'),
     action: {
       type: 'url',
       value: '/menu',
@@ -193,6 +193,7 @@ export const shouldShowCTAButton = (
 export const getCTAButtonsForBarraca = (
   barraca: Barraca,
   customCtaEnabled: boolean,
+  t: (key: string) => string,
   context?: {
     currentTime?: Date;
     isLoggedIn?: boolean;
@@ -215,7 +216,7 @@ export const getCTAButtonsForBarraca = (
 
   // Fallback to default buttons if no valid custom buttons or feature disabled
   if (buttons.length === 0) {
-    const defaultButtons = getDefaultCTAButtons();
+    const defaultButtons = getDefaultCTAButtons(t);
     
     // Configure default contact button with barraca's phone
     if (barraca.contact.phone) {

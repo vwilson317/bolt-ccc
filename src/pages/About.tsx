@@ -62,7 +62,7 @@ const About: React.FC = () => {
       {/* Hero Section */}
       <section className="bg-gradient-to-r from-orange-500 to-red-600 pt-16 pb-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
+          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6" data-lingo-skip>
             About Carioca Coastal Club
           </h1>
           <p className="text-xl text-orange-100 max-w-3xl mx-auto leading-relaxed">

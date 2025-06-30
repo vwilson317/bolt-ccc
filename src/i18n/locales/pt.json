@@ -43,19 +43,20 @@
     }
   },
   "barraca": {
-    "open": "Aberto",
-    "closed": "Fechado",
-    "typicalHours": "Horário",
+    "open": "Aberta",
+    "closed": "Fechada",
+    "typicalHours": "Horários",
     "location": "Localização",
     "menuPreview": "Especialidades",
     "comingSoon": "Em Breve",
     "weatherDependent": "Dependente do Clima",
     "viewDetails": "Ver Detalhes",
     "reserveChairs": "Reservar Cadeiras",
-    "loyaltyPerks": "Benefícios de Membro",
+    "loyaltyPerks": "Vantagens de Membro Disponíveis",
     "member": "Membro",
-    "showMore": "Ver Mais",
-    "showLess": "Ver Menos"
+    "showMore": "Mostrar Mais",
+    "showLess": "Mostrar Menos",
+    "moreItems": "+{count} mais"
   },
   "admin": {
     "login": "Login Admin",
@@ -187,7 +188,14 @@
       "description": "Conectando os amantes das barracas do Rio com seus locais favoritos através de reservas de cadeiras, atualizações em tempo real e benefícios exclusivos de membro.",
       "quickLinks": "Links Rápidos",
       "contact": "Contato",
-      "copyright": "© 2024 Carioca Coastal Club. Todos os direitos reservados."
+      "copyright": "© 2024 Carioca Coastal Club. Todos os direitos reservados.",
+      "companyName": "Carioca Coastal Club",
+      "loyaltyProgram": "Barraca Loyalty Program",
+      "email": "hello@cariocacoastal.com",
+      "phone": "+55 21 99999-0000",
+      "location": "Rio de Janeiro, RJ",
+      "instagram": "Instagram",
+      "whatsapp": "WhatsApp"
     }
   },
   "about": {
