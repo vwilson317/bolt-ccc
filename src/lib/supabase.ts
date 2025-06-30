@@ -66,7 +66,9 @@ export const handleSupabaseError = (error: any, context: string) => {
   console.error(`Supabase error in ${context} (${environmentInfo.environment}):`, error)
   
   if (error?.code === 'PGRST116') {
-    throw new Error('No data found')
+    // No data found - this is often expected, so just log and return
+    console.log(`No data found in ${context}`)
+    return
   }
   
   if (error?.code === 'PGRST301') {
