@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Play, Check } from 'lucide-react';
 import { useStory } from '../contexts/StoryContext';
 
@@ -17,6 +18,7 @@ const StoryRing: React.FC<StoryRingProps> = ({
   size = 'md',
   showLabel = true 
 }) => {
+  const { t } = useTranslation();
   const { stories, viewState, openStoryViewer } = useStory();
   
   const barracaStories = stories.filter(story => story.barracaId === barracaId);
@@ -47,7 +49,7 @@ const StoryRing: React.FC<StoryRingProps> = ({
         className={`relative ${sizeClasses[size]} rounded-full overflow-hidden hover:scale-105 transition-all duration-300 ${
           isViewed ? 'opacity-60' : 'opacity-100'
         }`}
-        aria-label={`View ${barracaName} stories`}
+        aria-label={t('stories.viewStories', { name: barracaName })}
       >
         {/* Gradient Ring */}
         <div className={`absolute inset-0 rounded-full p-0.5 ${

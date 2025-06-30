@@ -13,32 +13,32 @@ const AdminStats: React.FC = () => {
 
   const stats = [
     {
-      title: 'Total Barracas',
+      title: t('admin.stats.totalBarracas'),
       value: barracas.length,
       icon: MapPin,
       color: 'bg-blue-500',
-      change: '+2 this month'
+      change: t('admin.stats.thisMonth')
     },
     {
-      title: 'Currently Open',
+      title: t('admin.stats.currentlyOpen'),
       value: openBarracas,
       icon: Activity,
       color: 'bg-green-500',
-      change: `${Math.round((openBarracas / barracas.length) * 100)}% open rate`
+      change: `${Math.round((openBarracas / barracas.length) * 100)}% ${t('admin.stats.openRate')}`
     },
     {
-      title: 'Email Subscribers',
+      title: t('admin.stats.emailSubscribers'),
       value: emailSubscriptions.length,
       icon: Users,
       color: 'bg-purple-500',
-      change: '+15 this week'
+      change: t('admin.stats.thisWeek')
     },
     {
-      title: 'Unique Locations',
+      title: t('admin.stats.uniqueLocations'),
       value: locations,
       icon: MapPin,
       color: 'bg-orange-500',
-      change: 'Across Rio'
+      change: t('admin.stats.acrossRio')
     }
   ];
 
@@ -82,8 +82,8 @@ const AdminStats: React.FC = () => {
         {/* Barracas by Location */}
         <div className="bg-white rounded-2xl p-6 shadow-lg">
           <div className="flex items-center mb-6">
-            <BarChart3 className="h-5 w-5 text-sky-600 mr-2" />
-            <h3 className="text-lg font-semibold text-gray-900">Barracas by Location</h3>
+            <BarChart3 className="h-5 w-5 text-orange-600 mr-2" />
+            <h3 className="text-lg font-semibold text-gray-900">{t('admin.stats.barracasByLocation')}</h3>
           </div>
           <div className="space-y-4">
             {Object.entries(barracasByLocation).map(([location, count]) => (
@@ -92,7 +92,7 @@ const AdminStats: React.FC = () => {
                 <div className="flex items-center">
                   <div className="w-24 bg-gray-200 rounded-full h-2 mr-3">
                     <div 
-                      className="bg-sky-500 h-2 rounded-full" 
+                      className="bg-orange-500 h-2 rounded-full" 
                       style={{ width: `${(count / Math.max(...Object.values(barracasByLocation))) * 100}%` }}
                     ></div>
                   </div>
@@ -106,8 +106,8 @@ const AdminStats: React.FC = () => {
         {/* Recent Activity */}
         <div className="bg-white rounded-2xl p-6 shadow-lg">
           <div className="flex items-center mb-6">
-            <Activity className="h-5 w-5 text-sky-600 mr-2" />
-            <h3 className="text-lg font-semibold text-gray-900">Recent Activity</h3>
+            <Activity className="h-5 w-5 text-orange-600 mr-2" />
+            <h3 className="text-lg font-semibold text-gray-900">{t('admin.stats.recentActivity')}</h3>
           </div>
           <div className="space-y-4">
             {recentActivity.map((activity, index) => (
@@ -131,21 +131,21 @@ const AdminStats: React.FC = () => {
       {/* Performance Metrics */}
       <div className="bg-white rounded-2xl p-6 shadow-lg">
         <div className="flex items-center mb-6">
-          <Eye className="h-5 w-5 text-sky-600 mr-2" />
-          <h3 className="text-lg font-semibold text-gray-900">System Health</h3>
+          <Eye className="h-5 w-5 text-orange-600 mr-2" />
+          <h3 className="text-lg font-semibold text-gray-900">{t('admin.stats.systemHealth')}</h3>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="text-center">
             <div className="text-3xl font-bold text-green-500 mb-2">98.5%</div>
-            <div className="text-sm text-gray-600">Uptime</div>
+            <div className="text-sm text-gray-600">{t('admin.stats.uptime')}</div>
           </div>
           <div className="text-center">
             <div className="text-3xl font-bold text-blue-500 mb-2">{Math.round((openBarracas / barracas.length) * 100)}%</div>
-            <div className="text-sm text-gray-600">Open Rate</div>
+            <div className="text-sm text-gray-600">{t('admin.stats.openRate')}</div>
           </div>
           <div className="text-center">
             <div className="text-3xl font-bold text-purple-500 mb-2">{emailSubscriptions.length}</div>
-            <div className="text-sm text-gray-600">Active Subscribers</div>
+            <div className="text-sm text-gray-600">{t('admin.stats.activeSubscribers')}</div>
           </div>
         </div>
       </div>

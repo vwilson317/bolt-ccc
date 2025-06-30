@@ -55,13 +55,13 @@ const EmailSubscription: React.FC = () => {
         <button
           type="submit"
           disabled={status === 'loading' || status === 'success'}
-          className="w-full bg-gradient-to-r from-white to-gray-100 text-sky-600 py-4 rounded-xl font-semibold text-lg hover:from-gray-100 hover:to-gray-200 transform hover:scale-105 transition-all duration-200 shadow-lg disabled:opacity-50 disabled:transform-none flex items-center justify-center"
+          className="w-full bg-gradient-to-r from-white to-gray-100 text-orange-600 py-4 rounded-xl font-semibold text-lg hover:from-gray-100 hover:to-gray-200 transform hover:scale-105 transition-all duration-200 shadow-lg disabled:opacity-50 disabled:transform-none flex items-center justify-center"
         >
           {status === 'loading' && (
-            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-sky-600 mr-2"></div>
+            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-orange-600 mr-2"></div>
           )}
           {status === 'success' && <Check className="h-5 w-5 mr-2" />}
-          {status === 'loading' ? 'Joining...' : status === 'success' ? 'Welcome!' : t('email.submit')}
+          {status === 'loading' ? t('email.joining') : status === 'success' ? t('email.welcome') : t('email.submit')}
         </button>
       </form>
 
@@ -81,8 +81,8 @@ const EmailSubscription: React.FC = () => {
       )}
 
       <div className="mt-4 text-center">
-        <p className="text-sm text-sky-100">
-          Get chair reservations, status updates, and exclusive member offers
+        <p className="text-sm text-orange-100">
+          {t('email.benefits')}
         </p>
       </div>
     </div>

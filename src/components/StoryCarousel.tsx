@@ -1,9 +1,11 @@
 import React, { useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useStory } from '../contexts/StoryContext';
 import StoryRing from './StoryRing';
 import { useApp } from '../contexts/AppContext';
 
 const StoryCarousel: React.FC = () => {
+  const { t } = useTranslation();
   const { stories, featureFlags, viewState } = useStory();
   const { barracas } = useApp();
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -87,9 +89,9 @@ const StoryCarousel: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-gray-900">
-            Stories
+            {t('stories.title')}
             <span className="text-sm text-gray-500 ml-2">
-              ({barracasWithStories.filter(b => !b.isViewed).length} new)
+              ({barracasWithStories.filter(b => !b.isViewed).length} {t('stories.new')})
             </span>
           </h3>
         </div>

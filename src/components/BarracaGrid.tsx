@@ -83,7 +83,7 @@ const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
                 <div className={`w-1.5 h-1.5 rounded-full mr-1.5 ${
                   barraca.isOpen ? 'bg-green-200' : 'bg-red-200'
                 }`} />
-                {barraca.isOpen ? 'Open' : 'Closed'}
+                {barraca.isOpen ? t('barraca.open') : t('barraca.closed')}
               </span>
             </div>
 
@@ -120,7 +120,7 @@ const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
                 </h3>
                 {/* Member Badge - Smaller, Right Aligned */}
                 <span className="bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded-md text-xs font-medium ml-2 flex-shrink-0">
-                  Member
+                  {t('barraca.member')}
                 </span>
               </div>
               
@@ -146,7 +146,7 @@ const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
                     {barraca.menuPreview.slice(0, 2).map((item, index) => (
                       <span
                         key={index}
-                        className="bg-sky-50 text-sky-700 px-2 py-1 rounded-md text-xs font-medium"
+                        className="bg-orange-50 text-orange-700 px-2 py-1 rounded-md text-xs font-medium"
                       >
                         {item}
                       </span>
@@ -186,7 +186,7 @@ const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
                       {barraca.menuPreview.slice(2).map((item, index) => (
                         <span
                           key={index}
-                          className="bg-sky-50 text-sky-700 px-2 py-1 rounded-md text-xs font-medium"
+                          className="bg-orange-50 text-orange-700 px-2 py-1 rounded-md text-xs font-medium"
                         >
                           {item}
                         </span>
@@ -223,12 +223,12 @@ const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
               >
                 {isExpanded(barraca.id) ? (
                   <>
-                    <span>Show Less</span>
+                    <span>{t('barraca.showLess')}</span>
                     <ChevronUp className="h-4 w-4 ml-1" />
                   </>
                 ) : (
                   <>
-                    <span>Show More</span>
+                    <span>{t('barraca.showMore')}</span>
                     <ChevronDown className="h-4 w-4 ml-1" />
                   </>
                 )}

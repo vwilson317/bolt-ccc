@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Users } from 'lucide-react';
 
 interface VisitorData {
@@ -8,6 +9,7 @@ interface VisitorData {
 }
 
 const UniqueVisitorCounter: React.FC = () => {
+  const { t } = useTranslation();
   const [visitorCount, setVisitorCount] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -197,10 +199,10 @@ const UniqueVisitorCounter: React.FC = () => {
         </div>
       </div>
       <div className="text-sm text-gray-600 font-medium">
-        Total Unique Visitors Since Launch
+        {t('visitor.totalUnique')}
       </div>
       <div className="text-xs text-gray-400 mt-1">
-        Real-time counter
+        {t('visitor.realTime')}
       </div>
     </div>
   );

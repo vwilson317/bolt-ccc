@@ -32,9 +32,9 @@ const Discover: React.FC = () => {
   ];
 
   const availabilityOptions = [
-    { value: 'all', label: 'All', icon: null },
-    { value: 'open', label: 'Open', icon: CheckCircle },
-    { value: 'closed', label: 'Closed', icon: XCircle }
+    { value: 'all', label: t('discover.filters.all'), icon: null },
+    { value: 'open', label: t('discover.filters.open'), icon: CheckCircle },
+    { value: 'closed', label: t('discover.filters.closed'), icon: XCircle }
   ];
 
   const handleSearchChange = (query: string) => {
@@ -60,14 +60,14 @@ const Discover: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header Section */}
-      <section className="bg-gradient-to-r from-sky-500 to-blue-600 pt-8 pb-12">
+      <section className="bg-gradient-to-r from-orange-500 to-red-600 pt-8 pb-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8">
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-              Find Your Barraca
+              {t('discover.title')}
             </h1>
-            <p className="text-xl text-sky-100 max-w-2xl mx-auto">
-              Check if your favorite spot is open, reserve chairs, and discover new member benefits
+            <p className="text-xl text-orange-100 max-w-2xl mx-auto">
+              {t('discover.subtitle')}
             </p>
           </div>
           
@@ -77,7 +77,7 @@ const Discover: React.FC = () => {
               <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
               <input
                 type="text"
-                placeholder="Search by name, barraca number (e.g. 001), or neighborhood..."
+                placeholder={t('discover.searchPlaceholder')}
                 value={searchFilters.query}
                 onChange={(e) => handleSearchChange(e.target.value)}
                 className="w-full pl-12 pr-4 py-4 text-lg rounded-2xl border-0 shadow-lg focus:ring-4 focus:ring-white/30 focus:outline-none transition-all duration-200"
@@ -86,7 +86,7 @@ const Discover: React.FC = () => {
             
             {/* Quick Search Examples */}
             <div className="mt-4 flex flex-wrap justify-center gap-2">
-              <span className="text-sky-100 text-sm">Try:</span>
+              <span className="text-orange-100 text-sm">{t('search.examples.try')}</span>
               {['001', 'Ipanema', 'Sol e Mar', 'Leblon'].map((example) => (
                 <button
                   key={example}
@@ -109,7 +109,7 @@ const Discover: React.FC = () => {
         <div className="mb-8">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
             <h2 className="text-2xl font-bold text-gray-900">
-              {filteredBarracas.length} Partner {filteredBarracas.length === 1 ? 'Barraca' : 'Barracas'} Found
+              {filteredBarracas.length} {t('discover.resultsFound')} {filteredBarracas.length === 1 ? t('discover.barraca') : t('discover.barracas')} {t('discover.found')}
             </h2>
             <div className="flex items-center gap-3">
               {hasActiveFilters && (
@@ -118,7 +118,7 @@ const Discover: React.FC = () => {
                   className="flex items-center px-3 py-2 text-sm text-gray-600 hover:text-gray-800 transition-colors"
                 >
                   <X className="h-4 w-4 mr-1" />
-                  Clear
+                  {t('search.clear')}
                 </button>
               )}
               <button
@@ -126,7 +126,7 @@ const Discover: React.FC = () => {
                 className="flex items-center px-4 py-2 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors shadow-sm"
               >
                 <Filter className="h-4 w-4 mr-2" />
-                Filters
+                {t('search.filters')}
               </button>
             </div>
           </div>
@@ -146,7 +146,7 @@ const Discover: React.FC = () => {
                           onClick={() => handleAvailabilityFilter(option.value as 'all' | 'open' | 'closed')}
                           className={`flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                             searchFilters.status === option.value
-                              ? 'bg-sky-500 text-white shadow-sm'
+                              ? 'bg-orange-500 text-white shadow-sm'
                               : 'text-gray-600 hover:text-gray-900 hover:bg-white'
                           }`}
                         >
@@ -167,7 +167,7 @@ const Discover: React.FC = () => {
                         onClick={() => handleLocationFilter(neighborhood)}
                         className={`flex-shrink-0 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                           searchFilters.location === neighborhood
-                            ? 'bg-sky-500 text-white'
+                            ? 'bg-orange-500 text-white'
                             : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                         }`}
                       >
@@ -184,7 +184,7 @@ const Discover: React.FC = () => {
           {hasActiveFilters && (
             <div className="flex flex-wrap gap-2 mb-6">
               {searchFilters.query && (
-                <span className="bg-sky-100 text-sky-800 px-3 py-1 rounded-full text-sm flex items-center">
+                <span className="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm flex items-center">
                   <Search className="h-3 w-3 mr-1" />
                   "{searchFilters.query}"
                 </span>
@@ -200,7 +200,7 @@ const Discover: React.FC = () => {
                   ) : (
                     <XCircle className="h-3 w-3 mr-1" />
                   )}
-                  {searchFilters.status === 'open' ? 'Open' : 'Closed'}
+                  {searchFilters.status === 'open' ? t('barraca.open') : t('barraca.closed')}
                 </span>
               )}
               {searchFilters.location && (
@@ -216,23 +216,23 @@ const Discover: React.FC = () => {
         {/* Search Tips - Simplified */}
         {searchFilters.query === '' && !hasActiveFilters && (
           <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-8">
-            <h3 className="text-lg font-semibold text-blue-900 mb-2">Search Tips</h3>
+            <h3 className="text-lg font-semibold text-blue-900 mb-2">{t('search.tips.title')}</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm text-blue-800">
               <div className="flex items-center">
                 <Hash className="h-4 w-4 mr-2 text-blue-600" />
-                <span>Number: 001</span>
+                <span>{t('search.tips.number')}</span>
               </div>
               <div className="flex items-center">
                 <MapPin className="h-4 w-4 mr-2 text-blue-600" />
-                <span>Beach: Ipanema</span>
+                <span>{t('search.tips.beach')}</span>
               </div>
               <div className="flex items-center">
                 <Search className="h-4 w-4 mr-2 text-blue-600" />
-                <span>Name: Sol e Mar</span>
+                <span>{t('search.tips.name')}</span>
               </div>
               <div className="flex items-center">
                 <CheckCircle className="h-4 w-4 mr-2 text-blue-600" />
-                <span>Filter by availability</span>
+                <span>{t('search.tips.filter')}</span>
               </div>
             </div>
           </div>
@@ -246,18 +246,18 @@ const Discover: React.FC = () => {
             <div className="bg-gray-100 rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-4">
               <Search className="h-12 w-12 text-gray-400" />
             </div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">No barracas found</h3>
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">{t('discover.noResults')}</h3>
             <p className="text-gray-600 mb-6">
               {searchFilters.query 
-                ? `No results for "${searchFilters.query}". Try searching by barraca number, name, or neighborhood.`
-                : 'Try adjusting your search criteria or filters.'
+                ? t('discover.noResultsMessage', { query: searchFilters.query })
+                : t('discover.adjustCriteria')
               }
             </p>
             <button
               onClick={clearFilters}
-              className="px-6 py-3 bg-sky-500 text-white rounded-lg hover:bg-sky-600 transition-colors"
+              className="px-6 py-3 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors"
             >
-              Clear All Filters
+              {t('discover.clearAllFilters')}
             </button>
           </div>
         )}

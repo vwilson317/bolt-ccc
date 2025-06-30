@@ -25,11 +25,11 @@ const WeatherBar: React.FC = () => {
   };
 
   const getBeachConditionText = (condition: string) => {
-    return condition.charAt(0).toUpperCase() + condition.slice(1);
+    return t(`weather.conditions.${condition}`);
   };
 
   return (
-    <div className="fixed top-16 left-0 right-0 z-40 bg-gradient-to-r from-sky-400 to-blue-500 text-white shadow-sm">
+    <div className="fixed top-16 left-0 right-0 z-40 bg-gradient-to-r from-orange-400 to-red-500 text-white shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between py-2">
           {/* Weather Info */}
@@ -58,6 +58,7 @@ const WeatherBar: React.FC = () => {
               onClick={refreshWeather}
               disabled={isLoading}
               className="p-1 rounded hover:bg-white/20 transition-colors disabled:opacity-50"
+              title={t('common.retry')}
             >
               <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
             </button>

@@ -16,14 +16,31 @@
     "feelsLike": "Feels like",
     "humidity": "Humidity",
     "wind": "Wind",
-    "beachConditions": "Beach Conditions"
+    "barracaConditions": "Barraca Conditions",
+    "beachConditions": "Beach Conditions",
+    "conditions": {
+      "excellent": "Excellent for barraca activities",
+      "good": "Good barraca conditions",
+      "fair": "Fair conditions, some limitations",
+      "poor": "Poor conditions, consider indoor activities"
+    }
   },
   "search": {
     "placeholder": "Search by name, number, or neighborhood...",
     "filters": "Filters",
     "openNow": "Open Now",
     "location": "Location",
-    "clear": "Clear Filters"
+    "clear": "Clear Filters",
+    "tips": {
+      "title": "Search Tips",
+      "number": "Number: 001",
+      "beach": "Beach: Ipanema",
+      "name": "Name: Sol e Mar",
+      "filter": "Filter by availability"
+    },
+    "examples": {
+      "try": "Try:"
+    }
   },
   "barraca": {
     "open": "Open",
@@ -35,7 +52,10 @@
     "weatherDependent": "Weather Dependent",
     "viewDetails": "View Details",
     "reserveChairs": "Reserve Chairs",
-    "loyaltyPerks": "Member Perks Available"
+    "loyaltyPerks": "Member Perks Available",
+    "member": "Member",
+    "showMore": "Show More",
+    "showLess": "Show Less"
   },
   "admin": {
     "login": "Admin Login",
@@ -43,23 +63,197 @@
     "email": "Email",
     "password": "Password",
     "signIn": "Sign In",
+    "logout": "Logout",
     "addBarraca": "Add New Barraca",
     "editBarraca": "Edit Barraca",
     "deleteBarraca": "Delete Barraca",
-    "manageBarracas": "Manage Barracas"
+    "manageBarracas": "Manage Barracas",
+    "stats": "Analytics",
+    "emails": "Email Subscribers",
+    "credentials": "Demo credentials: admin@cariocacoastal.com / admin123",
+    "form": {
+      "name": "Name",
+      "barracaNumber": "Barraca Number",
+      "location": "Location",
+      "description": "Description",
+      "availability": "Availability",
+      "typicalHours": "Typical Hours",
+      "weatherDependent": "Weather Dependent",
+      "images": "Images (URLs)",
+      "menuPreview": "Menu Preview Items",
+      "contact": "Contact Information",
+      "whatsapp": "WhatsApp",
+      "email": "Email",
+      "instagram": "Instagram",
+      "amenities": "Amenities",
+      "ctaButtons": "Custom CTA Buttons",
+      "addImage": "Add Image",
+      "addItem": "Add Item",
+      "addAmenity": "Add Amenity",
+      "save": "Save Barraca",
+      "saving": "Saving...",
+      "cancel": "Cancel",
+      "selectNeighborhood": "Select neighborhood",
+      "required": "*"
+    },
+    "table": {
+      "barraca": "Barraca",
+      "location": "Location",
+      "availability": "Availability",
+      "updated": "Updated",
+      "actions": "Actions",
+      "email": "Email",
+      "subscribed": "Subscribed",
+      "preferences": "Preferences"
+    },
+    "stats": {
+      "totalBarracas": "Total Barracas",
+      "currentlyOpen": "Currently Open",
+      "emailSubscribers": "Email Subscribers",
+      "uniqueLocations": "Unique Locations",
+      "openRate": "open rate",
+      "thisMonth": "+2 this month",
+      "thisWeek": "+15 this week",
+      "acrossRio": "Across Rio",
+      "barracasByLocation": "Barracas by Location",
+      "recentActivity": "Recent Activity",
+      "systemHealth": "System Health",
+      "uptime": "Uptime",
+      "activeSubscribers": "Active Subscribers"
+    }
   },
   "email": {
     "subscribe": "Join Loyalty Program",
     "placeholder": "Enter your email for member updates",
     "submit": "Join Now",
+    "joining": "Joining...",
+    "welcome": "Welcome!",
     "success": "Welcome to Carioca Coastal Club!",
-    "error": "Please enter a valid email address"
+    "error": "Please enter a valid email address",
+    "benefits": "Get chair reservations, status updates, and exclusive member offers"
   },
   "loyalty": {
     "benefits": "Member Benefits",
     "chairReservation": "Chair Reservation",
     "exclusiveOffers": "Exclusive Offers",
     "newBarracas": "New Barraca Updates"
+  },
+  "home": {
+    "yourBarraca": "Your Barraca, Your Way",
+    "joinThousands": "Join thousands of loyal customers who use Carioca Coastal Club to stay connected with their favorite barracas",
+    "popularBarracas": "Popular Member Barracas",
+    "popularDescription": "These barracas are loved by our community - check if your favorite is open and reserve your spot",
+    "viewAllPartners": "View All Partner Barracas",
+    "whyJoin": "Why Join Carioca Coastal Club?",
+    "whyJoinDescription": "More than just finding barracas - we're your connection to Rio's barraca culture",
+    "exclusiveBenefits": "Exclusive Member Benefits",
+    "exclusiveDescription": "Reserve chairs, get availability updates, discover new spots, and enjoy special offers from your favorite barracas",
+    "joinToday": "Join the Club Today",
+    "joinDescription": "Start enjoying member benefits at your favorite barracas. Get updates, reserve chairs, and never miss out on the perfect barraca day.",
+    "stats": {
+      "partnerBarracas": "Partner Barracas",
+      "availabilityUpdates": "Availability Updates",
+      "neighborhoods": "Neighborhoods"
+    },
+    "features": {
+      "chairReservations": {
+        "title": "Chair Reservations",
+        "description": "Reserve your favorite spot at participating barracas - never worry about finding a chair again"
+      },
+      "realTimeUpdates": {
+        "title": "Real-time Updates",
+        "description": "Get instant notifications when your favorite barraca opens, closes, or has special offers"
+      },
+      "exclusivePerks": {
+        "title": "Exclusive Member Perks",
+        "description": "Access special discounts, priority service, and member-only events at partner barracas"
+      },
+      "personalizedRecommendations": {
+        "title": "Personalized Recommendations",
+        "description": "Discover new barracas based on your preferences and get insider tips from locals"
+      }
+    },
+    "memberBenefits": {
+      "chair": "Chair",
+      "reservations": "Reservations",
+      "priority": "Priority",
+      "service": "Service",
+      "availability": "Availability",
+      "updates": "Updates",
+      "special": "Special",
+      "offers": "Offers"
+    },
+    "footer": {
+      "description": "Connecting Rio's barraca lovers with their favorite spots through chair reservations, real-time updates, and exclusive member benefits.",
+      "quickLinks": "Quick Links",
+      "contact": "Contact",
+      "copyright": "© 2024 Carioca Coastal Club. All rights reserved."
+    }
+  },
+  "about": {
+    "title": "About Carioca Coastal Club",
+    "subtitle": "We're the loyalty platform connecting Rio's barraca lovers with their favorite spots. Check if your barraca is open, reserve chairs, and enjoy exclusive member benefits.",
+    "mission": "Our Mission",
+    "missionDescription": "To strengthen the bond between Rio's barraca community and their favorite spots. We believe loyal customers deserve better service, and barraca owners deserve loyal customers who keep coming back.",
+    "missionQuote": "Every barraca has its regulars - we help strengthen those relationships.",
+    "missionDetails": "Through chair reservations, real-time updates, and exclusive member perks, we make it easier for you to enjoy your favorite barraca spots while helping barracas build stronger customer loyalty.",
+    "whatWeStandFor": "What We Stand For",
+    "valuesDescription": "The values that drive our loyalty platform and community",
+    "values": {
+      "passion": {
+        "title": "Passion for Rio",
+        "description": "We love Rio de Janeiro and want to connect barraca lovers with their favorite spots."
+      },
+      "community": {
+        "title": "Community First",
+        "description": "Building loyalty between customers and barracas through better communication and service."
+      },
+      "convenience": {
+        "title": "Convenience",
+        "description": "Reserve chairs, get updates, and enjoy exclusive perks at participating barracas."
+      },
+      "benefits": {
+        "title": "Member Benefits",
+        "description": "Exclusive offers, priority service, and special events for loyal customers."
+      }
+    },
+    "meetTeam": "Meet Our Team",
+    "teamDescription": "Barraca enthusiasts and tech experts working to strengthen Rio's barraca community",
+    "getInTouch": "Get in Touch",
+    "getInTouchDescription": "Questions about membership? Want to partner with us? We'd love to hear from you.",
+    "whatsapp": "WhatsApp",
+    "whatsappDescription": "Quick responses via WhatsApp",
+    "instagram": "Instagram",
+    "instagramDescription": "Follow us for daily updates",
+    "joinCommunity": "Join Our Community",
+    "joinCommunityDescription": "Get member updates, chair reservation alerts, and exclusive offers from partner barracas"
+  },
+  "discover": {
+    "title": "Find Your Barraca",
+    "subtitle": "Check if your favorite spot is open, reserve chairs, and discover new member benefits",
+    "searchPlaceholder": "Search by name, barraca number (e.g. 001), or neighborhood...",
+    "resultsFound": "Partner",
+    "barracas": "Barracas",
+    "barraca": "Barraca",
+    "found": "Found",
+    "noResults": "No barracas found",
+    "noResultsMessage": "No results for \"{query}\". Try searching by barraca number, name, or neighborhood.",
+    "adjustCriteria": "Try adjusting your search criteria or filters.",
+    "clearAllFilters": "Clear All Filters",
+    "filters": {
+      "all": "All",
+      "open": "Open",
+      "closed": "Closed"
+    }
+  },
+  "stories": {
+    "title": "Stories",
+    "new": "new",
+    "viewStories": "View {name} stories"
+  },
+  "visitor": {
+    "totalUnique": "Total Unique Visitors Since Launch",
+    "realTime": "Real-time counter"
   },
   "common": {
     "loading": "Loading...",
@@ -69,6 +263,33 @@
     "cancel": "Cancel",
     "delete": "Delete",
     "edit": "Edit",
-    "add": "Add"
+    "add": "Add",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "clear": "Clear",
+    "search": "Search",
+    "filter": "Filter",
+    "more": "More",
+    "less": "Less",
+    "yes": "Yes",
+    "no": "No",
+    "ok": "OK",
+    "builtWith": "Built with Bolt"
+  },
+  "cta": {
+    "reserve": "Reserve",
+    "details": "Details",
+    "contact": "Contact",
+    "menu": "Menu",
+    "whatsapp": "WhatsApp",
+    "instagram": "Instagram"
+  },
+  "languages": {
+    "english": "English",
+    "portuguese": "Português",
+    "spanish": "Español",
+    "french": "Français"
   }
 }
