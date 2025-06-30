@@ -1,22 +1,29 @@
 /*
-  # Clean Database Schema for Carioca Coastal Club
-  
+  # Initial Database Schema for Carioca Coastal Club
+
   1. New Tables
-    - `barracas` - Main barraca data
-    - `business_hours` - Detailed business hours by day of week
-    - `stories` - Story content and media
-    - `email_subscriptions` - Newsletter subscriptions
-    - `weather_cache` - Weather data caching
-    - `visitor_analytics` - Unique visitor tracking
-    - `translations` - Multi-language content
+    - `barracas` - Main barraca data with locations, hours, and details
+    - `business_hours` - Detailed weekly schedules for each barraca
+    - `stories` - Temporary story content (24-hour expiry)
+    - `email_subscriptions` - Newsletter and notification subscriptions
+    - `weather_cache` - Cached weather data for performance
+    - `visitor_analytics` - Anonymous visitor tracking
+    - `translations` - Multi-language content support
+    - `translation_keys` - Translation key management
 
   2. Security
     - Enable RLS on all tables
-    - Add policies for authenticated and public access
-    
+    - Public read access for content tables
+    - Authenticated write access for admin operations
+    - User-specific access for subscriptions
+
   3. Performance
-    - Add indexes for common queries
-    - Enable real-time subscriptions
+    - Indexes on frequently queried columns
+    - Full-text search indexes for barracas
+    - Geographic indexes for location queries
+
+  4. Real-time
+    - Enable real-time subscriptions for live updates
 */
 
 -- Enable required extensions
@@ -24,7 +31,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE EXTENSION IF NOT EXISTS "postgis";
 
 -- Create barracas table
-CREATE TABLE IF NOT EXISTS barracas (
+CREATE TABLE barracas (
   id text PRIMARY KEY,
   name text NOT NULL,
   barraca_number text,
@@ -48,15 +55,15 @@ CREATE TABLE IF NOT EXISTS barracas (
 );
 
 -- Create business hours table
-CREATE TABLE IF NOT EXISTS business_hours (
+CREATE TABLE business_hours (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   barraca_id text NOT NULL REFERENCES barracas(id) ON DELETE CASCADE,
   day_of_week integer NOT NULL CHECK (day_of_week >= 0 AND day_of_week <= 6), -- 0 = Sunday, 6 = Saturday
   is_open boolean DEFAULT true,
-  open_time_utc time,
-  close_time_utc time,
-  break_start_utc time,
-  break_end_utc time,
+  open_time_utc time, -- Opening time in UTC
+  close_time_utc time, -- Closing time in UTC (can be next day for late night venues)
+  break_start_utc time, -- Break/lunch start time in UTC (optional)
+  break_end_utc time, -- Break/lunch end time in UTC (optional)
   notes text,
   created_at timestamptz DEFAULT now(),
   updated_at timestamptz DEFAULT now(),
@@ -64,7 +71,7 @@ CREATE TABLE IF NOT EXISTS business_hours (
 );
 
 -- Create stories table
-CREATE TABLE IF NOT EXISTS stories (
+CREATE TABLE stories (
   id text PRIMARY KEY DEFAULT gen_random_uuid()::text,
   barraca_id text NOT NULL REFERENCES barracas(id) ON DELETE CASCADE,
   media_url text NOT NULL,
@@ -76,7 +83,7 @@ CREATE TABLE IF NOT EXISTS stories (
 );
 
 -- Create email subscriptions table
-CREATE TABLE IF NOT EXISTS email_subscriptions (
+CREATE TABLE email_subscriptions (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   email text UNIQUE NOT NULL,
   preferences jsonb DEFAULT '{"newBarracas": true, "specialOffers": true}',
@@ -86,7 +93,7 @@ CREATE TABLE IF NOT EXISTS email_subscriptions (
 );
 
 -- Create weather cache table
-CREATE TABLE IF NOT EXISTS weather_cache (
+CREATE TABLE weather_cache (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   location text NOT NULL,
   temperature numeric(4,1) NOT NULL,
@@ -102,7 +109,7 @@ CREATE TABLE IF NOT EXISTS weather_cache (
 );
 
 -- Create visitor analytics table
-CREATE TABLE IF NOT EXISTS visitor_analytics (
+CREATE TABLE visitor_analytics (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   visitor_id text UNIQUE NOT NULL,
   first_visit timestamptz DEFAULT now(),
@@ -116,7 +123,7 @@ CREATE TABLE IF NOT EXISTS visitor_analytics (
 );
 
 -- Create translations table
-CREATE TABLE IF NOT EXISTS translations (
+CREATE TABLE translations (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   entity_type varchar(50) NOT NULL, -- 'barraca', 'story', etc.
   entity_id varchar(255) NOT NULL, -- ID of the entity being translated
@@ -132,7 +139,7 @@ CREATE TABLE IF NOT EXISTS translations (
 );
 
 -- Create translation keys table
-CREATE TABLE IF NOT EXISTS translation_keys (
+CREATE TABLE translation_keys (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   key_name varchar(255) UNIQUE NOT NULL,
   category varchar(100) NOT NULL, -- 'ui', 'error', 'email', etc.
@@ -143,33 +150,33 @@ CREATE TABLE IF NOT EXISTS translation_keys (
 );
 
 -- Create indexes for performance
-CREATE INDEX IF NOT EXISTS idx_barracas_location ON barracas(location);
-CREATE INDEX IF NOT EXISTS idx_barracas_is_open ON barracas(is_open);
-CREATE INDEX IF NOT EXISTS idx_barracas_coordinates ON barracas USING GIN(coordinates);
-CREATE INDEX IF NOT EXISTS idx_barracas_search ON barracas USING GIN(to_tsvector('portuguese', name || ' ' || description));
+CREATE INDEX idx_barracas_location ON barracas(location);
+CREATE INDEX idx_barracas_is_open ON barracas(is_open);
+CREATE INDEX idx_barracas_coordinates ON barracas USING GIN(coordinates);
+CREATE INDEX idx_barracas_search ON barracas USING GIN(to_tsvector('portuguese', name || ' ' || description));
 
-CREATE INDEX IF NOT EXISTS idx_business_hours_barraca_id ON business_hours(barraca_id);
-CREATE INDEX IF NOT EXISTS idx_business_hours_day_of_week ON business_hours(day_of_week);
-CREATE INDEX IF NOT EXISTS idx_business_hours_is_open ON business_hours(is_open);
+CREATE INDEX idx_business_hours_barraca_id ON business_hours(barraca_id);
+CREATE INDEX idx_business_hours_day_of_week ON business_hours(day_of_week);
+CREATE INDEX idx_business_hours_is_open ON business_hours(is_open);
 
-CREATE INDEX IF NOT EXISTS idx_stories_barraca_id ON stories(barraca_id);
-CREATE INDEX IF NOT EXISTS idx_stories_created_at ON stories(created_at DESC);
-CREATE INDEX IF NOT EXISTS idx_stories_expires_at ON stories(expires_at);
+CREATE INDEX idx_stories_barraca_id ON stories(barraca_id);
+CREATE INDEX idx_stories_created_at ON stories(created_at DESC);
+CREATE INDEX idx_stories_expires_at ON stories(expires_at);
 
-CREATE INDEX IF NOT EXISTS idx_email_subscriptions_email ON email_subscriptions(email);
-CREATE INDEX IF NOT EXISTS idx_email_subscriptions_active ON email_subscriptions(is_active);
+CREATE INDEX idx_email_subscriptions_email ON email_subscriptions(email);
+CREATE INDEX idx_email_subscriptions_active ON email_subscriptions(is_active);
 
-CREATE INDEX IF NOT EXISTS idx_weather_cache_location ON weather_cache(location);
-CREATE INDEX IF NOT EXISTS idx_weather_cache_expires_at ON weather_cache(expires_at);
+CREATE INDEX idx_weather_cache_location ON weather_cache(location);
+CREATE INDEX idx_weather_cache_expires_at ON weather_cache(expires_at);
 
-CREATE INDEX IF NOT EXISTS idx_visitor_analytics_visitor_id ON visitor_analytics(visitor_id);
-CREATE INDEX IF NOT EXISTS idx_visitor_analytics_last_visit ON visitor_analytics(last_visit DESC);
+CREATE INDEX idx_visitor_analytics_visitor_id ON visitor_analytics(visitor_id);
+CREATE INDEX idx_visitor_analytics_last_visit ON visitor_analytics(last_visit DESC);
 
-CREATE INDEX IF NOT EXISTS idx_translations_entity ON translations(entity_type, entity_id);
-CREATE INDEX IF NOT EXISTS idx_translations_language ON translations(language_code);
-CREATE INDEX IF NOT EXISTS idx_translations_field ON translations(field_name);
+CREATE INDEX idx_translations_entity ON translations(entity_type, entity_id);
+CREATE INDEX idx_translations_language ON translations(language_code);
+CREATE INDEX idx_translations_field ON translations(field_name);
 
-CREATE INDEX IF NOT EXISTS idx_translation_keys_category ON translation_keys(category);
+CREATE INDEX idx_translation_keys_category ON translation_keys(category);
 
 -- Enable Row Level Security
 ALTER TABLE barracas ENABLE ROW LEVEL SECURITY;
@@ -623,16 +630,6 @@ INSERT INTO business_hours (barraca_id, day_of_week, is_open, open_time_utc, clo
 ('barraca-uruguay', 5, true, convert_local_to_utc('09:00'::time), convert_local_to_utc('20:00'::time), 'Friday - Extended hours'),
 ('barraca-uruguay', 6, true, convert_local_to_utc('09:00'::time), convert_local_to_utc('20:00'::time), 'Saturday - Extended hours');
 
--- Insert sample stories
-INSERT INTO stories (id, barraca_id, media_url, media_type, caption, created_at, expires_at) VALUES
-('story-1', '1', 'https://images.pexels.com/photos/1002703/pexels-photo-1002703.jpeg', 'image', 'Fresh seafood just arrived! 🦐🐟', NOW() - INTERVAL '30 minutes', NOW() + INTERVAL '23.5 hours'),
-('story-2', '1', 'https://images.pexels.com/photos/1579739/pexels-photo-1579739.jpeg', 'image', 'Beautiful sunset from our deck 🌅', NOW() - INTERVAL '2 hours', NOW() + INTERVAL '22 hours'),
-('story-3', '2', 'https://images.pexels.com/photos/1415131/pexels-photo-1415131.jpeg', 'image', 'New tropical smoothie menu! 🥤🌺', NOW() - INTERVAL '1 hour', NOW() + INTERVAL '23 hours'),
-('story-4', '2', 'https://images.pexels.com/photos/1268855/pexels-photo-1268855.jpeg', 'image', 'Yoga class starting at 6 PM 🧘‍♀️', NOW() - INTERVAL '30 minutes', NOW() + INTERVAL '23.5 hours'),
-('story-5', '3', 'https://images.pexels.com/photos/1379636/pexels-photo-1379636.jpeg', 'image', 'VIP cabana setup for tonight 🏖️✨', NOW() - INTERVAL '45 minutes', NOW() + INTERVAL '23.25 hours'),
-('story-6', '4', 'https://images.pexels.com/photos/1078981/pexels-photo-1078981.jpeg', 'image', 'Morning meditation session 🧘‍♂️🌊', NOW() - INTERVAL '4 hours', NOW() + INTERVAL '20 hours'),
-('story-7', '6', 'https://images.pexels.com/photos/1415131/pexels-photo-1415131.jpeg', 'image', 'Family fun day at the beach! 👨‍👩‍👧‍👦🏖️', NOW() - INTERVAL '1.5 hours', NOW() + INTERVAL '22.5 hours');
-
 -- Insert sample email subscriptions
 INSERT INTO email_subscriptions (email, preferences, subscribed_at) VALUES
 ('demo@cariocacoastal.com', '{"newBarracas": true, "specialOffers": true}', NOW() - INTERVAL '1 week'),
@@ -656,46 +653,7 @@ INSERT INTO visitor_analytics (visitor_id, first_visit, last_visit, visit_count,
 ('visitor_004', NOW() - INTERVAL '1 day', NOW() - INTERVAL '30 minutes', 2, 'Mozilla/5.0 (Android 12; Mobile)', 'AR', 'Buenos Aires'),
 ('visitor_005', NOW() - INTERVAL '5 days', NOW() - INTERVAL '1 hour', 4, 'Mozilla/5.0 (iPad; CPU OS 15_0 like Mac OS X)', 'FR', 'Paris');
 
--- Insert sample translation keys
-INSERT INTO translation_keys (key_name, category, description, is_dynamic) VALUES
-('nav.home', 'ui', 'Navigation home link', true),
-('nav.discover', 'ui', 'Navigation discover link', true),
-('nav.about', 'ui', 'Navigation about link', true),
-('nav.admin', 'ui', 'Navigation admin link', true),
-('hero.title', 'ui', 'Hero section title', true),
-('hero.subtitle', 'ui', 'Hero section subtitle', true),
-('email.subscribe', 'email', 'Email subscription button text', true),
-('email.placeholder', 'email', 'Email input placeholder', true),
-('email.success', 'email', 'Email subscription success message', true),
-('email.error', 'email', 'Email subscription error message', true);
-
--- Insert sample translations
-INSERT INTO translations (entity_type, entity_id, field_name, language_code, translated_text, is_approved, is_primary) VALUES
--- English translations
-('ui', 'nav.home', 'text', 'en', 'Home', true, true),
-('ui', 'nav.discover', 'text', 'en', 'Find Barracas', true, true),
-('ui', 'nav.about', 'text', 'en', 'About', true, true),
-('ui', 'nav.admin', 'text', 'en', 'Admin', true, true),
-('ui', 'hero.title', 'text', 'en', 'Your Favorite Barraca Awaits', true, true),
-('ui', 'hero.subtitle', 'text', 'en', 'Check if your go-to spot is open, reserve chairs, and get exclusive member updates', true, true),
-
--- Portuguese translations
-('ui', 'nav.home', 'text', 'pt', 'Início', true, false),
-('ui', 'nav.discover', 'text', 'pt', 'Encontrar Barracas', true, false),
-('ui', 'nav.about', 'text', 'pt', 'Sobre', true, false),
-('ui', 'nav.admin', 'text', 'pt', 'Admin', true, false),
-('ui', 'hero.title', 'text', 'pt', 'Sua Barraca Favorita Te Espera', true, false),
-('ui', 'hero.subtitle', 'text', 'pt', 'Veja se seu local preferido está aberto, reserve cadeiras e receba atualizações exclusivas', true, false),
-
--- Spanish translations
-('ui', 'nav.home', 'text', 'es', 'Inicio', true, false),
-('ui', 'nav.discover', 'text', 'es', 'Encontrar Barracas', true, false),
-('ui', 'nav.about', 'text', 'es', 'Acerca de', true, false),
-('ui', 'nav.admin', 'text', 'es', 'Admin', true, false),
-('ui', 'hero.title', 'text', 'es', 'Tu Barraca Favorita Te Espera', true, false),
-('ui', 'hero.subtitle', 'text', 'es', 'Verifica si tu lugar preferido está abierto, reserva sillas y recibe actualizaciones exclusivas', true, false);
-
--- Add comments
+-- Add comments for documentation
 COMMENT ON TABLE business_hours IS 'Detailed business hours for each barraca by day of week, stored in UTC for consistency across timezones';
 COMMENT ON COLUMN business_hours.day_of_week IS '0=Sunday, 1=Monday, 2=Tuesday, 3=Wednesday, 4=Thursday, 5=Friday, 6=Saturday';
 COMMENT ON COLUMN business_hours.open_time_utc IS 'Opening time in UTC';
