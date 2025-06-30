@@ -84,14 +84,21 @@ const Header: React.FC = () => {
           <div className="flex items-center space-x-4">
             {/* Bolt Badge */}
             <div className="hidden sm:flex items-center space-x-2">
-              <img 
-                src="/white_circle_360x360.png" 
-                alt="Bolt" 
-                className="h-6 w-6 opacity-60 hover:opacity-100 transition-opacity"
-              />
-              <span className="text-xs text-gray-500 opacity-60 hover:opacity-100 transition-opacity" data-lingo-skip>
-                Built with Bolt
-              </span>
+              <a 
+                href="https://bolt.new/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="flex items-center space-x-2 opacity-60 hover:opacity-100 transition-opacity"
+              >
+                <img 
+                  src="/white_circle_360x360.png" 
+                  alt="Bolt" 
+                  className="h-6 w-6"
+                />
+                <span className="text-xs text-gray-500" data-lingo-skip>
+                  Built with Bolt
+                </span>
+              </a>
             </div>
 
             {/* Language Selector */}
@@ -180,15 +187,22 @@ const Header: React.FC = () => {
               </Link>
               
               {/* Mobile Bolt Badge */}
-              <div className="flex items-center space-x-2 pt-4 border-t border-gray-200">
-                <img 
-                  src="/white_circle_360x360.png" 
-                  alt="Bolt" 
-                  className="h-6 w-6 opacity-60"
-                />
-                <span className="text-xs text-gray-500 opacity-60" data-lingo-skip>
-                  Built with Bolt
-                </span>
+              <div className="pt-4 border-t border-gray-200">
+                <a 
+                  href="https://bolt.new/" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="flex items-center space-x-2 opacity-60 hover:opacity-100 transition-opacity"
+                >
+                  <img 
+                    src="/white_circle_360x360.png" 
+                    alt="Bolt" 
+                    className="h-6 w-6"
+                  />
+                  <span className="text-xs text-gray-500" data-lingo-skip>
+                    Built with Bolt
+                  </span>
+                </a>
               </div>
             </nav>
           </div>
