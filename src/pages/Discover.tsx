@@ -7,15 +7,14 @@ import { useWeather } from '../contexts/WeatherContext';
 import BarracaGrid from '../components/BarracaGrid';
 import StoryCarousel from '../components/StoryCarousel';
 import WeatherWidget from '../components/WeatherWidget';
-import LocationFilterForm from '../components/LocationFilterForm';
+import LocationFilterCheckboxes from '../components/LocationFilterCheckboxes';
 
 const Discover: React.FC = () => {
   const { t } = useTranslation();
   const { filteredBarracas, searchFilters, updateSearchFilters } = useApp();
   const { featureFlags } = useStory();
   const { weather } = useWeather();
-  const [showFilters, setShowFilters] = useState(false);
-  const [showLocationForm, setShowLocationForm] = useState(false);
+  const [showFilters, setShowFilters] = useState(true);
 
   // Complete list of South Zone neighborhoods
   const southZoneNeighborhoods = [
@@ -56,15 +55,22 @@ const Discover: React.FC = () => {
     updateSearchFilters({ status });
   };
 
-  const clearFilters = () => {
-    updateSearchFilters({ query: '', openNow: false, location: '', status: 'all' });
+  const handleLocationsChange = (locations: string[]) => {
+    // If only one location is selected, use it as the main location filter
+    // Otherwise, we could implement a more complex filter logic here
+    if (locations.length === 1) {
+      updateSearchFilters({ location: locations[0] });
+    } else if (locations.length > 1) {
+      // For multiple locations, we could implement a custom filter
+      // For now, just use the first one as the main filter
+      updateSearchFilters({ location: locations[0] });
+    } else {
+      updateSearchFilters({ location: '' });
+    }
   };
 
-  const handleLocationFormSubmit = (data: { primaryLocation: string; neighboringLocations: string[] }) => {
-    console.log('Location form submitted:', data);
-    // Here you would typically update your filters or state with the selected locations
-    updateSearchFilters({ location: data.primaryLocation });
-    setShowLocationForm(false);
+  const clearFilters = () => {
+    updateSearchFilters({ query: '', openNow: false, location: '', status: 'all' });
   };
 
   const hasActiveFilters = searchFilters.query || searchFilters.location || searchFilters.status !== 'all';
@@ -145,25 +151,22 @@ const Discover: React.FC = () => {
                 className="flex items-center px-4 py-2 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors shadow-sm"
               >
                 <Filter className="h-4 w-4 mr-2" />
-                {t('search.filters')}
-              </button>
-              <button
-                onClick={() => setShowLocationForm(!showLocationForm)}
-                className="flex items-center px-4 py-2 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors shadow-sm"
-              >
-                <MapPin className="h-4 w-4 mr-2" />
-                Locations
+                {showFilters ? 'Hide Filters' : 'Show Filters'}
               </button>
             </div>
           </div>
 
-          {/* Minimal Filter Panel */}
+          {/* Always Visible Filter Panel */}
           {showFilters && (
             <div className="bg-white rounded-xl p-4 shadow-lg border border-gray-200 mb-6">
-              <div className="flex flex-col sm:flex-row gap-4">
-                {/* Availability Filter - Compact */}
-                <div className="flex-shrink-0">
-                  <div className="flex gap-1 bg-gray-100 rounded-lg p-1">
+              <div className="space-y-4">
+                {/* Availability Filter */}
+                <div>
+                  <div className="flex items-center mb-3">
+                    <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
+                    <h3 className="text-sm font-medium text-gray-700">Availability</h3>
+                  </div>
+                  <div className="flex gap-2 bg-gray-100 rounded-lg p-1 w-fit">
                     {availabilityOptions.map((option) => {
                       const Icon = option.icon;
                       return (
@@ -184,34 +187,14 @@ const Discover: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Neighborhood Filter - Scrollable */}
-                <div className="flex-1">
-                  <div className="flex gap-2 overflow-x-auto pb-2">
-                    {southZoneNeighborhoods.map((neighborhood) => (
-                      <button
-                        key={neighborhood}
-                        onClick={() => handleLocationFilter(neighborhood)}
-                        className={`flex-shrink-0 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                          searchFilters.location === neighborhood
-                            ? 'bg-orange-500 text-white'
-                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                        }`}
-                      >
-                        {neighborhood}
-                      </button>
-                    ))}
-                  </div>
-                </div>
+                {/* Location Filter Checkboxes */}
+                <LocationFilterCheckboxes
+                  availableLocations={southZoneNeighborhoods}
+                  onLocationsChange={handleLocationsChange}
+                  initialLocations={searchFilters.location ? [searchFilters.location] : []}
+                />
               </div>
             </div>
-          )}
-
-          {/* Location Form */}
-          {showLocationForm && (
-            <LocationFilterForm 
-              onSubmit={handleLocationFormSubmit}
-              className="mb-6"
-            />
           )}
 
           {/* Active Filters Display - Compact */}
