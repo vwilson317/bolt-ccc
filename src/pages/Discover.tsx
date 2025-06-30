@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Search, Filter, MapPin, X, Hash, CheckCircle, XCircle } from 'lucide-react';
+import { Search, Filter, MapPin, X, CheckCircle, XCircle } from 'lucide-react';
 import { useApp } from '../contexts/AppContext';
 import { useStory } from '../contexts/StoryContext';
 import { useWeather } from '../contexts/WeatherContext';
 import BarracaGrid from '../components/BarracaGrid';
 import StoryCarousel from '../components/StoryCarousel';
 import WeatherWidget from '../components/WeatherWidget';
+import LocationFilterForm from '../components/LocationFilterForm';
 
 const Discover: React.FC = () => {
   const { t } = useTranslation();
@@ -14,8 +15,9 @@ const Discover: React.FC = () => {
   const { featureFlags } = useStory();
   const { weather } = useWeather();
   const [showFilters, setShowFilters] = useState(false);
+  const [showLocationForm, setShowLocationForm] = useState(false);
 
-  // Complete list of South Zone beaches
+  // Complete list of South Zone neighborhoods
   const southZoneNeighborhoods = [
     'Copacabana', 
     'Ipanema', 
@@ -56,6 +58,13 @@ const Discover: React.FC = () => {
 
   const clearFilters = () => {
     updateSearchFilters({ query: '', openNow: false, location: '', status: 'all' });
+  };
+
+  const handleLocationFormSubmit = (data: { primaryLocation: string; neighboringLocations: string[] }) => {
+    console.log('Location form submitted:', data);
+    // Here you would typically update your filters or state with the selected locations
+    updateSearchFilters({ location: data.primaryLocation });
+    setShowLocationForm(false);
   };
 
   const hasActiveFilters = searchFilters.query || searchFilters.location || searchFilters.status !== 'all';
@@ -138,6 +147,13 @@ const Discover: React.FC = () => {
                 <Filter className="h-4 w-4 mr-2" />
                 {t('search.filters')}
               </button>
+              <button
+                onClick={() => setShowLocationForm(!showLocationForm)}
+                className="flex items-center px-4 py-2 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors shadow-sm"
+              >
+                <MapPin className="h-4 w-4 mr-2" />
+                Locations
+              </button>
             </div>
           </div>
 
@@ -190,6 +206,14 @@ const Discover: React.FC = () => {
             </div>
           )}
 
+          {/* Location Form */}
+          {showLocationForm && (
+            <LocationFilterForm 
+              onSubmit={handleLocationFormSubmit}
+              className="mb-6"
+            />
+          )}
+
           {/* Active Filters Display - Compact */}
           {hasActiveFilters && (
             <div className="flex flex-wrap gap-2 mb-6">
@@ -229,7 +253,7 @@ const Discover: React.FC = () => {
             <h3 className="text-lg font-semibold text-blue-900 mb-2">{t('search.tips.title')}</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm text-blue-800">
               <div className="flex items-center">
-                <Hash className="h-4 w-4 mr-2 text-blue-600" />
+                <span className="inline-flex items-center justify-center h-6 w-6 rounded-full bg-blue-200 text-blue-600 mr-2">#</span>
                 <span>{t('search.tips.number')}</span>
               </div>
               <div className="flex items-center">
