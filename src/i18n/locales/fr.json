@@ -39,7 +39,11 @@
       "filter": "Filtrer par disponibilité"
     },
     "examples": {
-      "try": "Essayez:"
+      "try": "Essayez:",
+      "number": "001",
+      "name1": "Sol e Mar",
+      "name2": "Barraca 15",
+      "name3": "Carioca"
     }
   },
   "barraca": {

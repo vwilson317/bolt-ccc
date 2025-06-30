@@ -39,7 +39,11 @@
       "filter": "Filtrar por disponibilidade"
     },
     "examples": {
-      "try": "Tente:"
+      "try": "Tente:",
+      "number": "001",
+      "name1": "Sol e Mar",
+      "name2": "Barraca 15",
+      "name3": "Carioca"
     }
   },
   "barraca": {

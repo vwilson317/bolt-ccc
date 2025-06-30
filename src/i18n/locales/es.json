@@ -39,7 +39,11 @@
       "filter": "Filtrar por disponibilidad"
     },
     "examples": {
-      "try": "Prueba:"
+      "try": "Prueba:",
+      "number": "001",
+      "name1": "Sol e Mar",
+      "name2": "Barraca 15",
+      "name3": "Carioca"
     }
   },
   "barraca": {
@@ -239,13 +243,13 @@
   "discover": {
     "title": "Encuentra Tu Barraca",
     "subtitle": "Verifica si tu lugar favorito está abierto, reserva sillas y descubre nuevos beneficios de miembro",
-    "searchPlaceholder": "Buscar por nombre, número de barraca (ej. 001), o barrio...",
+    "searchPlaceholder": "# o nombre",
     "resultsFound": "Socia",
     "barracas": "Barracas",
     "barraca": "Barraca",
     "found": "Encontradas",
     "noResults": "No se encontraron barracas",
-    "noResultsMessage": "No hay resultados para \"{query}\". Intenta buscar por número de barraca, nombre o barrio.",
+    "noResultsMessage": "No hay resultados para \"{query}\". # o nombre",
     "adjustCriteria": "Intenta ajustar tus criterios de búsqueda o filtros.",
     "clearAllFilters": "Limpiar Todos los Filtros",
     "filters": {

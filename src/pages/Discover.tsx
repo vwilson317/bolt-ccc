@@ -86,20 +86,6 @@ const Discover: React.FC = () => {
                 className="w-full pl-12 pr-4 py-4 text-lg rounded-2xl border-0 shadow-lg focus:ring-4 focus:ring-white/30 focus:outline-none transition-all duration-200"
               />
             </div>
-            
-            {/* Quick Search Examples */}
-            <div className="mt-4 flex flex-wrap justify-center gap-2">
-              <span className="text-orange-100 text-sm">{t('search.examples.try')}</span>
-              {['001', 'Ipanema', 'Sol e Mar', 'Leblon'].map((example) => (
-                <button
-                  key={example}
-                  onClick={() => handleSearchChange(example)}
-                  className="bg-white/20 text-white px-3 py-1 rounded-full text-sm hover:bg-white/30 transition-colors"
-                >
-                  {example}
-                </button>
-              ))}
-            </div>
           </div>
         </div>
       </section>
@@ -222,31 +208,6 @@ const Discover: React.FC = () => {
             </div>
           )}
         </div>
-
-        {/* Search Tips - Simplified */}
-        {searchFilters.query === '' && !hasActiveFilters && (
-          <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-8">
-            <h3 className="text-lg font-semibold text-blue-900 mb-2">{t('search.tips.title')}</h3>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm text-blue-800">
-              <div className="flex items-center">
-                <Hash className="h-4 w-4 mr-2 text-blue-600" />
-                <span>{t('search.tips.number')}</span>
-              </div>
-              <div className="flex items-center">
-                <MapPin className="h-4 w-4 mr-2 text-blue-600" />
-                <span>{t('search.tips.beach')}</span>
-              </div>
-              <div className="flex items-center">
-                <Search className="h-4 w-4 mr-2 text-blue-600" />
-                <span>{t('search.tips.name')}</span>
-              </div>
-              <div className="flex items-center">
-                <CheckCircle className="h-4 w-4 mr-2 text-blue-600" />
-                <span>{t('search.tips.filter')}</span>
-              </div>
-            </div>
-          </div>
-        )}
 
         {/* Results */}
         {filteredBarracas.length > 0 ? (

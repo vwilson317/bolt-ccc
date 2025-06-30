@@ -1371,7 +1371,7 @@
           "type": "element",
           "hash": "c9264a9335f9d310130716cd752f40a4",
           "context": "",
-          "skip": false,
+          "skip": true,
           "overrides": {},
           "content": "Rio de Janeiro"
         },
@@ -1379,7 +1379,7 @@
           "type": "element",
           "hash": "8636978f8f6086b141e66f53eb87e1ac",
           "context": "",
-          "skip": false,
+          "skip": true,
           "overrides": {},
           "content": "Temperature"
         },
@@ -1387,7 +1387,7 @@
           "type": "element",
           "hash": "b46490ecd9b3e449f7eb6b7f192f4565",
           "context": "",
-          "skip": false,
+          "skip": true,
           "overrides": {},
           "content": "{weather.temperature}°C"
         },
@@ -1395,7 +1395,7 @@
           "type": "element",
           "hash": "5873278fb3f38bbf601a53a324972bff",
           "context": "",
-          "skip": false,
+          "skip": true,
           "overrides": {},
           "content": "<function:t/> {weather.feelsLike}°C"
         },
@@ -1403,7 +1403,7 @@
           "type": "element",
           "hash": "8c63078f8a3c1d6e149bd80ecbc8dacc",
           "context": "",
-          "skip": false,
+          "skip": true,
           "overrides": {},
           "content": "<function:t/>: {weather.humidity}%"
         },
@@ -1411,7 +1411,7 @@
           "type": "element",
           "hash": "ff6a5eae53c3e8fc4cdf311d3f65bf60",
           "context": "",
-          "skip": false,
+          "skip": true,
           "overrides": {},
           "content": "<function:t/>: {weather.windSpeed} km/h"
         }
