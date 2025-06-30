@@ -66,6 +66,14 @@ export const WeatherProvider: React.FC<WeatherProviderProps> = ({
       const weatherData = await WeatherService.getCurrentWeather();
       setWeather(weatherData);
       setLastUpdated(new Date());
+      
+      // Update weather-dependent barracas if needed
+      if (weatherData) {
+        const updatedCount = await WeatherService.updateWeatherDependentBarracas();
+        if (updatedCount > 0) {
+          console.log(`🌤️ Updated ${updatedCount} weather-dependent barracas based on conditions`);
+        }
+      }
     } catch (error) {
       console.error('Failed to fetch weather data:', error);
       setError('Failed to load weather data. Please try again later.');
