@@ -60,7 +60,7 @@ const Home: React.FC = () => {
       <section className="py-16 bg-gradient-to-b from-orange-50 to-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
-            Your Beach, Your Way
+            Your Barraca, Your Way
           </h2>
           <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
             Join thousands of loyal customers who use Carioca Coastal Club to stay connected with their favorite barracas
@@ -132,7 +132,7 @@ const Home: React.FC = () => {
               Why Join Carioca Coastal Club?
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              More than just finding barracas - we're your connection to Rio's beach culture
+              More than just finding barracas - we're your connection to Rio's barraca culture
             </p>
           </div>
           
@@ -197,7 +197,7 @@ const Home: React.FC = () => {
             Join the Club Today
           </h2>
           <p className="text-xl text-orange-100 mb-8 max-w-2xl mx-auto">
-            Start enjoying member benefits at your favorite barracas. Get updates, reserve chairs, and never miss out on the perfect beach day.
+            Start enjoying member benefits at your favorite barracas. Get updates, reserve chairs, and never miss out on the perfect barraca day.
           </p>
           <EmailSubscription />
         </div>
@@ -211,10 +211,10 @@ const Home: React.FC = () => {
             <div className="md:col-span-2">
               <div className="mb-4">
                 <h3 className="text-xl font-bold text-orange-400">Carioca Coastal Club</h3>
-                <p className="text-gray-400 text-sm">Beach Loyalty Program</p>
+                <p className="text-gray-400 text-sm">Barraca Loyalty Program</p>
               </div>
               <p className="text-gray-300 mb-4 max-w-md">
-                Connecting Rio's beach lovers with their favorite barracas through chair reservations, 
+                Connecting Rio's barraca lovers with their favorite spots through chair reservations, 
                 real-time updates, and exclusive member benefits.
               </p>
               <div className="flex space-x-4">

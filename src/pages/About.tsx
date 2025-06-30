@@ -10,7 +10,7 @@ const About: React.FC = () => {
     {
       icon: Heart,
       title: 'Passion for Rio',
-      description: 'We love Rio de Janeiro and want to connect beach lovers with their favorite barracas.'
+      description: 'We love Rio de Janeiro and want to connect barraca lovers with their favorite spots.'
     },
     {
       icon: Users,
@@ -46,7 +46,7 @@ const About: React.FC = () => {
     {
       name: 'Ana Santos', 
       role: 'Head of Partnerships',
-      bio: 'Former barraca manager with deep connections to Rio\'s beach vendor community and customer service expertise.',
+      bio: 'Former barraca manager with deep connections to Rio\'s barraca vendor community and customer service expertise.',
       image: 'https://images.pexels.com/photos/1181690/pexels-photo-1181690.jpeg'
     },
     {
@@ -60,14 +60,14 @@ const About: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-sky-500 to-blue-600 pt-16 pb-20">
+      <section className="bg-gradient-to-r from-orange-500 to-red-600 pt-16 pb-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
             About Carioca Coastal Club
           </h1>
-          <p className="text-xl text-sky-100 max-w-3xl mx-auto leading-relaxed">
-            We're the loyalty platform connecting Rio's beach lovers with their favorite barracas. 
-            Check if your spot is open, reserve chairs, and enjoy exclusive member benefits.
+          <p className="text-xl text-orange-100 max-w-3xl mx-auto leading-relaxed">
+            We're the loyalty platform connecting Rio's barraca lovers with their favorite spots. 
+            Check if your barraca is open, reserve chairs, and enjoy exclusive member benefits.
           </p>
         </div>
       </section>
@@ -79,17 +79,17 @@ const About: React.FC = () => {
             Our Mission
           </h2>
           <p className="text-lg text-gray-600 leading-relaxed mb-8">
-            To strengthen the bond between Rio's beach community and their favorite barracas. 
+            To strengthen the bond between Rio's barraca community and their favorite spots. 
             We believe loyal customers deserve better service, and barraca owners deserve loyal customers 
             who keep coming back.
           </p>
-          <div className="bg-gradient-to-r from-sky-50 to-blue-50 rounded-2xl p-8 border border-sky-100">
+          <div className="bg-gradient-to-r from-orange-50 to-red-50 rounded-2xl p-8 border border-orange-100">
             <p className="text-xl font-semibold text-gray-900 mb-4">
               "Every barraca has its regulars - we help strengthen those relationships."
             </p>
             <p className="text-gray-600">
               Through chair reservations, real-time updates, and exclusive member perks, 
-              we make it easier for you to enjoy your favorite beach spots while helping 
+              we make it easier for you to enjoy your favorite barraca spots while helping 
               barracas build stronger customer loyalty.
             </p>
           </div>
@@ -97,7 +97,7 @@ const About: React.FC = () => {
       </section>
 
       {/* Stats Section */}
-      <section className="py-16 bg-gradient-to-r from-sky-500 to-blue-600">
+      <section className="py-16 bg-gradient-to-r from-orange-500 to-red-600">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             {stats.map((stat, index) => (
@@ -105,7 +105,7 @@ const About: React.FC = () => {
                 <div className="text-4xl md:text-5xl font-bold text-white mb-2">
                   {stat.number}
                 </div>
-                <div className="text-sky-100 font-medium">
+                <div className="text-orange-100 font-medium">
                   {stat.label}
                 </div>
               </div>
@@ -131,7 +131,7 @@ const About: React.FC = () => {
               const Icon = value.icon;
               return (
                 <div key={index} className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-200">
-                  <div className="bg-gradient-to-r from-sky-500 to-blue-600 w-12 h-12 rounded-xl flex items-center justify-center mb-4">
+                  <div className="bg-gradient-to-r from-orange-500 to-red-600 w-12 h-12 rounded-xl flex items-center justify-center mb-4">
                     <Icon className="h-6 w-6 text-white" />
                   </div>
                   <h3 className="text-xl font-semibold text-gray-900 mb-3">
@@ -155,7 +155,7 @@ const About: React.FC = () => {
               Meet Our Team
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Beach enthusiasts and tech experts working to strengthen Rio's beach community
+              Barraca enthusiasts and tech experts working to strengthen Rio's barraca community
             </p>
           </div>
           
@@ -172,7 +172,7 @@ const About: React.FC = () => {
                 <h3 className="text-xl font-semibold text-gray-900 mb-1">
                   {member.name}
                 </h3>
-                <p className="text-sky-600 font-medium mb-3">
+                <p className="text-orange-600 font-medium mb-3">
                   {member.role}
                 </p>
                 <p className="text-gray-600 leading-relaxed">
@@ -239,11 +239,11 @@ const About: React.FC = () => {
           </div>
 
           {/* Newsletter Signup */}
-          <div className="bg-gradient-to-r from-sky-500 to-blue-600 rounded-2xl p-8 text-center">
+          <div className="bg-gradient-to-r from-orange-500 to-red-600 rounded-2xl p-8 text-center">
             <h3 className="text-2xl font-bold text-white mb-4">
               Join Our Community
             </h3>
-            <p className="text-sky-100 mb-6">
+            <p className="text-orange-100 mb-6">
               Get member updates, chair reservation alerts, and exclusive offers from partner barracas
             </p>
             <EmailSubscription />

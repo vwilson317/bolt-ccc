@@ -32,7 +32,7 @@ const Header: React.FC = () => {
               <h1 className="text-xl font-bold bg-gradient-to-r from-orange-600 to-red-700 bg-clip-text text-transparent">
                 Carioca Coastal Club
               </h1>
-              <p className="text-xs text-orange-500 -mt-1">Beach Loyalty Program</p>
+              <p className="text-xs text-orange-500 -mt-1">Barraca Loyalty Program</p>
             </div>
           </Link>
 
