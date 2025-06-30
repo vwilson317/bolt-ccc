@@ -1,6 +1,24 @@
 import { createClient } from '@supabase/supabase-js'
 import type { Database } from '../types/database'
 
+// Helper function to validate URL
+const isValidUrl = (url: string): boolean => {
+  if (!url || url.includes('your_') || url === 'your_default_supabase_project_url') {
+    return false
+  }
+  try {
+    new URL(url)
+    return true
+  } catch {
+    return false
+  }
+}
+
+// Helper function to validate API key
+const isValidApiKey = (key: string): boolean => {
+  return !(!key || key.includes('your_') || key === 'your_default_supabase_anon_key')
+}
+
 // Environment configuration
 const getEnvironmentConfig = () => {
   const env = import.meta.env.VITE_APP_ENV || 'development'
@@ -9,7 +27,7 @@ const getEnvironmentConfig = () => {
     development: {
       url: import.meta.env.VITE_SUPABASE_URL_DEV || import.meta.env.VITE_SUPABASE_URL,
       anonKey: import.meta.env.VITE_SUPABASE_ANON_KEY_DEV || import.meta.env.VITE_SUPABASE_ANON_KEY,
-      schema: 'public' // Always use public for client, we'll specify schema in queries
+      schema: 'public'
     },
     qa: {
       url: import.meta.env.VITE_SUPABASE_URL_QA || import.meta.env.VITE_SUPABASE_URL,
@@ -32,9 +50,20 @@ const getEnvironmentConfig = () => {
 }
 
 const config = getEnvironmentConfig()
+const currentEnv = import.meta.env.VITE_APP_ENV || 'development'
 
-if (!config.url || !config.anonKey) {
-  throw new Error(`Missing Supabase environment variables for ${import.meta.env.VITE_APP_ENV || 'development'} environment. Please check your .env file.`)
+// Validate configuration
+if (!config.url || !isValidUrl(config.url)) {
+  console.error(`❌ Invalid or missing Supabase URL for ${currentEnv} environment`)
+  console.error('Please update your .env file with a valid Supabase project URL')
+  console.error('Example: VITE_SUPABASE_URL=https://your-project.supabase.co')
+  throw new Error(`Invalid Supabase URL for ${currentEnv} environment. Please check your .env file and ensure you have a valid Supabase project URL.`)
+}
+
+if (!config.anonKey || !isValidApiKey(config.anonKey)) {
+  console.error(`❌ Invalid or missing Supabase anonymous key for ${currentEnv} environment`)
+  console.error('Please update your .env file with a valid Supabase anonymous key')
+  throw new Error(`Invalid Supabase anonymous key for ${currentEnv} environment. Please check your .env file and ensure you have a valid Supabase anonymous key.`)
 }
 
 export const supabase = createClient<Database>(config.url, config.anonKey, {
@@ -47,18 +76,17 @@ export const supabase = createClient<Database>(config.url, config.anonKey, {
       eventsPerSecond: 10,
     },
   }
-  // Removed db.schema configuration - Supabase only accepts 'public' or 'graphql_public'
 })
 
 // Environment info for debugging
 export const environmentInfo = {
-  environment: import.meta.env.VITE_APP_ENV || 'development',
-  schema: 'public', // Always use public schema for client
+  environment: currentEnv,
+  schema: 'public',
   url: config.url,
-  isDevelopment: (import.meta.env.VITE_APP_ENV || 'development') === 'development',
-  isQA: (import.meta.env.VITE_APP_ENV || 'development') === 'qa',
-  isUAT: (import.meta.env.VITE_APP_ENV || 'development') === 'uat',
-  isProduction: (import.meta.env.VITE_APP_ENV || 'development') === 'production'
+  isDevelopment: currentEnv === 'development',
+  isQA: currentEnv === 'qa',
+  isUAT: currentEnv === 'uat',
+  isProduction: currentEnv === 'production'
 }
 
 // Helper function to handle Supabase errors
