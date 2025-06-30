@@ -83,8 +83,20 @@ const Header: React.FC = () => {
             </Link>
           </nav>
 
-          {/* Language Selector & Mobile Menu */}
+          {/* Language Selector, Bolt Badge & Mobile Menu */}
           <div className="flex items-center space-x-4">
+            {/* Bolt Badge */}
+            <div className="hidden sm:flex items-center space-x-2">
+              <img 
+                src="/white_circle_360x360.png" 
+                alt="Bolt" 
+                className="h-4 w-4 opacity-60 hover:opacity-100 transition-opacity"
+              />
+              <span className="text-xs text-gray-500 opacity-60 hover:opacity-100 transition-opacity">
+                Built with Bolt
+              </span>
+            </div>
+
             {/* Language Selector */}
             <div className="relative">
               <button
@@ -169,6 +181,18 @@ const Header: React.FC = () => {
               >
                 {t('nav.admin')}
               </Link>
+              
+              {/* Mobile Bolt Badge */}
+              <div className="flex items-center space-x-2 pt-4 border-t border-gray-200">
+                <img 
+                  src="/white_circle_360x360.png" 
+                  alt="Bolt" 
+                  className="h-4 w-4 opacity-60"
+                />
+                <span className="text-xs text-gray-500 opacity-60">
+                  Built with Bolt
+                </span>
+              </div>
             </nav>
           </div>
         )}

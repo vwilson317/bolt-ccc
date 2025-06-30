@@ -261,15 +261,6 @@ const Home: React.FC = () => {
             <p className="text-gray-400 text-sm">
               © 2024 Carioca Coastal Club. All rights reserved.
             </p>
-            <div className="flex items-center space-x-2 mt-4 md:mt-0">
-              <span className="text-gray-400 text-sm">Built with</span>
-              <img 
-                src="/white_circle_360x360.png" 
-                alt="Bolt" 
-                className="h-5 w-5 opacity-60 hover:opacity-100 transition-opacity"
-              />
-              <span className="text-gray-400 text-sm opacity-60 hover:opacity-100 transition-opacity">Bolt</span>
-            </div>
           </div>
         </div>
       </footer>
