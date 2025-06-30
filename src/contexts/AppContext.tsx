@@ -1,7 +1,9 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { Barraca, WeatherData, SearchFilters, EmailSubscription } from '../types';
-import { mockBarracas } from '../data/mockData';
+import { fetchBarracas } from '../data/mockData';
 import { WeatherService } from '../services/weatherService';
+import { BarracaService } from '../services/barracaService';
+import { EmailService } from '../services/emailService';
 
 interface AppContextType {
   barracas: Barraca[];
@@ -13,10 +15,11 @@ interface AppContextType {
   emailSubscriptions: EmailSubscription[];
   currentLanguage?: string;
   updateSearchFilters: (filters: Partial<SearchFilters>) => void;
-  addBarraca: (barraca: Omit<Barraca, 'id' | 'createdAt' | 'updatedAt'>) => void;
-  updateBarraca: (id: string, updates: Partial<Barraca>) => void;
-  deleteBarraca: (id: string) => void;
+  addBarraca: (barraca: Omit<Barraca, 'id' | 'createdAt' | 'updatedAt'>) => Promise<Barraca>;
+  updateBarraca: (id: string, updates: Partial<Barraca>) => Promise<Barraca>;
+  deleteBarraca: (id: string) => Promise<void>;
   subscribeEmail: (email: string) => Promise<boolean>;
+  checkEmailSubscription: (email: string) => Promise<boolean>;
   adminLogin: (email: string, password: string) => Promise<boolean>;
   adminLogout: () => void;
   refreshWeather: () => Promise<void>;
@@ -39,7 +42,7 @@ interface AppProviderProps {
 }
 
 export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
-  const [barracas, setBarracas] = useState<Barraca[]>(mockBarracas);
+  const [barracas, setBarracas] = useState<Barraca[]>([]);
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [searchFilters, setSearchFilters] = useState<SearchFilters>({
     query: '',
@@ -51,6 +54,39 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [emailSubscriptions, setEmailSubscriptions] = useState<EmailSubscription[]>([]);
   const [currentLanguage, setCurrentLanguage] = useState<string>('en');
+
+  // Load barracas from database on mount
+  useEffect(() => {
+    const loadBarracas = async () => {
+      setIsLoading(true);
+      try {
+        const fetchedBarracas = await fetchBarracas();
+        setBarracas(fetchedBarracas);
+      } catch (error) {
+        console.error('Failed to load barracas:', error);
+        // Keep empty array if loading fails
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadBarracas();
+  }, []);
+
+  // Load email subscriptions from database on mount
+  useEffect(() => {
+    const loadEmailSubscriptions = async () => {
+      try {
+        const subscriptions = await EmailService.getActiveSubscriptions();
+        setEmailSubscriptions(subscriptions);
+      } catch (error) {
+        console.error('Failed to load email subscriptions:', error);
+        // Keep empty array if loading fails
+      }
+    };
+
+    loadEmailSubscriptions();
+  }, []);
 
   // Enhanced filter logic for comprehensive search
   const filteredBarracas = barracas.filter(barraca => {
@@ -85,45 +121,61 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     setSearchFilters(prev => ({ ...prev, ...filters }));
   };
 
-  const addBarraca = (barracaData: Omit<Barraca, 'id' | 'createdAt' | 'updatedAt'>) => {
-    const newBarraca: Barraca = {
-      ...barracaData,
-      id: Date.now().toString(),
-      createdAt: new Date(),
-      updatedAt: new Date()
-    };
-    setBarracas(prev => [...prev, newBarraca]);
+  const addBarraca = async (barracaData: Omit<Barraca, 'id' | 'createdAt' | 'updatedAt'>) => {
+    try {
+      const newBarraca = await BarracaService.create(barracaData);
+      setBarracas(prev => [...prev, newBarraca]);
+      return newBarraca;
+    } catch (error) {
+      console.error('Failed to add barraca:', error);
+      throw error;
+    }
   };
 
-  const updateBarraca = (id: string, updates: Partial<Barraca>) => {
-    setBarracas(prev => prev.map(barraca => 
-      barraca.id === id 
-        ? { ...barraca, ...updates, updatedAt: new Date() }
-        : barraca
-    ));
+  const updateBarraca = async (id: string, updates: Partial<Barraca>) => {
+    try {
+      const updatedBarraca = await BarracaService.update(id, updates);
+      setBarracas(prev => prev.map(barraca => 
+        barraca.id === id ? updatedBarraca : barraca
+      ));
+      return updatedBarraca;
+    } catch (error) {
+      console.error('Failed to update barraca:', error);
+      throw error;
+    }
   };
 
-  const deleteBarraca = (id: string) => {
-    setBarracas(prev => prev.filter(barraca => barraca.id !== id));
+  const deleteBarraca = async (id: string) => {
+    try {
+      await BarracaService.delete(id);
+      setBarracas(prev => prev.filter(barraca => barraca.id !== id));
+    } catch (error) {
+      console.error('Failed to delete barraca:', error);
+      throw error;
+    }
   };
 
   const subscribeEmail = async (email: string): Promise<boolean> => {
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      const subscription: EmailSubscription = {
-        email,
-        subscribedAt: new Date(),
-        preferences: {
-          newBarracas: true,
-          specialOffers: true
-        }
-      };
-      
-      setEmailSubscriptions(prev => [...prev, subscription]);
-      return true;
+      const success = await EmailService.subscribe(email);
+      if (success) {
+        // Refresh email subscriptions from database
+        const subscriptions = await EmailService.getActiveSubscriptions();
+        setEmailSubscriptions(subscriptions);
+      }
+      return success;
     } catch (error) {
+      console.error('Failed to subscribe email:', error);
+      return false;
+    }
+  };
+
+  const checkEmailSubscription = async (email: string): Promise<boolean> => {
+    try {
+      const subscription = await EmailService.getByEmail(email);
+      return subscription !== null;
+    } catch (error) {
+      console.error('Failed to check email subscription:', error);
       return false;
     }
   };
@@ -153,25 +205,13 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
         if (updatedCount > 0) {
           console.log(`🌤️ Updated ${updatedCount} weather-dependent barracas based on conditions`);
           
-          // Refresh barracas from database (mock implementation)
-          // In a real app, this would fetch from the database
-          setBarracas(prev => prev.map(barraca => {
-            if (barraca.weatherDependent) {
-              // Update open status based on weather conditions
-              const shouldBeOpen = 
-                weatherData.beachConditions === 'excellent' || 
-                weatherData.beachConditions === 'good';
-              
-              if (barraca.isOpen !== shouldBeOpen) {
-                return {
-                  ...barraca,
-                  isOpen: shouldBeOpen,
-                  updatedAt: new Date()
-                };
-              }
-            }
-            return barraca;
-          }));
+          // Refresh barracas from database to get updated status
+          try {
+            const refreshedBarracas = await fetchBarracas();
+            setBarracas(refreshedBarracas);
+          } catch (error) {
+            console.error('Failed to refresh barracas after weather update:', error);
+          }
         }
       }
     } catch (error) {
@@ -195,6 +235,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     updateBarraca,
     deleteBarraca,
     subscribeEmail,
+    checkEmailSubscription,
     adminLogin,
     adminLogout,
     refreshWeather

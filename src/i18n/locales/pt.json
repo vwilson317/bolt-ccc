@@ -135,6 +135,7 @@
     "welcome": "Bem-vindo!",
     "success": "Bem-vindo ao Carioca Coastal Club!",
     "error": "Por favor, digite um endereço de email válido",
+    "failed": "A inscrição falhou. Por favor tente novamente.",
     "benefits": "Receba reservas de cadeiras, atualizações de status e ofertas exclusivas"
   },
   "loyalty": {

@@ -135,6 +135,7 @@
     "welcome": "Welcome!",
     "success": "Welcome to Carioca Coastal Club!",
     "error": "Please enter a valid email address",
+    "failed": "Subscription failed. Please try again.",
     "benefits": "Get chair reservations, status updates, and exclusive member offers"
   },
   "loyalty": {

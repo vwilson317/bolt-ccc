@@ -29,11 +29,12 @@ const EmailSubscription: React.FC = () => {
         setEmail('');
       } else {
         setStatus('error');
-        setMessage('Subscription failed. Please try again.');
+        setMessage(t('email.failed') || 'Subscription failed. Please try again.');
       }
     } catch (error) {
+      console.error('Email subscription error:', error);
       setStatus('error');
-      setMessage('Something went wrong. Please try again.');
+      setMessage(t('email.error') || 'Something went wrong. Please try again.');
     }
   };
 

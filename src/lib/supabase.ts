@@ -21,10 +21,10 @@ const isValidApiKey = (key: string): boolean => {
 
 // Environment configuration
 const getEnvironmentConfig = () => {
-  const env = import.meta.env.VITE_APP_ENV || 'development'
+  const env = import.meta.env.VITE_APP_ENV || 'dev'
   
   const configs = {
-    development: {
+    dev: {
       url: import.meta.env.VITE_SUPABASE_URL_DEV || import.meta.env.VITE_SUPABASE_URL,
       anonKey: import.meta.env.VITE_SUPABASE_ANON_KEY_DEV || import.meta.env.VITE_SUPABASE_ANON_KEY,
       schema: 'public'
@@ -39,18 +39,18 @@ const getEnvironmentConfig = () => {
       anonKey: import.meta.env.VITE_SUPABASE_ANON_KEY_UAT || import.meta.env.VITE_SUPABASE_ANON_KEY,
       schema: 'public'
     },
-    production: {
+    prod: {
       url: import.meta.env.VITE_SUPABASE_URL_PROD || import.meta.env.VITE_SUPABASE_URL,
       anonKey: import.meta.env.VITE_SUPABASE_ANON_KEY_PROD || import.meta.env.VITE_SUPABASE_ANON_KEY,
       schema: 'public'
     }
   }
   
-  return configs[env as keyof typeof configs] || configs.development
+  return configs[env as keyof typeof configs] || configs.dev
 }
 
 const config = getEnvironmentConfig()
-const currentEnv = import.meta.env.VITE_APP_ENV || 'development'
+const currentEnv = import.meta.env.VITE_APP_ENV || 'dev'
 
 // Validate configuration
 if (!config.url || !isValidUrl(config.url)) {
@@ -83,10 +83,10 @@ export const environmentInfo = {
   environment: currentEnv,
   schema: 'public',
   url: config.url,
-  isDevelopment: currentEnv === 'development',
+  isDevelopment: currentEnv === 'dev',
   isQA: currentEnv === 'qa',
   isUAT: currentEnv === 'uat',
-  isProduction: currentEnv === 'production'
+  isProduction: currentEnv === 'prod'
 }
 
 // Helper function to handle Supabase errors

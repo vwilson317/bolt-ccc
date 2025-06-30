@@ -97,14 +97,15 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
       };
 
       if (barracaId) {
-        updateBarraca(barracaId, barracaData);
+        await updateBarraca(barracaId, barracaData);
       } else {
-        addBarraca(barracaData);
+        await addBarraca(barracaData);
       }
 
       onSave();
     } catch (error) {
       console.error('Failed to save barraca:', error);
+      // Error message could be added here
     } finally {
       setIsSaving(false);
     }

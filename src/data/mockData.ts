@@ -1,5 +1,6 @@
 import { Barraca, WeatherData, CTAButtonConfig } from '../types';
 import { barracaUruguayData } from './barracaUruguayData';
+import { BarracaService } from '../services/barracaService';
 
 // Sample custom CTA button configurations
 const sampleCTAButtons: CTAButtonConfig[] = [
@@ -57,7 +58,8 @@ const sampleCTAButtons: CTAButtonConfig[] = [
   }
 ];
 
-export const mockBarracas: Barraca[] = [
+// Fallback mock data in case database is unavailable
+const fallbackMockBarracas: Barraca[] = [
   // Include Barraca Uruguay as the first entry
   barracaUruguayData,
   {
@@ -70,7 +72,7 @@ export const mockBarracas: Barraca[] = [
     typicalHours: '8:00 - 18:00',
     description: 'Traditional beachside barraca serving fresh seafood and cold drinks with ocean views.',
     images: [
-      'https://images.pexels.com/photos/1002703/pexels-photo-1002703.jpeg',
+      'https://pub-db19578f977b43e184c45b5084d7c029.r2.dev/group-photo-sm.jpg',
       'https://images.pexels.com/photos/1579739/pexels-photo-1579739.jpeg'
     ],
     menuPreview: ['Caipirinha', 'Grilled Fish', 'Coconut Water', 'Açaí Bowl'],
@@ -287,6 +289,29 @@ export const mockBarracas: Barraca[] = [
     updatedAt: new Date('2024-01-13')
   }
 ];
+
+// Function to fetch barracas from database with fallback to mock data
+export const fetchBarracas = async (): Promise<Barraca[]> => {
+  try {
+    console.log('🔄 Fetching barracas from database...');
+    const barracas = await BarracaService.getAll();
+    
+    if (barracas && barracas.length > 0) {
+      console.log(`✅ Successfully fetched ${barracas.length} barracas from database`);
+      return barracas;
+    } else {
+      console.log('⚠️ No barracas found in database, using fallback mock data');
+      return fallbackMockBarracas;
+    }
+  } catch (error) {
+    console.error('❌ Error fetching barracas from database:', error);
+    console.log('🔄 Falling back to mock data');
+    return fallbackMockBarracas;
+  }
+};
+
+// Export the fallback data for backward compatibility
+export const mockBarracas = fallbackMockBarracas;
 
 export const mockWeatherData: WeatherData = {
   temperature: 28,

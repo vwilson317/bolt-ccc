@@ -47,10 +47,16 @@ const Admin: React.FC = () => {
     }
   };
 
-  const handleDeleteBarraca = (id: string) => {
+  const handleDeleteBarraca = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this barraca?')) {
-      trackAdminAction('Delete Barraca', `Barraca ID: ${id}`);
-      deleteBarraca(id);
+      try {
+        trackAdminAction('Delete Barraca', `Barraca ID: ${id}`);
+        await deleteBarraca(id);
+        // Success message could be added here
+      } catch (error) {
+        console.error('Failed to delete barraca:', error);
+        // Error message could be added here
+      }
     }
   };
 

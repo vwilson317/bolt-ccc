@@ -2,9 +2,11 @@ import { supabase, handleSupabaseError } from '../lib/supabase'
 import type { Barraca } from '../types'
 import type { Database } from '../types/database'
 
+
 type BarracaRow = Database['public']['Tables']['barracas']['Row']
 type BarracaInsert = Database['public']['Tables']['barracas']['Insert']
 type BarracaUpdate = Database['public']['Tables']['barracas']['Update']
+type Json = Database['public']['Tables']['barracas']['Row']['cta_buttons']
 
 // Transform database row to application type
 const transformBarracaFromDB = (row: BarracaRow): Barraca => ({
@@ -40,7 +42,7 @@ const transformBarracaToDB = (barraca: Omit<Barraca, 'id' | 'createdAt' | 'updat
   contact: barraca.contact,
   amenities: barraca.amenities,
   weather_dependent: barraca.weatherDependent,
-  cta_buttons: barraca.ctaButtons || []
+  cta_buttons: (barraca.ctaButtons as unknown as Json) || []
 })
 
 export class BarracaService {
@@ -120,7 +122,7 @@ export class BarracaService {
 
         // Get full barraca data for search results
         if (data && data.length > 0) {
-          const ids = data.map(item => item.id)
+          const ids = data.map((item: { id: string }) => item.id)
           const { data: fullData, error: fullError } = await supabase
             .from('barracas')
             .select('*')
@@ -132,8 +134,8 @@ export class BarracaService {
 
           // Sort by search rank
           const sortedData = fullData?.sort((a, b) => {
-            const aRank = data.find(item => item.id === a.id)?.rank || 0
-            const bRank = data.find(item => item.id === b.id)?.rank || 0
+            const aRank = data.find((item: { id: string; rank: number }) => item.id === a.id)?.rank || 0
+            const bRank = data.find((item: { id: string; rank: number }) => item.id === b.id)?.rank || 0
             return bRank - aRank
           })
 
@@ -184,7 +186,7 @@ export class BarracaService {
 
       // Get full barraca data
       if (data && data.length > 0) {
-        const ids = data.map(item => item.id)
+        const ids = data.map((item: { id: string }) => item.id)
         const { data: fullData, error: fullError } = await supabase
           .from('barracas')
           .select('*')
@@ -196,8 +198,8 @@ export class BarracaService {
 
         // Sort by distance
         const sortedData = fullData?.sort((a, b) => {
-          const aDistance = data.find(item => item.id === a.id)?.distance_km || 0
-          const bDistance = data.find(item => item.id === b.id)?.distance_km || 0
+          const aDistance = data.find((item: { id: string; distance_km: number }) => item.id === a.id)?.distance_km || 0
+          const bDistance = data.find((item: { id: string; distance_km: number }) => item.id === b.id)?.distance_km || 0
           return aDistance - bDistance
         })
 
@@ -251,7 +253,7 @@ export class BarracaService {
       if (updates.contact !== undefined) updateData.contact = updates.contact
       if (updates.amenities !== undefined) updateData.amenities = updates.amenities
       if (updates.weatherDependent !== undefined) updateData.weather_dependent = updates.weatherDependent
-      if (updates.ctaButtons !== undefined) updateData.cta_buttons = updates.ctaButtons
+      if (updates.ctaButtons !== undefined) updateData.cta_buttons = updates.ctaButtons as unknown as Json
 
       const { data, error } = await supabase
         .from('barracas')
