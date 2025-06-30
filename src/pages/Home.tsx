@@ -264,7 +264,7 @@ const Home: React.FC = () => {
             <div className="flex items-center space-x-2 mt-4 md:mt-0">
               <span className="text-gray-400 text-sm">Built with</span>
               <img 
-                src="/bolt-logo.png" 
+                src="/white_circle_360x360.png" 
                 alt="Bolt" 
                 className="h-4 w-4 opacity-60 hover:opacity-100 transition-opacity"
                 onError={(e) => {
