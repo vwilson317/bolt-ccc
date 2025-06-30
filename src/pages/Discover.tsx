@@ -150,7 +150,7 @@ const Discover: React.FC = () => {
                 <div>
                   <div className="flex items-center mb-3">
                     <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
-                    <h3 className="text-sm font-medium text-gray-700">Availability</h3>
+                    <h3 className="text-sm font-medium text-gray-700" data-lingo-skip>Availability</h3>
                   </div>
                   <div className="flex gap-2 bg-gray-100 rounded-lg p-1 w-fit">
                     {availabilityOptions.map((option) => {

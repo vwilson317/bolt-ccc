@@ -81,7 +81,7 @@ const EmailSubscription: React.FC = () => {
       )}
 
       <div className="mt-4 text-center">
-        <p className="text-sm text-orange-100">
+        <p className="text-sm text-orange-100" data-lingo-skip>
           {t('email.benefits')}
         </p>
       </div>

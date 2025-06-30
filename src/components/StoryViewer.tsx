@@ -324,10 +324,11 @@ const StoryViewer: React.FC = () => {
         {loadError && (
           <div className="absolute inset-0 flex items-center justify-center bg-black/50 text-white">
             <div className="text-center">
-              <p className="text-lg mb-2">Failed to load</p>
+              <p className="text-lg mb-2" data-lingo-skip>Failed to load</p>
               <button
                 onClick={nextMedia}
                 className="px-4 py-2 bg-white/20 rounded-lg hover:bg-white/30"
+                data-lingo-skip
               >
                 Skip
               </button>
@@ -386,14 +387,14 @@ const StoryViewer: React.FC = () => {
       {/* Debug Panel (Development Only) */}
       {import.meta.env.DEV && (
         <div className="absolute bottom-4 left-4 z-30 bg-black/90 text-white p-3 rounded text-xs font-mono space-y-1 max-w-xs">
-          <div className="text-yellow-400 font-bold">DEBUG PANEL</div>
-          <div>Progress: {Math.round(viewState.progress)}%</div>
-          <div>Media Ready: {isMediaReady ? '✅' : '❌'}</div>
-          <div>Playing: {viewState.isPlaying ? '▶️' : '⏸️'}</div>
-          <div>Paused: {viewState.isPaused ? '⏸️' : '▶️'}</div>
-          <div>Timer Active: {timerRef.current ? '🟢' : '🔴'}</div>
-          <div>Load Error: {loadError ? '❌' : '✅'}</div>
-          <div>Media: {viewState.currentMediaIndex + 1}/{currentStory?.media.length}</div>
+          <div className="text-yellow-400 font-bold" data-lingo-skip>DEBUG PANEL</div>
+          <div data-lingo-skip>Progress: {Math.round(viewState.progress)}%</div>
+          <div data-lingo-skip>Media Ready: {isMediaReady ? '✅' : '❌'}</div>
+          <div data-lingo-skip>Playing: {viewState.isPlaying ? '▶️' : '⏸️'}</div>
+          <div data-lingo-skip>Paused: {viewState.isPaused ? '⏸️' : '▶️'}</div>
+          <div data-lingo-skip>Timer Active: {timerRef.current ? '🟢' : '🔴'}</div>
+          <div data-lingo-skip>Load Error: {loadError ? '❌' : '✅'}</div>
+          <div data-lingo-skip>Media: {viewState.currentMediaIndex + 1}/{currentStory?.media.length}</div>
           <div className="pt-2 border-t border-gray-600">
             <button 
               onClick={() => {
@@ -401,6 +402,7 @@ const StoryViewer: React.FC = () => {
                 startTimer();
               }}
               className="bg-blue-600 px-2 py-1 rounded text-xs mr-2"
+              data-lingo-skip
             >
               Force Start
             </button>
@@ -410,6 +412,7 @@ const StoryViewer: React.FC = () => {
                 nextMedia();
               }}
               className="bg-green-600 px-2 py-1 rounded text-xs"
+              data-lingo-skip
             >
               Force Next
             </button>

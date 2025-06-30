@@ -40,7 +40,7 @@ const LocationFilterCheckboxes: React.FC<LocationFilterCheckboxesProps> = ({
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center">
           <MapPin className="h-4 w-4 text-orange-500 mr-2" />
-          <h3 className="text-sm font-medium text-gray-700">Filter by Location</h3>
+          <h3 className="text-sm font-medium text-gray-700" data-lingo-skip>Filter by Location</h3>
         </div>
         {selectedLocations.length > 0 && (
           <button

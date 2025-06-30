@@ -50,10 +50,10 @@ const CulturalContext: React.FC<CulturalContextProps> = ({
               <Heart className="h-5 w-5 text-orange-600" />
             </div>
             <div>
-              <h3 className="font-semibold text-gray-900">
+              <h3 className="font-semibold text-gray-900" data-lingo-skip>
                 Cultural Context: {location}
               </h3>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-gray-600" data-lingo-skip>
                 Learn about the local culture and traditions
               </p>
             </div>
@@ -74,14 +74,14 @@ const CulturalContext: React.FC<CulturalContextProps> = ({
             <div className="bg-white rounded-lg p-3 border border-orange-100">
               <div className="flex items-center mb-2">
                 <Clock className="h-4 w-4 text-orange-600 mr-2" />
-                <span className="text-sm font-medium text-gray-700">Best Time to Visit</span>
+                <span className="text-sm font-medium text-gray-700" data-lingo-skip>Best Time to Visit</span>
               </div>
               <p className="text-sm text-gray-600">{culturalInfo.bestTimeToVisit}</p>
             </div>
             <div className="bg-white rounded-lg p-3 border border-orange-100">
               <div className="flex items-center mb-2">
                 <MapPin className="h-4 w-4 text-orange-600 mr-2" />
-                <span className="text-sm font-medium text-gray-700">Cultural Significance</span>
+                <span className="text-sm font-medium text-gray-700" data-lingo-skip>Cultural Significance</span>
               </div>
               <p className="text-sm text-gray-600">{culturalInfo.culturalSignificance}</p>
             </div>
@@ -115,7 +115,7 @@ const CulturalContext: React.FC<CulturalContextProps> = ({
             {activeTab === 'history' && (
               <div className="space-y-4">
                 <div>
-                  <h4 className="font-medium text-gray-900 mb-2">History</h4>
+                  <h4 className="font-medium text-gray-900 mb-2" data-lingo-skip>History</h4>
                   <p className="text-sm text-gray-600 leading-relaxed">
                     {culturalInfo.history}
                   </p>
@@ -123,7 +123,7 @@ const CulturalContext: React.FC<CulturalContextProps> = ({
                 
                 {culturalInfo.traditions.length > 0 && (
                   <div>
-                    <h4 className="font-medium text-gray-900 mb-2">Local Traditions</h4>
+                    <h4 className="font-medium text-gray-900 mb-2" data-lingo-skip>Local Traditions</h4>
                     <ul className="space-y-2">
                       {culturalInfo.traditions.map((tradition, index) => (
                         <li key={index} className="flex items-start">
@@ -140,7 +140,7 @@ const CulturalContext: React.FC<CulturalContextProps> = ({
             {activeTab === 'tips' && (
               <div className="space-y-4">
                 <div>
-                  <h4 className="font-medium text-gray-900 mb-2">Local Tips</h4>
+                  <h4 className="font-medium text-gray-900 mb-2" data-lingo-skip>Local Tips</h4>
                   <div className="space-y-3">
                     {culturalInfo.localTips.map((tip, index) => (
                       <div key={index} className="bg-white rounded-lg p-3 border border-orange-100">
@@ -152,7 +152,7 @@ const CulturalContext: React.FC<CulturalContextProps> = ({
 
                 {culturalInfo.localEtiquette.length > 0 && (
                   <div>
-                    <h4 className="font-medium text-gray-900 mb-2">Local Etiquette</h4>
+                    <h4 className="font-medium text-gray-900 mb-2" data-lingo-skip>Local Etiquette</h4>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                       {culturalInfo.localEtiquette.map((rule, index) => (
                         <div key={index} className="flex items-center bg-white rounded-lg p-2 border border-orange-100">
@@ -169,7 +169,7 @@ const CulturalContext: React.FC<CulturalContextProps> = ({
             {activeTab === 'language' && (
               <div className="space-y-4">
                 <div>
-                  <h4 className="font-medium text-gray-900 mb-2">Helpful Portuguese Phrases</h4>
+                  <h4 className="font-medium text-gray-900 mb-2" data-lingo-skip>Helpful Portuguese Phrases</h4>
                   <div className="space-y-3">
                     {culturalInfo.languageHelp.map((phrase, index) => (
                       <div key={index} className="bg-white rounded-lg p-4 border border-orange-100">
@@ -189,7 +189,7 @@ const CulturalContext: React.FC<CulturalContextProps> = ({
                 </div>
 
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
-                  <p className="text-sm text-blue-800">
+                  <p className="text-sm text-blue-800" data-lingo-skip>
                     💡 <strong>Tip:</strong> Most barraca staff speak some English, but they appreciate when tourists try to speak Portuguese!
                   </p>
                 </div>

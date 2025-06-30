@@ -457,7 +457,7 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
           {showCTAConfig && (
             <div className="border border-gray-200 rounded-lg p-4 space-y-4">
               <div className="flex justify-between items-center">
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-gray-600" data-lingo-skip>
                   Configure custom call-to-action buttons for this barraca. Leave empty to use default buttons.
                 </p>
                 <button
@@ -473,7 +473,7 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
               {formData.ctaButtons.map((button, index) => (
                 <div key={button.id} className="border border-gray-100 rounded-lg p-4 space-y-3">
                   <div className="flex justify-between items-center">
-                    <h5 className="font-medium text-gray-900">Button {index + 1}</h5>
+                    <h5 className="font-medium text-gray-900" data-lingo-skip>Button {index + 1}</h5>
                     <button
                       type="button"
                       onClick={() => removeCTAButton(index)}
@@ -530,7 +530,7 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
                     </div>
 
                     <div>
-                      <label className="block text-xs font-medium text-gray-700 mb-1">
+                      <label className="block text-xs font-medium text-gray-700 mb-1" data-lingo-skip>
                         Style
                       </label>
                       <select
@@ -547,7 +547,7 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                     <div>
-                      <label className="block text-xs font-medium text-gray-700 mb-1">
+                      <label className="block text-xs font-medium text-gray-700 mb-1" data-lingo-skip>
                         Icon
                       </label>
                       <select
@@ -555,7 +555,7 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
                         onChange={(e) => updateCTAButton(index, { icon: e.target.value || undefined })}
                         className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-orange-500"
                       >
-                        <option value="">No Icon</option>
+                        <option value="" data-lingo-skip>No Icon</option>
                         {iconOptions.map(icon => (
                           <option key={icon} value={icon}>{icon}</option>
                         ))}
@@ -563,7 +563,7 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
                     </div>
 
                     <div>
-                      <label className="block text-xs font-medium text-gray-700 mb-1">
+                      <label className="block text-xs font-medium text-gray-700 mb-1" data-lingo-skip>
                         Position
                       </label>
                       <input
@@ -583,14 +583,14 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
                           onChange={(e) => updateCTAButton(index, { enabled: e.target.checked })}
                           className="h-3 w-3 text-orange-600 focus:ring-orange-500 border-gray-300 rounded"
                         />
-                        <span className="ml-2 text-xs text-gray-700">Enabled</span>
+                        <span className="ml-2 text-xs text-gray-700" data-lingo-skip>Enabled</span>
                       </label>
                     </div>
                   </div>
 
                   {/* Visibility Conditions */}
                   <div className="border-t border-gray-100 pt-3">
-                    <h6 className="text-xs font-medium text-gray-700 mb-2">Visibility Conditions</h6>
+                    <h6 className="text-xs font-medium text-gray-700 mb-2" data-lingo-skip>Visibility Conditions</h6>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                       <label className="flex items-center">
                         <input
@@ -604,7 +604,7 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
                           })}
                           className="h-3 w-3 text-orange-600 focus:ring-orange-500 border-gray-300 rounded"
                         />
-                        <span className="ml-1 text-xs text-gray-700">Requires Open</span>
+                        <span className="ml-1 text-xs text-gray-700" data-lingo-skip>Requires Open</span>
                       </label>
 
                       <label className="flex items-center">
@@ -619,7 +619,7 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
                           })}
                           className="h-3 w-3 text-orange-600 focus:ring-orange-500 border-gray-300 rounded"
                         />
-                        <span className="ml-1 text-xs text-gray-700">Requires Closed</span>
+                        <span className="ml-1 text-xs text-gray-700" data-lingo-skip>Requires Closed</span>
                       </label>
 
                       <label className="flex items-center">
@@ -634,7 +634,7 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
                           })}
                           className="h-3 w-3 text-orange-600 focus:ring-orange-500 border-gray-300 rounded"
                         />
-                        <span className="ml-1 text-xs text-gray-700">Member Only</span>
+                        <span className="ml-1 text-xs text-gray-700" data-lingo-skip>Member Only</span>
                       </label>
 
                       <label className="flex items-center">
@@ -649,7 +649,7 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
                           })}
                           className="h-3 w-3 text-orange-600 focus:ring-orange-500 border-gray-300 rounded"
                         />
-                        <span className="ml-1 text-xs text-gray-700">Weather Dependent</span>
+                        <span className="ml-1 text-xs text-gray-700" data-lingo-skip>Weather Dependent</span>
                       </label>
                     </div>
                   </div>

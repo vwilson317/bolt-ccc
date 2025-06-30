@@ -118,9 +118,9 @@ const AdminStats: React.FC = () => {
                   'bg-green-500'
                 }`}></div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-900">{activity.action}</p>
-                  <p className="text-sm text-gray-500 truncate">{activity.detail}</p>
-                  <p className="text-xs text-gray-400 mt-1">{activity.time}</p>
+                  <p className="text-sm font-medium text-gray-900" data-lingo-skip>{activity.action}</p>
+                  <p className="text-sm text-gray-500 truncate" data-lingo-skip>{activity.detail}</p>
+                  <p className="text-xs text-gray-400 mt-1" data-lingo-skip>{activity.time}</p>
                 </div>
               </div>
             ))}
@@ -136,7 +136,7 @@ const AdminStats: React.FC = () => {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="text-center">
-            <div className="text-3xl font-bold text-green-500 mb-2">98.5%</div>
+            <div className="text-3xl font-bold text-green-500 mb-2" data-lingo-skip>98.5%</div>
             <div className="text-sm text-gray-600">{t('admin.stats.uptime')}</div>
           </div>
           <div className="text-center">

@@ -122,17 +122,18 @@ const TouristOnboarding: React.FC<TouristOnboardingProps> = ({ onComplete, onSki
         {/* Header */}
         <div className="p-6 border-b border-gray-200">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-2xl font-bold text-gray-900">
+            <h2 className="text-2xl font-bold text-gray-900" data-lingo-skip>
               Welcome to Rio! 🏖️
             </h2>
             <button
               onClick={onSkip}
               className="text-gray-400 hover:text-gray-600 text-sm"
+              data-lingo-skip
             >
               Skip
             </button>
           </div>
-          <p className="text-gray-600">
+          <p className="text-gray-600" data-lingo-skip>
             Let's personalize your beach experience in Rio de Janeiro
           </p>
           
@@ -155,10 +156,10 @@ const TouristOnboarding: React.FC<TouristOnboardingProps> = ({ onComplete, onSki
           {step === 1 && (
             <div className="space-y-6">
               <div className="text-center">
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                <h3 className="text-xl font-semibold text-gray-900 mb-2" data-lingo-skip>
                   What kind of beach experience are you looking for?
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-gray-600" data-lingo-skip>
                   Choose the style that best matches your travel preferences
                 </p>
               </div>
@@ -192,10 +193,10 @@ const TouristOnboarding: React.FC<TouristOnboardingProps> = ({ onComplete, onSki
           {step === 2 && (
             <div className="space-y-6">
               <div className="text-center">
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                <h3 className="text-xl font-semibold text-gray-900 mb-2" data-lingo-skip>
                   What's your daily budget for beach activities?
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-gray-600" data-lingo-skip>
                   This helps us recommend barracas in your price range
                 </p>
               </div>

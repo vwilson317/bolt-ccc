@@ -135,7 +135,7 @@
           "type": "element",
           "hash": "48e82b78f25542cb81115e9244ed5e30",
           "context": "",
-          "skip": false,
+          "skip": true,
           "overrides": {},
           "content": "Configure custom call-to-action buttons for this barraca. Leave empty to use default buttons."
         },
@@ -151,7 +151,7 @@
           "type": "element",
           "hash": "1542a452ec6f7c29285d60f9a856ae3a",
           "context": "",
-          "skip": false,
+          "skip": true,
           "overrides": {},
           "content": "Button <expression/>"
         },
@@ -199,7 +199,7 @@
           "type": "element",
           "hash": "a508d39d1555f64a2d0ac8775f7b1ef3",
           "context": "",
-          "skip": false,
+          "skip": true,
           "overrides": {},
           "content": "Style"
         },
@@ -207,7 +207,7 @@
           "type": "element",
           "hash": "a3f0e9541385a2303db5d4d916ec09c8",
           "context": "",
-          "skip": false,
+          "skip": true,
           "overrides": {},
           "content": "Icon"
         },
@@ -215,7 +215,7 @@
           "type": "element",
           "hash": "b7ab22d22fa88e35020185192ec1ae00",
           "context": "",
-          "skip": false,
+          "skip": true,
           "overrides": {},
           "content": "No Icon"
         },
@@ -223,7 +223,7 @@
           "type": "element",
           "hash": "80ab4e65765505d166a1a97d3446b3aa",
           "context": "",
-          "skip": false,
+          "skip": true,
           "overrides": {},
           "content": "Position"
         },
@@ -231,7 +231,7 @@
           "type": "element",
           "hash": "20236664b7e62df0e767921b4450205f",
           "context": "",
-          "skip": false,
+          "skip": true,
           "overrides": {},
           "content": "Enabled"
         },
@@ -239,7 +239,7 @@
           "type": "element",
           "hash": "16849cc1a898a121a74324b1dcbac070",
           "context": "",
-          "skip": false,
+          "skip": true,
           "overrides": {},
           "content": "Visibility Conditions"
         },
@@ -247,7 +247,7 @@
           "type": "element",
           "hash": "1f1ca240966cdad08cf4e80ae4b04a75",
           "context": "",
-          "skip": false,
+          "skip": true,
           "overrides": {},
           "content": "Requires Open"
         },
@@ -255,7 +255,7 @@
           "type": "element",
           "hash": "c32fbdc4e7fef06a62fba4780d9d6237",
           "context": "",
-          "skip": false,
+          "skip": true,
           "overrides": {},
           "content": "Requires Closed"
         },
@@ -263,7 +263,7 @@
           "type": "element",
           "hash": "b32012a38ee2f15250f94936dc9c7a08",
           "context": "",
-          "skip": false,
+          "skip": true,
           "overrides": {},
           "content": "Member Only"
         },
@@ -271,7 +271,7 @@
           "type": "element",
           "hash": "58feeaf2016df37ec81772e170e64f3a",
           "context": "",
-          "skip": false,
+          "skip": true,
           "overrides": {},
           "content": "Weather Dependent"
         },
@@ -403,7 +403,7 @@
           "type": "element",
           "hash": "b07e776f2213b07587f8ba411718ad5d",
           "context": "",
-          "skip": false,
+          "skip": true,
           "overrides": {},
           "content": "98.5%"
         },
@@ -743,7 +743,7 @@
           "type": "element",
           "hash": "ff2f8542978159a2646c26a32c1ba2f3",
           "context": "",
-          "skip": false,
+          "skip": true,
           "overrides": {},
           "content": "Filter by Location"
         },
@@ -791,7 +791,7 @@
           "type": "element",
           "hash": "0d08a74e226ff0686fafce0a07c88d5d",
           "context": "",
-          "skip": false,
+          "skip": true,
           "overrides": {},
           "content": "Failed to load"
         },
@@ -799,7 +799,7 @@
           "type": "element",
           "hash": "b6a970ddf725f04868efa167dbb5744b",
           "context": "",
-          "skip": false,
+          "skip": true,
           "overrides": {},
           "content": "Skip"
         },
@@ -807,7 +807,7 @@
           "type": "element",
           "hash": "75d55bc6c0ca250d094dee0d3fc48071",
           "context": "",
-          "skip": false,
+          "skip": true,
           "overrides": {},
           "content": "DEBUG PANEL"
         },
@@ -815,7 +815,7 @@
           "type": "element",
           "hash": "c6af59915cb253f902318df0b8d0a910",
           "context": "",
-          "skip": false,
+          "skip": true,
           "overrides": {},
           "content": "Timer Active: <expression/>"
         },
@@ -823,7 +823,7 @@
           "type": "element",
           "hash": "d55a7f1d2af354da51c1e23a624e0c52",
           "context": "",
-          "skip": false,
+          "skip": true,
           "overrides": {},
           "content": "Load Error: <expression/>"
         },
@@ -831,7 +831,7 @@
           "type": "element",
           "hash": "815e04689676006570a213370fe80b83",
           "context": "",
-          "skip": false,
+          "skip": true,
           "overrides": {},
           "content": "Media: <expression/>/<expression/>"
         },
@@ -839,7 +839,7 @@
           "type": "element",
           "hash": "e7b0afc193ae6f95d18d65db935df323",
           "context": "",
-          "skip": false,
+          "skip": true,
           "overrides": {},
           "content": "Force Start"
         },
@@ -847,7 +847,7 @@
           "type": "element",
           "hash": "efd67577b46e1953973f0ccedb87e332",
           "context": "",
-          "skip": false,
+          "skip": true,
           "overrides": {},
           "content": "Force Next"
         },
@@ -855,7 +855,7 @@
           "type": "element",
           "hash": "0970ba0a84992c9479780be737f6d4f9",
           "context": "",
-          "skip": false,
+          "skip": true,
           "overrides": {},
           "content": "Progress: <function:Math.round/>%"
         },
@@ -863,7 +863,7 @@
           "type": "element",
           "hash": "e22db496dc0f2419fe7423755aa0d53e",
           "context": "",
-          "skip": false,
+          "skip": true,
           "overrides": {},
           "content": "Media Ready: <expression/>"
         },
@@ -871,7 +871,7 @@
           "type": "element",
           "hash": "2f50d34b3ceabd0019d2036bbf2d3205",
           "context": "",
-          "skip": false,
+          "skip": true,
           "overrides": {},
           "content": "Playing: <expression/>"
         },
@@ -879,7 +879,7 @@
           "type": "element",
           "hash": "49ce8a087cfd4116301326aa50ba1492",
           "context": "",
-          "skip": false,
+          "skip": true,
           "overrides": {},
           "content": "Paused: <expression/>"
         },
@@ -1499,7 +1499,7 @@
           "type": "element",
           "hash": "eecbae2901416adf2539ee8cc3815c3e",
           "context": "",
-          "skip": false,
+          "skip": true,
           "overrides": {},
           "content": "What We Stand For"
         },
@@ -1507,7 +1507,7 @@
           "type": "element",
           "hash": "a16a23fbf1d85a4dc74e20f3aa4a6d56",
           "context": "",
-          "skip": false,
+          "skip": true,
           "overrides": {},
           "content": "The values that drive our loyalty platform and community"
         },
@@ -1515,7 +1515,7 @@
           "type": "element",
           "hash": "0ec73fab2bea1090e621eb93b6ac2ff4",
           "context": "",
-          "skip": false,
+          "skip": true,
           "overrides": {},
           "content": "Meet Our Team"
         },
@@ -1523,7 +1523,7 @@
           "type": "element",
           "hash": "4542282cc65db294e24e67433b6594e5",
           "context": "",
-          "skip": false,
+          "skip": true,
           "overrides": {},
           "content": "Barraca enthusiasts and tech experts working to strengthen Rio's barraca community"
         },
@@ -1531,7 +1531,7 @@
           "type": "element",
           "hash": "c51256ff4ebfb40daa32cb2cee28631e",
           "context": "",
-          "skip": false,
+          "skip": true,
           "overrides": {},
           "content": "Get in Touch"
         },
@@ -1539,7 +1539,7 @@
           "type": "element",
           "hash": "b4bccda8ec43918e855cc9dfd876c04d",
           "context": "",
-          "skip": false,
+          "skip": true,
           "overrides": {},
           "content": "Questions about membership? Want to partner with us? We'd love to hear from you."
         },
@@ -1547,7 +1547,7 @@
           "type": "element",
           "hash": "f342772a23e724418e684189a8951a30",
           "context": "",
-          "skip": false,
+          "skip": true,
           "overrides": {},
           "content": "WhatsApp"
         },
@@ -1555,7 +1555,7 @@
           "type": "element",
           "hash": "3dd3b77ca5ffdca89d3f30b76a3ba6b1",
           "context": "",
-          "skip": false,
+          "skip": true,
           "overrides": {},
           "content": "Quick responses via WhatsApp"
         },
@@ -1563,7 +1563,7 @@
           "type": "element",
           "hash": "b297f3729f52cedbcd0c6709a43cd645",
           "context": "",
-          "skip": false,
+          "skip": true,
           "overrides": {},
           "content": "+55 21 99999-0000"
         },
@@ -1571,7 +1571,7 @@
           "type": "element",
           "hash": "c9555810826c30d571ffae869a236494",
           "context": "",
-          "skip": false,
+          "skip": true,
           "overrides": {},
           "content": "Instagram"
         },
@@ -1579,7 +1579,7 @@
           "type": "element",
           "hash": "65a0b33092a4baf493b563312df11842",
           "context": "",
-          "skip": false,
+          "skip": true,
           "overrides": {},
           "content": "Follow us for daily updates"
         },
@@ -1587,7 +1587,7 @@
           "type": "element",
           "hash": "b49b2c5ea6b24bbcb8123da961b686b4",
           "context": "",
-          "skip": false,
+          "skip": true,
           "overrides": {},
           "content": "@cariocacoastal"
         },
@@ -1595,7 +1595,7 @@
           "type": "element",
           "hash": "65090dac11c9cb75e86f2b6b809615e1",
           "context": "",
-          "skip": false,
+          "skip": true,
           "overrides": {},
           "content": "Join Our Community"
         },
@@ -1603,7 +1603,7 @@
           "type": "element",
           "hash": "b9fc0ae83c61a8275642ce7980752d93",
           "context": "",
-          "skip": false,
+          "skip": true,
           "overrides": {},
           "content": "Get member updates, chair reservation alerts, and exclusive offers from partner barracas"
         },
@@ -1619,7 +1619,7 @@
           "type": "element",
           "hash": "8d5686256a776d4351d335085287bbc8",
           "context": "",
-          "skip": false,
+          "skip": true,
           "overrides": {},
           "content": "We're the loyalty platform connecting Rio's barraca lovers with their favorite spots. Check if your barraca is open, reserve chairs, and enjoy exclusive member benefits."
         },
@@ -1627,7 +1627,7 @@
           "type": "element",
           "hash": "d09235992e400222a938171b25a3163f",
           "context": "",
-          "skip": false,
+          "skip": true,
           "overrides": {},
           "content": "Our Mission"
         },
@@ -1635,7 +1635,7 @@
           "type": "element",
           "hash": "3071ef44dd6b7d45e0a05f5385aa2070",
           "context": "",
-          "skip": false,
+          "skip": true,
           "overrides": {},
           "content": "To strengthen the bond between Rio's barraca community and their favorite spots. We believe loyal customers deserve better service, and barraca owners deserve loyal customers who keep coming back."
         },
@@ -1643,7 +1643,7 @@
           "type": "element",
           "hash": "c53b0d3606b48feedace8405309cf509",
           "context": "",
-          "skip": false,
+          "skip": true,
           "overrides": {},
           "content": "\"Every barraca has its regulars - we help strengthen those relationships.\""
         },
@@ -1651,7 +1651,7 @@
           "type": "element",
           "hash": "68b95466d22c5d6667e485f64000facd",
           "context": "",
-          "skip": false,
+          "skip": true,
           "overrides": {},
           "content": "Through chair reservations, real-time updates, and exclusive member perks, we make it easier for you to enjoy your favorite barraca spots while helping barracas build stronger customer loyalty."
         }
@@ -1843,7 +1843,7 @@
           "type": "element",
           "hash": "f141aa3e9adb2179806cc1c909b5516a",
           "context": "",
-          "skip": false,
+          "skip": true,
           "overrides": {},
           "content": "Availability"
         },

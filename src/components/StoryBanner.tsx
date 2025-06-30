@@ -77,7 +77,7 @@ const StoryBanner: React.FC = () => {
               <h3 className="text-sm sm:text-base font-semibold">
                 {currentStory.barracaName}
               </h3>
-              <p className="text-xs sm:text-sm text-gray-300">
+              <p className="text-xs sm:text-sm text-gray-300" data-lingo-skip>
                 {currentStory.media.length} {currentStory.media.length === 1 ? 'story' : 'stories'}
               </p>
             </div>
@@ -85,7 +85,7 @@ const StoryBanner: React.FC = () => {
           
           {/* Story Preview */}
           <div className="hidden sm:block">
-            <p className="text-sm text-gray-200 line-clamp-2">
+            <p className="text-sm text-gray-200 line-clamp-2" data-lingo-skip>
               {currentStory.media[0].caption || 'Check out our latest updates!'}
             </p>
           </div>

@@ -65,7 +65,7 @@ const About: React.FC = () => {
           <h1 className="text-4xl md:text-6xl font-bold text-white mb-6" data-lingo-skip>
             About Carioca Coastal Club
           </h1>
-          <p className="text-xl text-orange-100 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-xl text-orange-100 max-w-3xl mx-auto leading-relaxed" data-lingo-skip>
             We're the loyalty platform connecting Rio's barraca lovers with their favorite spots. 
             Check if your barraca is open, reserve chairs, and enjoy exclusive member benefits.
           </p>
@@ -75,19 +75,19 @@ const About: React.FC = () => {
       {/* Mission Section */}
       <section className="py-16 bg-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-8">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-8" data-lingo-skip>
             Our Mission
           </h2>
-          <p className="text-lg text-gray-600 leading-relaxed mb-8">
+          <p className="text-lg text-gray-600 leading-relaxed mb-8" data-lingo-skip>
             To strengthen the bond between Rio's barraca community and their favorite spots. 
             We believe loyal customers deserve better service, and barraca owners deserve loyal customers 
             who keep coming back.
           </p>
           <div className="bg-gradient-to-r from-orange-50 to-red-50 rounded-2xl p-8 border border-orange-100">
-            <p className="text-xl font-semibold text-gray-900 mb-4">
+            <p className="text-xl font-semibold text-gray-900 mb-4" data-lingo-skip>
               "Every barraca has its regulars - we help strengthen those relationships."
             </p>
-            <p className="text-gray-600">
+            <p className="text-gray-600" data-lingo-skip>
               Through chair reservations, real-time updates, and exclusive member perks, 
               we make it easier for you to enjoy your favorite barraca spots while helping 
               barracas build stronger customer loyalty.
@@ -102,10 +102,10 @@ const About: React.FC = () => {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             {stats.map((stat, index) => (
               <div key={index}>
-                <div className="text-4xl md:text-5xl font-bold text-white mb-2">
+                <div className="text-4xl md:text-5xl font-bold text-white mb-2" data-lingo-skip>
                   {stat.number}
                 </div>
-                <div className="text-orange-100 font-medium">
+                <div className="text-orange-100 font-medium" data-lingo-skip>
                   {stat.label}
                 </div>
               </div>
@@ -118,10 +118,10 @@ const About: React.FC = () => {
       <section className="py-16 bg-gray-50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4" data-lingo-skip>
               What We Stand For
             </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto" data-lingo-skip>
               The values that drive our loyalty platform and community
             </p>
           </div>
@@ -134,10 +134,10 @@ const About: React.FC = () => {
                   <div className="bg-gradient-to-r from-orange-500 to-red-600 w-12 h-12 rounded-xl flex items-center justify-center mb-4">
                     <Icon className="h-6 w-6 text-white" />
                   </div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-3" data-lingo-skip>
                     {value.title}
                   </h3>
-                  <p className="text-gray-600 leading-relaxed">
+                  <p className="text-gray-600 leading-relaxed" data-lingo-skip>
                     {value.description}
                   </p>
                 </div>
@@ -151,10 +151,10 @@ const About: React.FC = () => {
       <section className="py-16 bg-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4" data-lingo-skip>
               Meet Our Team
             </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto" data-lingo-skip>
               Barraca enthusiasts and tech experts working to strengthen Rio's barraca community
             </p>
           </div>
@@ -169,13 +169,13 @@ const About: React.FC = () => {
                     className="w-32 h-32 rounded-full mx-auto object-cover shadow-lg"
                   />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-1">
+                <h3 className="text-xl font-semibold text-gray-900 mb-1" data-lingo-skip>
                   {member.name}
                 </h3>
-                <p className="text-orange-600 font-medium mb-3">
+                <p className="text-orange-600 font-medium mb-3" data-lingo-skip>
                   {member.role}
                 </p>
-                <p className="text-gray-600 leading-relaxed">
+                <p className="text-gray-600 leading-relaxed" data-lingo-skip>
                   {member.bio}
                 </p>
               </div>
@@ -188,10 +188,10 @@ const About: React.FC = () => {
       <section className="py-16 bg-gradient-to-b from-gray-50 to-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4" data-lingo-skip>
               Get in Touch
             </h2>
-            <p className="text-lg text-gray-600">
+            <p className="text-lg text-gray-600" data-lingo-skip>
               Questions about membership? Want to partner with us? We'd love to hear from you.
             </p>
           </div>
@@ -203,8 +203,8 @@ const About: React.FC = () => {
                   <MessageCircle className="h-6 w-6 text-green-600" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900">WhatsApp</h3>
-                  <p className="text-gray-600">Quick responses via WhatsApp</p>
+                  <h3 className="font-semibold text-gray-900" data-lingo-skip>WhatsApp</h3>
+                  <p className="text-gray-600" data-lingo-skip>Quick responses via WhatsApp</p>
                 </div>
               </div>
               <a 
@@ -212,6 +212,7 @@ const About: React.FC = () => {
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-green-600 font-medium hover:text-green-700"
+                data-lingo-skip
               >
                 +55 21 99999-0000
               </a>
@@ -223,8 +224,8 @@ const About: React.FC = () => {
                   <Instagram className="h-6 w-6 text-pink-600" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900">Instagram</h3>
-                  <p className="text-gray-600">Follow us for daily updates</p>
+                  <h3 className="font-semibold text-gray-900" data-lingo-skip>Instagram</h3>
+                  <p className="text-gray-600" data-lingo-skip>Follow us for daily updates</p>
                 </div>
               </div>
               <a 
@@ -232,6 +233,7 @@ const About: React.FC = () => {
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-pink-600 font-medium hover:text-pink-700"
+                data-lingo-skip
               >
                 @cariocacoastal
               </a>
@@ -240,10 +242,10 @@ const About: React.FC = () => {
 
           {/* Newsletter Signup */}
           <div className="bg-gradient-to-r from-orange-500 to-red-600 rounded-2xl p-8 text-center">
-            <h3 className="text-2xl font-bold text-white mb-4">
+            <h3 className="text-2xl font-bold text-white mb-4" data-lingo-skip>
               Join Our Community
             </h3>
-            <p className="text-orange-100 mb-6">
+            <p className="text-orange-100 mb-6" data-lingo-skip>
               Get member updates, chair reservation alerts, and exclusive offers from partner barracas
             </p>
             <EmailSubscription />
