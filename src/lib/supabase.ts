@@ -3,7 +3,7 @@ import type { Database } from '../types/database'
 
 // Helper function to validate URL
 const isValidUrl = (url: string): boolean => {
-  if (!url || url.includes('your_') || url === 'your_default_supabase_project_url') {
+  if (!url || url.includes('your_') || url === 'your_default_supabase_project_url' || url.includes('placeholder')) {
     return false
   }
   try {
@@ -16,7 +16,7 @@ const isValidUrl = (url: string): boolean => {
 
 // Helper function to validate API key
 const isValidApiKey = (key: string): boolean => {
-  return !(!key || key.includes('your_') || key === 'your_default_supabase_anon_key')
+  return !(!key || key.includes('your_') || key === 'your_default_supabase_anon_key' || key.includes('placeholder'))
 }
 
 // Environment configuration
@@ -52,31 +52,50 @@ const getEnvironmentConfig = () => {
 const config = getEnvironmentConfig()
 const currentEnv = import.meta.env.VITE_APP_ENV || 'dev'
 
-// Validate configuration
-if (!config.url || !isValidUrl(config.url)) {
-  console.error(`❌ Invalid or missing Supabase URL for ${currentEnv} environment`)
-  console.error('Please update your .env file with a valid Supabase project URL')
-  console.error('Example: VITE_SUPABASE_URL=https://your-project.supabase.co')
-  throw new Error(`Invalid Supabase URL for ${currentEnv} environment. Please check your .env file and ensure you have a valid Supabase project URL.`)
-}
+// Check if we have valid Supabase configuration
+const hasValidSupabaseConfig = isValidUrl(config.url) && isValidApiKey(config.anonKey)
 
-if (!config.anonKey || !isValidApiKey(config.anonKey)) {
-  console.error(`❌ Invalid or missing Supabase anonymous key for ${currentEnv} environment`)
-  console.error('Please update your .env file with a valid Supabase anonymous key')
-  throw new Error(`Invalid Supabase anonymous key for ${currentEnv} environment. Please check your .env file and ensure you have a valid Supabase anonymous key.`)
-}
-
-export const supabase = createClient<Database>(config.url, config.anonKey, {
-  auth: {
-    persistSession: true,
-    autoRefreshToken: true,
-  },
-  realtime: {
-    params: {
-      eventsPerSecond: 10,
+// Create a mock client for development when Supabase is not configured
+const createMockSupabaseClient = () => {
+  console.warn('⚠️ Using mock Supabase client - database operations will not work')
+  console.warn('To connect to Supabase, please update your .env file with valid credentials')
+  
+  return {
+    from: () => ({
+      select: () => Promise.resolve({ data: [], error: null }),
+      insert: () => Promise.resolve({ data: null, error: null }),
+      update: () => Promise.resolve({ data: null, error: null }),
+      delete: () => Promise.resolve({ data: null, error: null }),
+      upsert: () => Promise.resolve({ data: null, error: null }),
+    }),
+    auth: {
+      signUp: () => Promise.resolve({ data: null, error: null }),
+      signIn: () => Promise.resolve({ data: null, error: null }),
+      signOut: () => Promise.resolve({ error: null }),
+      getSession: () => Promise.resolve({ data: { session: null }, error: null }),
+      onAuthStateChange: () => ({ data: { subscription: null } }),
     },
+    channel: () => ({
+      on: () => ({ subscribe: () => {} }),
+    }),
+    removeChannel: () => {},
   }
-})
+}
+
+// Create Supabase client or mock client
+export const supabase = hasValidSupabaseConfig 
+  ? createClient<Database>(config.url, config.anonKey, {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+      },
+      realtime: {
+        params: {
+          eventsPerSecond: 10,
+        },
+      }
+    })
+  : createMockSupabaseClient() as any
 
 // Environment info for debugging
 export const environmentInfo = {
@@ -86,11 +105,17 @@ export const environmentInfo = {
   isDevelopment: currentEnv === 'dev',
   isQA: currentEnv === 'qa',
   isUAT: currentEnv === 'uat',
-  isProduction: currentEnv === 'prod'
+  isProduction: currentEnv === 'prod',
+  hasValidConfig: hasValidSupabaseConfig
 }
 
 // Helper function to handle Supabase errors
 export const handleSupabaseError = (error: any, context: string) => {
+  if (!hasValidSupabaseConfig) {
+    console.warn(`Mock Supabase operation in ${context} - no real database connection`)
+    return
+  }
+  
   console.error(`Supabase error in ${context} (${environmentInfo.environment}):`, error)
   
   if (error?.code === 'PGRST116') {
@@ -108,6 +133,11 @@ export const handleSupabaseError = (error: any, context: string) => {
 
 // Connection health check
 export const checkSupabaseConnection = async (): Promise<boolean> => {
+  if (!hasValidSupabaseConfig) {
+    console.warn('⚠️ Supabase not configured - using mock data')
+    return false
+  }
+  
   try {
     const { data, error } = await supabase
       .from('barracas')
@@ -129,6 +159,11 @@ export const checkSupabaseConnection = async (): Promise<boolean> => {
 
 // Real-time subscription helpers
 export const subscribeToBarracas = (callback: (payload: any) => void) => {
+  if (!hasValidSupabaseConfig) {
+    console.warn('⚠️ Real-time subscriptions not available - Supabase not configured')
+    return { unsubscribe: () => {} }
+  }
+  
   return supabase
     .channel(`barracas-changes-${environmentInfo.schema}`)
     .on(
@@ -144,6 +179,11 @@ export const subscribeToBarracas = (callback: (payload: any) => void) => {
 }
 
 export const subscribeToStories = (callback: (payload: any) => void) => {
+  if (!hasValidSupabaseConfig) {
+    console.warn('⚠️ Real-time subscriptions not available - Supabase not configured')
+    return { unsubscribe: () => {} }
+  }
+  
   return supabase
     .channel(`stories-changes-${environmentInfo.schema}`)
     .on(
@@ -160,7 +200,7 @@ export const subscribeToStories = (callback: (payload: any) => void) => {
 
 // Cleanup function for subscriptions
 export const unsubscribeFromChannel = (subscription: any) => {
-  if (subscription) {
+  if (subscription && hasValidSupabaseConfig) {
     supabase.removeChannel(subscription)
   }
 }
@@ -171,6 +211,14 @@ export const logEnvironmentInfo = () => {
     environment: environmentInfo.environment,
     schema: environmentInfo.schema,
     isDevelopment: environmentInfo.isDevelopment,
-    isProduction: environmentInfo.isProduction
+    isProduction: environmentInfo.isProduction,
+    hasValidSupabaseConfig: environmentInfo.hasValidConfig
   })
+  
+  if (!hasValidSupabaseConfig) {
+    console.warn('⚠️ To enable database functionality, please:')
+    console.warn('1. Create a Supabase project at https://supabase.com')
+    console.warn('2. Update your .env file with your project URL and API key')
+    console.warn('3. Restart the development server')
+  }
 }
