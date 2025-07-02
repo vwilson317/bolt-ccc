@@ -61,6 +61,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
       setIsLoading(true);
       try {
         const fetchedBarracas = await fetchBarracas();
+        fetchedBarracas.sort((a, b) => a.location.localeCompare(b.location));
         setBarracas(fetchedBarracas);
       } catch (error) {
         console.error('Failed to load barracas:', error);

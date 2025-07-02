@@ -40,7 +40,7 @@ const About: React.FC = () => {
     {
       name: 'Vincent Wilson',
       role: 'Founder & CEO',
-      bio: 'Born and raised in Rio, Carlos has spent over 20 years building relationships with barraca owners across the city.',
+      bio: 'Born and raised in the United States, Vincent has spent over 5 years building relationships with barraca owners across the city making them  more familiar with foriegn business practices.',
       image: 'https://pub-db19578f977b43e184c45b5084d7c029.r2.dev/editsV1/about%20edits/IMG_0385.jpg'
     },
     {
