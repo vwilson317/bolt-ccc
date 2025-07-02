@@ -68,10 +68,10 @@ const Admin: React.FC = () => {
             <div className="bg-gradient-to-r from-orange-500 to-red-600 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4">
               <Lock className="h-8 w-8 text-white" />
             </div>
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">
+            <h1 className="text-2xl font-bold text-gray-900 mb-2" data-lingo-skip>
               {t('admin.login')}
             </h1>
-            <p className="text-gray-600">
+            <p className="text-gray-600" data-lingo-skip>
               Access the admin dashboard to manage barracas
             </p>
           </div>
@@ -131,11 +131,11 @@ const Admin: React.FC = () => {
             </button>
           </form>
 
-          <div className="mt-6 text-center">
-            <p className="text-sm text-gray-500">
-              {t('admin.credentials')}
-            </p>
-          </div>
+                      <div className="mt-6 text-center">
+              <p className="text-sm text-gray-500" data-lingo-skip>
+                {t('admin.credentials')}
+              </p>
+            </div>
         </div>
       </div>
     );
@@ -147,7 +147,7 @@ const Admin: React.FC = () => {
       <div className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <h1 className="text-2xl font-bold text-gray-900">
+            <h1 className="text-2xl font-bold text-gray-900" data-lingo-skip>
               {t('admin.dashboard')}
             </h1>
             <button
@@ -217,7 +217,7 @@ const Admin: React.FC = () => {
         {activeTab === 'barracas' && (
           <div>
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-semibold text-gray-900">
+              <h2 className="text-xl font-semibold text-gray-900" data-lingo-skip>
                 {t('admin.manageBarracas')}
               </h2>
               <button
@@ -335,7 +335,7 @@ const Admin: React.FC = () => {
 
         {activeTab === 'emails' && (
           <div className="bg-white rounded-2xl shadow-lg p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-6">
+            <h2 className="text-xl font-semibold text-gray-900 mb-6" data-lingo-skip>
               {t('admin.emails')}
             </h2>
             <div className="overflow-x-auto">
@@ -365,12 +365,12 @@ const Admin: React.FC = () => {
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         <div className="flex space-x-2">
                           {subscription.preferences.newBarracas && (
-                            <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs">
+                            <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs" data-lingo-skip>
                               New Spots
                             </span>
                           )}
                           {subscription.preferences.specialOffers && (
-                            <span className="bg-purple-100 text-purple-800 px-2 py-1 rounded-full text-xs">
+                            <span className="bg-purple-100 text-purple-800 px-2 py-1 rounded-full text-xs" data-lingo-skip>
                               Offers
                             </span>
                           )}
