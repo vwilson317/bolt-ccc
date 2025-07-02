@@ -21,6 +21,81 @@
      - Stakeholder-friendly scenarios
 */
 
+-- Ensure all referenced tables exist before any TRUNCATE or INSERT
+CREATE TABLE IF NOT EXISTS visitor_analytics (
+  visitor_id TEXT PRIMARY KEY,
+  first_visit TIMESTAMPTZ,
+  last_visit TIMESTAMPTZ,
+  visit_count INTEGER,
+  user_agent TEXT,
+  referrer TEXT,
+  country TEXT,
+  city TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS weather_cache (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  location TEXT,
+  temperature NUMERIC(4,1),
+  feels_like NUMERIC(4,1),
+  humidity INTEGER,
+  wind_speed NUMERIC(4,1),
+  wind_direction INTEGER,
+  description TEXT,
+  icon TEXT,
+  beach_conditions TEXT,
+  cached_at TIMESTAMPTZ,
+  expires_at TIMESTAMPTZ
+);
+
+CREATE TABLE IF NOT EXISTS email_subscriptions (
+  email TEXT PRIMARY KEY,
+  preferences JSONB,
+  subscribed_at TIMESTAMPTZ,
+  is_active BOOLEAN
+);
+
+CREATE TABLE IF NOT EXISTS stories (
+  id TEXT PRIMARY KEY,
+  barraca_id TEXT,
+  media_url TEXT,
+  media_type TEXT,
+  caption TEXT,
+  duration INTEGER,
+  created_at TIMESTAMPTZ,
+  expires_at TIMESTAMPTZ
+);
+
+CREATE TABLE IF NOT EXISTS business_hours (
+  id SERIAL PRIMARY KEY,
+  barraca_id TEXT,
+  day_of_week INTEGER,
+  is_open BOOLEAN,
+  open_time_utc TIME,
+  close_time_utc TIME,
+  notes TEXT
+);
+
+CREATE TABLE IF NOT EXISTS barracas (
+  id TEXT PRIMARY KEY,
+  name TEXT,
+  barraca_number TEXT,
+  location TEXT,
+  coordinates JSONB,
+  is_open BOOLEAN,
+  typical_hours TEXT,
+  description TEXT,
+  images TEXT[],
+  menu_preview TEXT[],
+  contact JSONB,
+  amenities TEXT[],
+  weather_dependent BOOLEAN,
+  cta_buttons JSONB,
+  created_at TIMESTAMPTZ,
+  updated_at TIMESTAMPTZ
+);
+
 -- Only run in UAT environment
 DO $$
 BEGIN

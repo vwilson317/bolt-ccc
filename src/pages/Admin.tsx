@@ -15,7 +15,10 @@ const Admin: React.FC = () => {
     adminLogout, 
     barracas, 
     deleteBarraca,
-    emailSubscriptions 
+    emailSubscriptions,
+    setWeatherOverride,
+    weatherOverride,
+    overrideExpiry
   } = useApp();
   const { trackAdminLogin, trackAdminAction } = useAnalytics();
   
@@ -27,6 +30,15 @@ const Admin: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'barracas' | 'stats' | 'emails' | 'analytics'>('barracas');
   const [editingBarraca, setEditingBarraca] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
+
+  // Helper function to format time until expiry
+  const formatTimeUntilExpiry = (expiry: Date) => {
+    const now = new Date();
+    const diff = expiry.getTime() - now.getTime();
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    return `${hours}h ${minutes}m`;
+  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -217,16 +229,71 @@ const Admin: React.FC = () => {
         {activeTab === 'barracas' && (
           <div>
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-semibold text-gray-900" data-lingo-skip>
-                {t('admin.manageBarracas')}
-              </h2>
-              <button
-                onClick={() => setShowForm(true)}
-                className="bg-gradient-to-r from-orange-500 to-red-600 text-white px-4 py-2 rounded-lg hover:from-orange-600 hover:to-red-700 transition-all duration-200 shadow-lg flex items-center"
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                {t('admin.addBarraca')}
-              </button>
+              <div className="flex items-center space-x-4">
+                <h2 className="text-xl font-semibold text-gray-900" data-lingo-skip>
+                  {t('admin.manageBarracas')}
+                </h2>
+                {weatherOverride && (
+                  <div className="bg-red-100 border border-red-300 text-red-800 px-3 py-1 rounded-full text-sm font-medium flex items-center">
+                    <EyeOff className="h-4 w-4 mr-1" />
+                    Weather Override Active
+                    {overrideExpiry && (
+                      <span className="ml-2 text-xs opacity-75">
+                        (expires in {formatTimeUntilExpiry(overrideExpiry)})
+                      </span>
+                    )}
+                  </div>
+                )}
+              </div>
+              <div className="flex space-x-3">
+                <button
+                  onClick={async () => {
+                    if (weatherOverride) {
+                      try {
+                        await setWeatherOverride(false);
+                        trackAdminAction('Disable Weather Override', 'Show Normal Status');
+                      } catch (error) {
+                        console.error('Failed to disable weather override:', error);
+                        alert('Failed to disable weather override. Please try again.');
+                      }
+                    } else {
+                      if (window.confirm('Enable weather override? This will show all barracas as closed in the UI (no database changes). The override will automatically clear at midnight.')) {
+                        try {
+                          await setWeatherOverride(true);
+                          trackAdminAction('Enable Weather Override', 'Show All Closed');
+                        } catch (error) {
+                          console.error('Failed to enable weather override:', error);
+                          alert('Failed to enable weather override. Please try again.');
+                        }
+                      }
+                    }
+                  }}
+                  className={`px-4 py-2 rounded-lg transition-all duration-200 shadow-lg flex items-center ${
+                    weatherOverride 
+                      ? 'bg-green-600 text-white hover:bg-green-700' 
+                      : 'bg-red-600 text-white hover:bg-red-700'
+                  }`}
+                >
+                  {weatherOverride ? (
+                    <>
+                      <Eye className="h-4 w-4 mr-2" />
+                      {t('admin.disableWeatherOverride')}
+                    </>
+                  ) : (
+                    <>
+                      <EyeOff className="h-4 w-4 mr-2" />
+                      {t('admin.enableWeatherOverride')}
+                    </>
+                  )}
+                </button>
+                <button
+                  onClick={() => setShowForm(true)}
+                  className="bg-gradient-to-r from-orange-500 to-red-600 text-white px-4 py-2 rounded-lg hover:from-orange-600 hover:to-red-700 transition-all duration-200 shadow-lg flex items-center"
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  {t('admin.addBarraca')}
+                </button>
+              </div>
             </div>
 
             {(showForm || editingBarraca) && (

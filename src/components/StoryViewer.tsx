@@ -34,7 +34,7 @@ const StoryViewer: React.FC = () => {
   const STORY_DURATION = 5000; // 5 seconds
   const UPDATE_INTERVAL = 50; // Update every 50ms for smooth progress
 
-  // Clear timer utility
+  // Clear timer utility - memoized to prevent recreation
   const clearTimer = useCallback(() => {
     if (timerRef.current) {
       clearInterval(timerRef.current);
@@ -42,7 +42,7 @@ const StoryViewer: React.FC = () => {
     }
   }, []);
 
-  // Start timer - ULTRA SIMPLIFIED
+  // Start timer - memoized with stable dependencies
   const startTimer = useCallback(() => {
     console.log('🚀 Starting timer for:', currentStory?.barracaName);
     
@@ -69,7 +69,7 @@ const StoryViewer: React.FC = () => {
         }, 100);
       }
     }, UPDATE_INTERVAL);
-  }, [clearTimer, updateProgress, currentMedia, markMediaAsViewed, nextMedia, currentStory?.barracaName]);
+  }, [clearTimer, updateProgress, currentMedia?.id, markMediaAsViewed, nextMedia, currentStory?.barracaName]);
 
   // Media loading handlers
   const handleMediaLoad = useCallback(() => {
@@ -162,7 +162,7 @@ const StoryViewer: React.FC = () => {
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [isStoryViewerOpen, viewState.isPlaying, viewState.isPaused, closeStoryViewer, previousMedia, nextMedia, pauseStory, resumeStory]);
+  }, [isStoryViewerOpen, viewState.isPlaying, viewState.isPaused]); // Removed function dependencies
 
   // Reset when media changes
   useEffect(() => {
@@ -172,7 +172,7 @@ const StoryViewer: React.FC = () => {
     setLoadError(false);
     resetProgress();
     progressRef.current = 0;
-  }, [currentMedia?.id, clearTimer, resetProgress]);
+  }, [currentMedia?.id]); // Removed function dependencies to prevent infinite loops
 
   // MAIN TIMER LOGIC - DEAD SIMPLE
   useEffect(() => {
@@ -209,9 +209,8 @@ const StoryViewer: React.FC = () => {
     isMediaReady,
     viewState.isPlaying,
     viewState.isPaused,
-    loadError,
-    startTimer,
-    clearTimer
+    loadError
+    // Removed startTimer and clearTimer from dependencies to prevent infinite loops
   ]);
 
   // Mark story as viewed
@@ -219,12 +218,17 @@ const StoryViewer: React.FC = () => {
     if (currentStory && isStoryViewerOpen) {
       markStoryAsViewed(currentStory.id);
     }
-  }, [currentStory?.id, isStoryViewerOpen, markStoryAsViewed]);
+  }, [currentStory?.id, isStoryViewerOpen]); // Removed markStoryAsViewed from dependencies
 
-  // Cleanup
+  // Cleanup - simplified to prevent dependency issues
   useEffect(() => {
-    return clearTimer;
-  }, [clearTimer]);
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+        timerRef.current = null;
+      }
+    };
+  }, []); // No dependencies needed for cleanup
 
   if (!isStoryViewerOpen || !currentStory || !currentMedia) {
     return null;

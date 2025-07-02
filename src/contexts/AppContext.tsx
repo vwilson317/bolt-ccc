@@ -4,6 +4,7 @@ import { fetchBarracas } from '../data/mockData';
 import { WeatherService } from '../services/weatherService';
 import { BarracaService } from '../services/barracaService';
 import { EmailService } from '../services/emailService';
+import { WeatherOverrideService, WeatherOverride } from '../services/weatherOverrideService';
 
 interface AppContextType {
   barracas: Barraca[];
@@ -14,9 +15,12 @@ interface AppContextType {
   isAdmin: boolean;
   emailSubscriptions: EmailSubscription[];
   currentLanguage?: string;
+  weatherOverride: boolean;
+  overrideExpiry: Date | null;
   updateSearchFilters: (filters: Partial<SearchFilters>) => void;
   addBarraca: (barraca: Omit<Barraca, 'id' | 'createdAt' | 'updatedAt'>) => Promise<Barraca>;
   updateBarraca: (id: string, updates: Partial<Barraca>) => Promise<Barraca>;
+  setWeatherOverride: (override: boolean) => Promise<void>;
   deleteBarraca: (id: string) => Promise<void>;
   subscribeEmail: (email: string) => Promise<boolean>;
   checkEmailSubscription: (email: string) => Promise<boolean>;
@@ -54,6 +58,8 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [emailSubscriptions, setEmailSubscriptions] = useState<EmailSubscription[]>([]);
   const [currentLanguage, setCurrentLanguage] = useState<string>('en');
+  const [weatherOverride, setWeatherOverride] = useState(false);
+  const [overrideExpiry, setOverrideExpiry] = useState<Date | null>(null);
 
   // Load barracas from database on mount
   useEffect(() => {
@@ -89,6 +95,22 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     loadEmailSubscriptions();
   }, []);
 
+  // Load weather override status from database on mount
+  useEffect(() => {
+    const loadWeatherOverride = async () => {
+      try {
+        const override = await WeatherOverrideService.getStatus();
+        setWeatherOverride(override.is_active);
+        setOverrideExpiry(override.expires_at);
+      } catch (error) {
+        console.error('Failed to load weather override status:', error);
+        // Keep default values if loading fails
+      }
+    };
+
+    loadWeatherOverride();
+  }, []);
+
   // Enhanced filter logic for comprehensive search
   const filteredBarracas = barracas.filter(barraca => {
     // Text search: name, barraca number, location
@@ -98,13 +120,14 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
       (barraca.barracaNumber && barraca.barracaNumber.toLowerCase().includes(searchQuery)) ||
       barraca.location.toLowerCase().includes(searchQuery);
     
-    // Status filter (all, open, closed)
+    // Status filter (all, open, closed) - respect weather override
+    const effectiveIsOpen = weatherOverride ? false : barraca.isOpen;
     const matchesStatus = searchFilters.status === 'all' ||
-      (searchFilters.status === 'open' && barraca.isOpen) ||
-      (searchFilters.status === 'closed' && !barraca.isOpen);
+      (searchFilters.status === 'open' && effectiveIsOpen) ||
+      (searchFilters.status === 'closed' && !effectiveIsOpen);
     
     // Legacy openNow filter (for backward compatibility)
-    const matchesOpenNow = !searchFilters.openNow || barraca.isOpen;
+    const matchesOpenNow = !searchFilters.openNow || effectiveIsOpen;
     
     // Location filter (neighborhood)
     const matchesLocation = searchFilters.location === '' ||
@@ -118,6 +141,47 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     refreshWeather();
   }, []);
 
+  // Subscribe to weather override changes (real-time)
+  useEffect(() => {
+    const subscription = WeatherOverrideService.subscribeToChanges((payload) => {
+      if (payload.eventType === 'INSERT' || payload.eventType === 'UPDATE') {
+        const newOverride = payload.new;
+        setWeatherOverride(newOverride.is_active);
+        setOverrideExpiry(newOverride.expires_at ? new Date(newOverride.expires_at) : null);
+      } else if (payload.eventType === 'DELETE') {
+        setWeatherOverride(false);
+        setOverrideExpiry(null);
+      }
+    });
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
+
+  // Check for weather override expiry every minute
+  useEffect(() => {
+    if (!weatherOverride || !overrideExpiry) return;
+    
+    const checkExpiry = async () => {
+      if (new Date() >= overrideExpiry) {
+        console.log('🌅 Weather override expired at midnight, reverting to normal display');
+        try {
+          await WeatherOverrideService.clearExpired();
+          // Don't set state here; let the real-time subscription update state
+        } catch (error) {
+          console.error('Failed to clear expired weather override:', error);
+        }
+      }
+    };
+    
+    // Check immediately
+    checkExpiry();
+    
+    // Set up interval
+    const interval = setInterval(checkExpiry, 60000);
+    
+    return () => clearInterval(interval);
+  }, [overrideExpiry]); // Remove weatherOverride from dependencies to prevent loops
   const updateSearchFilters = (filters: Partial<SearchFilters>) => {
     setSearchFilters(prev => ({ ...prev, ...filters }));
   };
@@ -156,6 +220,30 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     }
   };
 
+  const handleSetWeatherOverride = async (override: boolean) => {
+    try {
+      let expiryDate: Date | undefined;
+      
+      if (override) {
+        // Set expiry to next midnight
+        const now = new Date();
+        const tomorrow = new Date(now);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        tomorrow.setHours(0, 0, 0, 0);
+        expiryDate = tomorrow;
+      }
+
+      const success = await WeatherOverrideService.setStatus(override, expiryDate);
+      
+      if (success) {
+        setWeatherOverride(override);
+        setOverrideExpiry(expiryDate || null);
+      }
+    } catch (error) {
+      console.error('Failed to set weather override:', error);
+      throw error;
+    }
+  };
   const subscribeEmail = async (email: string): Promise<boolean> => {
     try {
       const success = await EmailService.subscribe(email);
@@ -231,9 +319,12 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     isAdmin,
     emailSubscriptions,
     currentLanguage,
+    weatherOverride,
+    overrideExpiry,
     updateSearchFilters,
     addBarraca,
     updateBarraca,
+    setWeatherOverride: handleSetWeatherOverride,
     deleteBarraca,
     subscribeEmail,
     checkEmailSubscription,
