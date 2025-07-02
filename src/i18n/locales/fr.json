@@ -73,6 +73,8 @@
     "editBarraca": "Modifier Barraca",
     "deleteBarraca": "Supprimer Barraca",
     "manageBarracas": "Gérer les Barracas",
+    "enableWeatherOverride": "Surcharge Météo: Afficher Toutes Fermées",
+    "disableWeatherOverride": "Désactiver la Surcharge Météo",
     "stats": "Analyses",
     "emails": "Abonnés Email",
     "credentials": "Identifiants démo: admin@cariocacoastal.com / admin123",

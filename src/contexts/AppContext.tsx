@@ -14,9 +14,12 @@ interface AppContextType {
   isAdmin: boolean;
   emailSubscriptions: EmailSubscription[];
   currentLanguage?: string;
+  weatherOverride: boolean;
+  overrideExpiry: Date | null;
   updateSearchFilters: (filters: Partial<SearchFilters>) => void;
   addBarraca: (barraca: Omit<Barraca, 'id' | 'createdAt' | 'updatedAt'>) => Promise<Barraca>;
   updateBarraca: (id: string, updates: Partial<Barraca>) => Promise<Barraca>;
+  setWeatherOverride: (override: boolean) => void;
   deleteBarraca: (id: string) => Promise<void>;
   subscribeEmail: (email: string) => Promise<boolean>;
   checkEmailSubscription: (email: string) => Promise<boolean>;
@@ -53,7 +56,9 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [emailSubscriptions, setEmailSubscriptions] = useState<EmailSubscription[]>([]);
-  const [currentLanguage, setCurrentLanguage] = useState<string>('en');
+  const [currentLanguage] = useState<string>('en');
+  const [weatherOverride, setWeatherOverride] = useState(false);
+  const [overrideExpiry, setOverrideExpiry] = useState<Date | null>(null);
 
   // Load barracas from database on mount
   useEffect(() => {
@@ -91,6 +96,9 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
 
   // Enhanced filter logic for comprehensive search
   const filteredBarracas = barracas.filter(barraca => {
+    // Apply weather override - if active, show all barracas as closed
+    const effectiveIsOpen = weatherOverride ? false : barraca.isOpen;
+    
     // Text search: name, barraca number, location
     const searchQuery = searchFilters.query.toLowerCase();
     const matchesQuery = searchQuery === '' || 
@@ -100,11 +108,11 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     
     // Status filter (all, open, closed)
     const matchesStatus = searchFilters.status === 'all' ||
-      (searchFilters.status === 'open' && barraca.isOpen) ||
-      (searchFilters.status === 'closed' && !barraca.isOpen);
+      (searchFilters.status === 'open' && effectiveIsOpen) ||
+      (searchFilters.status === 'closed' && !effectiveIsOpen);
     
     // Legacy openNow filter (for backward compatibility)
-    const matchesOpenNow = !searchFilters.openNow || barraca.isOpen;
+    const matchesOpenNow = !searchFilters.openNow || effectiveIsOpen;
     
     // Location filter (neighborhood)
     const matchesLocation = searchFilters.location === '' ||
@@ -117,6 +125,25 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   useEffect(() => {
     refreshWeather();
   }, []);
+
+  // Check for weather override expiry every minute
+  useEffect(() => {
+    const checkExpiry = () => {
+      if (weatherOverride && overrideExpiry && new Date() >= overrideExpiry) {
+        console.log('🌅 Weather override expired at midnight, reverting to normal display');
+        setWeatherOverride(false);
+        setOverrideExpiry(null);
+      }
+    };
+
+    // Check immediately
+    checkExpiry();
+
+    // Set up interval to check every minute
+    const interval = setInterval(checkExpiry, 60000);
+
+    return () => clearInterval(interval);
+  }, [weatherOverride, overrideExpiry]);
 
   const updateSearchFilters = (filters: Partial<SearchFilters>) => {
     setSearchFilters(prev => ({ ...prev, ...filters }));
@@ -153,6 +180,21 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     } catch (error) {
       console.error('Failed to delete barraca:', error);
       throw error;
+    }
+  };
+
+  const handleSetWeatherOverride = (override: boolean) => {
+    setWeatherOverride(override);
+    
+    if (override) {
+      // Set expiry to next midnight
+      const now = new Date();
+      const tomorrow = new Date(now);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      tomorrow.setHours(0, 0, 0, 0);
+      setOverrideExpiry(tomorrow);
+    } else {
+      setOverrideExpiry(null);
     }
   };
 
@@ -231,9 +273,12 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     isAdmin,
     emailSubscriptions,
     currentLanguage,
+    weatherOverride,
+    overrideExpiry,
     updateSearchFilters,
     addBarraca,
     updateBarraca,
+    setWeatherOverride: handleSetWeatherOverride,
     deleteBarraca,
     subscribeEmail,
     checkEmailSubscription,

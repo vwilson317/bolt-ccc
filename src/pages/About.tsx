@@ -67,12 +67,12 @@ const About: React.FC = () => {
       bio: 'Sales professional with a proven track record in building client relationships and driving business growth.',
       image: 'https://images.pexels.com/photos/1181319/pexels-photo-1181319.jpeg'
     },
-    // {
-    //   name: 'Chris Finn',
-    //   role: 'Quality Control Specialist',
-    //   bio: 'Detail-oriented professional focused on maintaining high standards and ensuring exceptional service quality.',
-    //   image: 'https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg'
-    // },
+    {
+      name: 'Chris Finn',
+      role: 'Quality Control Specialist',
+      bio: 'Detail-oriented professional focused on maintaining high standards and ensuring exceptional service quality.',
+      image: 'https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg'
+    },
     {
       name: 'Ricardo Del Razo',
       role: 'Head of Special Partnerships',

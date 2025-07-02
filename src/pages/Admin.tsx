@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Lock, Plus, Edit2, Trash2, Eye, EyeOff, Users, Mail, BarChart3 } from 'lucide-react';
+import { Lock, Plus, Edit2, Trash2, Eye, EyeOff, Mail, BarChart3 } from 'lucide-react';
 import { useApp } from '../contexts/AppContext';
 import { useAnalytics } from '../hooks/useAnalytics';
 import AdminBarracaForm from '../components/AdminBarracaForm';
@@ -15,6 +15,9 @@ const Admin: React.FC = () => {
     adminLogout, 
     barracas, 
     deleteBarraca,
+    weatherOverride,
+    overrideExpiry,
+    setWeatherOverride,
     emailSubscriptions 
   } = useApp();
   const { trackAdminLogin, trackAdminAction } = useAnalytics();
@@ -27,6 +30,27 @@ const Admin: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'barracas' | 'stats' | 'emails' | 'analytics'>('barracas');
   const [editingBarraca, setEditingBarraca] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
+  const [currentTime, setCurrentTime] = useState(new Date());
+
+  const formatTimeUntilExpiry = (expiry: Date) => {
+    const diff = expiry.getTime() - currentTime.getTime();
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    
+    if (hours > 0) {
+      return `${hours}h ${minutes}m`;
+    }
+    return `${minutes}m`;
+  };
+
+  // Update current time every minute for countdown
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 60000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,7 +63,7 @@ const Admin: React.FC = () => {
       if (!success) {
         setLoginError('Invalid credentials. Try admin@cariocacoastal.com / admin123');
       }
-    } catch (error) {
+    } catch {
       trackAdminLogin(false);
       setLoginError('Login failed. Please try again.');
     } finally {
@@ -217,16 +241,61 @@ const Admin: React.FC = () => {
         {activeTab === 'barracas' && (
           <div>
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-semibold text-gray-900" data-lingo-skip>
-                {t('admin.manageBarracas')}
-              </h2>
-              <button
-                onClick={() => setShowForm(true)}
-                className="bg-gradient-to-r from-orange-500 to-red-600 text-white px-4 py-2 rounded-lg hover:from-orange-600 hover:to-red-700 transition-all duration-200 shadow-lg flex items-center"
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                {t('admin.addBarraca')}
-              </button>
+              <div className="flex items-center space-x-4">
+                <h2 className="text-xl font-semibold text-gray-900" data-lingo-skip>
+                  {t('admin.manageBarracas')}
+                </h2>
+                {weatherOverride && (
+                  <div className="bg-red-100 border border-red-300 text-red-800 px-3 py-1 rounded-full text-sm font-medium flex items-center">
+                    <EyeOff className="h-4 w-4 mr-1" />
+                    Weather Override Active
+                    {overrideExpiry && (
+                      <span className="ml-2 text-xs opacity-75">
+                        (expires in {formatTimeUntilExpiry(overrideExpiry)})
+                      </span>
+                    )}
+                  </div>
+                )}
+              </div>
+              <div className="flex space-x-3">
+                <button
+                  onClick={() => {
+                    if (weatherOverride) {
+                      setWeatherOverride(false);
+                      trackAdminAction('Disable Weather Override', 'Show Normal Status');
+                    } else {
+                      if (window.confirm('Enable weather override? This will show all barracas as closed in the UI (no database changes). The override will automatically clear at midnight.')) {
+                        setWeatherOverride(true);
+                        trackAdminAction('Enable Weather Override', 'Show All Closed');
+                      }
+                    }
+                  }}
+                  className={`px-4 py-2 rounded-lg transition-all duration-200 shadow-lg flex items-center ${
+                    weatherOverride 
+                      ? 'bg-green-600 text-white hover:bg-green-700' 
+                      : 'bg-red-600 text-white hover:bg-red-700'
+                  }`}
+                >
+                  {weatherOverride ? (
+                    <>
+                      <Eye className="h-4 w-4 mr-2" />
+                      {t('admin.disableWeatherOverride')}
+                    </>
+                  ) : (
+                    <>
+                      <EyeOff className="h-4 w-4 mr-2" />
+                      {t('admin.enableWeatherOverride')}
+                    </>
+                  )}
+                </button>
+                <button
+                  onClick={() => setShowForm(true)}
+                  className="bg-gradient-to-r from-orange-500 to-red-600 text-white px-4 py-2 rounded-lg hover:from-orange-600 hover:to-red-700 transition-all duration-200 shadow-lg flex items-center"
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  {t('admin.addBarraca')}
+                </button>
+              </div>
             </div>
 
             {(showForm || editingBarraca) && (
