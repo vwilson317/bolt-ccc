@@ -45,8 +45,8 @@ function AppContent() {
         </Routes>
       </main>
       <StoryViewer />
-      <EnvironmentBadge />
-      <EnvironmentInfo />
+      {/* <EnvironmentBadge />
+      <EnvironmentInfo /> */}
     </div>
   );
 }
