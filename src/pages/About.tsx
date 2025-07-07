@@ -77,7 +77,7 @@ const About: React.FC = () => {
       name: 'Ricardo Del Razo',
       role: 'Head of Special Partnerships',
       bio: 'Strategic partnership expert with experience in developing and maintaining key business relationships.',
-      image: 'https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg'
+      image: 'https://pub-db19578f977b43e184c45b5084d7c029.r2.dev/editsV1/about%20edits/80-group-e-1.jpg'
     }
 
   ];

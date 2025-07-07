@@ -59,6 +59,8 @@
     "editBarraca": "Edit Barraca",
     "deleteBarraca": "Delete Barraca",
     "manageBarracas": "Manage Barracas",
+    "enableWeatherOverride": "Weather Override: Show All Closed",
+    "disableWeatherOverride": "Disable Weather Override",
     "stats": "Analytics",
     "emails": "Email Subscribers",
     "credentials": "Demo credentials: admin@cariocacoastal.com / admin123",
