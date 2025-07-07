@@ -30,21 +30,7 @@
     "filters": "Filters",
     "openNow": "Open Now",
     "location": "Location",
-    "clear": "Clear Filters",
-    "tips": {
-      "title": "Search Tips",
-      "number": "Number: 001",
-      "beach": "Beach: Ipanema",
-      "name": "Name: Sol e Mar",
-      "filter": "Filter by availability"
-    },
-    "examples": {
-      "try": "Try:",
-      "number": "001",
-      "name1": "Sol e Mar",
-      "name2": "Barraca 15",
-      "name3": "Carioca"
-    }
+    "clear": "Clear Filters"
   },
   "barraca": {
     "open": "Open",
@@ -132,7 +118,7 @@
   },
   "email": {
     "subscribe": "Join Loyalty Program",
-    "placeholder": "Enter your email for member updates",
+    "placeholder": "Enter your email",
     "submit": "Join Now",
     "joining": "Joining...",
     "welcome": "Welcome!",
@@ -150,9 +136,9 @@
   "home": {
     "yourBarraca": "Your Barraca, Your Way",
     "joinThousands": "Join thousands of loyal customers who use Carioca Coastal Club to stay connected with their favorite barracas",
-    "popularBarracas": "Popular Member Barracas",
+    "popularBarracas": "Popular Barracas",
     "popularDescription": "These barracas are loved by our community - check if your favorite is open and reserve your spot",
-    "viewAllPartners": "View All Partner Barracas",
+    "viewAllPartners": "View All Barracas",
     "whyJoin": "Why Join Carioca Coastal Club?",
     "whyJoinDescription": "More than just finding barracas - we're your connection to Rio's barraca culture",
     "exclusiveBenefits": "Exclusive Member Benefits",
@@ -160,7 +146,6 @@
     "joinToday": "Join the Club Today",
     "joinDescription": "Start enjoying member benefits at your favorite barracas. Get updates, reserve chairs, and never miss out on the perfect barraca day.",
     "stats": {
-      "partnerBarracas": "Partner Barracas",
       "availabilityUpdates": "Availability Updates",
       "neighborhoods": "Neighborhoods"
     },
