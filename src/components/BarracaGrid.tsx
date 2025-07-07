@@ -126,9 +126,9 @@ const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
                 <h3 className="text-lg md:text-xl font-bold text-gray-900 leading-tight">
                   {barraca.name}
                 </h3>
-                {/* Member Badge - Smaller, Right Aligned */}
+                {/* Partner Badge - Smaller, Right Aligned */}
                 <span className="bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded-md text-xs font-medium ml-2 flex-shrink-0">
-                  {t('barraca.member')}
+                  {t('barraca.partner')}
                 </span>
               </div>
               
