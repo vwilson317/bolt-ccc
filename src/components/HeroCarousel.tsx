@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ChevronLeft, ChevronRight, MapPin } from 'lucide-react';
 import { useApp } from '../contexts/AppContext';
+import { getEffectiveOpenStatus } from '../utils/environmentUtils';
 
 const HeroCarousel: React.FC = () => {
   const { t } = useTranslation();
-  const { barracas } = useApp();
+  const { barracas, weatherOverride } = useApp();
   const [currentSlide, setCurrentSlide] = useState(0);
 
   // Auto-advance slides
@@ -75,16 +76,21 @@ const HeroCarousel: React.FC = () => {
             <p className="text-gray-200 mb-2 sm:mb-3 md:mb-4 max-w-xl mx-auto text-xs sm:text-sm md:text-base">
               {barracas[currentSlide].description}
             </p>
-            <div className={`inline-flex items-center px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium ${
-              barracas[currentSlide].isOpen 
-                ? 'bg-green-500/20 text-green-300 border border-green-400/30' 
-                : 'bg-red-500/20 text-red-300 border border-red-400/30'
-            }`}>
-              <div className={`w-2 h-2 rounded-full mr-2 ${
-                barracas[currentSlide].isOpen ? 'bg-green-400' : 'bg-red-400'
-              }`} />
-              {barracas[currentSlide].isOpen ? t('barraca.open') : t('barraca.closed')}
-            </div>
+            {(() => {
+              const effectiveIsOpen = getEffectiveOpenStatus(barracas[currentSlide], weatherOverride);
+              return (
+                <div className={`inline-flex items-center px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium status-pulse ${
+                  effectiveIsOpen 
+                    ? 'bg-green-500/20 text-green-300 border border-green-400/30' 
+                    : 'bg-red-500/20 text-red-300 border border-red-400/30'
+                }`}>
+                  <div className={`w-2 h-2 rounded-full mr-2 dot-pulse ${
+                    effectiveIsOpen ? 'bg-green-400' : 'bg-red-400'
+                  }`} />
+                  {effectiveIsOpen ? t('barraca.open') : t('barraca.closed')}
+                </div>
+              );
+            })()}
           </div>
         </div>
       </div>

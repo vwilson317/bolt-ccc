@@ -2,6 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Barraca, CTAButtonConfig } from '../types';
 import { useStory } from '../contexts/StoryContext';
+import { useApp } from '../contexts/AppContext';
 import { 
   getCTAButtonsForBarraca, 
   handleCTAButtonClick, 
@@ -18,6 +19,7 @@ interface CTAButtonGroupProps {
     currentTime?: Date;
     isLoggedIn?: boolean;
     weatherConditions?: string;
+    weatherOverride?: boolean;
   };
 }
 
@@ -30,13 +32,14 @@ const CTAButtonGroup: React.FC<CTAButtonGroupProps> = ({
 }) => {
   const { t } = useTranslation();
   const { featureFlags } = useStory();
+  const { weatherOverride } = useApp();
 
   // Get appropriate CTA buttons based on feature flag and configuration
   const ctaButtons = getCTAButtonsForBarraca(
     barraca, 
     featureFlags.customCtaButtons, 
     t,
-    context
+    { ...context, weatherOverride }
   ).slice(0, maxButtons);
 
   if (ctaButtons.length === 0) {

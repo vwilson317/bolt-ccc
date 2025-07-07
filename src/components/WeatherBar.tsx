@@ -50,8 +50,8 @@ const WeatherBar: React.FC = () => {
 
           {/* Beach Conditions */}
           <div className="flex items-center space-x-3">
-            <div className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium text-white ${getBeachConditionColor(weather.beachConditions)}`}>
-              <div className="w-2 h-2 rounded-full bg-white mr-2" />
+            <div className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium text-white status-pulse ${getBeachConditionColor(weather.beachConditions)}`}>
+              <div className="w-2 h-2 rounded-full bg-white mr-2 dot-pulse" />
               {weather.beachConditions.charAt(0).toUpperCase() + weather.beachConditions.slice(1)}
             </div>
             <button

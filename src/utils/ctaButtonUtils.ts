@@ -131,16 +131,20 @@ export const shouldShowCTAButton = (
     currentTime?: Date;
     isLoggedIn?: boolean;
     weatherConditions?: string;
+    weatherOverride?: boolean;
   } = {}
 ): boolean => {
   if (!button.enabled) return false;
 
   const { visibilityConditions } = button;
-  const { currentTime = new Date(), isLoggedIn = false, weatherConditions = 'good' } = context;
+  const { currentTime = new Date(), isLoggedIn = false, weatherConditions = 'good', weatherOverride = false } = context;
 
-  // Check open/closed requirements
-  if (visibilityConditions.requiresOpen && !barraca.isOpen) return false;
-  if (visibilityConditions.requiresClosed && barraca.isOpen) return false;
+  // Calculate effective open status considering weather override
+  const effectiveIsOpen = weatherOverride ? false : barraca.isOpen;
+
+  // Check open/closed requirements using effective status
+  if (visibilityConditions.requiresOpen && !effectiveIsOpen) return false;
+  if (visibilityConditions.requiresClosed && effectiveIsOpen) return false;
 
   // Check member-only requirement
   if (visibilityConditions.memberOnly && !isLoggedIn) return false;
@@ -173,7 +177,7 @@ export const shouldShowCTAButton = (
     try {
       // Simple evaluation - in production, use a safer expression evaluator
       const condition = visibilityConditions.customCondition
-        .replace(/\$\{barraca\.isOpen\}/g, barraca.isOpen.toString())
+        .replace(/\$\{barraca\.isOpen\}/g, effectiveIsOpen.toString())
         .replace(/\$\{barraca\.location\}/g, `"${barraca.location}"`)
         .replace(/\$\{isLoggedIn\}/g, isLoggedIn.toString());
       

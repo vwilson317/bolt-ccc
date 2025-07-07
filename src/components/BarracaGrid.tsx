@@ -5,6 +5,8 @@ import { Barraca } from '../types';
 import StoryRing from './StoryRing';
 import CTAButtonGroup from './CTAButtonGroup';
 import { useStory } from '../contexts/StoryContext';
+import { useApp } from '../contexts/AppContext';
+import { getEffectiveOpenStatus } from '../utils/environmentUtils';
 
 interface BarracaGridProps {
   barracas: Barraca[];
@@ -13,6 +15,7 @@ interface BarracaGridProps {
 const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
   const { t } = useTranslation();
   const { stories, featureFlags } = useStory();
+  const { weatherOverride } = useApp();
   const [expandedCards, setExpandedCards] = useState<Set<string>>(new Set());
 
   const getAmenityIcon = (amenity: string) => {
@@ -75,16 +78,21 @@ const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
             
             {/* Status Badge - Larger for Mobile */}
             <div className="absolute top-3 right-3">
-              <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                barraca.isOpen 
-                  ? 'bg-green-500 text-white' 
-                  : 'bg-red-500 text-white'
-              }`}>
-                <div className={`w-1.5 h-1.5 rounded-full mr-1.5 ${
-                  barraca.isOpen ? 'bg-green-200' : 'bg-red-200'
-                }`} />
-                {barraca.isOpen ? t('barraca.open') : t('barraca.closed')}
-              </span>
+              {(() => {
+                const effectiveIsOpen = getEffectiveOpenStatus(barraca, weatherOverride);
+                return (
+                  <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium status-pulse ${
+                    effectiveIsOpen 
+                      ? 'bg-green-500 text-white' 
+                      : 'bg-red-500 text-white'
+                  }`}>
+                    <div className={`w-1.5 h-1.5 rounded-full mr-1.5 dot-pulse ${
+                      effectiveIsOpen ? 'bg-green-200' : 'bg-red-200'
+                    }`} />
+                    {effectiveIsOpen ? t('barraca.open') : t('barraca.closed')}
+                  </span>
+                );
+              })()}
             </div>
 
             {/* Barraca Number - Bottom Left */}

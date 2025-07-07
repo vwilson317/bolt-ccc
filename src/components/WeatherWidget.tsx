@@ -67,8 +67,8 @@ const WeatherWidget: React.FC = () => {
           </div>
         </div>
         
-        <div className={`flex items-center px-3 py-1 rounded-full text-xs font-medium text-white ${getBeachConditionColor(weather.beachConditions)}`}>
-          <div className="w-1.5 h-1.5 rounded-full bg-white mr-1.5" />
+        <div className={`flex items-center px-3 py-1 rounded-full text-xs font-medium text-white status-pulse ${getBeachConditionColor(weather.beachConditions)}`}>
+          <div className="w-1.5 h-1.5 rounded-full bg-white mr-1.5 dot-pulse" />
           {weather.beachConditions.charAt(0).toUpperCase() + weather.beachConditions.slice(1)}
         </div>
       </div>

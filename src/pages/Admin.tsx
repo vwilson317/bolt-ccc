@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Lock, Plus, Edit2, Trash2, Eye, EyeOff, Users, Mail, BarChart3 } from 'lucide-react';
 import { useApp } from '../contexts/AppContext';
 import { useAnalytics } from '../hooks/useAnalytics';
+import { getEffectiveOpenStatus } from '../utils/environmentUtils';
 import AdminBarracaForm from '../components/AdminBarracaForm';
 import AdminStats from '../components/AdminStats';
 import AnalyticsDashboard from '../components/AnalyticsDashboard';
@@ -270,7 +271,7 @@ const Admin: React.FC = () => {
                   }}
                   className={`px-4 py-2 rounded-lg transition-all duration-200 shadow-lg flex items-center ${
                     weatherOverride 
-                      ? 'bg-green-600 text-white hover:bg-green-700' 
+                      ? 'bg-green-600 text-white hover:bg-green-700 status-pulse-fast' 
                       : 'bg-red-600 text-white hover:bg-red-700'
                   }`}
                 >
@@ -360,13 +361,18 @@ const Admin: React.FC = () => {
                           {barraca.location}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                            barraca.isOpen
-                              ? 'bg-green-100 text-green-800'
-                              : 'bg-red-100 text-red-800'
-                          }`}>
-                            {barraca.isOpen ? t('barraca.open') : t('barraca.closed')}
-                          </span>
+                          {(() => {
+                            const effectiveIsOpen = getEffectiveOpenStatus(barraca, weatherOverride);
+                            return (
+                              <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full status-pulse ${
+                                effectiveIsOpen
+                                  ? 'bg-green-100 text-green-800'
+                                  : 'bg-red-100 text-red-800'
+                              }`}>
+                                {effectiveIsOpen ? t('barraca.open') : t('barraca.closed')}
+                              </span>
+                            );
+                          })()}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                           {barraca.updatedAt.toLocaleDateString()}

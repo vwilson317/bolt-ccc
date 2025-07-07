@@ -188,3 +188,13 @@ export const validateEnvironmentData = (data: any, type: string): boolean => {
   
   return true
 }
+
+/**
+ * Calculates the effective open status of a barraca considering weather override
+ * @param barraca - The barraca object
+ * @param weatherOverride - Whether weather override is active
+ * @returns The effective open status (true if open, false if closed)
+ */
+export const getEffectiveOpenStatus = (barraca: { isOpen: boolean }, weatherOverride: boolean): boolean => {
+  return weatherOverride ? false : barraca.isOpen;
+};

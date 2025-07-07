@@ -23,3 +23,8 @@ dist-ssr
 *.sln
 *.sw?
 .env
+supabase/.temp/gotrue-version
+supabase/.temp/pooler-url
+supabase/.temp/postgres-version
+supabase/.temp/project-ref
+supabase/.temp/rest-version
