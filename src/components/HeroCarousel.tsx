@@ -9,33 +9,36 @@ const HeroCarousel: React.FC = () => {
   const { barracas, weatherOverride } = useApp();
   const [currentSlide, setCurrentSlide] = useState(0);
 
+  // Filter to only partnered barracas for hero display
+  const partneredBarracas = barracas.filter(barraca => barraca.partnered);
+
   // Auto-advance slides
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % barracas.length);
+      setCurrentSlide((prev) => (prev + 1) % partneredBarracas.length);
     }, 5000);
     return () => clearInterval(timer);
-  }, [barracas.length]);
+  }, [partneredBarracas.length]);
 
   const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % barracas.length);
+    setCurrentSlide((prev) => (prev + 1) % partneredBarracas.length);
   };
 
   const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + barracas.length) % barracas.length);
+    setCurrentSlide((prev) => (prev - 1 + partneredBarracas.length) % partneredBarracas.length);
   };
 
   const goToSlide = (index: number) => {
     setCurrentSlide(index);
   };
 
-  if (barracas.length === 0) return null;
+  if (partneredBarracas.length === 0) return null;
 
   return (
     <div className="relative h-[66vh] sm:h-[70vh] md:h-screen overflow-hidden">
       {/* Background Images with Parallax Effect */}
       <div className="absolute inset-0">
-        {barracas.map((barraca, index) => (
+        {partneredBarracas.map((barraca, index) => (
           <div
             key={barraca.id}
             className={`absolute inset-0 transition-opacity duration-1000 ${
@@ -68,16 +71,16 @@ const HeroCarousel: React.FC = () => {
           <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-3 sm:p-4 md:p-6 border border-white/20">
             <div className="flex items-center justify-center mb-2 sm:mb-3 md:mb-4">
               <MapPin className="h-3 w-3 sm:h-4 sm:w-4 md:h-5 md:w-5 mr-2 text-sky-300" />
-              <span className="text-sm sm:text-base md:text-lg font-semibold">{barracas[currentSlide].location}</span>
-            </div>
-            <h3 className="text-lg sm:text-xl md:text-3xl font-bold mb-1 sm:mb-2">
-              {barracas[currentSlide].name}
-            </h3>
-            <p className="text-gray-200 mb-2 sm:mb-3 md:mb-4 max-w-xl mx-auto text-xs sm:text-sm md:text-base">
-              {barracas[currentSlide].description}
-            </p>
-            {(() => {
-              const effectiveIsOpen = getEffectiveOpenStatus(barracas[currentSlide], weatherOverride);
+                          <span className="text-sm sm:text-base md:text-lg font-semibold">{partneredBarracas[currentSlide].location}</span>
+          </div>
+          <h3 className="text-lg sm:text-xl md:text-3xl font-bold mb-1 sm:mb-2">
+            {partneredBarracas[currentSlide].name}
+          </h3>
+          <p className="text-gray-200 mb-2 sm:mb-3 md:mb-4 max-w-xl mx-auto text-xs sm:text-sm md:text-base">
+            {partneredBarracas[currentSlide].description}
+          </p>
+          {(() => {
+            const effectiveIsOpen = getEffectiveOpenStatus(partneredBarracas[currentSlide], weatherOverride);
               return (
                 <div className={`inline-flex items-center px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium status-pulse ${
                   effectiveIsOpen 
@@ -111,7 +114,7 @@ const HeroCarousel: React.FC = () => {
 
       {/* Slide Indicators */}
       <div className="absolute bottom-4 sm:bottom-6 md:bottom-8 left-1/2 transform -translate-x-1/2 z-20 flex space-x-2">
-        {barracas.map((_, index) => (
+        {partneredBarracas.map((_, index) => (
           <button
             key={index}
             onClick={() => goToSlide(index)}

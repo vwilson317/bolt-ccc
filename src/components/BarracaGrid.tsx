@@ -4,6 +4,7 @@ import { MapPin, Clock, MessageCircle, Instagram, Wifi, Umbrella, Hash, Users, C
 import { Barraca } from '../types';
 import StoryRing from './StoryRing';
 import CTAButtonGroup from './CTAButtonGroup';
+import BarracaDetail from './BarracaDetail';
 import { useStory } from '../contexts/StoryContext';
 import { useApp } from '../contexts/AppContext';
 import { getEffectiveOpenStatus } from '../utils/environmentUtils';
@@ -17,6 +18,7 @@ const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
   const { stories, featureFlags } = useStory();
   const { weatherOverride } = useApp();
   const [expandedCards, setExpandedCards] = useState<Set<string>>(new Set());
+  const [selectedBarraca, setSelectedBarraca] = useState<Barraca | null>(null);
 
   const getAmenityIcon = (amenity: string) => {
     switch (amenity.toLowerCase()) {
@@ -64,7 +66,13 @@ const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
       {barracas.map((barraca) => (
-        <div key={barraca.id} className="bg-white rounded-xl md:rounded-2xl shadow-md hover:shadow-lg transition-all duration-200 overflow-hidden flex flex-col">
+        <div 
+          key={barraca.id} 
+          className={`bg-white rounded-xl md:rounded-2xl shadow-md hover:shadow-lg transition-all duration-200 overflow-hidden flex flex-col ${
+            barraca.partnered ? 'cursor-pointer' : ''
+          }`}
+          onClick={() => barraca.partnered && setSelectedBarraca(barraca)}
+        >
           {/* Mobile-Optimized Image Section */}
           <div className="relative h-40 md:h-48 overflow-hidden flex-shrink-0">
             <img
@@ -126,10 +134,12 @@ const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
                 <h3 className="text-lg md:text-xl font-bold text-gray-900 leading-tight">
                   {barraca.name}
                 </h3>
-                {/* Partner Badge - Smaller, Right Aligned */}
-                <span className="bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded-md text-xs font-medium ml-2 flex-shrink-0">
-                  {t('barraca.partner')}
-                </span>
+                {/* Partner Badge - Only show for partnered barracas */}
+                {barraca.partnered && (
+                  <span className="bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded-md text-xs font-medium ml-2 flex-shrink-0">
+                    {t('barraca.partner')}
+                  </span>
+                )}
               </div>
               
               {/* Location & Hours - Simplified */}
@@ -288,6 +298,15 @@ const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
           </div>
         </div>
       ))}
+      
+      {/* Barraca Detail Modal */}
+      {selectedBarraca && (
+        <BarracaDetail
+          barraca={selectedBarraca}
+          onClose={() => setSelectedBarraca(null)}
+          weatherOverride={weatherOverride}
+        />
+      )}
     </div>
   );
 };

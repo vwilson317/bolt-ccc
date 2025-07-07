@@ -24,6 +24,7 @@ export interface Database {
           contact: Json
           amenities: string[]
           weather_dependent: boolean
+          partnered: boolean
           cta_buttons: Json
           created_at: string
           updated_at: string
@@ -42,6 +43,7 @@ export interface Database {
           contact?: Json
           amenities?: string[]
           weather_dependent?: boolean
+          partnered?: boolean
           cta_buttons?: Json
           created_at?: string
           updated_at?: string
@@ -60,6 +62,7 @@ export interface Database {
           contact?: Json
           amenities?: string[]
           weather_dependent?: boolean
+          partnered?: boolean
           cta_buttons?: Json
           created_at?: string
           updated_at?: string

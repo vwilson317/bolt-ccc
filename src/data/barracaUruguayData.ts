@@ -699,6 +699,7 @@ export const barracaUruguayData: Barraca = {
     'Style Advisory'
   ],
   weatherDependent: false,
+  partnered: true,
   createdAt: new Date('2023-06-15'),
   updatedAt: new Date('2024-01-20'),
   ctaButtons: barracaUruguayCTAButtons

@@ -23,6 +23,7 @@ const transformBarracaFromDB = (row: BarracaRow): Barraca => ({
   contact: row.contact as any,
   amenities: row.amenities,
   weatherDependent: row.weather_dependent,
+  partnered: row.partnered,
   ctaButtons: row.cta_buttons as any,
   createdAt: new Date(row.created_at),
   updatedAt: new Date(row.updated_at)
@@ -42,6 +43,7 @@ const transformBarracaToDB = (barraca: Omit<Barraca, 'id' | 'createdAt' | 'updat
   contact: barraca.contact,
   amenities: barraca.amenities,
   weather_dependent: barraca.weatherDependent,
+  partnered: barraca.partnered,
   cta_buttons: (barraca.ctaButtons as unknown as Json) || []
 })
 
@@ -253,6 +255,7 @@ export class BarracaService {
       if (updates.contact !== undefined) updateData.contact = updates.contact
       if (updates.amenities !== undefined) updateData.amenities = updates.amenities
       if (updates.weatherDependent !== undefined) updateData.weather_dependent = updates.weatherDependent
+      if (updates.partnered !== undefined) updateData.partnered = updates.partnered
       if (updates.ctaButtons !== undefined) updateData.cta_buttons = updates.ctaButtons as unknown as Json
 
       const { data, error } = await supabase

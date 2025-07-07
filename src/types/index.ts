@@ -22,6 +22,7 @@ export interface Barraca {
   };
   amenities: string[];
   weatherDependent: boolean;
+  partnered: boolean; // Partnered barracas get special treatment
   createdAt: Date;
   updatedAt: Date;
   ctaButtons?: CTAButtonConfig[]; // New configurable CTA buttons

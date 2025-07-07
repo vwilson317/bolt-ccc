@@ -46,7 +46,14 @@
     "partner": "Partner",
     "showMore": "Show More",
     "showLess": "Show Less",
-    "moreItems": "+{count} more"
+    "moreItems": "+{count} more",
+    "about": "About",
+    "menu": "Menu",
+    "amenities": "Amenities",
+    "contact": "Contact",
+    "website": "Website",
+    "whatsapp": "WhatsApp",
+    "call": "Call"
   },
   "admin": {
     "login": "Admin Login",
