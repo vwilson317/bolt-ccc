@@ -55,7 +55,7 @@ const Discover: React.FC = () => {
     updateSearchFilters({ status });
   };
 
-  const handleLocationsChange = (locations: string[]) => {
+  const handleLocationsChange = React.useCallback((locations: string[]) => {
     // If only one location is selected, use it as the main location filter
     // Otherwise, we could implement a more complex filter logic here
     if (locations.length === 1) {
@@ -67,7 +67,7 @@ const Discover: React.FC = () => {
     } else {
       updateSearchFilters({ location: '' });
     }
-  };
+  }, [updateSearchFilters]);
 
   const clearFilters = () => {
     updateSearchFilters({ query: '', openNow: false, location: '', status: 'all' });

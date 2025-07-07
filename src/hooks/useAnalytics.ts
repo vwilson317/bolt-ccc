@@ -104,12 +104,18 @@ export const useAnalytics = () => {
     try {
       if ('performance' in window) {
         const observer = new PerformanceObserver((list) => {
-          for (const entry of list.getEntries()) {
-            if (entry.entryType === 'navigation') {
-              const navEntry = entry as PerformanceNavigationTiming;
-              trackPerformance('Page Load Time', navEntry.loadEventEnd - navEntry.loadEventStart);
-              trackPerformance('DOM Content Loaded', navEntry.domContentLoadedEventEnd - navEntry.domContentLoadedEventStart);
+          try {
+            for (const entry of list.getEntries()) {
+              if (entry.entryType === 'navigation') {
+                const navEntry = entry as PerformanceNavigationTiming;
+                if (trackPerformance && typeof trackPerformance === 'function') {
+                  trackPerformance('Page Load Time', navEntry.loadEventEnd - navEntry.loadEventStart);
+                  trackPerformance('DOM Content Loaded', navEntry.domContentLoadedEventEnd - navEntry.domContentLoadedEventStart);
+                }
+              }
             }
+          } catch (error) {
+            console.warn('⚠️ Performance observer callback failed:', error);
           }
         });
         

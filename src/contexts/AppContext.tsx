@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import { Barraca, WeatherData, SearchFilters, EmailSubscription } from '../types';
 import { fetchBarracas } from '../data/mockData';
 import { WeatherService } from '../services/weatherService';
@@ -182,11 +182,11 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     
     return () => clearInterval(interval);
   }, [overrideExpiry]); // Remove weatherOverride from dependencies to prevent loops
-  const updateSearchFilters = (filters: Partial<SearchFilters>) => {
+  const updateSearchFilters = useCallback((filters: Partial<SearchFilters>) => {
     setSearchFilters(prev => ({ ...prev, ...filters }));
-  };
+  }, []);
 
-  const addBarraca = async (barracaData: Omit<Barraca, 'id' | 'createdAt' | 'updatedAt'>) => {
+  const addBarraca = useCallback(async (barracaData: Omit<Barraca, 'id' | 'createdAt' | 'updatedAt'>) => {
     try {
       const newBarraca = await BarracaService.create(barracaData);
       setBarracas(prev => [...prev, newBarraca]);
@@ -195,9 +195,9 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
       console.error('Failed to add barraca:', error);
       throw error;
     }
-  };
+  }, []);
 
-  const updateBarraca = async (id: string, updates: Partial<Barraca>) => {
+  const updateBarraca = useCallback(async (id: string, updates: Partial<Barraca>) => {
     try {
       const updatedBarraca = await BarracaService.update(id, updates);
       setBarracas(prev => prev.map(barraca => 
@@ -208,9 +208,9 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
       console.error('Failed to update barraca:', error);
       throw error;
     }
-  };
+  }, []);
 
-  const deleteBarraca = async (id: string) => {
+  const deleteBarraca = useCallback(async (id: string) => {
     try {
       await BarracaService.delete(id);
       setBarracas(prev => prev.filter(barraca => barraca.id !== id));
@@ -218,9 +218,9 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
       console.error('Failed to delete barraca:', error);
       throw error;
     }
-  };
+  }, []);
 
-  const handleSetWeatherOverride = async (override: boolean) => {
+  const handleSetWeatherOverride = useCallback(async (override: boolean) => {
     try {
       let expiryDate: Date | undefined;
       
@@ -243,8 +243,8 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
       console.error('Failed to set weather override:', error);
       throw error;
     }
-  };
-  const subscribeEmail = async (email: string): Promise<boolean> => {
+  }, []);
+  const subscribeEmail = useCallback(async (email: string): Promise<boolean> => {
     try {
       const success = await EmailService.subscribe(email);
       if (success) {
@@ -257,9 +257,9 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
       console.error('Failed to subscribe email:', error);
       return false;
     }
-  };
+  }, []);
 
-  const checkEmailSubscription = async (email: string): Promise<boolean> => {
+  const checkEmailSubscription = useCallback(async (email: string): Promise<boolean> => {
     try {
       const subscription = await EmailService.getByEmail(email);
       return subscription !== null;
@@ -267,22 +267,22 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
       console.error('Failed to check email subscription:', error);
       return false;
     }
-  };
+  }, []);
 
-  const adminLogin = async (email: string, password: string): Promise<boolean> => {
+  const adminLogin = useCallback(async (email: string, password: string): Promise<boolean> => {
     // Mock admin authentication
     if (email === 'admin@cariocacoastal.com' && password === 'admin123') {
       setIsAdmin(true);
       return true;
     }
     return false;
-  };
+  }, []);
 
-  const adminLogout = () => {
+  const adminLogout = useCallback(() => {
     setIsAdmin(false);
-  };
+  }, []);
 
-  const refreshWeather = async () => {
+  const refreshWeather = useCallback(async () => {
     setIsLoading(true);
     try {
       const weatherData = await WeatherService.getCurrentWeather();
@@ -308,7 +308,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
   const value: AppContextType = {
     barracas,

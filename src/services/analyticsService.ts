@@ -30,7 +30,6 @@ class AnalyticsService {
 
     try {
       ReactGA.initialize(this.measurementId, {
-        debug: import.meta.env.DEV,
         gaOptions: {
           siteSpeedSampleRate: 100
         }
@@ -125,7 +124,11 @@ class AnalyticsService {
 
   // Track performance metrics
   trackPerformance(metric: string, value: number) {
-    this.trackEvent('Performance', metric, undefined, Math.round(value));
+    try {
+      this.trackEvent('Performance', metric, undefined, Math.round(value));
+    } catch (error) {
+      console.warn('⚠️ Performance tracking failed:', error);
+    }
   }
 
   // Track errors
@@ -209,33 +212,220 @@ try {
 
 export const analytics = analyticsInstance;
 
-// Export individual tracking functions for convenience
-export const {
-  init: initAnalytics,
-  trackPageView,
-  trackEvent,
-  trackBarracaView,
-  trackBarracaFilter,
-  trackBarracaSearch,
-  trackWeatherView,
-  trackWeatherRefresh,
-  trackStoryView,
-  trackStoryShare,
-  trackEmailSubscription,
-  trackLanguageChange,
-  trackAdminLogin,
-  trackAdminAction,
-  trackPerformance,
-  trackError,
-  trackUserJourney,
-  trackDeviceType,
-  trackScreenSize,
-  trackTimeOnPage,
-  trackScrollDepth,
-  trackCTAClick,
-  trackExternalLink,
-  trackSocialShare,
-  trackFormSubmission,
-  trackPWAInstall,
-  getStatus: getAnalyticsStatus
-} = analytics; 
+// Export individual tracking functions for convenience with safety checks
+export const initAnalytics = () => {
+  try {
+    return analytics?.init?.();
+  } catch (error) {
+    console.warn('⚠️ Analytics initialization failed:', error);
+  }
+};
+
+export const trackPageView = (path: string, title?: string) => {
+  try {
+    return analytics?.trackPageView?.(path, title);
+  } catch (error) {
+    console.warn('⚠️ Page view tracking failed:', error);
+  }
+};
+
+export const trackEvent = (category: string, action: string, label?: string, value?: number) => {
+  try {
+    return analytics?.trackEvent?.(category, action, label, value);
+  } catch (error) {
+    console.warn('⚠️ Event tracking failed:', error);
+  }
+};
+
+export const trackBarracaView = (barracaId: string, barracaName: string) => {
+  try {
+    return analytics?.trackBarracaView?.(barracaId, barracaName);
+  } catch (error) {
+    console.warn('⚠️ Barraca view tracking failed:', error);
+  }
+};
+
+export const trackBarracaFilter = (filterType: string, filterValue: string) => {
+  try {
+    return analytics?.trackBarracaFilter?.(filterType, filterValue);
+  } catch (error) {
+    console.warn('⚠️ Barraca filter tracking failed:', error);
+  }
+};
+
+export const trackBarracaSearch = (searchTerm: string) => {
+  try {
+    return analytics?.trackBarracaSearch?.(searchTerm);
+  } catch (error) {
+    console.warn('⚠️ Barraca search tracking failed:', error);
+  }
+};
+
+export const trackWeatherView = (location: string) => {
+  try {
+    return analytics?.trackWeatherView?.(location);
+  } catch (error) {
+    console.warn('⚠️ Weather view tracking failed:', error);
+  }
+};
+
+export const trackWeatherRefresh = (location: string) => {
+  try {
+    return analytics?.trackWeatherRefresh?.(location);
+  } catch (error) {
+    console.warn('⚠️ Weather refresh tracking failed:', error);
+  }
+};
+
+export const trackStoryView = (storyId: string, storyTitle: string) => {
+  try {
+    return analytics?.trackStoryView?.(storyId, storyTitle);
+  } catch (error) {
+    console.warn('⚠️ Story view tracking failed:', error);
+  }
+};
+
+export const trackStoryShare = (storyId: string, storyTitle: string, platform: string) => {
+  try {
+    return analytics?.trackStoryShare?.(storyId, storyTitle, platform);
+  } catch (error) {
+    console.warn('⚠️ Story share tracking failed:', error);
+  }
+};
+
+export const trackEmailSubscription = (email: string, preferences?: any) => {
+  try {
+    return analytics?.trackEmailSubscription?.(email, preferences);
+  } catch (error) {
+    console.warn('⚠️ Email subscription tracking failed:', error);
+  }
+};
+
+export const trackLanguageChange = (fromLang: string, toLang: string) => {
+  try {
+    return analytics?.trackLanguageChange?.(fromLang, toLang);
+  } catch (error) {
+    console.warn('⚠️ Language change tracking failed:', error);
+  }
+};
+
+export const trackAdminLogin = (success: boolean) => {
+  try {
+    return analytics?.trackAdminLogin?.(success);
+  } catch (error) {
+    console.warn('⚠️ Admin login tracking failed:', error);
+  }
+};
+
+export const trackAdminAction = (action: string, details?: string) => {
+  try {
+    return analytics?.trackAdminAction?.(action, details);
+  } catch (error) {
+    console.warn('⚠️ Admin action tracking failed:', error);
+  }
+};
+
+export const trackPerformance = (metric: string, value: number) => {
+  try {
+    return analytics?.trackPerformance?.(metric, value);
+  } catch (error) {
+    console.warn('⚠️ Performance tracking failed:', error);
+  }
+};
+
+export const trackError = (error: string, context?: string) => {
+  try {
+    return analytics?.trackError?.(error, context);
+  } catch (err) {
+    console.warn('⚠️ Error tracking failed:', err);
+  }
+};
+
+export const trackUserJourney = (step: string, details?: string) => {
+  try {
+    return analytics?.trackUserJourney?.(step, details);
+  } catch (error) {
+    console.warn('⚠️ User journey tracking failed:', error);
+  }
+};
+
+export const trackDeviceType = () => {
+  try {
+    return analytics?.trackDeviceType?.();
+  } catch (error) {
+    console.warn('⚠️ Device type tracking failed:', error);
+  }
+};
+
+export const trackScreenSize = () => {
+  try {
+    return analytics?.trackScreenSize?.();
+  } catch (error) {
+    console.warn('⚠️ Screen size tracking failed:', error);
+  }
+};
+
+export const trackTimeOnPage = (page: string, timeSpent: number) => {
+  try {
+    return analytics?.trackTimeOnPage?.(page, timeSpent);
+  } catch (error) {
+    console.warn('⚠️ Time on page tracking failed:', error);
+  }
+};
+
+export const trackScrollDepth = (page: string, depth: number) => {
+  try {
+    return analytics?.trackScrollDepth?.(page, depth);
+  } catch (error) {
+    console.warn('⚠️ Scroll depth tracking failed:', error);
+  }
+};
+
+export const trackCTAClick = (ctaType: string, ctaText: string, page: string) => {
+  try {
+    return analytics?.trackCTAClick?.(ctaType, ctaText, page);
+  } catch (error) {
+    console.warn('⚠️ CTA click tracking failed:', error);
+  }
+};
+
+export const trackExternalLink = (url: string, page: string) => {
+  try {
+    return analytics?.trackExternalLink?.(url, page);
+  } catch (error) {
+    console.warn('⚠️ External link tracking failed:', error);
+  }
+};
+
+export const trackSocialShare = (platform: string, content: string) => {
+  try {
+    return analytics?.trackSocialShare?.(platform, content);
+  } catch (error) {
+    console.warn('⚠️ Social share tracking failed:', error);
+  }
+};
+
+export const trackFormSubmission = (formName: string, success: boolean) => {
+  try {
+    return analytics?.trackFormSubmission?.(formName, success);
+  } catch (error) {
+    console.warn('⚠️ Form submission tracking failed:', error);
+  }
+};
+
+export const trackPWAInstall = (prompted: boolean, installed: boolean) => {
+  try {
+    return analytics?.trackPWAInstall?.(prompted, installed);
+  } catch (error) {
+    console.warn('⚠️ PWA install tracking failed:', error);
+  }
+};
+
+export const getAnalyticsStatus = () => {
+  try {
+    return analytics?.getStatus?.() || { isInitialized: false, measurementId: 'Not Configured', environment: 'unknown' };
+  } catch (error) {
+    console.warn('⚠️ Analytics status check failed:', error);
+    return { isInitialized: false, measurementId: 'Error', environment: 'unknown' };
+  }
+}; 
