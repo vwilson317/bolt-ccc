@@ -31,6 +31,7 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
     },
     amenities: [''],
     weatherDependent: false,
+    partnered: false,
     ctaButtons: [] as CTAButtonConfig[]
   });
 
@@ -74,9 +75,14 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
           description: barraca.description,
           images: barraca.images,
           menuPreview: barraca.menuPreview,
-          contact: barraca.contact,
+          contact: {
+            phone: barraca.contact.phone || '',
+            email: barraca.contact.email || '',
+            website: barraca.contact.website || ''
+          },
           amenities: barraca.amenities,
           weatherDependent: barraca.weatherDependent,
+          partnered: barraca.partnered,
           ctaButtons: barraca.ctaButtons || []
         });
       }
@@ -247,7 +253,7 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
         </div>
 
         {/* Availability and Hours */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               {t('admin.form.availability')}
@@ -272,6 +278,10 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
             />
           </div>
+        </div>
+
+        {/* Settings */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="flex items-center">
             <label className="flex items-center">
               <input
@@ -281,6 +291,17 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
                 className="h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300 rounded"
               />
               <span className="ml-2 text-sm text-gray-700">{t('admin.form.weatherDependent')}</span>
+            </label>
+          </div>
+          <div className="flex items-center">
+            <label className="flex items-center">
+              <input
+                type="checkbox"
+                checked={formData.partnered}
+                onChange={(e) => setFormData(prev => ({ ...prev, partnered: e.target.checked }))}
+                className="h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300 rounded"
+              />
+              <span className="ml-2 text-sm text-gray-700">{t('admin.form.partnered')}</span>
             </label>
           </div>
         </div>

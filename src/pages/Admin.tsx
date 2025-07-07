@@ -328,6 +328,9 @@ const Admin: React.FC = () => {
                         {t('admin.table.availability')}
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        {t('admin.table.partnered')}
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         {t('admin.table.updated')}
                       </th>
                       <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -373,6 +376,15 @@ const Admin: React.FC = () => {
                               </span>
                             );
                           })()}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                            barraca.partnered
+                              ? 'bg-yellow-100 text-yellow-800'
+                              : 'bg-gray-100 text-gray-600'
+                          }`}>
+                            {barraca.partnered ? t('barraca.partner') : t('admin.table.notPartnered')}
+                          </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                           {barraca.updatedAt.toLocaleDateString()}
