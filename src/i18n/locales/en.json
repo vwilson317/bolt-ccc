@@ -76,6 +76,9 @@
     "stats": "Analytics",
     "emails": "Email Subscribers",
     "credentials": "Demo credentials: admin@cariocacoastal.com / admin123",
+    "enableWeatherOverride": "Enable Weather Override",
+    "disableWeatherOverride": "Disable Weather Override",
+    "weatherOverrideActive": "Weather override is active. All barracas will appear closed until midnight.",
     "form": {
       "name": "Name",
       "barracaNumber": "Barraca Number",

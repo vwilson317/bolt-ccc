@@ -75,7 +75,10 @@
     "manageBarracas": "Gérer les Barracas",
     "stats": "Analyses",
     "emails": "Abonnés Email",
-    "credentials": "Identifiants démo: admin@cariocacoastal.com / admin123",
+    "credentials": "Identifiants de démonstration : admin@cariocacoastal.com / admin123",
+    "enableWeatherOverride": "Activer le mode météo forcée",
+    "disableWeatherOverride": "Désactiver le mode météo forcée",
+    "weatherOverrideActive": "Le mode météo forcée est actif. Toutes les barracas apparaîtront fermées jusqu'à minuit.",
     "form": {
       "name": "Nom",
       "barracaNumber": "Numéro de Barraca",

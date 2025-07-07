@@ -75,7 +75,10 @@
     "manageBarracas": "Gestionar Barracas",
     "stats": "Análisis",
     "emails": "Suscriptores de Email",
-    "credentials": "Credenciales demo: admin@cariocacoastal.com / admin123",
+    "credentials": "Credenciales de demostración: admin@cariocacoastal.com / admin123",
+    "enableWeatherOverride": "Activar anulación meteorológica",
+    "disableWeatherOverride": "Desactivar anulación meteorológica",
+    "weatherOverrideActive": "La anulación meteorológica está activa. Todas las barracas aparecerán cerradas hasta la medianoche.",
     "form": {
       "name": "Nombre",
       "barracaNumber": "Número de Barraca",

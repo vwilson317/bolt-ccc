@@ -75,7 +75,10 @@
     "manageBarracas": "Gerenciar Barracas",
     "stats": "Análises",
     "emails": "Assinantes de Email",
-    "credentials": "Credenciais demo: admin@cariocacoastal.com / admin123",
+    "credentials": "Credenciais de demonstração: admin@cariocacoastal.com / admin123",
+    "enableWeatherOverride": "Ativar substituição do clima",
+    "disableWeatherOverride": "Desativar substituição do clima",
+    "weatherOverrideActive": "A substituição do clima está ativa. Todas as barracas aparecerão fechadas até a meia-noite.",
     "form": {
       "name": "Nome",
       "barracaNumber": "Número da Barraca",
