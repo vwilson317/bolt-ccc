@@ -16,7 +16,6 @@ export interface Database {
           barraca_number: string | null
           location: string
           coordinates: Json
-          is_open: boolean
           typical_hours: string
           description: string
           images: string[]
@@ -35,7 +34,6 @@ export interface Database {
           barraca_number?: string | null
           location: string
           coordinates: Json
-          is_open?: boolean
           typical_hours?: string
           description: string
           images?: string[]
@@ -54,7 +52,6 @@ export interface Database {
           barraca_number?: string | null
           location?: string
           coordinates?: Json
-          is_open?: boolean
           typical_hours?: string
           description?: string
           images?: string[]

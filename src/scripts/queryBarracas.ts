@@ -21,7 +21,6 @@ async function queryBarracas() {
     id: b.id, 
     name: b.name, 
     location: b.location, 
-    is_open: b.is_open,
     partnered: b.partnered 
   })));
 }

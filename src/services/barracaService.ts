@@ -9,13 +9,13 @@ type BarracaUpdate = Database['public']['Tables']['barracas']['Update']
 type Json = Database['public']['Tables']['barracas']['Row']['cta_buttons']
 
 // Transform database row to application type
-const transformBarracaFromDB = (row: BarracaRow): Barraca => ({
+const transformBarracaFromDB = (row: BarracaRow, isOpen: boolean = false): Barraca => ({
   id: row.id,
   name: row.name,
   barracaNumber: row.barraca_number || undefined,
   location: row.location,
   coordinates: row.coordinates as { lat: number; lng: number },
-  isOpen: row.is_open,
+  isOpen,
   typicalHours: row.typical_hours,
   description: row.description,
   images: row.images,
@@ -35,7 +35,6 @@ const transformBarracaToDB = (barraca: Omit<Barraca, 'id' | 'createdAt' | 'updat
   barraca_number: barraca.barracaNumber || null,
   location: barraca.location,
   coordinates: barraca.coordinates,
-  is_open: barraca.isOpen,
   typical_hours: barraca.typicalHours,
   description: barraca.description,
   images: barraca.images,
@@ -60,7 +59,14 @@ export class BarracaService {
         handleSupabaseError(error, 'getAll barracas')
       }
 
-      return data?.map(transformBarracaFromDB) || []
+      // Get open status for each barraca
+      const barracasWithOpenStatus = []
+      for (const row of data || []) {
+        const isOpen = await BarracaService.getOpenStatus(row.id)
+        barracasWithOpenStatus.push(transformBarracaFromDB(row, isOpen))
+      }
+
+      return barracasWithOpenStatus
     } catch (error) {
       console.error('Error fetching barracas:', error)
       throw error
@@ -83,7 +89,11 @@ export class BarracaService {
         handleSupabaseError(error, 'getById barraca')
       }
 
-      return data ? transformBarracaFromDB(data) : null
+      if (data) {
+        const isOpen = await BarracaService.getOpenStatus(data.id)
+        return transformBarracaFromDB(data, isOpen)
+      }
+      return null
     } catch (error) {
       console.error('Error fetching barraca by ID:', error)
       throw error
@@ -100,11 +110,7 @@ export class BarracaService {
     try {
       let query = supabase.from('barracas').select('*')
 
-      // Apply filters
-      if (filters.openOnly) {
-        query = query.eq('is_open', true)
-      }
-
+      // Apply filters - openOnly is now handled by the database function
       if (filters.location) {
         query = query.ilike('location', `%${filters.location}%`)
       }
@@ -134,14 +140,20 @@ export class BarracaService {
             handleSupabaseError(fullError, 'get full barraca data')
           }
 
-          // Sort by search rank
-          const sortedData = fullData?.sort((a, b) => {
-            const aRank = data.find((item: { id: string; rank: number }) => item.id === a.id)?.rank || 0
-            const bRank = data.find((item: { id: string; rank: number }) => item.id === b.id)?.rank || 0
-            return bRank - aRank
-          })
+                  // Sort by search rank
+        const sortedData = fullData?.sort((a: BarracaRow, b: BarracaRow) => {
+          const aRank = data.find((item: { id: string; rank: number }) => item.id === a.id)?.rank || 0
+          const bRank = data.find((item: { id: string; rank: number }) => item.id === b.id)?.rank || 0
+          return bRank - aRank
+        })
 
-          return sortedData?.map(transformBarracaFromDB) || []
+          // Get open status for each barraca
+          const barracasWithOpenStatus = []
+          for (const row of sortedData || []) {
+            const isOpen = await BarracaService.getOpenStatus(row.id)
+            barracasWithOpenStatus.push(transformBarracaFromDB(row, isOpen))
+          }
+          return barracasWithOpenStatus
         }
 
         return []
@@ -160,7 +172,13 @@ export class BarracaService {
         handleSupabaseError(error, 'search barracas')
       }
 
-      return data?.map(transformBarracaFromDB) || []
+      // Get open status for each barraca
+      const barracasWithOpenStatus = []
+      for (const row of data || []) {
+        const isOpen = await BarracaService.getOpenStatus(row.id)
+        barracasWithOpenStatus.push(transformBarracaFromDB(row, isOpen))
+      }
+      return barracasWithOpenStatus
     } catch (error) {
       console.error('Error searching barracas:', error)
       throw error
@@ -199,13 +217,19 @@ export class BarracaService {
         }
 
         // Sort by distance
-        const sortedData = fullData?.sort((a, b) => {
+        const sortedData = fullData?.sort((a: BarracaRow, b: BarracaRow) => {
           const aDistance = data.find((item: { id: string; distance_km: number }) => item.id === a.id)?.distance_km || 0
           const bDistance = data.find((item: { id: string; distance_km: number }) => item.id === b.id)?.distance_km || 0
           return aDistance - bDistance
         })
 
-        return sortedData?.map(transformBarracaFromDB) || []
+        // Get open status for each barraca
+        const barracasWithOpenStatus = []
+        for (const row of sortedData || []) {
+          const isOpen = await BarracaService.getOpenStatus(row.id)
+          barracasWithOpenStatus.push(transformBarracaFromDB(row, isOpen))
+        }
+        return barracasWithOpenStatus
       }
 
       return []
@@ -230,7 +254,8 @@ export class BarracaService {
         handleSupabaseError(error, 'create barraca')
       }
 
-      return transformBarracaFromDB(data)
+      const isOpen = await BarracaService.getOpenStatus(data.id)
+      return transformBarracaFromDB(data, isOpen)
     } catch (error) {
       console.error('Error creating barraca:', error)
       throw error
@@ -247,7 +272,6 @@ export class BarracaService {
       if (updates.barracaNumber !== undefined) updateData.barraca_number = updates.barracaNumber || null
       if (updates.location !== undefined) updateData.location = updates.location
       if (updates.coordinates !== undefined) updateData.coordinates = updates.coordinates
-      if (updates.isOpen !== undefined) updateData.is_open = updates.isOpen
       if (updates.typicalHours !== undefined) updateData.typical_hours = updates.typicalHours
       if (updates.description !== undefined) updateData.description = updates.description
       if (updates.images !== undefined) updateData.images = updates.images
@@ -269,7 +293,8 @@ export class BarracaService {
         handleSupabaseError(error, 'update barraca')
       }
 
-      return transformBarracaFromDB(data)
+      const isOpen = await BarracaService.getOpenStatus(data.id)
+      return transformBarracaFromDB(data, isOpen)
     } catch (error) {
       console.error('Error updating barraca:', error)
       throw error
@@ -306,35 +331,82 @@ export class BarracaService {
         handleSupabaseError(error, 'get barracas by location')
       }
 
-      return data?.map(transformBarracaFromDB) || []
+      // Get open status for each barraca
+      const barracasWithOpenStatus = []
+      for (const row of data || []) {
+        const isOpen = await BarracaService.getOpenStatus(row.id)
+        barracasWithOpenStatus.push(transformBarracaFromDB(row, isOpen))
+      }
+      return barracasWithOpenStatus
     } catch (error) {
       console.error('Error getting barracas by location:', error)
       throw error
     }
   }
 
-  // Get open barracas
+  // Get open barracas - now uses database function to determine open status
   static async getOpen(): Promise<Barraca[]> {
     try {
+      // Get all barracas and filter by open status using the database function
       const { data, error } = await supabase
         .from('barracas')
         .select('*')
-        .eq('is_open', true)
         .order('name')
 
       if (error) {
-        handleSupabaseError(error, 'get open barracas')
+        handleSupabaseError(error, 'get all barracas for open filter')
       }
 
-      return data?.map(transformBarracaFromDB) || []
+      // Filter to only open barracas using the database function
+      const openBarracas = []
+      for (const barraca of data || []) {
+        const { data: isOpenData, error: isOpenError } = await supabase.rpc('is_barraca_open_now', {
+          barraca_id_param: barraca.id
+        })
+        
+        if (isOpenError) {
+          console.error('Error checking if barraca is open:', isOpenError)
+          continue
+        }
+        
+        if (isOpenData) {
+          openBarracas.push(barraca)
+        }
+      }
+
+      // Get open status for each barraca
+      const barracasWithOpenStatus = []
+      for (const row of openBarracas) {
+        const isOpen = await BarracaService.getOpenStatus(row.id)
+        barracasWithOpenStatus.push(transformBarracaFromDB(row, isOpen))
+      }
+      return barracasWithOpenStatus
     } catch (error) {
       console.error('Error getting open barracas:', error)
       throw error
     }
   }
 
+  // Get open status for a barraca using the database function
+  static async getOpenStatus(barracaId: string): Promise<boolean> {
+    try {
+      const { data, error } = await supabase.rpc('is_barraca_open_now', {
+        barraca_id_param: barracaId
+      })
+
+      if (error) {
+        handleSupabaseError(error, 'get open status')
+      }
+
+      return data || false
+    } catch (error) {
+      console.error('Error getting open status:', error)
+      throw error
+    }
+  }
+
   // Subscribe to real-time changes
-  static subscribeToChanges(callback: (payload: any) => void) {
+  static subscribeToChanges(callback: (payload: unknown) => void) {
     return supabase
       .channel('barracas-realtime')
       .on(
@@ -344,7 +416,7 @@ export class BarracaService {
           schema: 'public',
           table: 'barracas'
         },
-        (payload) => {
+        (payload: unknown) => {
           console.log('Barraca change detected:', payload)
           callback(payload)
         }

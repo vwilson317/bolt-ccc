@@ -37,7 +37,6 @@ async function testDatabaseConnection() {
       const sampleBarraca = barracas[0];
       console.log(`- Name: ${sampleBarraca.name}`);
       console.log(`- Location: ${sampleBarraca.location}`);
-      console.log(`- Is Open: ${sampleBarraca.is_open}`);
       console.log(`- Weather Dependent: ${sampleBarraca.weather_dependent}`);
       console.log(`- Amenities: ${sampleBarraca.amenities?.join(', ') || 'None'}`);
       
@@ -61,13 +60,12 @@ async function testDatabaseConnection() {
         .from('barracas')
         .select('*')
         .ilike('location', '%Ipanema%')
-        .eq('is_open', true)
         .limit(5);
       
       if (searchError) {
         console.log('❌ Search failed:', searchError.message);
       } else {
-        console.log(`✅ Search found ${searchResults?.length || 0} barracas in Ipanema that are open`);
+        console.log(`✅ Search found ${searchResults?.length || 0} barracas in Ipanema`);
       }
     }
     
