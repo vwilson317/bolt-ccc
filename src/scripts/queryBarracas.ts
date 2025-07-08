@@ -17,6 +17,12 @@ async function queryBarracas() {
     process.exit(1);
   }
   console.log(`✅ Found ${data?.length || 0} barracas`);
-  if (data) console.table(data.map(b => ({ id: b.id, name: b.name, location: b.location, is_open: b.is_open })));
+  if (data) console.table(data.map(b => ({ 
+    id: b.id, 
+    name: b.name, 
+    location: b.location, 
+    is_open: b.is_open,
+    partnered: b.partnered 
+  })));
 }
 queryBarracas(); 

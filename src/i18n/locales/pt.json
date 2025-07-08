@@ -46,7 +46,15 @@
     "partner": "Parceiro",
     "showMore": "Mostrar Mais",
     "showLess": "Mostrar Menos",
-    "moreItems": "+{count} mais"
+    "moreItems": "+{count} mais",
+    "about": "Sobre",
+    "menu": "Menu",
+    "amenities": "Comodidades",
+    "contact": "Contato",
+    "website": "Website",
+    "whatsapp": "WhatsApp",
+    "call": "Ligar",
+    "share": "Compartilhar"
   },
   "admin": {
     "login": "Login Admin",
@@ -137,6 +145,22 @@
     "chairReservation": "Reserva de Cadeiras",
     "exclusiveOffers": "Ofertas Exclusivas",
     "newBarracas": "Novas Barracas"
+  },
+  "share": {
+    "title": "Compartilhar esta barraca",
+    "message": "Confira {name} em {location}!",
+    "copied": "Link copiado para a área de transferência!",
+    "sharing": "Compartilhando...",
+    "error": "Erro ao compartilhar. Tente novamente.",
+    "shared_successfully": "Compartilhado com sucesso!",
+    "share_error": "Erro ao compartilhar. Tente novamente.",
+    "platforms": {
+      "whatsapp": "Compartilhar no WhatsApp",
+      "facebook": "Compartilhar no Facebook",
+      "twitter": "Compartilhar no Twitter",
+      "instagram": "Compartilhar no Instagram",
+      "copy": "Copiar Link"
+    }
   },
   "home": {
     "yourBarraca": "Sua Barraca, Seu Jeito",

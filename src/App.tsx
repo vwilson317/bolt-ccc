@@ -13,6 +13,7 @@ import Home from './pages/Home';
 import Discover from './pages/Discover';
 import About from './pages/About';
 import Admin from './pages/Admin';
+import BarracaDetailPage from './pages/BarracaDetail';
 
 import { logEnvironmentInfo, checkSupabaseConnection } from './lib/supabase';
 import './i18n';
@@ -41,6 +42,7 @@ function AppContent() {
           <Route path="/discover" element={<Discover />} />
           <Route path="/about" element={<About />} />
           <Route path="/admin" element={<Admin />} />
+          <Route path="/barraca/:id" element={<BarracaDetailPage />} />
           {/* <Route path="/translation-demo" element={<TranslationDemo />} /> */}
         </Routes>
       </main>

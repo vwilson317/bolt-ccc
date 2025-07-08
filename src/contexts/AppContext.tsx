@@ -66,7 +66,9 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     const loadBarracas = async () => {
       setIsLoading(true);
       try {
+        console.log('🔄 Loading barracas...');
         const fetchedBarracas = await fetchBarracas();
+        console.log('📊 Fetched barracas:', fetchedBarracas.length, fetchedBarracas.map(b => b.id));
         fetchedBarracas.sort((a, b) => a.location.localeCompare(b.location));
         setBarracas(fetchedBarracas);
       } catch (error) {

@@ -46,7 +46,15 @@
     "partner": "Socio",
     "showMore": "Mostrar Más",
     "showLess": "Mostrar Menos",
-    "moreItems": "+{count} más"
+    "moreItems": "+{count} más",
+    "about": "Acerca de",
+    "menu": "Menú",
+    "amenities": "Comodidades",
+    "contact": "Contacto",
+    "website": "Sitio Web",
+    "whatsapp": "WhatsApp",
+    "call": "Llamar",
+    "share": "Compartir"
   },
   "admin": {
     "login": "Inicio de Sesión Admin",
@@ -137,6 +145,22 @@
     "chairReservation": "Reserva de Sillas",
     "exclusiveOffers": "Ofertas Exclusivas",
     "newBarracas": "Nuevas Barracas"
+  },
+  "share": {
+    "title": "Compartir esta barraca",
+    "message": "¡Mira {name} en {location}!",
+    "copied": "¡Enlace copiado al portapapeles!",
+    "sharing": "Compartiendo...",
+    "error": "Error al compartir. Inténtalo de nuevo.",
+    "shared_successfully": "¡Compartido exitosamente!",
+    "share_error": "Error al compartir. Inténtalo de nuevo.",
+    "platforms": {
+      "whatsapp": "Compartir en WhatsApp",
+      "facebook": "Compartir en Facebook",
+      "twitter": "Compartir en Twitter",
+      "instagram": "Compartir en Instagram",
+      "copy": "Copiar Enlace"
+    }
   },
   "home": {
     "yourBarraca": "Tu Barraca, Tu Manera",

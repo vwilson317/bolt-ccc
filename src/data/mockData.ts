@@ -63,10 +63,15 @@ const sampleCTAButtons: CTAButtonConfig[] = [
 export const fetchBarracas = async (): Promise<Barraca[]> => {
   try {
     console.log('🔄 Fetching barracas from database...');
+    console.log('🔧 Environment:', import.meta.env.VITE_APP_ENV);
+    console.log('🔧 Supabase URL:', import.meta.env.VITE_SUPABASE_URL_DEV);
+    console.log('🔧 Has anon key:', !!import.meta.env.VITE_SUPABASE_ANON_KEY_DEV);
+    
     const barracas = await BarracaService.getAll();
     
     if (barracas && barracas.length > 0) {
       console.log(`✅ Successfully fetched ${barracas.length} barracas from database`);
+      console.log('📋 Barraca IDs:', barracas.map(b => b.id));
       return barracas;
     } else {
       console.log('⚠️ No barracas found in database');

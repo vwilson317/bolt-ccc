@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { X, MapPin, Clock, Phone, Mail, ExternalLink, MessageCircle, Star } from 'lucide-react';
 import { Barraca } from '../types';
 import { getEffectiveOpenStatus } from '../utils/environmentUtils';
+import ShareButton from './ShareButton';
 
 // Helper function to format phone number for WhatsApp
 const formatPhoneForWhatsApp = (phone: string) => {
@@ -34,19 +35,39 @@ const BarracaDetail: React.FC<BarracaDetailProps> = ({ barraca, onClose, weather
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
             
-            {/* Close Button */}
+            {/* Share Button - Upper Left */}
+            <div className="absolute top-4 left-4">
+              <ShareButton 
+                barraca={barraca} 
+                variant="dropdown" 
+                size="md"
+              />
+            </div>
+            
+            {/* Close Button - Upper Right */}
             <button
               onClick={onClose}
               className="absolute top-4 right-4 bg-white/20 backdrop-blur-sm p-2 rounded-full hover:bg-white/30 transition-colors"
             >
               <X className="h-5 w-5 text-white" />
             </button>
+          </div>
+        </div>
 
-            {/* Status Badge */}
-            <div className="absolute top-4 left-4">
+        {/* Content */}
+        <div className="p-6">
+
+          {/* Title and Location */}
+          <div className="mb-6">
+            <div className="flex items-center justify-between mb-2">
+              <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
+                {barraca.barracaNumber && `#${barraca.barracaNumber} `}{barraca.name}
+              </h1>
+              
+              {/* Status Badge with Pulse Animation */}
               <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium ${
                 effectiveIsOpen 
-                  ? 'bg-green-500 text-white' 
+                  ? 'bg-green-500 text-white animate-pulse' 
                   : 'bg-red-500 text-white'
               }`}>
                 <div className={`w-2 h-2 rounded-full mr-2 ${
@@ -55,32 +76,6 @@ const BarracaDetail: React.FC<BarracaDetailProps> = ({ barraca, onClose, weather
                 {effectiveIsOpen ? t('barraca.open') : t('barraca.closed')}
               </span>
             </div>
-
-            {/* Partner Badge */}
-            <div className="absolute bottom-4 left-4">
-              <span className="bg-yellow-500 text-yellow-900 px-3 py-1.5 rounded-full text-sm font-medium">
-                {t('barraca.partner')}
-              </span>
-            </div>
-
-            {/* Barraca Number */}
-            {barraca.barracaNumber && (
-              <div className="absolute bottom-4 right-4">
-                <span className="bg-black/70 text-white px-3 py-1.5 rounded-full text-sm font-medium">
-                  #{barraca.barracaNumber}
-                </span>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Content */}
-        <div className="p-6">
-          {/* Title and Location */}
-          <div className="mb-6">
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
-              {barraca.name}
-            </h1>
             <div className="flex items-center text-gray-600 mb-2">
               <MapPin className="h-4 w-4 mr-2" />
               <span>{barraca.location}</span>

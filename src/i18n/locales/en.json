@@ -53,7 +53,8 @@
     "contact": "Contact",
     "website": "Website",
     "whatsapp": "WhatsApp",
-    "call": "Call"
+    "call": "Call",
+    "share": "Share"
   },
   "admin": {
     "login": "Admin Login",
@@ -144,6 +145,22 @@
     "chairReservation": "Chair Reservation",
     "exclusiveOffers": "Exclusive Offers",
     "newBarracas": "New Barraca Updates"
+  },
+  "share": {
+    "title": "Share this barraca",
+    "message": "Check out {name} at {location}!",
+    "copied": "Link copied to clipboard!",
+    "sharing": "Sharing...",
+    "error": "Error sharing. Please try again.",
+    "shared_successfully": "Shared successfully!",
+    "share_error": "Error sharing. Please try again.",
+    "platforms": {
+      "whatsapp": "Share on WhatsApp",
+      "facebook": "Share on Facebook",
+      "twitter": "Share on Twitter",
+      "instagram": "Share on Instagram",
+      "copy": "Copy Link"
+    }
   },
   "home": {
     "yourBarraca": "Your Barraca, Your Way",
