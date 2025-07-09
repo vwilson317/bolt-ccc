@@ -66,6 +66,14 @@ export class BarracaService {
         barracasWithOpenStatus.push(transformBarracaFromDB(row, isOpen))
       }
 
+      // Sort by partnered status first, then by name
+      barracasWithOpenStatus.sort((a, b) => {
+        if (a.partnered !== b.partnered) {
+          return a.partnered ? -1 : 1;
+        }
+        return a.name.localeCompare(b.name);
+      });
+
       return barracasWithOpenStatus
     } catch (error) {
       console.error('Error fetching barracas:', error)
@@ -140,7 +148,7 @@ export class BarracaService {
             handleSupabaseError(fullError, 'get full barraca data')
           }
 
-                  // Sort by search rank
+          // Sort by search rank
         const sortedData = fullData?.sort((a: BarracaRow, b: BarracaRow) => {
           const aRank = data.find((item: { id: string; rank: number }) => item.id === a.id)?.rank || 0
           const bRank = data.find((item: { id: string; rank: number }) => item.id === b.id)?.rank || 0
@@ -153,6 +161,18 @@ export class BarracaService {
             const isOpen = await BarracaService.getOpenStatus(row.id)
             barracasWithOpenStatus.push(transformBarracaFromDB(row, isOpen))
           }
+          
+          // Sort by partnered status first, then by search rank
+          barracasWithOpenStatus.sort((a, b) => {
+            if (a.partnered !== b.partnered) {
+              return a.partnered ? -1 : 1;
+            }
+            // Within each partnered group, maintain search rank order
+            const aRank = data.find((item: { id: string; rank: number }) => item.id === a.id)?.rank || 0;
+            const bRank = data.find((item: { id: string; rank: number }) => item.id === b.id)?.rank || 0;
+            return bRank - aRank;
+          });
+          
           return barracasWithOpenStatus
         }
 
@@ -229,6 +249,18 @@ export class BarracaService {
           const isOpen = await BarracaService.getOpenStatus(row.id)
           barracasWithOpenStatus.push(transformBarracaFromDB(row, isOpen))
         }
+        
+        // Sort by partnered status first, then by distance
+        barracasWithOpenStatus.sort((a, b) => {
+          if (a.partnered !== b.partnered) {
+            return a.partnered ? -1 : 1;
+          }
+          // Within each partnered group, maintain distance order
+          const aDistance = data.find((item: { id: string; distance_km: number }) => item.id === a.id)?.distance_km || 0;
+          const bDistance = data.find((item: { id: string; distance_km: number }) => item.id === b.id)?.distance_km || 0;
+          return aDistance - bDistance;
+        });
+        
         return barracasWithOpenStatus
       }
 
@@ -337,6 +369,15 @@ export class BarracaService {
         const isOpen = await BarracaService.getOpenStatus(row.id)
         barracasWithOpenStatus.push(transformBarracaFromDB(row, isOpen))
       }
+      
+      // Sort by partnered status first, then by name
+      barracasWithOpenStatus.sort((a, b) => {
+        if (a.partnered !== b.partnered) {
+          return a.partnered ? -1 : 1;
+        }
+        return a.name.localeCompare(b.name);
+      });
+      
       return barracasWithOpenStatus
     } catch (error) {
       console.error('Error getting barracas by location:', error)
@@ -380,6 +421,15 @@ export class BarracaService {
         const isOpen = await BarracaService.getOpenStatus(row.id)
         barracasWithOpenStatus.push(transformBarracaFromDB(row, isOpen))
       }
+      
+      // Sort by partnered status first, then by name
+      barracasWithOpenStatus.sort((a, b) => {
+        if (a.partnered !== b.partnered) {
+          return a.partnered ? -1 : 1;
+        }
+        return a.name.localeCompare(b.name);
+      });
+      
       return barracasWithOpenStatus
     } catch (error) {
       console.error('Error getting open barracas:', error)

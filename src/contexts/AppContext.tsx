@@ -69,7 +69,17 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
         console.log('🔄 Loading barracas...');
         const fetchedBarracas = await fetchBarracas();
         console.log('📊 Fetched barracas:', fetchedBarracas.length, fetchedBarracas.map(b => b.id));
-        fetchedBarracas.sort((a, b) => a.location.localeCompare(b.location));
+        
+        // Sort barracas: partnered first, then non-partnered, with location sorting within each group
+        fetchedBarracas.sort((a, b) => {
+          // First, sort by partnered status (partnered first)
+          if (a.partnered !== b.partnered) {
+            return a.partnered ? -1 : 1;
+          }
+          // Then, sort by location within each group
+          return a.location.localeCompare(b.location);
+        });
+        
         setBarracas(fetchedBarracas);
       } catch (error) {
         console.error('Failed to load barracas:', error);
@@ -136,6 +146,12 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
       barraca.location.toLowerCase().includes(searchFilters.location.toLowerCase());
 
     return matchesQuery && matchesStatus && matchesOpenNow && matchesLocation;
+  }).sort((a, b) => {
+    // Maintain the same sorting: partnered first, then non-partnered, with location sorting within each group
+    if (a.partnered !== b.partnered) {
+      return a.partnered ? -1 : 1;
+    }
+    return a.location.localeCompare(b.location);
   });
 
   // Load weather data on mount

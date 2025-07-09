@@ -68,8 +68,8 @@ const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
       {barracas.map((barraca) => (
         <div 
           key={barraca.id} 
-          className={`bg-white rounded-xl md:rounded-2xl shadow-md hover:shadow-lg transition-all duration-200 overflow-hidden flex flex-col ${
-            barraca.partnered ? 'cursor-pointer' : ''
+          className={`bg-white rounded-xl md:rounded-2xl shadow-md hover:shadow-lg transition-all duration-200 overflow-hidden flex flex-col relative ${
+            barraca.partnered ? 'cursor-pointer' : 'border-2 border-gray-300'
           }`}
           onClick={() => barraca.partnered && setSelectedBarraca(barraca)}
         >
@@ -78,7 +78,7 @@ const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
             <img
               src={barraca.images.length > 1 ? barraca.images[1] : barraca.images[0] ?? barraca.images[1]}
               alt={barraca.name}
-              className="w-full h-full object-cover"
+              className={`w-full h-full object-cover`}
             />
             
             {/* Simplified Overlay - Only Essential Info */}
@@ -88,6 +88,15 @@ const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
             <div className="absolute top-3 right-3">
               {(() => {
                 const effectiveIsOpen = getEffectiveOpenStatus(barraca, weatherOverride);
+                if (effectiveIsOpen === null) {
+                  // Non-partnered barracas show undetermined status
+                  return (
+                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-500 text-white">
+                      <div className="w-1.5 h-1.5 rounded-full mr-1.5 bg-gray-300" />
+                      {t('barraca.undetermined')}
+                    </span>
+                  );
+                }
                 return (
                   <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium status-pulse ${
                     effectiveIsOpen 
@@ -131,170 +140,214 @@ const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
             {/* Header - Clean and Scannable */}
             <div className="mb-3 flex-shrink-0">
               <div className="flex items-start justify-between mb-2">
-                <h3 className="text-lg md:text-xl font-bold text-gray-900 leading-tight">
+                <h3 className={`text-lg md:text-xl font-bold leading-tight ${
+                  barraca.partnered ? 'text-gray-900' : 'text-gray-600'
+                }`}>
                   {barraca.name}
-                </h3>
-                {/* Partner Badge - Only show for partnered barracas */}
-                {barraca.partnered && (
-                  <span className="bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded-md text-xs font-medium ml-2 flex-shrink-0">
-                    {t('barraca.partner')}
-                  </span>
-                )}
+                </h3> 
               </div>
               
-              {/* Location & Hours - Simplified */}
+              {/* Location - Only show location for non-partnered barracas */}
               <div className="space-y-1">
                 <div className="flex items-center text-gray-600">
                   <MapPin className="h-3.5 w-3.5 mr-1.5 flex-shrink-0" />
                   <span className="text-sm">{barraca.location}</span>
+                  {!barraca.partnered && (
+                    <span className="ml-1 text-xs text-gray-400">• Limited info</span>
+                  )}
                 </div>
-                <div className="flex items-center text-gray-600">
-                  <Clock className="h-3.5 w-3.5 mr-1.5 flex-shrink-0" />
-                  <span className="text-sm">{barraca.typicalHours}</span>
-                </div>
+                {barraca.partnered && (
+                  <div className="flex items-center text-gray-600">
+                    <Clock className="h-3.5 w-3.5 mr-1.5 flex-shrink-0" />
+                    <span className="text-sm">{barraca.typicalHours}</span>
+                  </div>
+                )}
+                {!barraca.partnered && (
+                  <div className="flex items-center text-yellow-700 text-xs mt-2">
+                    <span className="bg-yellow-100 border border-yellow-300 px-3 py-2 rounded-md font-medium flex items-center">
+                      <svg className="w-3 h-3 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                      </svg>
+                      {t('barraca.basicInfoOnly')}
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
 
             {/* Collapsible Details for Mobile / Fixed Height for Desktop */}
             <div className="md:block flex-grow">
-              {/* Always Visible: Top Menu Items */}
-              {barraca.menuPreview.length > 0 && (
-                <div className="mb-3">
-                  <div className="flex flex-wrap gap-1">
-                    {barraca.menuPreview.slice(0, 2).map((item, index) => (
-                      <span
-                        key={index}
-                        className="bg-orange-50 text-orange-700 px-2 py-1 rounded-md text-xs font-medium"
-                      >
-                        {item}
+              {barraca.partnered ? (
+                <>
+                  {/* Always Visible: Top Menu Items */}
+                  {barraca.menuPreview.length > 0 && (
+                    <div className="mb-3">
+                      <div className="flex flex-wrap gap-1">
+                        {barraca.menuPreview.slice(0, 2).map((item, index) => (
+                          <span
+                            key={index}
+                            className="bg-orange-50 text-orange-700 px-2 py-1 rounded-md text-xs font-medium"
+                          >
+                            {item}
+                          </span>
+                        ))}
+                        {barraca.menuPreview.length > 2 && (
+                          <button
+                            onClick={() => toggleExpanded(barraca.id)}
+                            className="text-xs text-gray-500 px-2 py-1 hover:text-gray-700 md:hidden"
+                          >
+                            {t('barraca.moreItems', { count: barraca.menuPreview.length - 2 })}
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Description - Truncated on Desktop, Expandable on Mobile */}
+                  <div className="mb-3">
+                    <p className="text-gray-600 text-sm leading-relaxed">
+                      {/* Desktop: Always show truncated */}
+                      <span className="hidden md:block">
+                        {getTruncatedDescription(barraca.description)}
                       </span>
-                    ))}
-                    {barraca.menuPreview.length > 2 && (
-                      <button
-                        onClick={() => toggleExpanded(barraca.id)}
-                        className="text-xs text-gray-500 px-2 py-1 hover:text-gray-700 md:hidden"
-                      >
-                        {t('barraca.moreItems', { count: barraca.menuPreview.length - 2 })}
-                      </button>
-                    )}
+                      {/* Mobile: Show full if expanded, truncated if not */}
+                      <span className="md:hidden">
+                        {isExpanded(barraca.id) ? barraca.description : getTruncatedDescription(barraca.description, 80)}
+                      </span>
+                    </p>
                   </div>
-                </div>
+                </>
+              ) : (
+                <>
+                  {/* Non-partnered information */}
+                  <div className="mb-3">
+                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                      <div className="flex items-start">
+                        <svg className="w-4 h-4 text-blue-600 mt-0.5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                        </svg>
+                        <div>
+                          <h4 className="text-sm font-medium text-blue-900 mb-1">
+                            {t('barraca.notPartnered')}
+                          </h4>
+                          <p className="text-xs text-blue-700 leading-relaxed">
+                            {t('barraca.notPartneredMessage')}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+
+                </>
               )}
 
-              {/* Description - Truncated on Desktop, Expandable on Mobile */}
-              <div className="mb-3">
-                <p className="text-gray-600 text-sm leading-relaxed">
-                  {/* Desktop: Always show truncated */}
-                  <span className="hidden md:block">
-                    {getTruncatedDescription(barraca.description)}
-                  </span>
-                  {/* Mobile: Show full if expanded, truncated if not */}
-                  <span className="md:hidden">
-                    {isExpanded(barraca.id) ? barraca.description : getTruncatedDescription(barraca.description, 80)}
-                  </span>
-                </p>
-              </div>
+              {/* Expandable Content on Mobile - Only for partnered barracas */}
+              {barraca.partnered && (
+                <>
+                  <div className={`md:block ${isExpanded(barraca.id) ? 'block' : 'hidden'}`}>
+                    {/* Additional Menu Items */}
+                    {barraca.menuPreview.length > 2 && (
+                      <div className="mb-3">
+                        <div className="flex flex-wrap gap-1">
+                          {barraca.menuPreview.slice(2).map((item, index) => (
+                            <span
+                              key={index}
+                              className="bg-orange-50 text-orange-700 px-2 py-1 rounded-md text-xs font-medium"
+                            >
+                              {item}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
 
-              {/* Expandable Content on Mobile */}
-              <div className={`md:block ${isExpanded(barraca.id) ? 'block' : 'hidden'}`}>
-                {/* Additional Menu Items */}
-                {barraca.menuPreview.length > 2 && (
-                  <div className="mb-3">
-                    <div className="flex flex-wrap gap-1">
-                      {barraca.menuPreview.slice(2).map((item, index) => (
-                        <span
-                          key={index}
-                          className="bg-orange-50 text-orange-700 px-2 py-1 rounded-md text-xs font-medium"
-                        >
-                          {item}
-                        </span>
-                      ))}
-                    </div>
+                    {/* Amenities - Simplified */}
+                    {barraca.amenities.length > 0 && (
+                      <div className="mb-3">
+                        <div className="flex flex-wrap gap-1">
+                          {barraca.amenities.slice(0, 3).map((amenity, index) => {
+                            const Icon = getAmenityIcon(amenity);
+                            return (
+                              <div
+                                key={index}
+                                className="flex items-center bg-gray-100 text-gray-700 px-2 py-1 rounded-md text-xs"
+                              >
+                                <Icon className="h-3 w-3 mr-1" />
+                                {amenity}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
                   </div>
-                )}
 
-                {/* Amenities - Simplified */}
-                {barraca.amenities.length > 0 && (
-                  <div className="mb-3">
-                    <div className="flex flex-wrap gap-1">
-                      {barraca.amenities.slice(0, 3).map((amenity, index) => {
-                        const Icon = getAmenityIcon(amenity);
-                        return (
-                          <div
-                            key={index}
-                            className="flex items-center bg-gray-100 text-gray-700 px-2 py-1 rounded-md text-xs"
-                          >
-                            <Icon className="h-3 w-3 mr-1" />
-                            {amenity}
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Mobile Expand/Collapse Button */}
-              <button
-                onClick={() => toggleExpanded(barraca.id)}
-                className="md:hidden w-full flex items-center justify-center py-2 text-sm text-gray-500 hover:text-gray-700 border-t border-gray-100 mt-3"
-              >
-                {isExpanded(barraca.id) ? (
-                  <>
-                    <span>{t('barraca.showLess')}</span>
-                    <ChevronUp className="h-4 w-4 ml-1" />
-                  </>
-                ) : (
-                  <>
-                    <span>{t('barraca.showMore')}</span>
-                    <ChevronDown className="h-4 w-4 ml-1" />
-                  </>
-                )}
-              </button>
+                  {/* Mobile Expand/Collapse Button */}
+                  <button
+                    onClick={() => toggleExpanded(barraca.id)}
+                    className="md:hidden w-full flex items-center justify-center py-2 text-sm text-gray-500 hover:text-gray-700 border-t border-gray-100 mt-3"
+                  >
+                    {isExpanded(barraca.id) ? (
+                      <>
+                        <span>{t('barraca.showLess')}</span>
+                        <ChevronUp className="h-4 w-4 ml-1" />
+                      </>
+                    ) : (
+                      <>
+                        <span>{t('barraca.showMore')}</span>
+                        <ChevronDown className="h-4 w-4 ml-1" />
+                      </>
+                    )}
+                  </button>
+                </>
+              )}
             </div>
 
-            {/* Action Footer - Mobile Optimized with Configurable CTA Buttons - Fixed at Bottom */}
-            <div className="mt-auto pt-3 border-t border-gray-100 flex-shrink-0">
-              <div className="flex items-center justify-between">
-                {/* Contact Icons - Larger Touch Targets */}
-                <div className="flex space-x-2">
-                  {barraca.contact.phone && (
-                    <a
-                      href={`https://wa.me/${formatPhoneForWhatsApp(barraca.contact.phone)}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="p-2.5 bg-green-100 text-green-600 rounded-lg hover:bg-green-200 transition-colors"
-                      title="WhatsApp"
-                    >
-                      <MessageCircle className="h-4 w-4" />
-                    </a>
-                  )}
-                  {barraca.contact.website && (
-                    <a
-                      href={barraca.contact.website}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="p-2.5 bg-pink-100 text-pink-600 rounded-lg hover:bg-pink-200 transition-colors"
-                      title="Instagram"
-                    >
-                      <Instagram className="h-4 w-4" />
-                    </a>
-                  )}
+            {/* Action Footer - Mobile Optimized with Configurable CTA Buttons - Fixed at Bottom - Only for partnered barracas */}
+            {barraca.partnered && (
+              <div className="mt-auto pt-3 border-t border-gray-100 flex-shrink-0">
+                <div className="flex items-center justify-between">
+                  {/* Contact Icons - Larger Touch Targets */}
+                  <div className="flex space-x-2">
+                    {barraca.contact.phone && (
+                      <a
+                        href={`https://wa.me/${formatPhoneForWhatsApp(barraca.contact.phone)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-2.5 bg-green-100 text-green-600 rounded-lg hover:bg-green-200 transition-colors"
+                        title="WhatsApp"
+                      >
+                        <MessageCircle className="h-4 w-4" />
+                      </a>
+                    )}
+                    {barraca.contact.website && (
+                      <a
+                        href={barraca.contact.website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-2.5 bg-pink-100 text-pink-600 rounded-lg hover:bg-pink-200 transition-colors"
+                        title="Instagram"
+                      >
+                        <Instagram className="h-4 w-4" />
+                      </a>
+                    )}
+                  </div>
+                  
+                  {/* Configurable CTA Buttons */}
+                  <CTAButtonGroup 
+                    barraca={barraca}
+                    size="sm"
+                    maxButtons={2}
+                    context={{
+                      currentTime: new Date(),
+                      isLoggedIn: false, // This would come from your auth context
+                      weatherConditions: 'good' // This would come from your weather context
+                    }}
+                  />
                 </div>
-                
-                {/* Configurable CTA Buttons */}
-                <CTAButtonGroup 
-                  barraca={barraca}
-                  size="sm"
-                  maxButtons={2}
-                  context={{
-                    currentTime: new Date(),
-                    isLoggedIn: false, // This would come from your auth context
-                    weatherConditions: 'good' // This would come from your weather context
-                  }}
-                />
               </div>
-            </div>
+            )}
           </div>
         </div>
       ))}

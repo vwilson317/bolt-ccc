@@ -190,11 +190,16 @@ export const validateEnvironmentData = (data: any, type: string): boolean => {
 }
 
 /**
- * Calculates the effective open status of a barraca considering weather override
+ * Calculates the effective open status of a barraca considering weather override and partnered status
  * @param barraca - The barraca object
  * @param weatherOverride - Whether weather override is active
- * @returns The effective open status (true if open, false if closed)
+ * @returns The effective open status (true if open, false if closed, null if undetermined for non-partnered)
  */
-export const getEffectiveOpenStatus = (barraca: { isOpen: boolean }, weatherOverride: boolean): boolean => {
+export const getEffectiveOpenStatus = (barraca: { isOpen: boolean; partnered: boolean }, weatherOverride: boolean): boolean | null => {
+  // Non-partnered barracas have undetermined open status
+  if (!barraca.partnered) {
+    return null;
+  }
+  
   return weatherOverride ? false : barraca.isOpen;
 };

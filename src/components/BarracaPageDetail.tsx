@@ -21,6 +21,45 @@ const BarracaPageDetail: React.FC<BarracaPageDetailProps> = ({
 }) => {
   const { t } = useTranslation();
 
+  // Prevent access for non-partnered barracas
+  if (!barraca.partnered) {
+    return (
+      <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+        <div className="p-8 text-center">
+          <div className="mb-6">
+            <div className="w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg className="w-10 h-10 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+              </svg>
+            </div>
+            <h1 className="text-2xl font-bold text-gray-900 mb-3">
+              {barraca.name}
+            </h1>
+            <div className="flex items-center justify-center text-gray-600 mb-6">
+              <svg className="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              <span className="text-lg">{barraca.location}</span>
+            </div>
+          </div>
+          
+          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
+            <h2 className="text-xl font-semibold text-yellow-800 mb-3">
+              {t('barraca.notPartnered')}
+            </h2>
+            <p className="text-yellow-700 mb-4">
+              {t('barraca.notPartneredMessage')}
+            </p>
+            <div className="text-sm text-yellow-600">
+              {t('barraca.basicInfoOnly')}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   const effectiveIsOpen = getEffectiveOpenStatus(barraca, weatherOverride);
 
   return (
@@ -36,26 +75,19 @@ const BarracaPageDetail: React.FC<BarracaPageDetailProps> = ({
         
         {/* Status Badge */}
         <div className="absolute top-4 left-4">
-          <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium ${
-            effectiveIsOpen 
-              ? 'bg-green-500 text-white' 
-              : 'bg-red-500 text-white'
-          }`}>
-            <div className={`w-2 h-2 rounded-full mr-2 ${
-              effectiveIsOpen ? 'bg-green-200' : 'bg-red-200'
-            }`} />
-            {effectiveIsOpen ? t('barraca.open') : t('barraca.closed')}
-          </span>
-        </div>
-
-        {/* Partner Badge */}
-        {barraca.partnered && (
-          <div className="absolute bottom-4 left-4">
-            <span className="bg-yellow-500 text-yellow-900 px-3 py-1.5 rounded-full text-sm font-medium">
-              {t('barraca.partner')}
+          {effectiveIsOpen !== null && (
+            <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium ${
+              effectiveIsOpen 
+                ? 'bg-green-500 text-white' 
+                : 'bg-red-500 text-white'
+            }`}>
+              <div className={`w-2 h-2 rounded-full mr-2 ${
+                effectiveIsOpen ? 'bg-green-200' : 'bg-red-200'
+              }`} />
+              {effectiveIsOpen ? t('barraca.open') : t('barraca.closed')}
             </span>
-          </div>
-        )}
+          )}
+        </div>
 
         {/* Barraca Number */}
         {barraca.barracaNumber && (
@@ -150,7 +182,7 @@ const BarracaPageDetail: React.FC<BarracaPageDetailProps> = ({
           <div className="space-y-3">
             {barraca.contact.phone && (
               <div className="flex items-center">
-                <Phone className="h-4 w-4 mr-3 text-gray-500" />
+                <Phone className="h-5 w-5 mr-3 text-gray-500" />
                 <a
                   href={`tel:${barraca.contact.phone}`}
                   className="text-blue-600 hover:text-blue-800"
@@ -161,7 +193,7 @@ const BarracaPageDetail: React.FC<BarracaPageDetailProps> = ({
             )}
             {barraca.contact.email && (
               <div className="flex items-center">
-                <Mail className="h-4 w-4 mr-3 text-gray-500" />
+                <Mail className="h-5 w-5 mr-3 text-gray-500" />
                 <a
                   href={`mailto:${barraca.contact.email}`}
                   className="text-blue-600 hover:text-blue-800"
@@ -172,7 +204,7 @@ const BarracaPageDetail: React.FC<BarracaPageDetailProps> = ({
             )}
             {barraca.contact.website && (
               <div className="flex items-center">
-                <ExternalLink className="h-4 w-4 mr-3 text-gray-500" />
+                <ExternalLink className="h-5 w-5 mr-3 text-gray-500" />
                 <a
                   href={barraca.contact.website}
                   target="_blank"

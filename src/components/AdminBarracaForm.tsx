@@ -252,33 +252,7 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
           />
         </div>
 
-        {/* Availability and Hours */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              {t('admin.form.availability')}
-            </label>
-            <select
-              value={formData.isOpen ? 'open' : 'closed'}
-              onChange={(e) => setFormData(prev => ({ ...prev, isOpen: e.target.value === 'open' }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-            >
-              <option value="open">{t('barraca.open')}</option>
-              <option value="closed">{t('barraca.closed')}</option>
-            </select>
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              {t('admin.form.typicalHours')}
-            </label>
-            <input
-              type="text"
-              value={formData.typicalHours}
-              onChange={(e) => setFormData(prev => ({ ...prev, typicalHours: e.target.value }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-            />
-          </div>
-        </div>
+
 
         {/* Settings */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -289,8 +263,11 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
                 checked={formData.weatherDependent}
                 onChange={(e) => setFormData(prev => ({ ...prev, weatherDependent: e.target.checked }))}
                 className="h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300 rounded"
+                disabled={!formData.partnered}
               />
-              <span className="ml-2 text-sm text-gray-700">{t('admin.form.weatherDependent')}</span>
+              <span className={`ml-2 text-sm ${!formData.partnered ? 'text-gray-400' : 'text-gray-700'}`}>
+                {t('admin.form.weatherDependent')}
+              </span>
             </label>
           </div>
           <div className="flex items-center">
@@ -306,380 +283,287 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
           </div>
         </div>
 
-        {/* Images */}
-        <div>
-          <div className="flex justify-between items-center mb-2">
-            <label className="block text-sm font-medium text-gray-700">
-              {t('admin.form.images')}
-            </label>
-            <button
-              type="button"
-              onClick={() => addArrayItem('images')}
-              className="text-orange-600 hover:text-orange-800 flex items-center text-sm"
-            >
-              <Plus className="h-4 w-4 mr-1" />
-              {t('admin.form.addImage')}
-            </button>
-          </div>
-          {formData.images.map((image, index) => (
-            <div key={index} className="flex gap-2 mb-2">
-              <input
-                type="url"
-                value={image}
-                onChange={(e) => updateArrayItem('images', index, e.target.value)}
-                placeholder="https://example.com/image.jpg"
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-              />
-              <button
-                type="button"
-                onClick={() => removeArrayItem('images', index)}
-                className="p-2 text-red-600 hover:text-red-800"
-              >
-                <Trash2 className="h-4 w-4" />
-              </button>
+        {/* Partnered-only fields */}
+        {formData.partnered && (
+          <>
+            {/* Availability and Hours */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  {t('admin.form.availability')}
+                </label>
+                <select
+                  value={formData.isOpen ? 'open' : 'closed'}
+                  onChange={(e) => setFormData(prev => ({ ...prev, isOpen: e.target.value === 'open' }))}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                >
+                  <option value="open">{t('barraca.open')}</option>
+                  <option value="closed">{t('barraca.closed')}</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  {t('admin.form.typicalHours')}
+                </label>
+                <input
+                  type="text"
+                  value={formData.typicalHours}
+                  onChange={(e) => setFormData(prev => ({ ...prev, typicalHours: e.target.value }))}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                />
+              </div>
             </div>
-          ))}
-        </div>
 
-        {/* Menu Preview */}
-        <div>
-          <div className="flex justify-between items-center mb-2">
-            <label className="block text-sm font-medium text-gray-700">
-              {t('admin.form.menuPreview')}
-            </label>
-            <button
-              type="button"
-              onClick={() => addArrayItem('menuPreview')}
-              className="text-orange-600 hover:text-orange-800 flex items-center text-sm"
-            >
-              <Plus className="h-4 w-4 mr-1" />
-              {t('admin.form.addItem')}
-            </button>
-          </div>
-          {formData.menuPreview.map((item, index) => (
-            <div key={index} className="flex gap-2 mb-2">
-              <input
-                type="text"
-                value={item}
-                onChange={(e) => updateArrayItem('menuPreview', index, e.target.value)}
-                placeholder="Menu item name"
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-              />
-              <button
-                type="button"
-                onClick={() => removeArrayItem('menuPreview', index)}
-                className="p-2 text-red-600 hover:text-red-800"
-              >
-                <Trash2 className="h-4 w-4" />
-              </button>
-            </div>
-          ))}
-        </div>
-
-        {/* Contact Information */}
-        <div>
-          <h4 className="text-lg font-medium text-gray-900 mb-3">{t('admin.form.contact')}</h4>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Images */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                {t('admin.form.whatsapp')}
-              </label>
-              <input
-                type="tel"
-                value={formData.contact.phone}
-                onChange={(e) => setFormData(prev => ({
-                  ...prev,
-                  contact: { ...prev.contact, phone: e.target.value }
-                }))}
-                placeholder="+55 21 99999-0000"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                {t('admin.form.email')}
-              </label>
-              <input
-                type="email"
-                value={formData.contact.email}
-                onChange={(e) => setFormData(prev => ({
-                  ...prev,
-                  contact: { ...prev.contact, email: e.target.value }
-                }))}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                {t('admin.form.instagram')}
-              </label>
-              <input
-                type="url"
-                value={formData.contact.website}
-                onChange={(e) => setFormData(prev => ({
-                  ...prev,
-                  contact: { ...prev.contact, website: e.target.value }
-                }))}
-                placeholder="https://instagram.com/barraca"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Amenities */}
-        <div>
-          <div className="flex justify-between items-center mb-2">
-            <label className="block text-sm font-medium text-gray-700">
-              {t('admin.form.amenities')}
-            </label>
-            <button
-              type="button"
-              onClick={() => addArrayItem('amenities')}
-              className="text-orange-600 hover:text-orange-800 flex items-center text-sm"
-            >
-              <Plus className="h-4 w-4 mr-1" />
-              {t('admin.form.addAmenity')}
-            </button>
-          </div>
-          {formData.amenities.map((amenity, index) => (
-            <div key={index} className="flex gap-2 mb-2">
-              <input
-                type="text"
-                value={amenity}
-                onChange={(e) => updateArrayItem('amenities', index, e.target.value)}
-                placeholder="WiFi, Umbrellas, etc."
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-              />
-              <button
-                type="button"
-                onClick={() => removeArrayItem('amenities', index)}
-                className="p-2 text-red-600 hover:text-red-800"
-              >
-                <Trash2 className="h-4 w-4" />
-              </button>
-            </div>
-          ))}
-        </div>
-
-        {/* CTA Buttons Configuration */}
-        <div>
-          <div className="flex justify-between items-center mb-4">
-            <h4 className="text-lg font-medium text-gray-900">{t('admin.form.ctaButtons')}</h4>
-            <button
-              type="button"
-              onClick={() => setShowCTAConfig(!showCTAConfig)}
-              className="flex items-center text-orange-600 hover:text-orange-800 text-sm"
-            >
-              <Settings className="h-4 w-4 mr-1" />
-              {showCTAConfig ? t('common.less') : t('common.more')}
-            </button>
-          </div>
-
-          {showCTAConfig && (
-            <div className="border border-gray-200 rounded-lg p-4 space-y-4">
-              <div className="flex justify-between items-center">
-                <p className="text-sm text-gray-600" data-lingo-skip>
-                  Configure custom call-to-action buttons for this barraca. Leave empty to use default buttons.
-                </p>
+              <div className="flex justify-between items-center mb-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  {t('admin.form.images')}
+                </label>
                 <button
                   type="button"
-                  onClick={addCTAButton}
+                  onClick={() => addArrayItem('images')}
                   className="text-orange-600 hover:text-orange-800 flex items-center text-sm"
                 >
                   <Plus className="h-4 w-4 mr-1" />
-                  {t('common.add')} Button
+                  {t('admin.form.addImage')}
+                </button>
+              </div>
+              {formData.images.map((image, index) => (
+                <div key={index} className="flex gap-2 mb-2">
+                  <input
+                    type="url"
+                    value={image}
+                    onChange={(e) => updateArrayItem('images', index, e.target.value)}
+                    placeholder="https://example.com/image.jpg"
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => removeArrayItem('images', index)}
+                    className="p-2 text-red-600 hover:text-red-800"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            {/* Menu Preview */}
+            <div>
+              <div className="flex justify-between items-center mb-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  {t('admin.form.menuPreview')}
+                </label>
+                <button
+                  type="button"
+                  onClick={() => addArrayItem('menuPreview')}
+                  className="text-orange-600 hover:text-orange-800 flex items-center text-sm"
+                >
+                  <Plus className="h-4 w-4 mr-1" />
+                  {t('admin.form.addItem')}
+                </button>
+              </div>
+              {formData.menuPreview.map((item, index) => (
+                <div key={index} className="flex gap-2 mb-2">
+                  <input
+                    type="text"
+                    value={item}
+                    onChange={(e) => updateArrayItem('menuPreview', index, e.target.value)}
+                    placeholder="Menu item name"
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => removeArrayItem('menuPreview', index)}
+                    className="p-2 text-red-600 hover:text-red-800"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            {/* Contact Information */}
+            <div>
+              <h4 className="text-lg font-medium text-gray-900 mb-3">{t('admin.form.contact')}</h4>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    {t('admin.form.whatsapp')}
+                  </label>
+                  <input
+                    type="tel"
+                    value={formData.contact.phone}
+                    onChange={(e) => setFormData(prev => ({
+                      ...prev,
+                      contact: { ...prev.contact, phone: e.target.value }
+                    }))}
+                    placeholder="+55 21 99999-0000"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    {t('admin.form.email')}
+                  </label>
+                  <input
+                    type="email"
+                    value={formData.contact.email}
+                    onChange={(e) => setFormData(prev => ({
+                      ...prev,
+                      contact: { ...prev.contact, email: e.target.value }
+                    }))}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    {t('admin.form.instagram')}
+                  </label>
+                  <input
+                    type="url"
+                    value={formData.contact.website}
+                    onChange={(e) => setFormData(prev => ({
+                      ...prev,
+                      contact: { ...prev.contact, website: e.target.value }
+                    }))}
+                    placeholder="https://instagram.com/barraca"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Amenities */}
+            <div>
+              <div className="flex justify-between items-center mb-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  {t('admin.form.amenities')}
+                </label>
+                <button
+                  type="button"
+                  onClick={() => addArrayItem('amenities')}
+                  className="text-orange-600 hover:text-orange-800 flex items-center text-sm"
+                >
+                  <Plus className="h-4 w-4 mr-1" />
+                  {t('admin.form.addAmenity')}
+                </button>
+              </div>
+              {formData.amenities.map((amenity, index) => (
+                <div key={index} className="flex gap-2 mb-2">
+                  <input
+                    type="text"
+                    value={amenity}
+                    onChange={(e) => updateArrayItem('amenities', index, e.target.value)}
+                    placeholder="WiFi, Umbrellas, etc."
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => removeArrayItem('amenities', index)}
+                    className="p-2 text-red-600 hover:text-red-800"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            {/* CTA Buttons Configuration */}
+            <div>
+              <div className="flex justify-between items-center mb-4">
+                <h4 className="text-lg font-medium text-gray-900">{t('admin.form.ctaButtons')}</h4>
+                <button
+                  type="button"
+                  onClick={() => setShowCTAConfig(!showCTAConfig)}
+                  className="flex items-center text-orange-600 hover:text-orange-800 text-sm"
+                >
+                  <Settings className="h-4 w-4 mr-1" />
+                  {showCTAConfig ? t('common.less') : t('common.more')}
                 </button>
               </div>
 
-              {formData.ctaButtons.map((button, index) => (
-                <div key={button.id} className="border border-gray-100 rounded-lg p-4 space-y-3">
-                  <div className="flex justify-between items-center">
-                    <h5 className="font-medium text-gray-900" data-lingo-skip>Button {index + 1}</h5>
-                    <button
-                      type="button"
-                      onClick={() => removeCTAButton(index)}
-                      className="text-red-600 hover:text-red-800"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </button>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-                    <div>
-                      <label className="block text-xs font-medium text-gray-700 mb-1">
-                        Button Text {t('admin.form.required')}
-                      </label>
+              {showCTAConfig && (
+                <div className="space-y-4 p-4 bg-gray-50 rounded-lg">
+                  {formData.ctaButtons.map((button, index) => (
+                    <div key={index} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
                       <input
                         type="text"
                         value={button.text}
                         onChange={(e) => updateCTAButton(index, { text: e.target.value })}
-                        placeholder="Reserve Now"
-                        className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-orange-500"
+                        placeholder="Button text"
+                        className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                       />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-medium text-gray-700 mb-1">
-                        Action Type {t('admin.form.required')}
-                      </label>
                       <select
                         value={button.action.type}
-                        onChange={(e) => updateCTAButton(index, { 
-                          action: { ...button.action, type: e.target.value as any }
-                        })}
-                        className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-orange-500"
+                        onChange={(e) => updateCTAButton(index, { action: { ...button.action, type: e.target.value as any } })}
+                        className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                       >
                         {ctaButtonTypes.map(type => (
                           <option key={type} value={type}>{type}</option>
                         ))}
                       </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-medium text-gray-700 mb-1">
-                        Action Value {t('admin.form.required')}
-                      </label>
                       <input
                         type="text"
                         value={button.action.value}
-                        onChange={(e) => updateCTAButton(index, { 
-                          action: { ...button.action, value: e.target.value }
-                        })}
-                        placeholder="URL, phone, etc."
-                        className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-orange-500"
+                        onChange={(e) => updateCTAButton(index, { action: { ...button.action, value: e.target.value } })}
+                        placeholder="URL, phone, email, etc."
+                        className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                       />
+                      <div className="flex gap-2">
+                        <select
+                          value={button.style}
+                          onChange={(e) => updateCTAButton(index, { style: e.target.value as any })}
+                          className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                        >
+                          {ctaButtonStyles.map(style => (
+                            <option key={style} value={style}>{style}</option>
+                          ))}
+                        </select>
+                        <button
+                          type="button"
+                          onClick={() => removeCTAButton(index)}
+                          className="p-2 text-red-600 hover:text-red-800"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      </div>
                     </div>
-
-                    <div>
-                      <label className="block text-xs font-medium text-gray-700 mb-1" data-lingo-skip>
-                        Style
-                      </label>
-                      <select
-                        value={button.style}
-                        onChange={(e) => updateCTAButton(index, { style: e.target.value as any })}
-                        className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-orange-500"
-                      >
-                        {ctaButtonStyles.map(style => (
-                          <option key={style} value={style}>{style}</option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    <div>
-                      <label className="block text-xs font-medium text-gray-700 mb-1" data-lingo-skip>
-                        Icon
-                      </label>
-                      <select
-                        value={button.icon || ''}
-                        onChange={(e) => updateCTAButton(index, { icon: e.target.value || undefined })}
-                        className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-orange-500"
-                      >
-                        <option value="" data-lingo-skip>No Icon</option>
-                        {iconOptions.map(icon => (
-                          <option key={icon} value={icon}>{icon}</option>
-                        ))}
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-medium text-gray-700 mb-1" data-lingo-skip>
-                        Position
-                      </label>
-                      <input
-                        type="number"
-                        min="1"
-                        value={button.position}
-                        onChange={(e) => updateCTAButton(index, { position: parseInt(e.target.value) || 1 })}
-                        className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-orange-500"
-                      />
-                    </div>
-
-                    <div className="flex items-center">
-                      <label className="flex items-center">
-                        <input
-                          type="checkbox"
-                          checked={button.enabled}
-                          onChange={(e) => updateCTAButton(index, { enabled: e.target.checked })}
-                          className="h-3 w-3 text-orange-600 focus:ring-orange-500 border-gray-300 rounded"
-                        />
-                        <span className="ml-2 text-xs text-gray-700" data-lingo-skip>Enabled</span>
-                      </label>
-                    </div>
-                  </div>
-
-                  {/* Visibility Conditions */}
-                  <div className="border-t border-gray-100 pt-3">
-                    <h6 className="text-xs font-medium text-gray-700 mb-2" data-lingo-skip>Visibility Conditions</h6>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-                      <label className="flex items-center">
-                        <input
-                          type="checkbox"
-                          checked={button.visibilityConditions.requiresOpen || false}
-                          onChange={(e) => updateCTAButton(index, {
-                            visibilityConditions: {
-                              ...button.visibilityConditions,
-                              requiresOpen: e.target.checked || undefined
-                            }
-                          })}
-                          className="h-3 w-3 text-orange-600 focus:ring-orange-500 border-gray-300 rounded"
-                        />
-                        <span className="ml-1 text-xs text-gray-700" data-lingo-skip>Requires Open</span>
-                      </label>
-
-                      <label className="flex items-center">
-                        <input
-                          type="checkbox"
-                          checked={button.visibilityConditions.requiresClosed || false}
-                          onChange={(e) => updateCTAButton(index, {
-                            visibilityConditions: {
-                              ...button.visibilityConditions,
-                              requiresClosed: e.target.checked || undefined
-                            }
-                          })}
-                          className="h-3 w-3 text-orange-600 focus:ring-orange-500 border-gray-300 rounded"
-                        />
-                        <span className="ml-1 text-xs text-gray-700" data-lingo-skip>Requires Closed</span>
-                      </label>
-
-                      <label className="flex items-center">
-                        <input
-                          type="checkbox"
-                          checked={button.visibilityConditions.memberOnly || false}
-                          onChange={(e) => updateCTAButton(index, {
-                            visibilityConditions: {
-                              ...button.visibilityConditions,
-                              memberOnly: e.target.checked || undefined
-                            }
-                          })}
-                          className="h-3 w-3 text-orange-600 focus:ring-orange-500 border-gray-300 rounded"
-                        />
-                        <span className="ml-1 text-xs text-gray-700" data-lingo-skip>Member Only</span>
-                      </label>
-
-                      <label className="flex items-center">
-                        <input
-                          type="checkbox"
-                          checked={button.visibilityConditions.weatherDependent || false}
-                          onChange={(e) => updateCTAButton(index, {
-                            visibilityConditions: {
-                              ...button.visibilityConditions,
-                              weatherDependent: e.target.checked || undefined
-                            }
-                          })}
-                          className="h-3 w-3 text-orange-600 focus:ring-orange-500 border-gray-300 rounded"
-                        />
-                        <span className="ml-1 text-xs text-gray-700" data-lingo-skip>Weather Dependent</span>
-                      </label>
-                    </div>
-                  </div>
+                  ))}
+                  <button
+                    type="button"
+                    onClick={addCTAButton}
+                    className="w-full py-2 border-2 border-dashed border-gray-300 rounded-lg text-gray-500 hover:border-orange-500 hover:text-orange-500 transition-colors"
+                  >
+                    <Plus className="h-4 w-4 mx-auto" />
+                  </button>
                 </div>
-              ))}
+              )}
             </div>
-          )}
-        </div>
+          </>
+        )}
+
+        {/* Non-partnered message */}
+        {!formData.partnered && (
+          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+            <div className="flex">
+              <div className="flex-shrink-0">
+                <svg className="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div className="ml-3">
+                <h3 className="text-sm font-medium text-yellow-800">
+                  {t('admin.form.partneredRequired')}
+                </h3>
+                <div className="mt-2 text-sm text-yellow-700">
+                  <p>{t('admin.form.partneredRequiredMessage')}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Form Actions */}
         <div className="flex justify-end space-x-4 pt-6 border-t">
