@@ -57,7 +57,7 @@
     "share": "Compartilhar",
     "notPartnered": "Não Parceira",
     "notPartneredMessage": "Esta barraca não é parceira nossa. Apenas informações básicas estão disponíveis.",
-    "basicInfoOnly": "Apenas informações básicas"
+    "limitedInfo": "Info limitada"
   },
   "admin": {
     "login": "Login Admin",

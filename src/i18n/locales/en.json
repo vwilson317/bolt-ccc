@@ -57,7 +57,7 @@
     "share": "Share",
     "notPartnered": "Not Partnered",
     "notPartneredMessage": "This barraca is not partnered with us. Only basic information is available.",
-    "basicInfoOnly": "Basic information only",
+    "limitedInfo": "Limited info",
     "open": "Open",
     "closed": "Closed",
     "undetermined": "Undetermined"
