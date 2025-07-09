@@ -258,12 +258,45 @@
     },
     "meetTeam": "Rencontrez Notre Équipe",
     "teamDescription": "Passionnés de barracas et experts en technologie travaillant pour renforcer la communauté des barracas de Rio",
+    "team": {
+      "vincent": {
+        "name": "Vincent Wilson",
+        "role": "Fondateur et PDG",
+        "bio": "Né et élevé aux États-Unis, Vincent apporte plus de 5 ans d'expérience en développement commercial international et construction de relations sur des marchés diversifiés."
+      },
+      "hans": {
+        "name": "Hans Yadav",
+        "role": "CTO",
+        "bio": "Leader technologique expérimenté avec expertise dans les systèmes de service client et le développement de plateformes numériques."
+      },
+      "simon": {
+        "name": "Simon Paul",
+        "role": "Directeur des Opérations",
+        "bio": "Passionné de technologie axé sur la création d'expériences utilisateur transparentes et l'optimisation des processus opérationnels."
+      },
+      "jordi": {
+        "name": "Jordi De Avila",
+        "role": "Gestionnaire des Opérations Commerciales",
+        "bio": "Professionnel dévoué avec expertise dans l'optimisation des processus commerciaux et la gestion des relations clients."
+      },
+      "ricardo": {
+        "name": "Ricardo Del Razo",
+        "role": "Chef des Partenariats Spéciaux",
+        "bio": "Expert en partenariats stratégiques avec expérience dans le développement et le maintien de relations commerciales clés."
+      }
+    },
     "getInTouch": "Contactez-nous",
     "getInTouchDescription": "Questions sur l'adhésion? Vous voulez être notre partenaire? Nous aimerions vous entendre.",
     "whatsapp": "WhatsApp",
     "whatsappDescription": "Réponses rapides via WhatsApp",
     "instagram": "Instagram",
     "instagramDescription": "Suivez-nous pour les mises à jour quotidiennes",
+    "stats": {
+      "partnerBarracas": "Barracas Partenaires",
+      "activeMembers": "Membres Actifs",
+      "statusUpdates": "Mises à jour de Statut",
+      "neighborhoods": "Quartiers"
+    },
     "joinCommunity": "Rejoignez Notre Communauté",
     "joinCommunityDescription": "Recevez des mises à jour de membre, alertes de réservation de chaises et offres exclusives des barracas partenaires"
   },

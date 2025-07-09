@@ -251,8 +251,41 @@
         "description": "Exclusive offers, priority service, and special events for loyal customers."
       }
     },
+    "stats": {
+      "partnerBarracas": "Partner Barracas",
+      "activeMembers": "Active Members",
+      "statusUpdates": "Status Updates",
+      "neighborhoods": "Neighborhoods"
+    },
     "meetTeam": "Meet Our Team",
     "teamDescription": "Barraca enthusiasts and tech experts working to strengthen Rio's barraca community",
+    "team": {
+      "vincent": {
+        "name": "Vincent Wilson",
+        "role": "Founder & CEO",
+        "bio": "Born and raised in the United States, Vincent brings over 5 years of experience in international business development and relationship building across diverse markets."
+      },
+      "hans": {
+        "name": "Hans Yadav",
+        "role": "CTO",
+        "bio": "Experienced technology leader with expertise in customer service systems and digital platform development."
+      },
+      "simon": {
+        "name": "Simon Paul",
+        "role": "Director of Operations",
+        "bio": "Tech enthusiast focused on creating seamless user experiences and optimizing operational processes."
+      },
+      "jordi": {
+        "name": "Jordi De Avila",
+        "role": "Business Operations Manager",
+        "bio": "Dedicated professional with expertise in business process optimization and customer relationship management."
+      },
+      "ricardo": {
+        "name": "Ricardo Del Razo",
+        "role": "Head of Special Partnerships",
+        "bio": "Strategic partnership expert with experience in developing and maintaining key business relationships."
+      }
+    },
     "getInTouch": "Get in Touch",
     "getInTouchDescription": "Questions about membership? Want to partner with us? We'd love to hear from you.",
     "whatsapp": "WhatsApp",

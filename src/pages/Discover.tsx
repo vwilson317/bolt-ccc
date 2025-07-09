@@ -56,24 +56,21 @@ const Discover: React.FC = () => {
   };
 
   const handleLocationsChange = React.useCallback((locations: string[]) => {
-    // If only one location is selected, use it as the main location filter
-    // Otherwise, we could implement a more complex filter logic here
+    // Update both location (for backward compatibility) and locations array
     if (locations.length === 1) {
-      updateSearchFilters({ location: locations[0] });
+      updateSearchFilters({ location: locations[0], locations: locations });
     } else if (locations.length > 1) {
-      // For multiple locations, we could implement a custom filter
-      // For now, just use the first one as the main filter
-      updateSearchFilters({ location: locations[0] });
+      updateSearchFilters({ location: '', locations: locations });
     } else {
-      updateSearchFilters({ location: '' });
+      updateSearchFilters({ location: '', locations: [] });
     }
   }, [updateSearchFilters]);
 
   const clearFilters = () => {
-    updateSearchFilters({ query: '', openNow: false, location: '', status: 'all' });
+    updateSearchFilters({ query: '', openNow: false, location: '', locations: [], status: 'all' });
   };
 
-  const hasActiveFilters = searchFilters.query || searchFilters.location || searchFilters.status !== 'all';
+  const hasActiveFilters = searchFilters.query || searchFilters.location || searchFilters.locations.length > 0 || searchFilters.status !== 'all';
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -177,7 +174,7 @@ const Discover: React.FC = () => {
                 <LocationFilterCheckboxes
                   availableLocations={southZoneNeighborhoods}
                   onLocationsChange={handleLocationsChange}
-                  initialLocations={searchFilters.location ? [searchFilters.location] : []}
+                  initialLocations={searchFilters.locations.length > 0 ? searchFilters.locations : (searchFilters.location ? [searchFilters.location] : [])}
                 />
               </div>
             </div>
@@ -206,10 +203,15 @@ const Discover: React.FC = () => {
                   {searchFilters.status === 'open' ? t('barraca.open') : t('barraca.closed')}
                 </span>
               )}
-              {searchFilters.location && (
+              {searchFilters.locations.length > 0 && (
                 <span className="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm flex items-center">
                   <MapPin className="h-3 w-3 mr-1" />
-                  {searchFilters.location}
+                  {searchFilters.locations.length === 1 
+                    ? searchFilters.locations[0]
+                    : searchFilters.locations.length <= 3
+                    ? searchFilters.locations.join(', ')
+                    : `${searchFilters.locations.length} locations`
+                  }
                 </span>
               )}
             </div>

@@ -258,12 +258,45 @@
     },
     "meetTeam": "Conoce Nuestro Equipo",
     "teamDescription": "Entusiastas de las barracas y expertos en tecnología trabajando para fortalecer la comunidad de barracas de Río",
+    "team": {
+      "vincent": {
+        "name": "Vincent Wilson",
+        "role": "Fundador y CEO",
+        "bio": "Nacido y criado en los Estados Unidos, Vincent aporta más de 5 años de experiencia en desarrollo de negocios internacionales y construcción de relaciones en mercados diversos."
+      },
+      "hans": {
+        "name": "Hans Yadav",
+        "role": "CTO",
+        "bio": "Líder experimentado en tecnología con experiencia en sistemas de servicio al cliente y desarrollo de plataformas digitales."
+      },
+      "simon": {
+        "name": "Simon Paul",
+        "role": "Director de Operaciones",
+        "bio": "Entusiasta de la tecnología enfocado en crear experiencias de usuario perfectas y optimizar procesos operativos."
+      },
+      "jordi": {
+        "name": "Jordi De Avila",
+        "role": "Gerente de Operaciones de Negocios",
+        "bio": "Profesional dedicado con experiencia en optimización de procesos de negocios y gestión de relaciones con clientes."
+      },
+      "ricardo": {
+        "name": "Ricardo Del Razo",
+        "role": "Jefe de Alianzas Especiales",
+        "bio": "Experto en alianzas estratégicas con experiencia en desarrollar y mantener relaciones comerciales clave."
+      }
+    },
     "getInTouch": "Ponte en Contacto",
     "getInTouchDescription": "¿Preguntas sobre la membresía? ¿Quieres ser nuestro socio? Nos encantaría escucharte.",
     "whatsapp": "WhatsApp",
     "whatsappDescription": "Respuestas rápidas vía WhatsApp",
     "instagram": "Instagram",
     "instagramDescription": "Síguenos para actualizaciones diarias",
+    "stats": {
+      "partnerBarracas": "Barracas Socias",
+      "activeMembers": "Miembros Activos",
+      "statusUpdates": "Actualizaciones de Estado",
+      "neighborhoods": "Barrios"
+    },
     "joinCommunity": "Únete a Nuestra Comunidad",
     "joinCommunityDescription": "Recibe actualizaciones de miembro, alertas de reserva de sillas y ofertas exclusivas de barracas socias"
   },

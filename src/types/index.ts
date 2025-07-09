@@ -52,7 +52,8 @@ export interface WeatherData {
 export interface SearchFilters {
   query: string;
   openNow: boolean;
-  location: string;
+  location: string; // Keep for backward compatibility
+  locations: string[]; // New field for multiple location support
   status: 'all' | 'open' | 'closed'; // Enhanced status filter
 }
 

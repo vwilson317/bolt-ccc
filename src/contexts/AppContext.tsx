@@ -52,6 +52,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     query: '',
     openNow: false,
     location: '',
+    locations: [],
     status: 'all'
   });
   const [isLoading, setIsLoading] = useState(false);
@@ -141,9 +142,13 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     // Legacy openNow filter (for backward compatibility)
     const matchesOpenNow = !searchFilters.openNow || effectiveIsOpen;
     
-    // Location filter (neighborhood)
-    const matchesLocation = searchFilters.location === '' ||
-      barraca.location.toLowerCase().includes(searchFilters.location.toLowerCase());
+    // Location filter (neighborhood) - support both single and multiple locations
+    const matchesLocation = 
+      searchFilters.location === '' && searchFilters.locations.length === 0 ||
+      (searchFilters.location !== '' && barraca.location.toLowerCase().includes(searchFilters.location.toLowerCase())) ||
+      (searchFilters.locations.length > 0 && searchFilters.locations.some(loc => 
+        barraca.location.toLowerCase().includes(loc.toLowerCase())
+      ));
 
     return matchesQuery && matchesStatus && matchesOpenNow && matchesLocation;
   }).sort((a, b) => {
