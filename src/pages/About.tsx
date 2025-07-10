@@ -2,9 +2,18 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Heart, Users, MapPin, Smartphone, MessageCircle, Instagram, Calendar, Gift } from 'lucide-react';
 import EmailSubscription from '../components/EmailSubscription';
+import { useScrollAnimation } from '../hooks/useScrollAnimation';
 
 const About: React.FC = () => {
   const { t } = useTranslation();
+
+  // Scroll animations
+  const heroAnimation = useScrollAnimation('slideUp');
+  const missionAnimation = useScrollAnimation('fadeInScale');
+  const statsAnimation = useScrollAnimation('slideUp', { delay: 200 });
+  const valuesAnimation = useScrollAnimation('slideUpStagger');
+  const teamAnimation = useScrollAnimation('rotateIn');
+  const contactAnimation = useScrollAnimation('zoomIn');
 
   const values = [
     {
@@ -85,7 +94,7 @@ const About: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-orange-500 to-red-600 pt-16 pb-20">
+      <section ref={heroAnimation.ref} className={`bg-gradient-to-r from-orange-500 to-red-600 pt-16 pb-20 ${heroAnimation.animationClasses}`}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
             {t('about.title')}
@@ -97,7 +106,7 @@ const About: React.FC = () => {
       </section>
 
       {/* Mission Section */}
-      <section className="py-16 bg-white">
+      <section ref={missionAnimation.ref} className={`py-16 bg-white ${missionAnimation.animationClasses}`}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-8">
             {t('about.mission')}
@@ -117,11 +126,11 @@ const About: React.FC = () => {
       </section>
 
       {/* Stats Section */}
-      <section className="py-16 bg-gradient-to-r from-orange-500 to-red-600">
+      <section ref={statsAnimation.ref} className={`py-16 bg-gradient-to-r from-orange-500 to-red-600 ${statsAnimation.animationClasses}`}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             {stats.map((stat, index) => (
-              <div key={index}>
+              <div key={index} className={`stagger-${index + 1}`}>
                 <div className="text-4xl md:text-5xl font-bold text-white mb-2">
                   {stat.number}
                 </div>
@@ -135,7 +144,7 @@ const About: React.FC = () => {
       </section>
 
       {/* Values Section */}
-      <section className="py-16 bg-gray-50">
+      <section ref={valuesAnimation.ref} className={`py-16 bg-gray-50 ${valuesAnimation.animationClasses}`}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -150,7 +159,7 @@ const About: React.FC = () => {
             {values.map((value, index) => {
               const Icon = value.icon;
               return (
-                <div key={index} className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-200">
+                <div key={index} className={`bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-200 stagger-${index + 1}`}>
                   <div className="bg-gradient-to-r from-orange-500 to-red-600 w-12 h-12 rounded-xl flex items-center justify-center mb-4">
                     <Icon className="h-6 w-6 text-white" />
                   </div>
@@ -168,7 +177,7 @@ const About: React.FC = () => {
       </section>
 
       {/* Team Section */}
-      <section className="py-16 bg-white">
+      <section ref={teamAnimation.ref} className={`py-16 bg-white ${teamAnimation.animationClasses}`}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -181,7 +190,7 @@ const About: React.FC = () => {
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {team.map((member, index) => (
-              <div key={index} className="text-center">
+              <div key={index} className={`text-center stagger-${index + 1}`}>
                 <div className="mb-6">
                   <img
                     src={member.image}
@@ -205,7 +214,7 @@ const About: React.FC = () => {
       </section>
 
       {/* Contact Section */}
-      <section className="py-16 bg-gradient-to-b from-gray-50 to-white">
+      <section ref={contactAnimation.ref} className={`py-16 bg-gradient-to-b from-gray-50 to-white ${contactAnimation.animationClasses}`}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">

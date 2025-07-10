@@ -8,6 +8,7 @@ import BarracaGrid from '../components/BarracaGrid';
 import StoryCarousel from '../components/StoryCarousel';
 import WeatherWidget from '../components/WeatherWidget';
 import LocationFilterCheckboxes from '../components/LocationFilterCheckboxes';
+import { useScrollAnimation } from '../hooks/useScrollAnimation';
 
 const Discover: React.FC = () => {
   const { t } = useTranslation();
@@ -15,6 +16,9 @@ const Discover: React.FC = () => {
   const { featureFlags } = useStory();
   const { weather } = useWeather();
   const [showFilters, setShowFilters] = useState(true);
+
+  // Scroll animations
+  const resultsAnimation = useScrollAnimation('slideUp');
 
   // Complete list of South Zone neighborhoods
   const southZoneNeighborhoods = [
@@ -219,9 +223,10 @@ const Discover: React.FC = () => {
         </div>
 
         {/* Results */}
-        {filteredBarracas.length > 0 ? (
-          <BarracaGrid barracas={filteredBarracas} />
-        ) : (
+        <div ref={resultsAnimation.ref} className={resultsAnimation.animationClasses}>
+          {filteredBarracas.length > 0 ? (
+            <BarracaGrid barracas={filteredBarracas} />
+          ) : (
           <div className="text-center py-16">
             <div className="bg-gray-100 rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-4">
               <Search className="h-12 w-12 text-gray-400" />
@@ -241,6 +246,7 @@ const Discover: React.FC = () => {
             </button>
           </div>
         )}
+        </div>
       </div>
     </div>
   );

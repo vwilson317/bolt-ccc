@@ -228,3 +228,37 @@
 .dot-pulse {
   animation: dotPulse 1.5s ease-in-out infinite;
 }
+
+/* Scroll Animation Classes */
+/* Staggered animation delays */
+.stagger-1 { animation-delay: 0.1s; }
+.stagger-2 { animation-delay: 0.2s; }
+.stagger-3 { animation-delay: 0.3s; }
+.stagger-4 { animation-delay: 0.4s; }
+.stagger-5 { animation-delay: 0.5s; }
+.stagger-6 { animation-delay: 0.6s; }
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .stagger-1, .stagger-2, .stagger-3, .stagger-4, .stagger-5, .stagger-6 {
+    animation-delay: 0s;
+  }
+  
+  .transition-all {
+    transition: none !important;
+  }
+  
+  .duration-700 {
+    transition-duration: 0s !important;
+  }
+}
+
+/* Smooth scrolling for better animation experience */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Will-change optimization for transform and opacity animations */
+.transition-all {
+  will-change: transform, opacity;
+}

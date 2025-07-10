@@ -9,11 +9,20 @@ import StoryCarousel from '../components/StoryCarousel';
 import UniqueVisitorCounter from '../components/UniqueVisitorCounter';
 import { useApp } from '../contexts/AppContext';
 import { useStory } from '../contexts/StoryContext';
+import { useScrollAnimation } from '../hooks/useScrollAnimation';
 
 const Home: React.FC = () => {
   const { t } = useTranslation();
   const { barracas } = useApp();
   const { featureFlags } = useStory();
+
+  // Scroll animations
+  const ctaAnimation = useScrollAnimation('slideUp');
+  const statsAnimation = useScrollAnimation('fadeInScale');
+  const featuredAnimation = useScrollAnimation('slideUp');
+  const featuresAnimation = useScrollAnimation('slideUpStagger');
+  const benefitsAnimation = useScrollAnimation('zoomIn');
+  const signupAnimation = useScrollAnimation('fadeInScale');
 
   const loyaltyFeatures = [
     {
@@ -57,7 +66,7 @@ const Home: React.FC = () => {
       <HeroCarousel />
 
       {/* Call to Action Section */}
-      <section className="py-16 bg-gradient-to-b from-orange-50 to-white">
+      <section ref={ctaAnimation.ref} className={`py-16 bg-gradient-to-b from-orange-50 to-white ${ctaAnimation.animationClasses}`}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
             {t('home.yourBarraca')}
@@ -84,7 +93,7 @@ const Home: React.FC = () => {
           </div>
 
           {/* Quick Stats with Unique Visitor Counter */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-12">
+          <div ref={statsAnimation.ref} className={`grid grid-cols-2 md:grid-cols-4 gap-6 mt-12 ${statsAnimation.animationClasses}`}>
             <div className="text-center">
               <div className="text-3xl font-bold text-orange-600 mb-2">{barracas.length}<span data-lingo-skip>+</span></div>
               <div className="text-sm text-gray-600"><span data-lingo-skip>{t('home.stats.partnerBarracas') || 'Partner Barracas'}</span></div>
@@ -103,7 +112,7 @@ const Home: React.FC = () => {
       </section>
 
       {/* Featured Barracas */}
-      <section className="py-16 bg-white">
+      <section ref={featuredAnimation.ref} className={`py-16 bg-white ${featuredAnimation.animationClasses}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -125,7 +134,7 @@ const Home: React.FC = () => {
       </section>
 
       {/* Loyalty Program Features */}
-      <section className="py-16 bg-gradient-to-b from-gray-50 to-white">
+      <section ref={featuresAnimation.ref} className={`py-16 bg-gradient-to-b from-gray-50 to-white ${featuresAnimation.animationClasses}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -140,7 +149,7 @@ const Home: React.FC = () => {
             {loyaltyFeatures.map((feature, index) => {
               const Icon = feature.icon;
               return (
-                <div key={index} className="text-center group">
+                <div key={index} className={`text-center group stagger-${index + 1}`}>
                   <div className="bg-gradient-to-r from-orange-500 to-red-600 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:from-orange-600 group-hover:to-red-700 transform group-hover:scale-110 transition-all duration-200 shadow-lg">
                     <Icon className="h-8 w-8 text-white" />
                   </div>
@@ -158,7 +167,7 @@ const Home: React.FC = () => {
       </section>
 
       {/* Member Benefits */}
-      <section className="py-16 bg-gradient-to-r from-yellow-400 to-orange-500">
+      <section ref={benefitsAnimation.ref} className={`py-16 bg-gradient-to-r from-yellow-400 to-orange-500 ${benefitsAnimation.animationClasses}`}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
             <Users className="h-16 w-16 text-white mx-auto mb-6" />
@@ -191,7 +200,7 @@ const Home: React.FC = () => {
       </section>
 
       {/* Email Subscription */}
-      <section id="loyalty-signup" className="py-16 bg-gradient-to-r from-orange-500 to-red-600">
+      <section id="loyalty-signup" ref={signupAnimation.ref} className={`py-16 bg-gradient-to-r from-orange-500 to-red-600 ${signupAnimation.animationClasses}`}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             {t('home.joinToday')}
