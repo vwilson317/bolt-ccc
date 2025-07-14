@@ -152,22 +152,6 @@ const Admin: React.FC = () => {
             <p className="text-sm text-gray-500 mb-2" data-lingo-skip>
               {t('admin.credentials')}
             </p>
-            <p className="text-xs text-gray-400" data-lingo-skip>
-              Special Admin: special@cariocacoastal.com / special123
-            </p>
-            <div className="mt-2 p-2 bg-gray-100 rounded text-xs">
-              <p>Debug: isAdmin={isAdmin.toString()}, isSpecialAdmin={isSpecialAdmin.toString()}</p>
-            </div>
-            <button
-              onClick={async () => {
-                console.log('Testing special admin login...');
-                const success = await adminLogin('special@cariocacoastal.com', 'special123');
-                console.log('Special admin login test result:', success);
-              }}
-              className="mt-2 px-3 py-1 bg-orange-600 text-white text-xs rounded hover:bg-orange-700"
-            >
-              Test Special Admin Login
-            </button>
           </div>
         </div>
       </div>
@@ -176,7 +160,6 @@ const Admin: React.FC = () => {
 
   // Special Admin Interface - Show only the Special Admin Panel
   if (isSpecialAdmin) {
-    console.log('Rendering Special Admin Interface - isSpecialAdmin is true');
     return (
       <div className="min-h-screen bg-gray-50">
         {/* Header */}
@@ -189,10 +172,7 @@ const Admin: React.FC = () => {
               
               {/* Desktop Logout Button */}
               <button
-                onClick={() => {
-                  console.log('Logout button clicked');
-                  adminLogout();
-                }}
+                onClick={adminLogout}
                 className="hidden sm:block px-6 py-2 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700 transition-colors shadow-sm border-2 border-red-700"
               >
                 LOGOUT
@@ -215,7 +195,6 @@ const Admin: React.FC = () => {
                 <div className="px-2 pt-2 pb-3 space-y-1">
                   <button
                     onClick={() => {
-                      console.log('Logout button clicked (mobile)');
                       adminLogout();
                       setMobileMenuOpen(false);
                     }}
@@ -230,12 +209,6 @@ const Admin: React.FC = () => {
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg">
-            <p className="text-sm text-green-800">
-              Special Admin Interface Active - {barracas?.length || 0} barracas loaded
-            </p>
-          </div>
-          
           <SpecialAdminPanel 
             barracas={barracas}
             onRefresh={() => {
