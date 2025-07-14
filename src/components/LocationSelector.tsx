@@ -112,7 +112,7 @@ const LocationSelector: React.FC<LocationSelectorProps> = ({
               <input
                 id="primary-location"
                 type="text"
-                className="w-full px-4 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-colors"
+                className="w-full px-4 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent transition-colors"
                 placeholder="Select a location"
                 value={primarySearchTerm}
                 onChange={(e) => {
@@ -156,8 +156,8 @@ const LocationSelector: React.FC<LocationSelectorProps> = ({
                 filteredPrimaryLocations.map((location) => (
                   <li
                     key={location}
-                    className={`relative cursor-pointer select-none py-2 px-4 hover:bg-orange-100 ${
-                      primaryLocation === location ? 'bg-orange-50 text-orange-600' : 'text-gray-900'
+                    className={`relative cursor-pointer select-none py-2 px-4 hover:bg-beach-100 ${
+                      primaryLocation === location ? 'bg-beach-50 text-beach-600' : 'text-gray-900'
                     }`}
                     onClick={() => handlePrimaryLocationSelect(location)}
                     role="option"
@@ -165,7 +165,7 @@ const LocationSelector: React.FC<LocationSelectorProps> = ({
                   >
                     <div className="flex items-center justify-between">
                       <span>{location}</span>
-                      {primaryLocation === location && <Check className="h-4 w-4 text-orange-600" />}
+                      {primaryLocation === location && <Check className="h-4 w-4 text-beach-600" />}
                     </div>
                   </li>
                 ))
@@ -175,7 +175,7 @@ const LocationSelector: React.FC<LocationSelectorProps> = ({
         </div>
         {primaryLocation && (
           <div className="mt-2 flex items-center">
-            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800">
+            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-beach-100 text-beach-800">
               {primaryLocation}
             </span>
           </div>
@@ -193,7 +193,7 @@ const LocationSelector: React.FC<LocationSelectorProps> = ({
               <input
                 id="neighboring-locations"
                 type="text"
-                className="w-full px-4 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-colors"
+                className="w-full px-4 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent transition-colors"
                 placeholder="Select neighboring locations"
                 value={neighboringSearchTerm}
                 onChange={(e) => {
@@ -240,8 +240,8 @@ const LocationSelector: React.FC<LocationSelectorProps> = ({
                 filteredNeighboringLocations.map((location) => (
                   <li
                     key={location}
-                    className={`relative cursor-pointer select-none py-2 px-4 hover:bg-orange-100 ${
-                      neighboringLocations.includes(location) ? 'bg-orange-50 text-orange-600' : 'text-gray-900'
+                    className={`relative cursor-pointer select-none py-2 px-4 hover:bg-beach-100 ${
+                      neighboringLocations.includes(location) ? 'bg-beach-50 text-beach-600' : 'text-gray-900'
                     }`}
                     onClick={() => handleNeighboringLocationToggle(location)}
                     role="option"
@@ -249,7 +249,7 @@ const LocationSelector: React.FC<LocationSelectorProps> = ({
                   >
                     <div className="flex items-center justify-between">
                       <span>{location}</span>
-                      {neighboringLocations.includes(location) && <Check className="h-4 w-4 text-orange-600" />}
+                      {neighboringLocations.includes(location) && <Check className="h-4 w-4 text-beach-600" />}
                     </div>
                   </li>
                 ))

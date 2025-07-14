@@ -58,7 +58,7 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
   ];
 
   const ctaButtonStyles = ['primary', 'secondary', 'outline', 'ghost'];
-  const ctaButtonTypes = ['url', 'phone', 'email', 'whatsapp', 'reservation', 'details', 'custom'];
+  const ctaButtonTypes = ['url', 'phone', 'email', 'whatsapp', 'reservation', 'custom'];
   const iconOptions = ['Calendar', 'Eye', 'MessageCircle', 'Menu', 'Phone', 'Mail', 'ExternalLink', 'Star'];
 
   useEffect(() => {
@@ -203,7 +203,7 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
               value={formData.name}
               onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
             />
           </div>
           <div>
@@ -216,7 +216,7 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
               onChange={(e) => setFormData(prev => ({ ...prev, barracaNumber: e.target.value }))}
               placeholder="e.g. 001"
               pattern="[0-9]*"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
             />
           </div>
           <div>
@@ -227,7 +227,7 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
               value={formData.location}
               onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
             >
               <option value="">{t('admin.form.selectNeighborhood')}</option>
               {southZoneNeighborhoods.map((neighborhood) => (
@@ -248,7 +248,7 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
             onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
             rows={3}
             required
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
           />
         </div>
 
@@ -262,7 +262,7 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
                 type="checkbox"
                 checked={formData.weatherDependent}
                 onChange={(e) => setFormData(prev => ({ ...prev, weatherDependent: e.target.checked }))}
-                className="h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300 rounded"
+                className="h-4 w-4 text-beach-600 focus:ring-beach-500 border-gray-300 rounded"
                 disabled={!formData.partnered}
               />
               <span className={`ml-2 text-sm ${!formData.partnered ? 'text-gray-400' : 'text-gray-700'}`}>
@@ -276,7 +276,7 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
                 type="checkbox"
                 checked={formData.partnered}
                 onChange={(e) => setFormData(prev => ({ ...prev, partnered: e.target.checked }))}
-                className="h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300 rounded"
+                className="h-4 w-4 text-beach-600 focus:ring-beach-500 border-gray-300 rounded"
               />
               <span className="ml-2 text-sm text-gray-700">{t('admin.form.partnered')}</span>
             </label>
@@ -295,7 +295,7 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
                 <select
                   value={formData.isOpen ? 'open' : 'closed'}
                   onChange={(e) => setFormData(prev => ({ ...prev, isOpen: e.target.value === 'open' }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
                 >
                   <option value="open">{t('barraca.open')}</option>
                   <option value="closed">{t('barraca.closed')}</option>
@@ -309,7 +309,7 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
                   type="text"
                   value={formData.typicalHours}
                   onChange={(e) => setFormData(prev => ({ ...prev, typicalHours: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
                 />
               </div>
             </div>
@@ -323,7 +323,7 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
                 <button
                   type="button"
                   onClick={() => addArrayItem('images')}
-                  className="text-orange-600 hover:text-orange-800 flex items-center text-sm"
+                  className="text-beach-600 hover:text-beach-800 flex items-center text-sm"
                 >
                   <Plus className="h-4 w-4 mr-1" />
                   {t('admin.form.addImage')}
@@ -336,7 +336,7 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
                     value={image}
                     onChange={(e) => updateArrayItem('images', index, e.target.value)}
                     placeholder="https://example.com/image.jpg"
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
                   />
                   <button
                     type="button"
@@ -358,7 +358,7 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
                 <button
                   type="button"
                   onClick={() => addArrayItem('menuPreview')}
-                  className="text-orange-600 hover:text-orange-800 flex items-center text-sm"
+                  className="text-beach-600 hover:text-beach-800 flex items-center text-sm"
                 >
                   <Plus className="h-4 w-4 mr-1" />
                   {t('admin.form.addItem')}
@@ -371,7 +371,7 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
                     value={item}
                     onChange={(e) => updateArrayItem('menuPreview', index, e.target.value)}
                     placeholder="Menu item name"
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
                   />
                   <button
                     type="button"
@@ -400,7 +400,7 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
                       contact: { ...prev.contact, phone: e.target.value }
                     }))}
                     placeholder="+55 21 99999-0000"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
                   />
                 </div>
                 <div>
@@ -414,7 +414,7 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
                       ...prev,
                       contact: { ...prev.contact, email: e.target.value }
                     }))}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
                   />
                 </div>
                 <div>
@@ -429,7 +429,7 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
                       contact: { ...prev.contact, website: e.target.value }
                     }))}
                     placeholder="https://instagram.com/barraca"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
                   />
                 </div>
               </div>
@@ -444,7 +444,7 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
                 <button
                   type="button"
                   onClick={() => addArrayItem('amenities')}
-                  className="text-orange-600 hover:text-orange-800 flex items-center text-sm"
+                  className="text-beach-600 hover:text-beach-800 flex items-center text-sm"
                 >
                   <Plus className="h-4 w-4 mr-1" />
                   {t('admin.form.addAmenity')}
@@ -457,7 +457,7 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
                     value={amenity}
                     onChange={(e) => updateArrayItem('amenities', index, e.target.value)}
                     placeholder="WiFi, Umbrellas, etc."
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
                   />
                   <button
                     type="button"
@@ -477,7 +477,7 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
                 <button
                   type="button"
                   onClick={() => setShowCTAConfig(!showCTAConfig)}
-                  className="flex items-center text-orange-600 hover:text-orange-800 text-sm"
+                  className="flex items-center text-beach-600 hover:text-beach-800 text-sm"
                 >
                   <Settings className="h-4 w-4 mr-1" />
                   {showCTAConfig ? t('common.less') : t('common.more')}
@@ -493,12 +493,12 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
                         value={button.text}
                         onChange={(e) => updateCTAButton(index, { text: e.target.value })}
                         placeholder="Button text"
-                        className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                        className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
                       />
                       <select
                         value={button.action.type}
                         onChange={(e) => updateCTAButton(index, { action: { ...button.action, type: e.target.value as any } })}
-                        className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                        className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
                       >
                         {ctaButtonTypes.map(type => (
                           <option key={type} value={type}>{type}</option>
@@ -509,13 +509,13 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
                         value={button.action.value}
                         onChange={(e) => updateCTAButton(index, { action: { ...button.action, value: e.target.value } })}
                         placeholder="URL, phone, email, etc."
-                        className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                        className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
                       />
                       <div className="flex gap-2">
                         <select
                           value={button.style}
                           onChange={(e) => updateCTAButton(index, { style: e.target.value as any })}
-                          className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                          className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
                         >
                           {ctaButtonStyles.map(style => (
                             <option key={style} value={style}>{style}</option>
@@ -534,7 +534,7 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
                   <button
                     type="button"
                     onClick={addCTAButton}
-                    className="w-full py-2 border-2 border-dashed border-gray-300 rounded-lg text-gray-500 hover:border-orange-500 hover:text-orange-500 transition-colors"
+                    className="w-full py-2 border-2 border-dashed border-gray-300 rounded-lg text-gray-500 hover:border-beach-500 hover:text-beach-500 transition-colors"
                   >
                     <Plus className="h-4 w-4 mx-auto" />
                   </button>
@@ -577,7 +577,7 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
           <button
             type="submit"
             disabled={isSaving}
-            className="px-6 py-2 bg-gradient-to-r from-orange-500 to-red-600 text-white rounded-lg hover:from-orange-600 hover:to-red-700 transition-all duration-200 shadow-lg disabled:opacity-50 flex items-center"
+            className="px-6 py-2 bg-gradient-to-r from-beach-500 to-beach-600 text-white rounded-lg hover:from-beach-600 hover:to-beach-700 transition-all duration-200 shadow-lg disabled:opacity-50 flex items-center"
           >
             {isSaving && (
               <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>

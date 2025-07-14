@@ -27,7 +27,7 @@
 
 /* Beach-themed gradient for story rings */
 .story-ring-gradient {
-  background: linear-gradient(45deg, #f97316, #f59e0b, #eab308, #84cc16, #06b6d4, #3b82f6);
+  background: linear-gradient(45deg, #ec4899, #eab308, #0ea5e9, #84cc16, #06b6d4, #3b82f6);
   background-size: 300% 300%;
   animation: beach-gradient-shift 4s ease infinite;
 }
@@ -41,10 +41,10 @@
 /* Beach sunset gradient animation */
 @keyframes sunset-glow {
   0%, 100% { 
-    background: linear-gradient(45deg, #f97316, #f59e0b, #eab308);
+    background: linear-gradient(45deg, #ec4899, #eab308, #0ea5e9);
   }
   50% { 
-    background: linear-gradient(45deg, #ec4899, #f97316, #f59e0b);
+    background: linear-gradient(45deg, #db2777, #ec4899, #eab308);
   }
 }
 
@@ -64,7 +64,7 @@
 /* Wave-like progress bar animation */
 .story-progress {
   transition: width 0.1s linear;
-  background: linear-gradient(90deg, #f97316, #f59e0b, #eab308);
+  background: linear-gradient(90deg, #ec4899, #eab308, #0ea5e9);
 }
 
 /* Fade in animation for story content */
@@ -87,12 +87,12 @@
 .story-backdrop {
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  background: linear-gradient(135deg, rgba(249, 115, 22, 0.1), rgba(236, 72, 153, 0.1));
+  background: linear-gradient(135deg, rgba(236, 72, 153, 0.1), rgba(14, 165, 233, 0.1));
 }
 
 /* Custom focus styles for accessibility */
 .story-focus:focus {
-  outline: 2px solid #f97316;
+  outline: 2px solid #ec4899;
   outline-offset: 2px;
 }
 
@@ -147,11 +147,11 @@
 
 /* Beach-themed glow effects */
 .beach-glow {
-  box-shadow: 0 0 20px rgba(249, 115, 22, 0.3);
+  box-shadow: 0 0 20px rgba(236, 72, 153, 0.3);
 }
 
 .beach-glow-pink {
-  box-shadow: 0 0 20px rgba(236, 72, 153, 0.3);
+  box-shadow: 0 0 20px rgba(14, 165, 233, 0.3);
 }
 
 /* Ripple effect for story interactions */
@@ -179,7 +179,7 @@
   width: 0;
   height: 0;
   border-radius: 50%;
-  background: rgba(249, 115, 22, 0.5);
+  background: rgba(236, 72, 153, 0.5);
   transform: translate(-50%, -50%);
   animation: ripple 0.6s linear;
 }
@@ -251,6 +251,15 @@
   .duration-700 {
     transition-duration: 0s !important;
   }
+}
+
+/* Global font styles */
+body {
+  font-family: 'Open Sans', ui-sans-serif, system-ui, sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Nunito', ui-sans-serif, system-ui, sans-serif;
 }
 
 /* Smooth scrolling for better animation experience */

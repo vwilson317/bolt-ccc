@@ -55,7 +55,7 @@ const StoryRing: React.FC<StoryRingProps> = ({
         <div className={`absolute inset-0 rounded-full p-0.5 ${
           isViewed 
             ? 'bg-gradient-to-r from-gray-300 via-gray-400 to-gray-300' 
-            : 'bg-gradient-to-r from-orange-400 via-pink-500 to-purple-600'
+            : 'bg-gradient-to-r from-beach-400 via-beach-500 to-ocean-600'
         }`}>
           <div className="w-full h-full rounded-full bg-white p-0.5">
             <img
@@ -72,13 +72,13 @@ const StoryRing: React.FC<StoryRingProps> = ({
         {/* Play Icon Overlay */}
         <div className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 hover:opacity-100 transition-opacity duration-200 rounded-full">
           <div className="bg-white/90 rounded-full p-1">
-            <Play className="h-3 w-3 text-orange-500 fill-current" />
+            <Play className="h-3 w-3 text-beach-500 fill-current" />
           </div>
         </div>
 
         {/* Story Count Badge */}
         {barracaStories.length > 1 && (
-          <div className="absolute -top-1 -right-1 bg-gradient-to-r from-orange-500 to-pink-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-medium shadow-lg">
+          <div className="absolute -top-1 -right-1 bg-gradient-to-r from-beach-500 to-ocean-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-medium shadow-lg">
             {barracaStories.length}
           </div>
         )}

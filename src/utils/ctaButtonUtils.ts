@@ -22,20 +22,6 @@ export const getDefaultCTAButtons = (t: (key: string) => string): DefaultCTAButt
     icon: 'Calendar',
     enabled: true
   },
-  details: {
-    id: 'default-details',
-    text: t('cta.details'),
-    action: {
-      type: 'details',
-      value: '/details',
-      trackingEvent: 'cta_details_clicked'
-    },
-    style: 'secondary',
-    position: 2,
-    visibilityConditions: {},
-    icon: 'Eye',
-    enabled: true
-  },
   contact: {
     id: 'default-contact',
     text: t('cta.contact'),
@@ -46,7 +32,7 @@ export const getDefaultCTAButtons = (t: (key: string) => string): DefaultCTAButt
       trackingEvent: 'cta_contact_clicked'
     },
     style: 'outline',
-    position: 3,
+    position: 2,
     visibilityConditions: {},
     icon: 'MessageCircle',
     enabled: true
@@ -61,7 +47,7 @@ export const getDefaultCTAButtons = (t: (key: string) => string): DefaultCTAButt
       trackingEvent: 'cta_menu_clicked'
     },
     style: 'ghost',
-    position: 4,
+    position: 3,
     visibilityConditions: {},
     icon: 'Menu',
     enabled: true
@@ -322,10 +308,10 @@ export const getCTAButtonClasses = (style: string, size: 'sm' | 'md' | 'lg' = 'm
   };
 
   const styleClasses = {
-    primary: 'bg-gradient-to-r from-sky-500 to-blue-600 text-white hover:from-sky-600 hover:to-blue-700 focus:ring-sky-500 shadow-sm',
-    secondary: 'bg-gradient-to-r from-orange-500 to-orange-600 text-white hover:from-orange-600 hover:to-orange-700 focus:ring-orange-500 shadow-sm',
-    outline: 'border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 focus:ring-gray-500',
-    ghost: 'text-gray-600 hover:text-gray-900 hover:bg-gray-100 focus:ring-gray-500'
+    primary: 'bg-gradient-to-r from-beach-500 to-beach-600 text-white hover:from-beach-600 hover:to-beach-700 focus:ring-beach-500 shadow-sm',
+    secondary: 'bg-gradient-to-r from-sunset-500 to-sunset-600 text-white hover:from-sunset-600 hover:to-sunset-700 focus:ring-sunset-500 shadow-sm',
+    outline: 'border border-sand-300 bg-white text-sand-700 hover:bg-sand-50 focus:ring-sand-500',
+    ghost: 'text-sand-600 hover:text-sand-900 hover:bg-sand-100 focus:ring-sand-500'
   };
 
   return `${baseClasses} ${sizeClasses[size]} ${styleClasses[style as keyof typeof styleClasses] || styleClasses.outline}`;

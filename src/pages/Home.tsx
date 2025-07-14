@@ -70,7 +70,7 @@ const Home: React.FC = () => {
       <WeatherBar />
 
       {/* Call to Action Section */}
-      <section ref={ctaAnimation.ref} className={`py-16 bg-gradient-to-b from-orange-50 to-white ${ctaAnimation.animationClasses}`}>
+      <section ref={ctaAnimation.ref} className={`py-16 bg-gradient-to-b from-beach-50 to-white ${ctaAnimation.animationClasses}`}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
             {t('home.yourBarraca')}
@@ -83,14 +83,14 @@ const Home: React.FC = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
             <Link
               to="/discover"
-              className="bg-gradient-to-r from-orange-500 to-red-600 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:from-orange-600 hover:to-red-700 transform hover:scale-105 transition-all duration-200 shadow-lg flex items-center justify-center"
+              className="bg-gradient-to-r from-beach-500 to-beach-600 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:from-beach-600 hover:to-beach-700 transform hover:scale-105 transition-all duration-200 shadow-lg flex items-center justify-center"
             >
               {t('hero.cta')}
               <ArrowRight className="ml-2 h-5 w-5" />
             </Link>
             <button 
               onClick={scrollToSignup}
-              className="bg-white text-orange-600 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-gray-50 transform hover:scale-105 transition-all duration-200 border-2 border-orange-200 shadow-lg"
+              className="bg-white text-beach-600 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-gray-50 transform hover:scale-105 transition-all duration-200 border-2 border-beach-200 shadow-lg"
             >
               {t('hero.earlyAccess')}
             </button>
@@ -99,16 +99,16 @@ const Home: React.FC = () => {
           {/* Quick Stats with Unique Visitor Counter */}
           <div ref={statsAnimation.ref} className={`grid grid-cols-2 md:grid-cols-4 gap-6 mt-12 ${statsAnimation.animationClasses}`}>
             <div className="text-center">
-              <div className="text-3xl font-bold text-orange-600 mb-2">{barracas.length}<span data-lingo-skip>+</span></div>
+                              <div className="text-3xl font-bold text-beach-600 mb-2">{barracas.length}<span data-lingo-skip>+</span></div>
               <div className="text-sm text-gray-600"><span data-lingo-skip>{t('home.stats.partnerBarracas') || 'Partner Barracas'}</span></div>
             </div>
             <UniqueVisitorCounter />
             <div className="text-center">
-              <div className="text-3xl font-bold text-orange-600 mb-2" data-lingo-skip>24/7</div>
+                              <div className="text-3xl font-bold text-beach-600 mb-2" data-lingo-skip>24/7</div>
               <div className="text-sm text-gray-600" data-lingo-skip>{t('home.stats.availabilityUpdates') || 'Availability Updates'}</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-orange-600 mb-2" data-lingo-skip>12</div>
+                              <div className="text-3xl font-bold text-beach-600 mb-2" data-lingo-skip>12</div>
               <div className="text-sm text-gray-600" data-lingo-skip>{t('home.stats.neighborhoods') || 'Neighborhoods'}</div>
             </div>
           </div>
@@ -127,7 +127,7 @@ const Home: React.FC = () => {
             </p>
             <Link
               to="/discover"
-              className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-orange-500 to-red-600 text-white font-semibold rounded-xl hover:from-orange-600 hover:to-red-700 transform hover:scale-105 transition-all duration-200 shadow-lg"
+              className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-beach-500 to-beach-600 text-white font-semibold rounded-xl hover:from-beach-600 hover:to-beach-700 transform hover:scale-105 transition-all duration-200 shadow-lg"
             >
               {t('home.viewAllPartners')}
               <ArrowRight className="ml-2 h-5 w-5" />
@@ -154,7 +154,7 @@ const Home: React.FC = () => {
               const Icon = feature.icon;
               return (
                 <div key={index} className={`text-center group stagger-${index + 1}`}>
-                  <div className="bg-gradient-to-r from-orange-500 to-red-600 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:from-orange-600 group-hover:to-red-700 transform group-hover:scale-110 transition-all duration-200 shadow-lg">
+                  <div className="bg-gradient-to-r from-beach-500 to-beach-600 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:from-beach-600 group-hover:to-beach-700 transform group-hover:scale-110 transition-all duration-200 shadow-lg">
                     <Icon className="h-8 w-8 text-white" />
                   </div>
                   <h3 className="text-xl font-semibold text-gray-900 mb-2">
@@ -171,32 +171,32 @@ const Home: React.FC = () => {
       </section>
 
       {/* Member Benefits */}
-      <section ref={benefitsAnimation.ref} className={`py-16 bg-gradient-to-r from-yellow-400 to-orange-500 ${benefitsAnimation.animationClasses}`}>
+      <section ref={benefitsAnimation.ref} className={`py-16 bg-white ${benefitsAnimation.animationClasses}`}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
-            <Users className="h-16 w-16 text-white mx-auto mb-6" />
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+          <div className="bg-white rounded-2xl p-8 border border-sand-100 shadow-md">
+            <Users className="h-16 w-16 text-beach-500 mx-auto mb-6" />
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               {t('home.exclusiveBenefits')}
             </h2>
-            <p className="text-xl text-yellow-100 mb-8 max-w-2xl mx-auto">
+            <p className="text-xl text-sand-600 mb-8 max-w-2xl mx-auto">
               {t('home.exclusiveDescription')}
             </p>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
               <div className="text-center">
-                <div className="text-2xl font-bold text-white mb-1">{t('home.memberBenefits.chair')}</div>
-                <div className="text-yellow-100 text-sm">{t('home.memberBenefits.reservations')}</div>
+                <div className="text-2xl font-bold text-beach-600 mb-1">{t('home.memberBenefits.chair')}</div>
+                <div className="text-sand-600 text-sm">{t('home.memberBenefits.reservations')}</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-white mb-1">{t('home.memberBenefits.priority')}</div>
-                <div className="text-yellow-100 text-sm">{t('home.memberBenefits.service')}</div>
+                <div className="text-2xl font-bold text-beach-600 mb-1">{t('home.memberBenefits.priority')}</div>
+                <div className="text-sand-600 text-sm">{t('home.memberBenefits.service')}</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-white mb-1">{t('home.memberBenefits.availability')}</div>
-                <div className="text-yellow-100 text-sm">{t('home.memberBenefits.updates')}</div>
+                <div className="text-2xl font-bold text-beach-600 mb-1">{t('home.memberBenefits.availability')}</div>
+                <div className="text-sand-600 text-sm">{t('home.memberBenefits.updates')}</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-white mb-1">{t('home.memberBenefits.special')}</div>
-                <div className="text-yellow-100 text-sm">{t('home.memberBenefits.offers')}</div>
+                <div className="text-2xl font-bold text-beach-600 mb-1">{t('home.memberBenefits.special')}</div>
+                <div className="text-sand-600 text-sm">{t('home.memberBenefits.offers')}</div>
               </div>
             </div>
           </div>
@@ -204,15 +204,19 @@ const Home: React.FC = () => {
       </section>
 
       {/* Email Subscription */}
-      <section id="loyalty-signup" ref={signupAnimation.ref} className={`py-16 bg-gradient-to-r from-orange-500 to-red-600 ${signupAnimation.animationClasses}`}>
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+      <section id="loyalty-signup" ref={signupAnimation.ref} className={`relative py-20 ${signupAnimation.animationClasses}`}> 
+        <div className="absolute inset-0 w-full h-full bg-[url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80')] bg-cover bg-center" />
+        <div className="absolute inset-0 w-full h-full bg-black/50" />
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4 drop-shadow-lg">
             {t('home.joinToday')}
           </h2>
-          <p className="text-xl text-orange-100 mb-8 max-w-2xl mx-auto">
+          <p className="text-xl text-white mb-8 max-w-2xl mx-auto drop-shadow">
             {t('home.joinDescription')}
           </p>
-          <EmailSubscription />
+          <div className="bg-white/90 rounded-2xl p-8 shadow-lg inline-block w-full max-w-xl mx-auto">
+            <EmailSubscription />
+          </div>
         </div>
       </section>
 
@@ -223,7 +227,7 @@ const Home: React.FC = () => {
             {/* Company Info */}
             <div className="md:col-span-2">
               <div className="mb-4">
-                <h3 className="text-xl font-bold text-orange-400" data-lingo-skip>Carioca Coastal Club</h3>
+                <h3 className="text-xl font-bold text-beach-400" data-lingo-skip>Carioca Coastal Club</h3>
                 <p className="text-gray-400 text-sm" data-lingo-skip>Barraca Loyalty Program</p>
               </div>
               <p className="text-gray-300 mb-4 max-w-md">

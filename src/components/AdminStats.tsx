@@ -37,7 +37,7 @@ const AdminStats: React.FC = () => {
       title: t('admin.stats.uniqueLocations'),
       value: locations,
       icon: MapPin,
-      color: 'bg-orange-500',
+      color: 'bg-beach-500',
       change: t('admin.stats.acrossRio')
     }
   ];
@@ -82,7 +82,7 @@ const AdminStats: React.FC = () => {
         {/* Barracas by Location */}
         <div className="bg-white rounded-2xl p-6 shadow-lg">
           <div className="flex items-center mb-6">
-            <BarChart3 className="h-5 w-5 text-orange-600 mr-2" />
+            <BarChart3 className="h-5 w-5 text-beach-600 mr-2" />
             <h3 className="text-lg font-semibold text-gray-900">{t('admin.stats.barracasByLocation')}</h3>
           </div>
           <div className="space-y-4">
@@ -92,7 +92,7 @@ const AdminStats: React.FC = () => {
                 <div className="flex items-center">
                   <div className="w-24 bg-gray-200 rounded-full h-2 mr-3">
                     <div 
-                      className="bg-orange-500 h-2 rounded-full" 
+                      className="bg-beach-500 h-2 rounded-full" 
                       style={{ width: `${(count / Math.max(...Object.values(barracasByLocation))) * 100}%` }}
                     ></div>
                   </div>
@@ -106,7 +106,7 @@ const AdminStats: React.FC = () => {
         {/* Recent Activity */}
         <div className="bg-white rounded-2xl p-6 shadow-lg">
           <div className="flex items-center mb-6">
-            <Activity className="h-5 w-5 text-orange-600 mr-2" />
+            <Activity className="h-5 w-5 text-beach-600 mr-2" />
             <h3 className="text-lg font-semibold text-gray-900">{t('admin.stats.recentActivity')}</h3>
           </div>
           <div className="space-y-4">
@@ -131,7 +131,7 @@ const AdminStats: React.FC = () => {
       {/* Performance Metrics */}
       <div className="bg-white rounded-2xl p-6 shadow-lg">
         <div className="flex items-center mb-6">
-          <Eye className="h-5 w-5 text-orange-600 mr-2" />
+          <Eye className="h-5 w-5 text-beach-600 mr-2" />
           <h3 className="text-lg font-semibold text-gray-900">{t('admin.stats.systemHealth')}</h3>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

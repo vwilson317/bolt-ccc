@@ -75,10 +75,10 @@ const Admin: React.FC = () => {
 
   if (!isAdmin) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-gradient-to-br from-beach-50 to-beach-100 flex items-center justify-center p-4">
         <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md">
           <div className="text-center mb-8">
-            <div className="bg-gradient-to-r from-orange-500 to-red-600 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <div className="bg-gradient-to-r from-beach-500 to-beach-600 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4">
               <Lock className="h-8 w-8 text-white" />
             </div>
             <h1 className="text-2xl font-bold text-gray-900 mb-2" data-lingo-skip>
@@ -100,7 +100,7 @@ const Admin: React.FC = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-colors"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent transition-colors"
                 placeholder="admin@cariocacoastal.com"
               />
             </div>
@@ -116,7 +116,7 @@ const Admin: React.FC = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-colors"
+                  className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent transition-colors"
                   placeholder="admin123"
                 />
                 <button
@@ -138,17 +138,17 @@ const Admin: React.FC = () => {
             <button
               type="submit"
               disabled={isLogging}
-              className="w-full bg-gradient-to-r from-orange-500 to-red-600 text-white py-3 rounded-lg font-semibold hover:from-orange-600 hover:to-red-700 transform hover:scale-105 transition-all duration-200 shadow-lg disabled:opacity-50 disabled:transform-none"
+              className="w-full bg-gradient-to-r from-beach-500 to-beach-600 text-white py-3 rounded-lg font-semibold hover:from-beach-600 hover:to-beach-700 transform hover:scale-105 transition-all duration-200 shadow-lg disabled:opacity-50 disabled:transform-none"
             >
               {isLogging ? t('common.loading') : t('admin.signIn')}
             </button>
           </form>
 
-                      <div className="mt-6 text-center">
-              <p className="text-sm text-gray-500" data-lingo-skip>
-                {t('admin.credentials')}
-              </p>
-            </div>
+          <div className="mt-6 text-center">
+            <p className="text-sm text-gray-500" data-lingo-skip>
+              {t('admin.credentials')}
+            </p>
+          </div>
         </div>
       </div>
     );
@@ -182,7 +182,7 @@ const Admin: React.FC = () => {
                 onClick={() => setActiveTab('barracas')}
                 className={`py-2 px-1 border-b-2 font-medium text-sm transition-colors ${
                   activeTab === 'barracas'
-                    ? 'border-orange-500 text-orange-600'
+                    ? 'border-beach-500 text-beach-600'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                 }`}
               >
@@ -193,7 +193,7 @@ const Admin: React.FC = () => {
                 onClick={() => setActiveTab('stats')}
                 className={`py-2 px-1 border-b-2 font-medium text-sm transition-colors ${
                   activeTab === 'stats'
-                    ? 'border-orange-500 text-orange-600'
+                    ? 'border-beach-500 text-beach-600'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                 }`}
               >
@@ -204,7 +204,7 @@ const Admin: React.FC = () => {
                 onClick={() => setActiveTab('emails')}
                 className={`py-2 px-1 border-b-2 font-medium text-sm transition-colors ${
                   activeTab === 'emails'
-                    ? 'border-orange-500 text-orange-600'
+                    ? 'border-beach-500 text-beach-600'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                 }`}
               >
@@ -215,7 +215,7 @@ const Admin: React.FC = () => {
                 onClick={() => setActiveTab('analytics')}
                 className={`py-2 px-1 border-b-2 font-medium text-sm transition-colors ${
                   activeTab === 'analytics'
-                    ? 'border-orange-500 text-orange-600'
+                    ? 'border-beach-500 text-beach-600'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                 }`}
               >
@@ -289,7 +289,7 @@ const Admin: React.FC = () => {
                 </button>
                 <button
                   onClick={() => setShowForm(true)}
-                  className="bg-gradient-to-r from-orange-500 to-red-600 text-white px-4 py-2 rounded-lg hover:from-orange-600 hover:to-red-700 transition-all duration-200 shadow-lg flex items-center"
+                  className="bg-gradient-to-r from-beach-500 to-beach-600 text-white px-4 py-2 rounded-lg hover:from-beach-600 hover:to-beach-700 transition-all duration-200 shadow-lg flex items-center"
                 >
                   <Plus className="h-4 w-4 mr-2" />
                   {t('admin.addBarraca')}
@@ -376,7 +376,7 @@ const Admin: React.FC = () => {
                           <div className="flex justify-end space-x-2">
                             <button
                               onClick={() => setEditingBarraca(barraca.id)}
-                              className="text-orange-600 hover:text-orange-900 p-1"
+                              className="text-beach-600 hover:text-beach-900 p-1"
                             >
                               <Edit2 className="h-4 w-4" />
                             </button>

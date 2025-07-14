@@ -39,7 +39,7 @@ const LocationFilterCheckboxes: React.FC<LocationFilterCheckboxesProps> = ({
     <div className={`${className}`}>
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center">
-          <MapPin className="h-4 w-4 text-orange-500 mr-2" />
+          <MapPin className="h-4 w-4 text-beach-500 mr-2" />
           <h3 className="text-sm font-medium text-gray-700" data-lingo-skip>Filter by Location</h3>
         </div>
         {selectedLocations.length > 0 && (
@@ -59,7 +59,7 @@ const LocationFilterCheckboxes: React.FC<LocationFilterCheckboxesProps> = ({
             key={location}
             className={`flex items-center p-2 rounded-md cursor-pointer text-sm ${
               selectedLocations.includes(location)
-                ? 'bg-orange-50 border border-orange-200'
+                ? 'bg-beach-50 border border-beach-200'
                 : 'bg-white border border-gray-200 hover:bg-gray-50'
             }`}
           >
@@ -67,7 +67,7 @@ const LocationFilterCheckboxes: React.FC<LocationFilterCheckboxesProps> = ({
               type="checkbox"
               checked={selectedLocations.includes(location)}
               onChange={() => toggleLocation(location)}
-              className="h-4 w-4 text-orange-500 rounded border-gray-300 focus:ring-orange-500"
+              className="h-4 w-4 text-beach-500 rounded border-gray-300 focus:ring-beach-500"
             />
             <span className="ml-2 truncate">{location}</span>
           </label>

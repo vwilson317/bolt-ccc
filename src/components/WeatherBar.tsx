@@ -29,7 +29,7 @@ const WeatherBar: React.FC = () => {
   };
 
   return (
-    <div className="sticky top-16 z-30 bg-gradient-to-r from-orange-400 to-red-500 text-white shadow-sm">
+    <div className="sticky top-16 z-30 bg-white text-sand-800 shadow-sm border-t-4 border-beach-500">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between py-3">
           {/* Weather Info */}

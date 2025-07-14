@@ -143,7 +143,7 @@ export interface TranslatableCTAButtonFields {
 }
 
 export interface CTAButtonAction {
-  type: 'url' | 'phone' | 'email' | 'whatsapp' | 'reservation' | 'details' | 'custom';
+  type: 'url' | 'phone' | 'email' | 'whatsapp' | 'reservation' | 'custom';
   value: string; // URL, phone number, email, etc.
   target?: '_blank' | '_self'; // For URL actions
   trackingEvent?: string; // Analytics tracking
@@ -165,7 +165,7 @@ export interface CTAVisibilityConditions {
 // Default CTA Button Configurations
 export interface DefaultCTAButtons {
   reserve: CTAButtonConfig;
-  details: CTAButtonConfig;
+  details?: CTAButtonConfig;
   contact: CTAButtonConfig;
   menu: CTAButtonConfig;
 }

@@ -79,13 +79,15 @@ const Discover: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header Section */}
-      <section className="bg-gradient-to-r from-orange-500 to-red-600 pt-24 pb-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="relative pt-24 pb-12">
+        <div className="absolute inset-0 w-full h-full bg-[url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80')] bg-cover bg-center" />
+        <div className="absolute inset-0 w-full h-full bg-black/40" />
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8">
-            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 drop-shadow-lg">
               {t('discover.title')}
             </h1>
-            <p className="text-xl text-orange-100 max-w-2xl mx-auto">
+            <p className="text-xl text-white max-w-2xl mx-auto drop-shadow">
               {t('discover.subtitle')}
             </p>
           </div>
@@ -162,7 +164,7 @@ const Discover: React.FC = () => {
                           onClick={() => handleAvailabilityFilter(option.value as 'all' | 'open' | 'closed')}
                           className={`flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                             searchFilters.status === option.value
-                              ? 'bg-orange-500 text-white shadow-sm'
+                              ? 'bg-beach-500 text-white shadow-sm'
                               : 'text-gray-600 hover:text-gray-900 hover:bg-white'
                           }`}
                         >
@@ -188,7 +190,7 @@ const Discover: React.FC = () => {
           {hasActiveFilters && (
             <div className="flex flex-wrap gap-2 mb-6">
               {searchFilters.query && (
-                <span className="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm flex items-center">
+                <span className="bg-beach-100 text-beach-800 px-3 py-1 rounded-full text-sm flex items-center">
                   <Search className="h-3 w-3 mr-1" />
                   "{searchFilters.query}"
                 </span>
@@ -240,7 +242,7 @@ const Discover: React.FC = () => {
             </p>
             <button
               onClick={clearFilters}
-              className="px-6 py-3 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors"
+              className="px-6 py-3 bg-beach-500 text-white rounded-lg hover:bg-beach-600 transition-colors"
             >
               {t('discover.clearAllFilters')}
             </button>

@@ -176,7 +176,7 @@ const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
                         {barraca.menuPreview.slice(0, 2).map((item, index) => (
                           <span
                             key={index}
-                            className="bg-orange-50 text-orange-700 px-2 py-1 rounded-md text-xs font-medium"
+                            className="bg-beach-50 text-beach-700 px-2 py-1 rounded-md text-xs font-medium"
                           >
                             {item}
                           </span>
@@ -243,7 +243,7 @@ const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
                           {barraca.menuPreview.slice(2).map((item, index) => (
                             <span
                               key={index}
-                              className="bg-orange-50 text-orange-700 px-2 py-1 rounded-md text-xs font-medium"
+                              className="bg-beach-50 text-beach-700 px-2 py-1 rounded-md text-xs font-medium"
                             >
                               {item}
                             </span>

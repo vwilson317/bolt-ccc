@@ -94,12 +94,14 @@ const About: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <section ref={heroAnimation.ref} className={`bg-gradient-to-r from-orange-500 to-red-600 pt-24 pb-20 ${heroAnimation.animationClasses}`}>
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
+      <section ref={heroAnimation.ref} className={`relative pt-24 pb-20 ${heroAnimation.animationClasses}`}>
+        <div className="absolute inset-0 w-full h-full bg-[url('https://images.unsplash.com/photo-1502086223501-7ea6ecd79368?auto=format&fit=crop&w=1200&q=80')] bg-cover bg-center" />
+        <div className="absolute inset-0 w-full h-full bg-black/50" />
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 drop-shadow-lg">
             {t('about.title')}
           </h1>
-          <p className="text-xl text-orange-100 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-xl text-white max-w-3xl mx-auto leading-relaxed drop-shadow">
             {t('about.subtitle')}
           </p>
         </div>
@@ -114,7 +116,7 @@ const About: React.FC = () => {
           <p className="text-lg text-gray-600 leading-relaxed mb-8">
             {t('about.missionDescription')}
           </p>
-          <div className="bg-gradient-to-r from-orange-50 to-red-50 rounded-2xl p-8 border border-orange-100">
+          <div className="bg-gradient-to-r from-beach-50 to-beach-100 rounded-2xl p-8 border border-beach-100">
             <p className="text-xl font-semibold text-gray-900 mb-4">
               "{t('about.missionQuote')}"
             </p>
@@ -126,7 +128,7 @@ const About: React.FC = () => {
       </section>
 
       {/* Stats Section */}
-      <section ref={statsAnimation.ref} className={`py-16 bg-gradient-to-r from-orange-500 to-red-600 ${statsAnimation.animationClasses}`}>
+      <section ref={statsAnimation.ref} className={`py-16 bg-gradient-to-r from-beach-500 to-beach-600 ${statsAnimation.animationClasses}`}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             {stats.map((stat, index) => (
@@ -134,7 +136,7 @@ const About: React.FC = () => {
                 <div className="text-4xl md:text-5xl font-bold text-white mb-2">
                   {stat.number}
                 </div>
-                <div className="text-orange-100 font-medium">
+                <div className="text-beach-100 font-medium">
                   {stat.label}
                 </div>
               </div>
@@ -160,7 +162,7 @@ const About: React.FC = () => {
               const Icon = value.icon;
               return (
                 <div key={index} className={`bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-200 stagger-${index + 1}`}>
-                  <div className="bg-gradient-to-r from-orange-500 to-red-600 w-12 h-12 rounded-xl flex items-center justify-center mb-4">
+                  <div className="bg-gradient-to-r from-beach-500 to-beach-600 w-12 h-12 rounded-xl flex items-center justify-center mb-4">
                     <Icon className="h-6 w-6 text-white" />
                   </div>
                   <h3 className="text-xl font-semibold text-gray-900 mb-3">
@@ -201,7 +203,7 @@ const About: React.FC = () => {
                 <h3 className="text-xl font-semibold text-gray-900 mb-1">
                   {member.name}
                 </h3>
-                <p className="text-orange-600 font-medium mb-3">
+                <p className="text-beach-600 font-medium mb-3">
                   {member.role}
                 </p>
                 <p className="text-gray-600 leading-relaxed">
@@ -268,11 +270,11 @@ const About: React.FC = () => {
           </div> */}
 
           {/* Newsletter Signup */}
-          <div className="bg-gradient-to-r from-orange-500 to-red-600 rounded-2xl p-8 text-center">
+          <div className="bg-gradient-to-r from-beach-500 to-beach-600 rounded-2xl p-8 text-center">
             <h3 className="text-2xl font-bold text-white mb-4">
               {t('about.joinCommunity')}
             </h3>
-            <p className="text-orange-100 mb-6">
+            <p className="text-beach-100 mb-6">
               {t('about.joinCommunityDescription')}
             </p>
             <EmailSubscription />

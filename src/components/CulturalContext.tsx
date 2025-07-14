@@ -38,7 +38,7 @@ const CulturalContext: React.FC<CulturalContextProps> = ({
   ];
 
   return (
-    <div className={`bg-gradient-to-r from-orange-50 to-amber-50 rounded-xl border border-orange-200 ${className}`}>
+    <div className={`bg-gradient-to-r from-beach-50 to-sunset-50 rounded-xl border border-beach-200 ${className}`}>
       {/* Header */}
       <div 
         className="p-4 cursor-pointer"
@@ -46,8 +46,8 @@ const CulturalContext: React.FC<CulturalContextProps> = ({
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center">
-            <div className="bg-orange-100 p-2 rounded-lg mr-3">
-              <Heart className="h-5 w-5 text-orange-600" />
+                    <div className="bg-beach-100 p-2 rounded-lg mr-3">
+          <Heart className="h-5 w-5 text-beach-600" />
             </div>
             <div>
               <h3 className="font-semibold text-gray-900" data-lingo-skip>
@@ -71,16 +71,16 @@ const CulturalContext: React.FC<CulturalContextProps> = ({
         <div className="px-4 pb-4">
           {/* Quick Info */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            <div className="bg-white rounded-lg p-3 border border-orange-100">
+            <div className="bg-white rounded-lg p-3 border border-beach-100">
               <div className="flex items-center mb-2">
-                <Clock className="h-4 w-4 text-orange-600 mr-2" />
+                <Clock className="h-4 w-4 text-beach-600 mr-2" />
                 <span className="text-sm font-medium text-gray-700" data-lingo-skip>Best Time to Visit</span>
               </div>
               <p className="text-sm text-gray-600">{culturalInfo.bestTimeToVisit}</p>
             </div>
-            <div className="bg-white rounded-lg p-3 border border-orange-100">
+            <div className="bg-white rounded-lg p-3 border border-beach-100">
               <div className="flex items-center mb-2">
-                <MapPin className="h-4 w-4 text-orange-600 mr-2" />
+                <MapPin className="h-4 w-4 text-beach-600 mr-2" />
                 <span className="text-sm font-medium text-gray-700" data-lingo-skip>Cultural Significance</span>
               </div>
               <p className="text-sm text-gray-600">{culturalInfo.culturalSignificance}</p>
@@ -88,7 +88,7 @@ const CulturalContext: React.FC<CulturalContextProps> = ({
           </div>
 
           {/* Tabs */}
-          <div className="border-b border-orange-200 mb-4">
+          <div className="border-b border-beach-200 mb-4">
             <nav className="flex space-x-4">
               {tabs.map((tab) => {
                 const Icon = tab.icon;
@@ -98,7 +98,7 @@ const CulturalContext: React.FC<CulturalContextProps> = ({
                     onClick={() => setActiveTab(tab.id as any)}
                     className={`flex items-center px-3 py-2 text-sm font-medium border-b-2 transition-colors ${
                       activeTab === tab.id
-                        ? 'border-orange-500 text-orange-600'
+                        ? 'border-beach-500 text-beach-600'
                         : 'border-transparent text-gray-500 hover:text-gray-700'
                     }`}
                   >
@@ -127,7 +127,7 @@ const CulturalContext: React.FC<CulturalContextProps> = ({
                     <ul className="space-y-2">
                       {culturalInfo.traditions.map((tradition, index) => (
                         <li key={index} className="flex items-start">
-                          <div className="w-2 h-2 bg-orange-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                          <div className="w-2 h-2 bg-beach-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
                           <span className="text-sm text-gray-600">{tradition}</span>
                         </li>
                       ))}
@@ -143,7 +143,7 @@ const CulturalContext: React.FC<CulturalContextProps> = ({
                   <h4 className="font-medium text-gray-900 mb-2" data-lingo-skip>Local Tips</h4>
                   <div className="space-y-3">
                     {culturalInfo.localTips.map((tip, index) => (
-                      <div key={index} className="bg-white rounded-lg p-3 border border-orange-100">
+                      <div key={index} className="bg-white rounded-lg p-3 border border-beach-100">
                         <p className="text-sm text-gray-600">{tip}</p>
                       </div>
                     ))}
@@ -155,7 +155,7 @@ const CulturalContext: React.FC<CulturalContextProps> = ({
                     <h4 className="font-medium text-gray-900 mb-2" data-lingo-skip>Local Etiquette</h4>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                       {culturalInfo.localEtiquette.map((rule, index) => (
-                        <div key={index} className="flex items-center bg-white rounded-lg p-2 border border-orange-100">
+                        <div key={index} className="flex items-center bg-white rounded-lg p-2 border border-beach-100">
                           <div className="w-2 h-2 bg-green-400 rounded-full mr-3 flex-shrink-0"></div>
                           <span className="text-sm text-gray-600">{rule}</span>
                         </div>
@@ -172,13 +172,13 @@ const CulturalContext: React.FC<CulturalContextProps> = ({
                   <h4 className="font-medium text-gray-900 mb-2" data-lingo-skip>Helpful Portuguese Phrases</h4>
                   <div className="space-y-3">
                     {culturalInfo.languageHelp.map((phrase, index) => (
-                      <div key={index} className="bg-white rounded-lg p-4 border border-orange-100">
+                      <div key={index} className="bg-white rounded-lg p-4 border border-beach-100">
                         <div className="flex justify-between items-start mb-2">
                           <div className="flex-1">
                             <p className="font-medium text-gray-900">{phrase.phrase}</p>
                             <p className="text-sm text-gray-500 italic">"{phrase.pronunciation}"</p>
                           </div>
-                          <button className="text-orange-600 hover:text-orange-700 text-sm font-medium ml-4">
+                          <button className="text-beach-600 hover:text-beach-700 text-sm font-medium ml-4">
                             🔊
                           </button>
                         </div>

@@ -30,7 +30,7 @@ const UniqueVisitorCounter: React.FC = () => {
       new Date().getTimezoneOffset(),
       canvas.toDataURL(),
       navigator.hardwareConcurrency || 0,
-      navigator.deviceMemory || 0
+      (navigator as any).deviceMemory || 0
     ].join('|');
 
     // Simple hash function to create a shorter ID
@@ -183,7 +183,7 @@ const UniqueVisitorCounter: React.FC = () => {
     return (
       <div className="text-center">
         <div className="animate-pulse">
-          <div className="text-3xl font-bold text-orange-600 mb-2 bg-gray-200 rounded w-16 h-8 mx-auto"></div>
+          <div className="text-3xl font-bold text-beach-600 mb-2 bg-gray-200 rounded w-16 h-8 mx-auto"></div>
           <div className="text-sm text-gray-600 bg-gray-200 rounded w-32 h-4 mx-auto"></div>
         </div>
       </div>
@@ -193,8 +193,8 @@ const UniqueVisitorCounter: React.FC = () => {
   return (
     <div className="text-center group">
       <div className="flex items-center justify-center mb-2">
-        <Users className="h-6 w-6 text-orange-500 mr-2 group-hover:text-orange-600 transition-colors" />
-        <div className="text-3xl font-bold text-orange-600 group-hover:text-orange-700 transition-colors">
+        <Users className="h-6 w-6 text-beach-500 mr-2 group-hover:text-beach-600 transition-colors" />
+        <div className="text-3xl font-bold text-beach-600 group-hover:text-beach-700 transition-colors">
           {formatNumber(visitorCount)}
         </div>
       </div>

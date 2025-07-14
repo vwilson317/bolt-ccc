@@ -145,7 +145,7 @@ const BarracaPageDetail: React.FC<BarracaPageDetailProps> = ({
               {barraca.menuPreview.map((item, index) => (
                 <span
                   key={index}
-                  className="bg-orange-50 text-orange-700 px-3 py-2 rounded-lg text-sm font-medium"
+                  className="bg-beach-50 text-beach-700 px-3 py-2 rounded-lg text-sm font-medium"
                 >
                   {item}
                 </span>
@@ -255,7 +255,7 @@ const BarracaPageDetail: React.FC<BarracaPageDetailProps> = ({
                   href={button.action.value}
                   target={button.action.target || "_blank"}
                   rel="noopener noreferrer"
-                  className="flex-1 bg-orange-500 text-white px-6 py-3 rounded-lg hover:bg-orange-600 transition-colors text-center font-medium"
+                  className="flex-1 bg-beach-500 text-white px-6 py-3 rounded-lg hover:bg-beach-600 transition-colors text-center font-medium"
                 >
                   {button.text}
                 </a>

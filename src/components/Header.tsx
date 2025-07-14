@@ -30,7 +30,7 @@ const Header: React.FC = () => {
   return (
     <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
       isScrolled || isAdminLoginPage
-        ? 'bg-white/95 backdrop-blur-sm border-b border-orange-100 shadow-sm' 
+        ? 'bg-white/95 backdrop-blur-sm border-b border-beach-100 shadow-sm' 
         : 'bg-transparent'
     }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -38,13 +38,13 @@ const Header: React.FC = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-3 group">
             <div className="text-center">
-              <h1 className={`text-xl font-bold bg-gradient-to-r from-orange-600 to-red-700 bg-clip-text text-transparent transition-colors duration-300 ${
+              <h1 className={`text-xl font-bold bg-gradient-to-r from-beach-600 to-beach-700 bg-clip-text text-transparent transition-colors duration-300 ${
                 isScrolled || isAdminLoginPage ? '' : 'text-white drop-shadow-lg'
               }`} data-lingo-skip>
                 Carioca Coastal Club
               </h1>
               <p className={`text-xs transition-colors duration-300 ${
-                isScrolled || isAdminLoginPage ? 'text-orange-500' : 'text-orange-200'
+                isScrolled || isAdminLoginPage ? 'text-beach-500' : 'text-beach-200'
               } -mt-1`} data-lingo-skip>Barraca Loyalty Program</p>
             </div>
           </Link>
@@ -56,10 +56,10 @@ const Header: React.FC = () => {
               className={`font-medium transition-colors duration-200 ${
                 isActive('/') 
                   ? isScrolled || isAdminLoginPage
-                    ? 'text-orange-600 border-b-2 border-orange-600 pb-1' 
+                    ? 'text-beach-600 border-b-2 border-beach-600 pb-1' 
                     : 'text-white border-b-2 border-white pb-1'
                   : isScrolled || isAdminLoginPage
-                    ? 'text-gray-700 hover:text-orange-600'
+                    ? 'text-gray-700 hover:text-beach-600'
                     : 'text-white/90 hover:text-white'
               }`}
             >
@@ -70,10 +70,10 @@ const Header: React.FC = () => {
               className={`font-medium transition-colors duration-200 ${
                 isActive('/discover') 
                   ? isScrolled || isAdminLoginPage
-                    ? 'text-orange-600 border-b-2 border-orange-600 pb-1' 
+                    ? 'text-beach-600 border-b-2 border-beach-600 pb-1' 
                     : 'text-white border-b-2 border-white pb-1'
                   : isScrolled || isAdminLoginPage
-                    ? 'text-gray-700 hover:text-orange-600'
+                    ? 'text-gray-700 hover:text-beach-600'
                     : 'text-white/90 hover:text-white'
               }`}
             >
@@ -84,10 +84,10 @@ const Header: React.FC = () => {
               className={`font-medium transition-colors duration-200 ${
                 isActive('/about') 
                   ? isScrolled || isAdminLoginPage
-                    ? 'text-orange-600 border-b-2 border-orange-600 pb-1' 
+                    ? 'text-beach-600 border-b-2 border-beach-600 pb-1' 
                     : 'text-white border-b-2 border-white pb-1'
                   : isScrolled || isAdminLoginPage
-                    ? 'text-gray-700 hover:text-orange-600'
+                    ? 'text-gray-700 hover:text-beach-600'
                     : 'text-white/90 hover:text-white'
               }`}
             >
@@ -98,10 +98,10 @@ const Header: React.FC = () => {
               className={`font-medium transition-colors duration-200 ${
                 isActive('/admin') 
                   ? isScrolled || isAdminLoginPage
-                    ? 'text-orange-600 border-b-2 border-orange-600 pb-1' 
+                    ? 'text-beach-600 border-b-2 border-beach-600 pb-1' 
                     : 'text-white border-b-2 border-white pb-1'
                   : isScrolled || isAdminLoginPage
-                    ? 'text-gray-700 hover:text-orange-600'
+                    ? 'text-gray-700 hover:text-beach-600'
                     : 'text-white/90 hover:text-white'
               }`}
             >
@@ -159,7 +159,7 @@ const Header: React.FC = () => {
                       key={lang.code}
                       onClick={() => changeLanguage(lang.code)}
                       className={`w-full px-4 py-2 text-left flex items-center space-x-3 hover:bg-gray-50 transition-colors ${
-                        i18n.language === lang.code ? 'bg-orange-50 text-orange-600' : 'text-gray-700'
+                        i18n.language === lang.code ? 'bg-beach-50 text-beach-600' : 'text-gray-700'
                       }`}
                     >
                       <span className="text-lg">{lang.flag}</span>
@@ -205,7 +205,7 @@ const Header: React.FC = () => {
                 onClick={() => setIsMenuOpen(false)}
                 className={`font-medium transition-colors duration-200 ${
                   isActive('/') 
-                    ? isScrolled || isAdminLoginPage ? 'text-orange-600' : 'text-white'
+                    ? isScrolled || isAdminLoginPage ? 'text-beach-600' : 'text-white'
                     : isScrolled || isAdminLoginPage ? 'text-gray-700' : 'text-white/90'
                 }`}
               >
@@ -216,7 +216,7 @@ const Header: React.FC = () => {
                 onClick={() => setIsMenuOpen(false)}
                 className={`font-medium transition-colors duration-200 ${
                   isActive('/discover') 
-                    ? isScrolled || isAdminLoginPage ? 'text-orange-600' : 'text-white'
+                    ? isScrolled || isAdminLoginPage ? 'text-beach-600' : 'text-white'
                     : isScrolled || isAdminLoginPage ? 'text-gray-700' : 'text-white/90'
                 }`}
               >
@@ -227,7 +227,7 @@ const Header: React.FC = () => {
                 onClick={() => setIsMenuOpen(false)}
                 className={`font-medium transition-colors duration-200 ${
                   isActive('/about') 
-                    ? isScrolled || isAdminLoginPage ? 'text-orange-600' : 'text-white'
+                    ? isScrolled || isAdminLoginPage ? 'text-beach-600' : 'text-white'
                     : isScrolled || isAdminLoginPage ? 'text-gray-700' : 'text-white/90'
                 }`}
               >
@@ -238,7 +238,7 @@ const Header: React.FC = () => {
                 onClick={() => setIsMenuOpen(false)}
                 className={`font-medium transition-colors duration-200 ${
                   isActive('/admin') 
-                    ? isScrolled || isAdminLoginPage ? 'text-orange-600' : 'text-white'
+                    ? isScrolled || isAdminLoginPage ? 'text-beach-600' : 'text-white'
                     : isScrolled || isAdminLoginPage ? 'text-gray-700' : 'text-white/90'
                 }`}
               >

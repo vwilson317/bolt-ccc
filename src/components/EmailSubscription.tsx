@@ -56,10 +56,10 @@ const EmailSubscription: React.FC = () => {
         <button
           type="submit"
           disabled={status === 'loading' || status === 'success'}
-          className="w-full bg-gradient-to-r from-white to-gray-100 text-orange-600 py-4 rounded-xl font-semibold text-lg hover:from-gray-100 hover:to-gray-200 transform hover:scale-105 transition-all duration-200 shadow-lg disabled:opacity-50 disabled:transform-none flex items-center justify-center"
+          className="w-full bg-gradient-to-r from-white to-gray-100 text-beach-600 py-4 rounded-xl font-semibold text-lg hover:from-gray-100 hover:to-gray-200 transform hover:scale-105 transition-all duration-200 shadow-lg disabled:opacity-50 disabled:transform-none flex items-center justify-center"
         >
           {status === 'loading' && (
-            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-orange-600 mr-2"></div>
+            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-beach-600 mr-2"></div>
           )}
           {status === 'success' && <Check className="h-5 w-5 mr-2" />}
           {status === 'loading' ? t('email.joining') : status === 'success' ? t('email.welcome') : t('email.submit')}
@@ -82,7 +82,7 @@ const EmailSubscription: React.FC = () => {
       )}
 
       <div className="mt-4 text-center">
-        <p className="text-sm text-orange-100" data-lingo-skip>
+        <p className="text-sm text-beach-100" data-lingo-skip>
           {t('email.benefits')}
         </p>
       </div>

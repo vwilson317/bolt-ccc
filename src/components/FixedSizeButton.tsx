@@ -1,5 +1,5 @@
 import React from 'react';
-import { DivideIcon as LucideIcon } from 'lucide-react';
+import { LucideIcon } from 'lucide-react';
 
 interface FixedSizeButtonProps {
   text: string;
@@ -33,10 +33,10 @@ const FixedSizeButton: React.FC<FixedSizeButtonProps> = ({
 
   // Styles based on variant
   const variantStyles = {
-    primary: 'bg-blue-500 hover:bg-blue-600 text-white',
-    secondary: 'bg-gray-200 hover:bg-gray-300 text-gray-800',
-    outline: 'bg-white border border-blue-500 text-blue-500 hover:bg-blue-50',
-    ghost: 'bg-transparent hover:bg-gray-100 text-gray-700',
+    primary: 'bg-beach-500 hover:bg-beach-600 text-white',
+    secondary: 'bg-sand-200 hover:bg-sand-300 text-sand-800',
+    outline: 'bg-white border border-beach-500 text-beach-500 hover:bg-beach-50',
+    ghost: 'bg-transparent hover:bg-sand-100 text-sand-700',
   };
 
   // Text size based on button size
@@ -70,7 +70,7 @@ const FixedSizeButton: React.FC<FixedSizeButtonProps> = ({
         duration-200
         focus:outline-none
         focus:ring-2
-        focus:ring-blue-500
+        focus:ring-beach-500
         focus:ring-offset-2
         disabled:opacity-50
         disabled:cursor-not-allowed

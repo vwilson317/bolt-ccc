@@ -259,7 +259,7 @@ const ShareButton: React.FC<ShareButtonProps> = ({
       <button
         onClick={() => handleShare()}
         disabled={isSharing}
-        className={`${getButtonClasses()} bg-orange-600 text-white hover:bg-orange-700`}
+        className={`${getButtonClasses()} bg-beach-600 text-white hover:bg-beach-700`}
       >
         <Share2 className={`${getIconSize()} mr-2`} />
         <span className="font-medium">

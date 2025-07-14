@@ -67,7 +67,7 @@ const AnalyticsDashboard: React.FC = () => {
     return (
       <div className="bg-white rounded-2xl shadow-lg p-6">
         <div className="flex items-center justify-center h-32">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-beach-500"></div>
         </div>
       </div>
     );
@@ -78,7 +78,7 @@ const AnalyticsDashboard: React.FC = () => {
       {/* Analytics Status */}
       <div className="bg-white rounded-2xl shadow-lg p-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-          <BarChart3 className="h-5 w-5 mr-2 text-orange-500" />
+          <BarChart3 className="h-5 w-5 mr-2 text-beach-500" />
           Analytics Status
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -167,7 +167,7 @@ const AnalyticsDashboard: React.FC = () => {
       {/* Device Types */}
       <div className="bg-white rounded-2xl shadow-lg p-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-          <Globe className="h-5 w-5 mr-2 text-orange-500" />
+          <Globe className="h-5 w-5 mr-2 text-beach-500" />
           Device Types
         </h3>
         <div className="space-y-3">
@@ -177,7 +177,7 @@ const AnalyticsDashboard: React.FC = () => {
               <div className="flex items-center">
                 <div className="w-24 bg-gray-200 rounded-full h-2 mr-3">
                   <div 
-                    className="bg-orange-500 h-2 rounded-full" 
+                    className="bg-beach-500 h-2 rounded-full" 
                     style={{ width: `${device.percentage}%` }}
                   ></div>
                 </div>
