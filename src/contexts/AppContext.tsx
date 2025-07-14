@@ -17,6 +17,9 @@ interface AppContextType {
   currentLanguage?: string;
   weatherOverride: boolean;
   overrideExpiry: Date | null;
+  selectedBarraca: Barraca | null;
+  openBarracaModal: (barraca: Barraca) => void;
+  closeBarracaModal: () => void;
   updateSearchFilters: (filters: Partial<SearchFilters>) => void;
   addBarraca: (barraca: Omit<Barraca, 'id' | 'createdAt' | 'updatedAt'>) => Promise<Barraca>;
   updateBarraca: (id: string, updates: Partial<Barraca>) => Promise<Barraca>;
@@ -61,6 +64,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const [currentLanguage, setCurrentLanguage] = useState<string>('en');
   const [weatherOverride, setWeatherOverride] = useState(false);
   const [overrideExpiry, setOverrideExpiry] = useState<Date | null>(null);
+  const [selectedBarraca, setSelectedBarraca] = useState<Barraca | null>(null);
 
   // Load barracas from database on mount
   useEffect(() => {
@@ -333,6 +337,14 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     }
   }, []);
 
+  const openBarracaModal = useCallback((barraca: Barraca) => {
+    setSelectedBarraca(barraca);
+  }, []);
+
+  const closeBarracaModal = useCallback(() => {
+    setSelectedBarraca(null);
+  }, []);
+
   const value: AppContextType = {
     barracas,
     filteredBarracas,
@@ -344,6 +356,9 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     currentLanguage,
     weatherOverride,
     overrideExpiry,
+    selectedBarraca,
+    openBarracaModal,
+    closeBarracaModal,
     updateSearchFilters,
     addBarraca,
     updateBarraca,

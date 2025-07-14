@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Thermometer, Droplets, Wind, RefreshCw } from 'lucide-react';
+import { Thermometer, Droplets, Wind, RefreshCw, Cloud } from 'lucide-react';
 import { useWeather } from '../contexts/WeatherContext';
 
 const WeatherBar: React.FC = () => {
@@ -31,20 +31,25 @@ const WeatherBar: React.FC = () => {
   return (
     <div className="sticky top-16 z-30 bg-white text-sand-800 shadow-sm border-t-4 border-beach-500">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Main weather bar */}
         <div className="flex items-center justify-between py-3">
           {/* Weather Info */}
-          <div className="flex items-center space-x-4 text-sm">
+          <div className="flex items-center space-x-2 sm:space-x-4 text-sm">
             <div className="flex items-center space-x-1">
               <Thermometer className="h-4 w-4" />
               <span className="font-medium" data-lingo-skip>{weather.temperature}°C</span>
             </div>
-            <div className="hidden sm:flex items-center space-x-1">
+            <div className="flex items-center space-x-1">
               <Droplets className="h-4 w-4" />
               <span data-lingo-skip>{weather.humidity}%</span>
             </div>
-            <div className="hidden md:flex items-center space-x-1">
+            <div className="flex items-center space-x-1">
               <Wind className="h-4 w-4" />
               <span data-lingo-skip>{weather.windSpeed} km/h</span>
+            </div>
+            <div className="hidden sm:flex items-center space-x-1">
+              <Cloud className="h-4 w-4" />
+              <span className="max-w-20 truncate" data-lingo-skip>{weather.description}</span>
             </div>
           </div>
 
@@ -62,6 +67,19 @@ const WeatherBar: React.FC = () => {
             >
               <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
             </button>
+          </div>
+        </div>
+
+        {/* Additional weather details for mobile */}
+        <div className="sm:hidden border-t border-gray-200 py-2">
+          <div className="flex items-center justify-between text-xs text-gray-600">
+            <div className="flex items-center space-x-1">
+              <Cloud className="h-3 w-3" />
+              <span data-lingo-skip>{weather.description}</span>
+            </div>
+            <div className="flex items-center space-x-1">
+              <span data-lingo-skip>Feels like {weather.feelsLike}°C</span>
+            </div>
           </div>
         </div>
       </div>

@@ -65,8 +65,8 @@ const BarracaDetail: React.FC<BarracaDetailProps> = ({ barraca, onClose, weather
   const effectiveIsOpen = getEffectiveOpenStatus(barraca, weatherOverride || false);
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-2 md:p-4">
+      <div className="bg-white rounded-2xl w-full h-full max-w-6xl max-h-[98vh] md:max-h-[95vh] overflow-y-auto">
         {/* Header */}
         <div className="relative">
           {/* Hero Image */}
@@ -239,7 +239,7 @@ const BarracaDetail: React.FC<BarracaDetailProps> = ({ barraca, onClose, weather
             {barraca.contact.phone && (
               <a
                 href={`tel:${barraca.contact.phone}`}
-                className="flex-1 bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-colors flex items-center justify-center"
+                className="flex-1 bg-beach-500 text-white px-6 py-3 rounded-lg hover:bg-beach-600 transition-colors flex items-center justify-center"
               >
                 <Phone className="h-5 w-5 mr-2" />
                 {t('barraca.call')}

@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { MapPin, Clock, MessageCircle, Instagram, Wifi, Umbrella, Hash, Users, ChevronDown, ChevronUp } from 'lucide-react';
+import { MapPin, Clock, MessageCircle, Instagram, Wifi, Umbrella, Hash, Users, MousePointer } from 'lucide-react';
 import { Barraca } from '../types';
 import StoryRing from './StoryRing';
 import CTAButtonGroup from './CTAButtonGroup';
-import BarracaDetail from './BarracaDetail';
 import { useStory } from '../contexts/StoryContext';
 import { useApp } from '../contexts/AppContext';
 import { getEffectiveOpenStatus } from '../utils/environmentUtils';
@@ -16,9 +15,7 @@ interface BarracaGridProps {
 const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
   const { t } = useTranslation();
   const { stories, featureFlags } = useStory();
-  const { weatherOverride } = useApp();
-  const [expandedCards, setExpandedCards] = useState<Set<string>>(new Set());
-  const [selectedBarraca, setSelectedBarraca] = useState<Barraca | null>(null);
+  const { weatherOverride, openBarracaModal } = useApp();
 
   const getAmenityIcon = (amenity: string) => {
     switch (amenity.toLowerCase()) {
@@ -45,17 +42,7 @@ const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
     return stories.some(story => story.barracaId === barracaId);
   };
 
-  const toggleExpanded = (barracaId: string) => {
-    const newExpanded = new Set(expandedCards);
-    if (newExpanded.has(barracaId)) {
-      newExpanded.delete(barracaId);
-    } else {
-      newExpanded.add(barracaId);
-    }
-    setExpandedCards(newExpanded);
-  };
 
-  const isExpanded = (barracaId: string) => expandedCards.has(barracaId);
 
   // Helper function to truncate description for desktop
   const getTruncatedDescription = (description: string, maxLength: number = 120) => {
@@ -69,9 +56,9 @@ const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
         <div 
           key={barraca.id} 
           className={`bg-white rounded-xl md:rounded-2xl shadow-md hover:shadow-lg transition-all duration-200 overflow-hidden flex flex-col relative ${
-            barraca.partnered ? 'cursor-pointer' : 'border-2 border-gray-300'
+            barraca.partnered ? 'cursor-pointer barraca-tap-feedback barraca-selectable active:scale-[0.98] md:active:scale-100 border border-transparent md:border-transparent' : 'border-2 border-gray-300'
           }`}
-          onClick={() => barraca.partnered && setSelectedBarraca(barraca)}
+          onClick={() => barraca.partnered && openBarracaModal(barraca)}
         >
           {/* Mobile-Optimized Image Section */}
           <div className="relative h-40 md:h-48 overflow-hidden flex-shrink-0">
@@ -133,6 +120,15 @@ const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
                 />
               </div>
             )}
+
+            {/* Mobile Tap Indicator - Only for partnered barracas */}
+            {barraca.partnered && (
+              <div className="absolute bottom-3 right-3 md:hidden">
+                <div className="bg-black/50 backdrop-blur-sm text-white p-1.5 rounded-full">
+                  <MousePointer className="h-3 w-3" />
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Content Section - Mobile Optimized with Flex Layout */}
@@ -181,29 +177,15 @@ const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
                             {item}
                           </span>
                         ))}
-                        {barraca.menuPreview.length > 2 && (
-                          <button
-                            onClick={() => toggleExpanded(barraca.id)}
-                            className="text-xs text-gray-500 px-2 py-1 hover:text-gray-700 md:hidden"
-                          >
-                            {t('barraca.moreItems', { count: barraca.menuPreview.length - 2 })}
-                          </button>
-                        )}
+
                       </div>
                     </div>
                   )}
 
-                  {/* Description - Truncated on Desktop, Expandable on Mobile */}
+                  {/* Description - Always truncated for cleaner look */}
                   <div className="mb-3">
                     <p className="text-gray-600 text-sm leading-relaxed">
-                      {/* Desktop: Always show truncated */}
-                      <span className="hidden md:block">
-                        {getTruncatedDescription(barraca.description)}
-                      </span>
-                      {/* Mobile: Show full if expanded, truncated if not */}
-                      <span className="md:hidden">
-                        {isExpanded(barraca.id) ? barraca.description : getTruncatedDescription(barraca.description, 80)}
-                      </span>
+                      {getTruncatedDescription(barraca.description, 80)}
                     </p>
                   </div>
                 </>
@@ -232,66 +214,7 @@ const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
                 </>
               )}
 
-              {/* Expandable Content on Mobile - Only for partnered barracas */}
-              {barraca.partnered && (
-                <>
-                  <div className={`md:block ${isExpanded(barraca.id) ? 'block' : 'hidden'}`}>
-                    {/* Additional Menu Items */}
-                    {barraca.menuPreview.length > 2 && (
-                      <div className="mb-3">
-                        <div className="flex flex-wrap gap-1">
-                          {barraca.menuPreview.slice(2).map((item, index) => (
-                            <span
-                              key={index}
-                              className="bg-beach-50 text-beach-700 px-2 py-1 rounded-md text-xs font-medium"
-                            >
-                              {item}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    )}
 
-                    {/* Amenities - Simplified */}
-                    {barraca.amenities.length > 0 && (
-                      <div className="mb-3">
-                        <div className="flex flex-wrap gap-1">
-                          {barraca.amenities.slice(0, 3).map((amenity, index) => {
-                            const Icon = getAmenityIcon(amenity);
-                            return (
-                              <div
-                                key={index}
-                                className="flex items-center bg-gray-100 text-gray-700 px-2 py-1 rounded-md text-xs"
-                              >
-                                <Icon className="h-3 w-3 mr-1" />
-                                {amenity}
-                              </div>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Mobile Expand/Collapse Button */}
-                  <button
-                    onClick={() => toggleExpanded(barraca.id)}
-                    className="md:hidden w-full flex items-center justify-center py-2 text-sm text-gray-500 hover:text-gray-700 border-t border-gray-100 mt-3"
-                  >
-                    {isExpanded(barraca.id) ? (
-                      <>
-                        <span>{t('barraca.showLess')}</span>
-                        <ChevronUp className="h-4 w-4 ml-1" />
-                      </>
-                    ) : (
-                      <>
-                        <span>{t('barraca.showMore')}</span>
-                        <ChevronDown className="h-4 w-4 ml-1" />
-                      </>
-                    )}
-                  </button>
-                </>
-              )}
             </div>
 
             {/* Action Footer - Mobile Optimized with Configurable CTA Buttons - Fixed at Bottom - Only for partnered barracas */}
@@ -341,15 +264,6 @@ const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
           </div>
         </div>
       ))}
-      
-      {/* Barraca Detail Modal */}
-      {selectedBarraca && (
-        <BarracaDetail
-          barraca={selectedBarraca}
-          onClose={() => setSelectedBarraca(null)}
-          weatherOverride={weatherOverride}
-        />
-      )}
     </div>
   );
 };

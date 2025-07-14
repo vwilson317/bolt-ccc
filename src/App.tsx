@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { AppProvider } from './contexts/AppContext';
+import { AppProvider, useApp } from './contexts/AppContext';
 import { StoryProvider } from './contexts/StoryContext';
 import { WeatherProvider } from './contexts/WeatherContext';
 import { useAnalytics } from './hooks/useAnalytics';
@@ -9,6 +9,7 @@ import WeatherBar from './components/WeatherBar';
 import StoryViewer from './components/StoryViewer';
 import EnvironmentBadge from './components/EnvironmentBadge';
 import EnvironmentInfo from './components/EnvironmentInfo';
+import BarracaDetail from './components/BarracaDetail';
 import Home from './pages/Home';
 import Discover from './pages/Discover';
 import About from './pages/About';
@@ -31,6 +32,7 @@ checkSupabaseConnection().then(connected => {
 function AppContent() {
   // Initialize analytics
   useAnalytics();
+  const { selectedBarraca, closeBarracaModal, weatherOverride } = useApp();
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -46,6 +48,16 @@ function AppContent() {
         </Routes>
       </main>
       <StoryViewer />
+      
+      {/* Global Barraca Detail Modal */}
+      {selectedBarraca && (
+        <BarracaDetail
+          barraca={selectedBarraca}
+          onClose={closeBarracaModal}
+          weatherOverride={weatherOverride}
+        />
+      )}
+      
       {/* <EnvironmentBadge />
       <EnvironmentInfo /> */}
     </div>

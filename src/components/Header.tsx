@@ -29,7 +29,7 @@ const Header: React.FC = () => {
 
   return (
     <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-      isScrolled || isAdminLoginPage
+      isScrolled || isAdminLoginPage || isMenuOpen
         ? 'bg-white/95 backdrop-blur-sm border-b border-beach-100 shadow-sm' 
         : 'bg-transparent'
     }`}>
@@ -39,12 +39,12 @@ const Header: React.FC = () => {
           <Link to="/" className="flex items-center space-x-3 group">
             <div className="text-center">
               <h1 className={`text-xl font-bold bg-gradient-to-r from-beach-600 to-beach-700 bg-clip-text text-transparent transition-colors duration-300 ${
-                isScrolled || isAdminLoginPage ? '' : 'text-white drop-shadow-lg'
+                isScrolled || isAdminLoginPage || isMenuOpen ? '' : 'text-white drop-shadow-lg'
               }`} data-lingo-skip>
                 Carioca Coastal Club
               </h1>
               <p className={`text-xs transition-colors duration-300 ${
-                isScrolled || isAdminLoginPage ? 'text-beach-500' : 'text-beach-200'
+                isScrolled || isAdminLoginPage || isMenuOpen ? 'text-beach-500' : 'text-beach-200'
               } -mt-1`} data-lingo-skip>Barraca Loyalty Program</p>
             </div>
           </Link>
@@ -55,10 +55,10 @@ const Header: React.FC = () => {
               to="/"
               className={`font-medium transition-colors duration-200 ${
                 isActive('/') 
-                  ? isScrolled || isAdminLoginPage
+                  ? isScrolled || isAdminLoginPage || isMenuOpen
                     ? 'text-beach-600 border-b-2 border-beach-600 pb-1' 
                     : 'text-white border-b-2 border-white pb-1'
-                  : isScrolled || isAdminLoginPage
+                  : isScrolled || isAdminLoginPage || isMenuOpen
                     ? 'text-gray-700 hover:text-beach-600'
                     : 'text-white/90 hover:text-white'
               }`}
@@ -69,10 +69,10 @@ const Header: React.FC = () => {
               to="/discover"
               className={`font-medium transition-colors duration-200 ${
                 isActive('/discover') 
-                  ? isScrolled || isAdminLoginPage
+                  ? isScrolled || isAdminLoginPage || isMenuOpen
                     ? 'text-beach-600 border-b-2 border-beach-600 pb-1' 
                     : 'text-white border-b-2 border-white pb-1'
-                  : isScrolled || isAdminLoginPage
+                  : isScrolled || isAdminLoginPage || isMenuOpen
                     ? 'text-gray-700 hover:text-beach-600'
                     : 'text-white/90 hover:text-white'
               }`}
@@ -83,10 +83,10 @@ const Header: React.FC = () => {
               to="/about"
               className={`font-medium transition-colors duration-200 ${
                 isActive('/about') 
-                  ? isScrolled || isAdminLoginPage
+                  ? isScrolled || isAdminLoginPage || isMenuOpen
                     ? 'text-beach-600 border-b-2 border-beach-600 pb-1' 
                     : 'text-white border-b-2 border-white pb-1'
-                  : isScrolled || isAdminLoginPage
+                  : isScrolled || isAdminLoginPage || isMenuOpen
                     ? 'text-gray-700 hover:text-beach-600'
                     : 'text-white/90 hover:text-white'
               }`}
@@ -97,10 +97,10 @@ const Header: React.FC = () => {
               to="/admin"
               className={`font-medium transition-colors duration-200 ${
                 isActive('/admin') 
-                  ? isScrolled || isAdminLoginPage
+                  ? isScrolled || isAdminLoginPage || isMenuOpen
                     ? 'text-beach-600 border-b-2 border-beach-600 pb-1' 
                     : 'text-white border-b-2 border-white pb-1'
-                  : isScrolled || isAdminLoginPage
+                  : isScrolled || isAdminLoginPage || isMenuOpen
                     ? 'text-gray-700 hover:text-beach-600'
                     : 'text-white/90 hover:text-white'
               }`}
@@ -125,7 +125,7 @@ const Header: React.FC = () => {
                   className="h-6 w-6"
                 />
                 <span className={`text-xs transition-colors duration-300 ${
-                  isScrolled || isAdminLoginPage ? 'text-gray-500' : 'text-white/70'
+                  isScrolled || isAdminLoginPage || isMenuOpen ? 'text-gray-500' : 'text-white/70'
                 }`} data-lingo-skip>
                   Built with Bolt
                 </span>
@@ -137,16 +137,16 @@ const Header: React.FC = () => {
               <button
                 onClick={() => setIsLanguageOpen(!isLanguageOpen)}
                 className={`flex items-center space-x-1 p-2 rounded-lg transition-colors ${
-                  isScrolled || isAdminLoginPage
+                  isScrolled || isAdminLoginPage || isMenuOpen
                     ? 'hover:bg-gray-100' 
                     : 'hover:bg-white/20'
                 }`}
               >
                 <Globe className={`h-4 w-4 transition-colors duration-300 ${
-                  isScrolled || isAdminLoginPage ? 'text-gray-600' : 'text-white'
+                  isScrolled || isAdminLoginPage || isMenuOpen ? 'text-gray-600' : 'text-white'
                 }`} />
                 <span className={`text-sm font-medium transition-colors duration-300 ${
-                  isScrolled || isAdminLoginPage ? 'text-gray-700' : 'text-white'
+                  isScrolled || isAdminLoginPage || isMenuOpen ? 'text-gray-700' : 'text-white'
                 } uppercase`}>
                   {i18n.language}
                 </span>
@@ -174,18 +174,18 @@ const Header: React.FC = () => {
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className={`md:hidden p-2 rounded-lg transition-colors ${
-                isScrolled || isAdminLoginPage
+                isScrolled || isAdminLoginPage || isMenuOpen
                   ? 'hover:bg-gray-100' 
                   : 'hover:bg-white/20'
               }`}
             >
               {isMenuOpen ? (
                 <X className={`h-6 w-6 transition-colors duration-300 ${
-                  isScrolled || isAdminLoginPage ? 'text-gray-600' : 'text-white'
+                  isScrolled || isAdminLoginPage || isMenuOpen ? 'text-gray-600' : 'text-white'
                 }`} />
               ) : (
                 <Menu className={`h-6 w-6 transition-colors duration-300 ${
-                  isScrolled || isAdminLoginPage ? 'text-gray-600' : 'text-white'
+                  isScrolled || isAdminLoginPage || isMenuOpen ? 'text-gray-600' : 'text-white'
                 }`} />
               )}
             </button>
@@ -195,7 +195,7 @@ const Header: React.FC = () => {
         {/* Mobile Navigation */}
         {isMenuOpen && (
           <div className={`md:hidden border-t py-4 transition-colors duration-300 ${
-            isScrolled || isAdminLoginPage
+            isScrolled || isAdminLoginPage || isMenuOpen
               ? 'border-gray-200 bg-white' 
               : 'border-white/20 bg-black/20 backdrop-blur-sm'
           }`}>
@@ -205,8 +205,8 @@ const Header: React.FC = () => {
                 onClick={() => setIsMenuOpen(false)}
                 className={`font-medium transition-colors duration-200 ${
                   isActive('/') 
-                    ? isScrolled || isAdminLoginPage ? 'text-beach-600' : 'text-white'
-                    : isScrolled || isAdminLoginPage ? 'text-gray-700' : 'text-white/90'
+                    ? isScrolled || isAdminLoginPage || isMenuOpen ? 'text-beach-600' : 'text-white'
+                    : isScrolled || isAdminLoginPage || isMenuOpen ? 'text-gray-700' : 'text-white/90'
                 }`}
               >
                 {t('nav.home')}
@@ -216,8 +216,8 @@ const Header: React.FC = () => {
                 onClick={() => setIsMenuOpen(false)}
                 className={`font-medium transition-colors duration-200 ${
                   isActive('/discover') 
-                    ? isScrolled || isAdminLoginPage ? 'text-beach-600' : 'text-white'
-                    : isScrolled || isAdminLoginPage ? 'text-gray-700' : 'text-white/90'
+                    ? isScrolled || isAdminLoginPage || isMenuOpen ? 'text-beach-600' : 'text-white'
+                    : isScrolled || isAdminLoginPage || isMenuOpen ? 'text-gray-700' : 'text-white/90'
                 }`}
               >
                 {t('nav.discover')}
@@ -227,8 +227,8 @@ const Header: React.FC = () => {
                 onClick={() => setIsMenuOpen(false)}
                 className={`font-medium transition-colors duration-200 ${
                   isActive('/about') 
-                    ? isScrolled || isAdminLoginPage ? 'text-beach-600' : 'text-white'
-                    : isScrolled || isAdminLoginPage ? 'text-gray-700' : 'text-white/90'
+                    ? isScrolled || isAdminLoginPage || isMenuOpen ? 'text-beach-600' : 'text-white'
+                    : isScrolled || isAdminLoginPage || isMenuOpen ? 'text-gray-700' : 'text-white/90'
                 }`}
               >
                 {t('nav.about')}
@@ -238,8 +238,8 @@ const Header: React.FC = () => {
                 onClick={() => setIsMenuOpen(false)}
                 className={`font-medium transition-colors duration-200 ${
                   isActive('/admin') 
-                    ? isScrolled || isAdminLoginPage ? 'text-beach-600' : 'text-white'
-                    : isScrolled || isAdminLoginPage ? 'text-gray-700' : 'text-white/90'
+                    ? isScrolled || isAdminLoginPage || isMenuOpen ? 'text-beach-600' : 'text-white'
+                    : isScrolled || isAdminLoginPage || isMenuOpen ? 'text-gray-700' : 'text-white/90'
                 }`}
               >
                 {t('nav.admin')}
@@ -247,7 +247,7 @@ const Header: React.FC = () => {
               
               {/* Mobile Bolt Badge */}
               <div className={`pt-4 border-t transition-colors duration-300 ${
-                isScrolled || isAdminLoginPage ? 'border-gray-200' : 'border-white/20'
+                isScrolled || isAdminLoginPage || isMenuOpen ? 'border-gray-200' : 'border-white/20'
               }`}>
                 <a 
                   href="https://bolt.new/" 
@@ -261,7 +261,7 @@ const Header: React.FC = () => {
                     className="h-6 w-6"
                   />
                   <span className={`text-xs transition-colors duration-300 ${
-                    isScrolled || isAdminLoginPage ? 'text-gray-500' : 'text-white/70'
+                    isScrolled || isAdminLoginPage || isMenuOpen ? 'text-gray-500' : 'text-white/70'
                   }`} data-lingo-skip>
                     Built with Bolt
                   </span>

@@ -124,6 +124,48 @@
   user-select: none;
 }
 
+/* Mobile-specific barraca selectability indicators */
+@media (max-width: 768px) {
+  /* Subtle tap feedback for barraca cards */
+  .barraca-tap-feedback {
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+  }
+  
+  .barraca-tap-feedback:active {
+    transform: scale(0.98);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Gentle glow effect for partnered barracas on mobile */
+  .barraca-selectable {
+    position: relative;
+  }
+  
+  .barraca-selectable::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(45deg, transparent, rgba(236, 72, 153, 0.05), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+  
+  .barraca-selectable:active::after {
+    opacity: 1;
+  }
+  
+  /* Subtle border highlight for partnered barracas */
+  .barraca-selectable {
+    border-color: rgba(236, 72, 153, 0.2) !important;
+  }
+  
+  .barraca-selectable:active {
+    border-color: rgba(236, 72, 153, 0.4) !important;
+  }
+}
+
 /* Enhanced story ring animations with beach theme */
 .story-ring-viewed {
   opacity: 0.6;
