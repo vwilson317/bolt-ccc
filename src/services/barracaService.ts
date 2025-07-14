@@ -24,6 +24,11 @@ const transformBarracaFromDB = (row: BarracaRow, isOpen: boolean = false): Barra
   amenities: row.amenities,
   weatherDependent: row.weather_dependent,
   partnered: row.partnered,
+  weekendHoursEnabled: row.weekend_hours_enabled || false,
+  weekendHours: row.weekend_hours_schedule as any,
+  manualStatus: (row.manual_status as 'open' | 'closed' | 'undefined') || 'undefined',
+  specialAdminOverride: row.special_admin_override || false,
+  specialAdminOverrideExpires: row.special_admin_override_expires ? new Date(row.special_admin_override_expires) : null,
   ctaButtons: row.cta_buttons as any,
   createdAt: new Date(row.created_at),
   updatedAt: new Date(row.updated_at)
@@ -43,6 +48,9 @@ const transformBarracaToDB = (barraca: Omit<Barraca, 'id' | 'createdAt' | 'updat
   amenities: barraca.amenities,
   weather_dependent: barraca.weatherDependent,
   partnered: barraca.partnered,
+  weekend_hours_enabled: barraca.weekendHoursEnabled,
+  special_admin_override: barraca.specialAdminOverride,
+  special_admin_override_expires: barraca.specialAdminOverrideExpires?.toISOString() || null,
   cta_buttons: (barraca.ctaButtons as unknown as Json) || []
 })
 
@@ -472,5 +480,160 @@ export class BarracaService {
         }
       )
       .subscribe()
+  }
+
+  // Weekend Hours Management
+  static async setWeekendHours(
+    barracaId: string,
+    fridayOpen?: string,
+    fridayClose?: string,
+    saturdayOpen?: string,
+    saturdayClose?: string,
+    sundayOpen?: string,
+    sundayClose?: string
+  ): Promise<void> {
+    try {
+      const { error } = await supabase.rpc('set_weekend_hours', {
+        barraca_id_param: barracaId,
+        friday_open: fridayOpen,
+        friday_close: fridayClose,
+        saturday_open: saturdayOpen,
+        saturday_close: saturdayClose,
+        sunday_open: sundayOpen,
+        sunday_close: sundayClose
+      })
+
+      if (error) {
+        handleSupabaseError(error, 'set weekend hours')
+      }
+    } catch (error) {
+      console.error('Error setting weekend hours:', error)
+      throw error
+    }
+  }
+
+  static async disableWeekendHours(barracaId: string): Promise<void> {
+    try {
+      const { error } = await supabase.rpc('disable_weekend_hours', {
+        barraca_id_param: barracaId
+      })
+
+      if (error) {
+        handleSupabaseError(error, 'disable weekend hours')
+      }
+    } catch (error) {
+      console.error('Error disabling weekend hours:', error)
+      throw error
+    }
+  }
+
+  // Special Admin Functions
+  static async specialAdminOpenBarraca(barracaId: string, durationHours: number = 24): Promise<boolean> {
+    try {
+      const { data, error } = await supabase.rpc('special_admin_open_barraca', {
+        barraca_id_param: barracaId,
+        duration_hours: durationHours
+      })
+
+      if (error) {
+        handleSupabaseError(error, 'special admin open barraca')
+      }
+
+      return data || false
+    } catch (error) {
+      console.error('Error opening barraca with special admin:', error)
+      throw error
+    }
+  }
+
+  static async specialAdminCloseBarraca(barracaId: string): Promise<boolean> {
+    try {
+      const { data, error } = await supabase.rpc('special_admin_close_barraca', {
+        barraca_id_param: barracaId
+      })
+
+      if (error) {
+        handleSupabaseError(error, 'special admin close barraca')
+      }
+
+      return data || false
+    } catch (error) {
+      console.error('Error closing barraca with special admin:', error)
+      throw error
+    }
+  }
+
+  static async getSpecialAdminOverrides(): Promise<Array<{
+    barracaId: string;
+    barracaName: string;
+    overrideExpires: Date;
+    hoursRemaining: number;
+  }>> {
+    try {
+      const { data, error } = await supabase.rpc('get_special_admin_overrides')
+
+      if (error) {
+        handleSupabaseError(error, 'get special admin overrides')
+      }
+
+      return (data || []).map((item: any) => ({
+        barracaId: item.barraca_id,
+        barracaName: item.barraca_name,
+        overrideExpires: new Date(item.override_expires),
+        hoursRemaining: item.hours_remaining
+      }))
+    } catch (error) {
+      console.error('Error getting special admin overrides:', error)
+      throw error
+    }
+  }
+
+  // Get barracas with manual status (for super admin)
+  static async getBarracasWithManualStatus(): Promise<Array<{
+    barracaId: string;
+    barracaName: string;
+    location: string;
+    partnered: boolean;
+    manualStatus: string;
+    lastUpdated: Date;
+  }>> {
+    try {
+      const { data, error } = await supabase.rpc('get_barracas_with_manual_status');
+
+      if (error) {
+        handleSupabaseError(error, 'get barracas with manual status');
+      }
+
+      return (data || []).map((row: any) => ({
+        barracaId: row.barraca_id,
+        barracaName: row.barraca_name,
+        location: row.location,
+        partnered: row.partnered,
+        manualStatus: row.manual_status,
+        lastUpdated: new Date(row.last_updated)
+      }));
+    } catch (error) {
+      console.error('Error fetching barracas with manual status:', error);
+      throw error;
+    }
+  }
+
+  // Set manual status for non-partnered barraca (super admin only)
+  static async setManualStatus(barracaId: string, status: 'open' | 'closed' | 'undefined'): Promise<boolean> {
+    try {
+      const { data, error } = await supabase.rpc('set_manual_barraca_status', {
+        barraca_id_param: barracaId,
+        status_param: status
+      });
+
+      if (error) {
+        handleSupabaseError(error, 'set manual barraca status');
+      }
+
+      return data || false;
+    } catch (error) {
+      console.error('Error setting manual status:', error);
+      throw error;
+    }
   }
 }

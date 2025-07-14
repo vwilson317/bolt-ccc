@@ -73,7 +73,7 @@ export const validateCTAButton = (button: CTAButtonConfig): { isValid: boolean; 
     errors.push('Button action type is required');
   }
 
-  if (!button.action.value || button.action.value.trim() === '') {
+  if (button.action && (!button.action.value || button.action.value.trim() === '')) {
     errors.push('Button action value is required');
   }
 
@@ -89,15 +89,15 @@ export const validateCTAButton = (button: CTAButtonConfig): { isValid: boolean; 
   }
 
   // Action-specific validation
-  if (button.action.type === 'url' && !isValidUrl(button.action.value)) {
+  if (button.action && button.action.type === 'url' && !isValidUrl(button.action.value)) {
     errors.push('Invalid URL format');
   }
 
-  if (button.action.type === 'email' && !isValidEmail(button.action.value)) {
+  if (button.action && button.action.type === 'email' && !isValidEmail(button.action.value)) {
     errors.push('Invalid email format');
   }
 
-  if (button.action.type === 'phone' && !isValidPhone(button.action.value)) {
+  if (button.action && button.action.type === 'phone' && !isValidPhone(button.action.value)) {
     errors.push('Invalid phone number format');
   }
 

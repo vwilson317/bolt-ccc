@@ -24,6 +24,11 @@ export interface Database {
           amenities: string[]
           weather_dependent: boolean
           partnered: boolean
+          weekend_hours_enabled: boolean
+          weekend_hours_schedule: Json | null
+          manual_status: string | null
+          special_admin_override: boolean
+          special_admin_override_expires: string | null
           cta_buttons: Json
           created_at: string
           updated_at: string
@@ -34,14 +39,19 @@ export interface Database {
           barraca_number?: string | null
           location: string
           coordinates: Json
-          typical_hours?: string
+          typical_hours: string
           description: string
-          images?: string[]
-          menu_preview?: string[]
-          contact?: Json
-          amenities?: string[]
+          images: string[]
+          menu_preview: string[]
+          contact: Json
+          amenities: string[]
           weather_dependent?: boolean
           partnered?: boolean
+          weekend_hours_enabled?: boolean
+          weekend_hours_schedule?: Json | null
+          manual_status?: string | null
+          special_admin_override?: boolean
+          special_admin_override_expires?: string | null
           cta_buttons?: Json
           created_at?: string
           updated_at?: string
@@ -60,7 +70,47 @@ export interface Database {
           amenities?: string[]
           weather_dependent?: boolean
           partnered?: boolean
+          weekend_hours_enabled?: boolean
+          weekend_hours_schedule?: Json | null
+          manual_status?: string | null
+          special_admin_override?: boolean
+          special_admin_override_expires?: string | null
           cta_buttons?: Json
+          created_at?: string
+          updated_at?: string
+        }
+      }
+      admin_users: {
+        Row: {
+          id: string
+          email: string
+          password_hash: string
+          role: string
+          name: string | null
+          last_login: string | null
+          is_active: boolean
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          email: string
+          password_hash: string
+          role: string
+          name?: string | null
+          last_login?: string | null
+          is_active?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          email?: string
+          password_hash?: string
+          role?: string
+          name?: string | null
+          last_login?: string | null
+          is_active?: boolean
           created_at?: string
           updated_at?: string
         }
@@ -253,6 +303,60 @@ export interface Database {
       cleanup_expired_weather: {
         Args: {}
         Returns: void
+      }
+      is_barraca_open_now: {
+        Args: {
+          barraca_id_param: string
+          check_time?: string
+        }
+        Returns: boolean
+      }
+      is_weekend_hours_active: {
+        Args: {
+          barraca_id_param: string
+          check_time?: string
+        }
+        Returns: boolean
+      }
+      set_weekend_hours: {
+        Args: {
+          barraca_id_param: string
+          friday_open?: string
+          friday_close?: string
+          saturday_open?: string
+          saturday_close?: string
+          sunday_open?: string
+          sunday_close?: string
+        }
+        Returns: void
+      }
+      disable_weekend_hours: {
+        Args: {
+          barraca_id_param: string
+        }
+        Returns: void
+      }
+      special_admin_open_barraca: {
+        Args: {
+          barraca_id_param: string
+          duration_hours?: number
+        }
+        Returns: boolean
+      }
+      special_admin_close_barraca: {
+        Args: {
+          barraca_id_param: string
+        }
+        Returns: boolean
+      }
+      get_special_admin_overrides: {
+        Args: {}
+        Returns: {
+          barraca_id: string
+          barraca_name: string
+          override_expires: string
+          hours_remaining: number
+        }[]
       }
     }
     Enums: {

@@ -32,6 +32,14 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
     amenities: [''],
     weatherDependent: false,
     partnered: false,
+    weekendHoursEnabled: false,
+    weekendHours: {
+      friday: { open: '10:00', close: '22:00' },
+      saturday: { open: '10:00', close: '22:00' },
+      sunday: { open: '10:00', close: '20:00' }
+    },
+    specialAdminOverride: false,
+    specialAdminOverrideExpires: null as Date | null,
     ctaButtons: [] as CTAButtonConfig[]
   });
 
@@ -83,6 +91,14 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
           amenities: barraca.amenities,
           weatherDependent: barraca.weatherDependent,
           partnered: barraca.partnered,
+          weekendHoursEnabled: barraca.weekendHoursEnabled,
+          weekendHours: barraca.weekendHours || {
+            friday: { open: '10:00', close: '22:00' },
+            saturday: { open: '10:00', close: '22:00' },
+            sunday: { open: '10:00', close: '20:00' }
+          },
+          specialAdminOverride: barraca.specialAdminOverride,
+          specialAdminOverrideExpires: barraca.specialAdminOverrideExpires,
           ctaButtons: barraca.ctaButtons || []
         });
       }
@@ -312,6 +328,134 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
                 />
               </div>
+            </div>
+
+            {/* Weekend Hours */}
+            <div className="border border-gray-200 rounded-lg p-4">
+              <div className="flex items-center justify-between mb-3">
+                <h4 className="text-lg font-medium text-gray-900">Weekend Hours</h4>
+                <label className="flex items-center">
+                  <input
+                    type="checkbox"
+                    checked={formData.weekendHoursEnabled}
+                    onChange={(e) => setFormData(prev => ({ ...prev, weekendHoursEnabled: e.target.checked }))}
+                    className="h-4 w-4 text-beach-600 focus:ring-beach-500 border-gray-300 rounded"
+                  />
+                  <span className="ml-2 text-sm text-gray-700">Enable Weekend Hours</span>
+                </label>
+              </div>
+              
+              {formData.weekendHoursEnabled && (
+                <div className="space-y-4">
+                  <p className="text-sm text-gray-600 mb-3">
+                    Configure specific hours for Friday, Saturday, and Sunday. These hours will override regular business hours on weekends.
+                  </p>
+                  
+                  {/* Friday Hours */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Friday Hours
+                      </label>
+                      <div className="flex gap-2">
+                        <input
+                          type="time"
+                          value={formData.weekendHours.friday.open}
+                          onChange={(e) => setFormData(prev => ({
+                            ...prev,
+                            weekendHours: {
+                              ...prev.weekendHours,
+                              friday: { ...prev.weekendHours.friday, open: e.target.value }
+                            }
+                          }))}
+                          className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
+                        />
+                        <span className="flex items-center text-gray-500">to</span>
+                        <input
+                          type="time"
+                          value={formData.weekendHours.friday.close}
+                          onChange={(e) => setFormData(prev => ({
+                            ...prev,
+                            weekendHours: {
+                              ...prev.weekendHours,
+                              friday: { ...prev.weekendHours.friday, close: e.target.value }
+                            }
+                          }))}
+                          className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
+                        />
+                      </div>
+                    </div>
+                    
+                    {/* Saturday Hours */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Saturday Hours
+                      </label>
+                      <div className="flex gap-2">
+                        <input
+                          type="time"
+                          value={formData.weekendHours.saturday.open}
+                          onChange={(e) => setFormData(prev => ({
+                            ...prev,
+                            weekendHours: {
+                              ...prev.weekendHours,
+                              saturday: { ...prev.weekendHours.saturday, open: e.target.value }
+                            }
+                          }))}
+                          className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
+                        />
+                        <span className="flex items-center text-gray-500">to</span>
+                        <input
+                          type="time"
+                          value={formData.weekendHours.saturday.close}
+                          onChange={(e) => setFormData(prev => ({
+                            ...prev,
+                            weekendHours: {
+                              ...prev.weekendHours,
+                              saturday: { ...prev.weekendHours.saturday, close: e.target.value }
+                            }
+                          }))}
+                          className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Sunday Hours */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Sunday Hours
+                    </label>
+                    <div className="flex gap-2">
+                      <input
+                        type="time"
+                        value={formData.weekendHours.sunday.open}
+                        onChange={(e) => setFormData(prev => ({
+                          ...prev,
+                          weekendHours: {
+                            ...prev.weekendHours,
+                            sunday: { ...prev.weekendHours.sunday, open: e.target.value }
+                          }
+                        }))}
+                        className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
+                      />
+                      <span className="flex items-center text-gray-500">to</span>
+                      <input
+                        type="time"
+                        value={formData.weekendHours.sunday.close}
+                        onChange={(e) => setFormData(prev => ({
+                          ...prev,
+                          weekendHours: {
+                            ...prev.weekendHours,
+                            sunday: { ...prev.weekendHours.sunday, close: e.target.value }
+                          }
+                        }))}
+                        className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Images */}

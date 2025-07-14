@@ -23,6 +23,15 @@ export interface Barraca {
   amenities: string[];
   weatherDependent: boolean;
   partnered: boolean; // Partnered barracas get special treatment
+  weekendHoursEnabled: boolean; // New weekend hours feature
+  weekendHours?: {
+    friday: { open: string; close: string };
+    saturday: { open: string; close: string };
+    sunday: { open: string; close: string };
+  };
+  manualStatus?: 'open' | 'closed' | 'undefined'; // Manual status for non-partnered barracas
+  specialAdminOverride: boolean; // Special admin override
+  specialAdminOverrideExpires: Date | null; // When override expires
   createdAt: Date;
   updatedAt: Date;
   ctaButtons?: CTAButtonConfig[]; // New configurable CTA buttons
@@ -143,7 +152,7 @@ export interface TranslatableCTAButtonFields {
 }
 
 export interface CTAButtonAction {
-  type: 'url' | 'phone' | 'email' | 'whatsapp' | 'reservation' | 'custom';
+  type: 'url' | 'phone' | 'email' | 'whatsapp' | 'reservation' | 'details' | 'custom';
   value: string; // URL, phone number, email, etc.
   target?: '_blank' | '_self'; // For URL actions
   trackingEvent?: string; // Analytics tracking

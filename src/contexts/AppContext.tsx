@@ -13,6 +13,7 @@ interface AppContextType {
   searchFilters: SearchFilters;
   isLoading: boolean;
   isAdmin: boolean;
+  isSpecialAdmin: boolean;
   emailSubscriptions: EmailSubscription[];
   currentLanguage?: string;
   weatherOverride: boolean;
@@ -60,6 +61,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isSpecialAdmin, setIsSpecialAdmin] = useState(false);
   const [emailSubscriptions, setEmailSubscriptions] = useState<EmailSubscription[]>([]);
   const [currentLanguage, setCurrentLanguage] = useState<string>('en');
   const [weatherOverride, setWeatherOverride] = useState(false);
@@ -71,9 +73,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     const loadBarracas = async () => {
       setIsLoading(true);
       try {
-        console.log('🔄 Loading barracas...');
         const fetchedBarracas = await fetchBarracas();
-        console.log('📊 Fetched barracas:', fetchedBarracas.length, fetchedBarracas.map(b => b.id));
         
         // Sort barracas: partnered first, then non-partnered, with location sorting within each group
         fetchedBarracas.sort((a, b) => {
@@ -191,7 +191,6 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     
     const checkExpiry = async () => {
       if (new Date() >= overrideExpiry) {
-        console.log('🌅 Weather override expired at midnight, reverting to normal display');
         try {
           await WeatherOverrideService.clearExpired();
           // Don't set state here; let the real-time subscription update state
@@ -300,6 +299,13 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     // Mock admin authentication
     if (email === 'admin@cariocacoastal.com' && password === 'admin123') {
       setIsAdmin(true);
+      setIsSpecialAdmin(false); // Ensure special admin is false
+      return true;
+    }
+    // Special admin authentication
+    if (email === 'special@cariocacoastal.com' && password === 'special123') {
+      setIsAdmin(true);
+      setIsSpecialAdmin(true); // Set special admin flag
       return true;
     }
     return false;
@@ -307,6 +313,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
 
   const adminLogout = useCallback(() => {
     setIsAdmin(false);
+    setIsSpecialAdmin(false);
   }, []);
 
   const refreshWeather = useCallback(async () => {
@@ -319,8 +326,6 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
       if (weatherData) {
         const updatedCount = await WeatherService.updateWeatherDependentBarracas();
         if (updatedCount > 0) {
-          console.log(`🌤️ Updated ${updatedCount} weather-dependent barracas based on conditions`);
-          
           // Refresh barracas from database to get updated status
           try {
             const refreshedBarracas = await fetchBarracas();
@@ -352,6 +357,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     searchFilters,
     isLoading,
     isAdmin,
+    isSpecialAdmin,
     emailSubscriptions,
     currentLanguage,
     weatherOverride,
