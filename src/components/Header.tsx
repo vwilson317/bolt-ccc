@@ -37,16 +37,15 @@ const Header: React.FC = () => {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-3 group">
-            <div className="text-center">
-              <h1 className={`text-xl font-bold bg-gradient-to-r from-beach-600 to-beach-700 bg-clip-text text-transparent transition-colors duration-300 ${
-                isScrolled || isAdminLoginPage || isMenuOpen ? '' : 'text-white drop-shadow-lg'
-              }`} data-lingo-skip>
-                Carioca Coastal Club
-              </h1>
-              <p className={`text-xs transition-colors duration-300 ${
-                isScrolled || isAdminLoginPage || isMenuOpen ? 'text-beach-500' : 'text-beach-200'
-              } -mt-1`} data-lingo-skip>Barraca Loyalty Program</p>
-            </div>
+            <img
+              src={
+                isScrolled || isAdminLoginPage || isMenuOpen
+                  ? "/logo-color.png"
+                  : "/logo-white.png"
+              }
+              alt="Carioca Coastal Club Logo"
+              className="h-12 w-auto transition-all duration-300"
+            />
           </Link>
 
           {/* Desktop Navigation */}
