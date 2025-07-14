@@ -79,7 +79,7 @@ const Discover: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header Section */}
-      <section className="bg-gradient-to-r from-orange-500 to-red-600 pt-8 pb-12">
+      <section className="bg-gradient-to-r from-orange-500 to-red-600 pt-24 pb-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8">
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">

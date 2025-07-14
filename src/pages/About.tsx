@@ -94,7 +94,7 @@ const About: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <section ref={heroAnimation.ref} className={`bg-gradient-to-r from-orange-500 to-red-600 pt-16 pb-20 ${heroAnimation.animationClasses}`}>
+      <section ref={heroAnimation.ref} className={`bg-gradient-to-r from-orange-500 to-red-600 pt-24 pb-20 ${heroAnimation.animationClasses}`}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
             {t('about.title')}

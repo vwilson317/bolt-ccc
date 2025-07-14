@@ -35,8 +35,7 @@ function AppContent() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
-      <WeatherBar />
-      <main className="pt-24">
+      <main>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/discover" element={<Discover />} />

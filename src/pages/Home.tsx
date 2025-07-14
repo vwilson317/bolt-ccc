@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { ArrowRight, MapPin, Users, Calendar, Bell, Gift } from 'lucide-react';
 import HeroCarousel from '../components/HeroCarousel';
+import WeatherBar from '../components/WeatherBar';
 import BarracaGrid from '../components/BarracaGrid';
 import EmailSubscription from '../components/EmailSubscription';
 import StoryCarousel from '../components/StoryCarousel';
@@ -64,6 +65,9 @@ const Home: React.FC = () => {
       
       {/* Hero Section */}
       <HeroCarousel />
+
+      {/* Weather Bar - Sticky after hero */}
+      <WeatherBar />
 
       {/* Call to Action Section */}
       <section ref={ctaAnimation.ref} className={`py-16 bg-gradient-to-b from-orange-50 to-white ${ctaAnimation.animationClasses}`}>
