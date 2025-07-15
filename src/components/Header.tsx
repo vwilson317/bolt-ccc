@@ -38,15 +38,39 @@ const Header: React.FC = () => {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-3 group">
-            <img
-              src={
-                isScrolled || isAdminLoginPage || isBarracaDetailPage || isMenuOpen
-                  ? "/logo-color.png"
-                  : "/logo-white.png"
-              }
-              alt="Carioca Coastal Club Logo"
-              className="h-12 w-auto transition-all duration-300"
-            />
+            <div className="flex items-center">
+              <img
+                src={
+                  isScrolled || isAdminLoginPage || isBarracaDetailPage || isMenuOpen
+                    ? "/logo-icon-color.png"
+                    : "/logo-icon-white.png"
+                }
+                alt="Carioca Coastal Club Icon Logo"
+                className="h-12 w-12 min-w-12 max-w-12 object-contain transition-all duration-300"
+              />
+              <div className="flex flex-col justify-center ml-3 h-12">
+                <span
+                  className={`leading-none font-bold tracking-tight transition-colors duration-300 ${
+                    isScrolled || isAdminLoginPage || isBarracaDetailPage || isMenuOpen
+                      ? 'text-beach-500'
+                      : 'text-white'
+                  }`} 
+                  style={{ fontSize: '1.55rem', lineHeight: 1.1, letterSpacing: '0.04em' }}
+                >
+                  CARIOCA
+                </span>
+                <span
+                  className={`leading-none font-medium tracking-tight whitespace-nowrap transition-colors duration-300 ${
+                    isScrolled || isAdminLoginPage || isBarracaDetailPage || isMenuOpen
+                      ? 'text-beach-500'
+                      : 'text-white/80'
+                  }`} 
+                  style={{ fontSize: '0.75rem', lineHeight: 1.1, maxWidth: '90%', alignSelf: 'center', letterSpacing: '0.08em' }}
+                >
+                  COASTAL CLUB
+                </span>
+              </div>
+            </div>
           </Link>
 
           {/* Desktop Navigation */}
