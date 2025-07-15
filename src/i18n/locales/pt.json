@@ -185,7 +185,8 @@
     "joinDescription": "Comece a aproveitar os benefícios de membro nas suas barracas favoritas. Receba atualizações, reserve cadeiras e nunca perca o dia perfeito na barraca.",
     "stats": {
       "availabilityUpdates": "Atualizações de Disponibilidade",
-      "neighborhoods": "Bairros"
+      "neighborhoods": "Bairros",
+      "partnerBarracas": "Barracas Parceiras"
     },
     "features": {
       "chairReservations": {

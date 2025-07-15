@@ -63,9 +63,7 @@ const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
           {/* Mobile-Optimized Image Section */}
           <div className="relative h-40 md:h-48 overflow-hidden flex-shrink-0">
             <img
-              src={window.innerWidth < 768
-                ? (barraca.photos.vertical[0] || barraca.photos.horizontal[0])
-                : (barraca.photos.horizontal[0] || barraca.photos.vertical[0])}
+              src={barraca.photos.horizontal[0] || barraca.photos.vertical[0]}
               alt={barraca.name}
               className={`w-full h-full object-cover`}
             />
