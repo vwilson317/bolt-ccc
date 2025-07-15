@@ -54,6 +54,12 @@ const transformBarracaToDB = (barraca: Omit<Barraca, 'id' | 'createdAt' | 'updat
   cta_buttons: (barraca.ctaButtons as unknown as Json) || []
 })
 
+// Helper to validate UUIDs
+const isValidUUID = (id: string): boolean => {
+  // Simple UUID v4 regex
+  return /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(id);
+};
+
 export class BarracaService {
   // Get all barracas
   static async getAll(): Promise<Barraca[]> {
@@ -70,8 +76,19 @@ export class BarracaService {
       // Get open status for each barraca
       const barracasWithOpenStatus = []
       for (const row of data || []) {
-        const isOpen = await BarracaService.getOpenStatus(row.id)
-        barracasWithOpenStatus.push(transformBarracaFromDB(row, isOpen))
+        let isOpen: boolean | null = false;
+        if (isValidUUID(row.id)) {
+          isOpen = await BarracaService.getOpenStatus(row.id);
+        } else {
+          // For non-UUIDs, treat as undetermined for non-partnered, or false for partnered
+          if (!row.partnered) {
+            isOpen = null;
+          } else {
+            isOpen = false;
+          }
+          console.warn(`Skipping open status check for non-UUID barraca id: ${row.id}`);
+        }
+        barracasWithOpenStatus.push(transformBarracaFromDB(row, isOpen));
       }
 
       // Sort by partnered status first, then by name
@@ -106,7 +123,17 @@ export class BarracaService {
       }
 
       if (data) {
-        const isOpen = await BarracaService.getOpenStatus(data.id)
+        let isOpen: boolean | null = false;
+        if (isValidUUID(data.id)) {
+          isOpen = await BarracaService.getOpenStatus(data.id);
+        } else {
+          if (!data.partnered) {
+            isOpen = null;
+          } else {
+            isOpen = false;
+          }
+          console.warn(`Skipping open status check for non-UUID barraca id: ${data.id}`);
+        }
         return transformBarracaFromDB(data, isOpen)
       }
       return null
@@ -166,8 +193,18 @@ export class BarracaService {
           // Get open status for each barraca
           const barracasWithOpenStatus = []
           for (const row of sortedData || []) {
-            const isOpen = await BarracaService.getOpenStatus(row.id)
-            barracasWithOpenStatus.push(transformBarracaFromDB(row, isOpen))
+            let isOpen: boolean | null = false;
+            if (isValidUUID(row.id)) {
+              isOpen = await BarracaService.getOpenStatus(row.id);
+            } else {
+              if (!row.partnered) {
+                isOpen = null;
+              } else {
+                isOpen = false;
+              }
+              console.warn(`Skipping open status check for non-UUID barraca id: ${row.id}`);
+            }
+            barracasWithOpenStatus.push(transformBarracaFromDB(row, isOpen));
           }
           
           // Sort by partnered status first, then by search rank
@@ -203,8 +240,18 @@ export class BarracaService {
       // Get open status for each barraca
       const barracasWithOpenStatus = []
       for (const row of data || []) {
-        const isOpen = await BarracaService.getOpenStatus(row.id)
-        barracasWithOpenStatus.push(transformBarracaFromDB(row, isOpen))
+        let isOpen: boolean | null = false;
+        if (isValidUUID(row.id)) {
+          isOpen = await BarracaService.getOpenStatus(row.id);
+        } else {
+          if (!row.partnered) {
+            isOpen = null;
+          } else {
+            isOpen = false;
+          }
+          console.warn(`Skipping open status check for non-UUID barraca id: ${row.id}`);
+        }
+        barracasWithOpenStatus.push(transformBarracaFromDB(row, isOpen));
       }
       return barracasWithOpenStatus
     } catch (error) {
@@ -254,8 +301,18 @@ export class BarracaService {
         // Get open status for each barraca
         const barracasWithOpenStatus = []
         for (const row of sortedData || []) {
-          const isOpen = await BarracaService.getOpenStatus(row.id)
-          barracasWithOpenStatus.push(transformBarracaFromDB(row, isOpen))
+          let isOpen: boolean | null = false;
+          if (isValidUUID(row.id)) {
+            isOpen = await BarracaService.getOpenStatus(row.id);
+          } else {
+            if (!row.partnered) {
+              isOpen = null;
+            } else {
+              isOpen = false;
+            }
+            console.warn(`Skipping open status check for non-UUID barraca id: ${row.id}`);
+          }
+          barracasWithOpenStatus.push(transformBarracaFromDB(row, isOpen));
         }
         
         // Sort by partnered status first, then by distance
@@ -374,8 +431,18 @@ export class BarracaService {
       // Get open status for each barraca
       const barracasWithOpenStatus = []
       for (const row of data || []) {
-        const isOpen = await BarracaService.getOpenStatus(row.id)
-        barracasWithOpenStatus.push(transformBarracaFromDB(row, isOpen))
+        let isOpen: boolean | null = false;
+        if (isValidUUID(row.id)) {
+          isOpen = await BarracaService.getOpenStatus(row.id);
+        } else {
+          if (!row.partnered) {
+            isOpen = null;
+          } else {
+            isOpen = false;
+          }
+          console.warn(`Skipping open status check for non-UUID barraca id: ${row.id}`);
+        }
+        barracasWithOpenStatus.push(transformBarracaFromDB(row, isOpen));
       }
       
       // Sort by partnered status first, then by name
@@ -409,6 +476,11 @@ export class BarracaService {
       // Filter to only open barracas using the database function
       const openBarracas = []
       for (const barraca of data || []) {
+        if (!isValidUUID(barraca.id)) {
+          // Non-UUIDs cannot be checked for open status
+          console.warn(`Skipping open status check for non-UUID barraca id: ${barraca.id}`);
+          continue;
+        }
         const { data: isOpenData, error: isOpenError } = await supabase.rpc('is_barraca_open_now', {
           barraca_id_param: barraca.id
         })
@@ -426,8 +498,18 @@ export class BarracaService {
       // Get open status for each barraca
       const barracasWithOpenStatus = []
       for (const row of openBarracas) {
-        const isOpen = await BarracaService.getOpenStatus(row.id)
-        barracasWithOpenStatus.push(transformBarracaFromDB(row, isOpen))
+        let isOpen: boolean | null = false;
+        if (isValidUUID(row.id)) {
+          isOpen = await BarracaService.getOpenStatus(row.id);
+        } else {
+          if (!row.partnered) {
+            isOpen = null;
+          } else {
+            isOpen = false;
+          }
+          console.warn(`Skipping open status check for non-UUID barraca id: ${row.id}`);
+        }
+        barracasWithOpenStatus.push(transformBarracaFromDB(row, isOpen));
       }
       
       // Sort by partnered status first, then by name
@@ -447,6 +529,10 @@ export class BarracaService {
 
   // Get open status for a barraca using the database function
   static async getOpenStatus(barracaId: string): Promise<boolean> {
+    if (!isValidUUID(barracaId)) {
+      console.warn(`getOpenStatus called with non-UUID id: ${barracaId}`);
+      return false;
+    }
     try {
       const { data, error } = await supabase.rpc('is_barraca_open_now', {
         barraca_id_param: barracaId
