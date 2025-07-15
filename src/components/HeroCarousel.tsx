@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ChevronLeft, ChevronRight, MapPin, Check, X as XIcon } from 'lucide-react';
 import { useApp } from '../contexts/AppContext';
@@ -8,6 +8,34 @@ const HeroCarousel: React.FC = () => {
   const { t } = useTranslation();
   const { barracas, weatherOverride } = useApp();
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [touchStartX, setTouchStartX] = useState<number | null>(null);
+  const [touchStartY, setTouchStartY] = useState<number | null>(null);
+  const touchThreshold = 50; // Minimum px to trigger swipe
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Touch event handlers for swipe gestures
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (e.touches.length === 1) {
+      setTouchStartX(e.touches[0].clientX);
+      setTouchStartY(e.touches[0].clientY);
+    }
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX === null || touchStartY === null) return;
+    const touch = e.changedTouches[0];
+    const deltaX = touch.clientX - touchStartX;
+    const deltaY = touch.clientY - touchStartY;
+    if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > touchThreshold) {
+      if (deltaX > 0) {
+        prevSlide();
+      } else {
+        nextSlide();
+      }
+    }
+    setTouchStartX(null);
+    setTouchStartY(null);
+  };
 
   // Filter to only partnered barracas for hero display
   const partneredBarracas = barracas.filter(barraca => barraca.partnered);
@@ -90,7 +118,12 @@ const HeroCarousel: React.FC = () => {
   };
 
   return (
-    <div className="relative h-[66vh] sm:h-[70vh] md:h-screen overflow-hidden">
+    <div
+      ref={containerRef}
+      className="relative h-[66vh] sm:h-[70vh] md:h-screen overflow-hidden"
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+    >
       {/* Background Images with Parallax Effect */}
       <div className="absolute inset-0">
         {partneredBarracas.map((barraca, index) => (
