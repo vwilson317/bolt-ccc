@@ -31,6 +31,7 @@ interface AppContextType {
   adminLogin: (email: string, password: string) => Promise<boolean>;
   adminLogout: () => void;
   refreshWeather: () => Promise<void>;
+  refreshBarracas: () => Promise<void>;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -350,6 +351,27 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     setSelectedBarraca(null);
   }, []);
 
+  const refreshBarracas = useCallback(async () => {
+    try {
+      const fetchedBarracas = await fetchBarracas();
+      
+      // Sort barracas: partnered first, then non-partnered, with location sorting within each group
+      fetchedBarracas.sort((a, b) => {
+        // First, sort by partnered status (partnered first)
+        if (a.partnered !== b.partnered) {
+          return a.partnered ? -1 : 1;
+        }
+        // Then, sort by location within each group
+        return a.location.localeCompare(b.location);
+      });
+      
+      setBarracas(fetchedBarracas);
+    } catch (error) {
+      console.error('Failed to refresh barracas:', error);
+      throw error;
+    }
+  }, []);
+
   const value: AppContextType = {
     barracas,
     filteredBarracas,
@@ -374,7 +396,8 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     checkEmailSubscription,
     adminLogin,
     adminLogout,
-    refreshWeather
+    refreshWeather,
+    refreshBarracas
   };
 
   return (

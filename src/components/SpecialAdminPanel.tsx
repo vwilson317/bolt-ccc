@@ -21,6 +21,7 @@ const SpecialAdminPanel: React.FC<SpecialAdminPanelProps> = ({ barracas, onRefre
     try {
       await BarracaService.specialAdminOpenBarraca(barracaId, 24); // Default 24 hours
       setMessage({ type: 'success', text: 'Barraca opened successfully!' });
+      // Call onRefresh without reloading the page
       onRefresh();
     } catch (error) {
       setMessage({ type: 'error', text: 'Failed to open barraca' });
@@ -37,6 +38,7 @@ const SpecialAdminPanel: React.FC<SpecialAdminPanelProps> = ({ barracas, onRefre
     try {
       await BarracaService.specialAdminCloseBarraca(barracaId);
       setMessage({ type: 'success', text: 'Barraca closed successfully!' });
+      // Call onRefresh without reloading the page
       onRefresh();
     } catch (error) {
       setMessage({ type: 'error', text: 'Failed to close barraca' });
