@@ -76,6 +76,12 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
       try {
         const fetchedBarracas = await fetchBarracas();
         
+        // Move barraca with barracaNumber '80' to the front if it exists
+        const index80 = fetchedBarracas.findIndex(b => b.barracaNumber === '80');
+        if (index80 > -1) {
+          const [barraca80] = fetchedBarracas.splice(index80, 1);
+          fetchedBarracas.unshift(barraca80);
+        }
         // Sort barracas: partnered first, then non-partnered, with location sorting within each group
         fetchedBarracas.sort((a, b) => {
           // First, sort by partnered status (partnered first)
@@ -85,7 +91,14 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
           // Then, sort by location within each group
           return a.location.localeCompare(b.location);
         });
-        
+        // Ensure barraca 80 stays first
+        if (index80 > -1) {
+          const indexAfterSort = fetchedBarracas.findIndex(b => b.barracaNumber === '80');
+          if (indexAfterSort > 0) {
+            const [barraca80] = fetchedBarracas.splice(indexAfterSort, 1);
+            fetchedBarracas.unshift(barraca80);
+          }
+        }
         setBarracas(fetchedBarracas);
       } catch (error) {
         console.error('Failed to load barracas:', error);
