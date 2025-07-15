@@ -12,7 +12,7 @@ import { useScrollAnimation } from '../hooks/useScrollAnimation';
 
 const Discover: React.FC = () => {
   const { t } = useTranslation();
-  const { filteredBarracas, searchFilters, updateSearchFilters } = useApp();
+  const { filteredBarracas, searchFilters, updateSearchFilters, barracas } = useApp();
   const { featureFlags } = useStory();
   const { weather } = useWeather();
   const [showFilters, setShowFilters] = useState(true);
@@ -20,24 +20,16 @@ const Discover: React.FC = () => {
   // Scroll animations
   const resultsAnimation = useScrollAnimation('slideUp');
 
-  // Complete list of South Zone neighborhoods
-  const southZoneNeighborhoods = [
-    'Copacabana', 
-    'Ipanema', 
-    'Leblon', 
-    'Leme', 
-    'Arpoador',
-    'Diabo Beach',
-    'Flamengo',
-    'Botafogo',
-    'Urca',
-    'Vermelha Beach',
-    'São Conrado',
-    'Barra da Tijuca',
-    'Recreio',
-    'Joatinga',
-    'Pepino Beach'
-  ];
+  // Compute unique locations from loaded barracas
+  const dynamicLocations = React.useMemo(() => {
+    const locationsSet = new Set<string>();
+    barracas.forEach(b => {
+      if (b.location && b.location.trim()) {
+        locationsSet.add(b.location.trim());
+      }
+    });
+    return Array.from(locationsSet).sort((a, b) => a.localeCompare(b));
+  }, [barracas]);
 
   const availabilityOptions = [
     { value: 'all', label: t('discover.filters.all'), icon: null },
@@ -178,7 +170,7 @@ const Discover: React.FC = () => {
 
                 {/* Location Filter Checkboxes */}
                 <LocationFilterCheckboxes
-                  availableLocations={southZoneNeighborhoods}
+                  availableLocations={dynamicLocations}
                   onLocationsChange={handleLocationsChange}
                   initialLocations={searchFilters.locations.length > 0 ? searchFilters.locations : (searchFilters.location ? [searchFilters.location] : [])}
                 />
