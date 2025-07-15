@@ -184,7 +184,8 @@
     "joinDescription": "Start enjoying member benefits at your favorite barracas. Get updates, reserve chairs, and never miss out on the perfect barraca day.",
     "stats": {
       "availabilityUpdates": "Availability Updates",
-      "neighborhoods": "Neighborhoods"
+      "neighborhoods": "Neighborhoods",
+      "partnerBarracas": "Partner Barracas"
     },
     "features": {
       "chairReservations": {
