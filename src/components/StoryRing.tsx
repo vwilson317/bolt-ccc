@@ -63,7 +63,7 @@ const StoryRing: React.FC<StoryRingProps> = ({
               alt={barracaName}
               className="w-full h-full object-cover rounded-full"
               onError={(e) => {
-                e.currentTarget.src = 'https://images.pexels.com/photos/1002703/pexels-photo-1002703.jpeg';
+                e.currentTarget.src = '';
               }}
             />
           </div>

@@ -48,7 +48,11 @@ const HeroCarousel: React.FC = () => {
             <div
               className="w-full h-full bg-cover bg-center"
               style={{
-                backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(${barraca.images[0]})`
+                backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(${
+                  window.innerWidth < 768
+                    ? (barraca.photos.vertical[0] || barraca.photos.horizontal[0])
+                    : (barraca.photos.horizontal[0] || barraca.photos.vertical[0])
+                })`
               }}
             />
           </div>

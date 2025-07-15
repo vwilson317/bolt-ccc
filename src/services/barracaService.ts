@@ -18,7 +18,7 @@ const transformBarracaFromDB = (row: BarracaRow, isOpen: boolean = false): Barra
   isOpen,
   typicalHours: row.typical_hours,
   description: row.description,
-  images: row.images,
+  photos: row.photos,
   menuPreview: row.menu_preview,
   contact: row.contact as any,
   amenities: row.amenities,
@@ -42,7 +42,7 @@ const transformBarracaToDB = (barraca: Omit<Barraca, 'id' | 'createdAt' | 'updat
   coordinates: barraca.coordinates,
   typical_hours: barraca.typicalHours,
   description: barraca.description,
-  images: barraca.images,
+  photos: barraca.photos,
   menu_preview: barraca.menuPreview,
   contact: barraca.contact,
   amenities: barraca.amenities,
@@ -314,7 +314,7 @@ export class BarracaService {
       if (updates.coordinates !== undefined) updateData.coordinates = updates.coordinates
       if (updates.typicalHours !== undefined) updateData.typical_hours = updates.typicalHours
       if (updates.description !== undefined) updateData.description = updates.description
-      if (updates.images !== undefined) updateData.images = updates.images
+      if (updates.photos !== undefined) updateData.photos = updates.photos
       if (updates.menuPreview !== undefined) updateData.menu_preview = updates.menuPreview
       if (updates.contact !== undefined) updateData.contact = updates.contact
       if (updates.amenities !== undefined) updateData.amenities = updates.amenities
