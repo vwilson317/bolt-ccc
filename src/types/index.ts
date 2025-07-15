@@ -1,6 +1,11 @@
 // Import translation types
 export * from './translation';
 
+export type BarracaPhotos = {
+  horizontal: string[];
+  vertical: string[];
+};
+
 export interface Barraca {
   id: string;
   name: string;
@@ -13,7 +18,7 @@ export interface Barraca {
   isOpen: boolean;
   typicalHours: string;
   description: string;
-  images: string[];
+  photos: BarracaPhotos;
   menuPreview: string[];
   contact: {
     phone?: string;

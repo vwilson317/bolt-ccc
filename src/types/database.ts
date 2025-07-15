@@ -18,7 +18,7 @@ export interface Database {
           coordinates: Json
           typical_hours: string
           description: string
-          images: string[]
+          photos: Json // { horizontal: string[]; vertical: string[] }
           menu_preview: string[]
           contact: Json
           amenities: string[]
@@ -41,7 +41,7 @@ export interface Database {
           coordinates: Json
           typical_hours: string
           description: string
-          images: string[]
+          photos: Json // { horizontal: string[]; vertical: string[] }
           menu_preview: string[]
           contact: Json
           amenities: string[]
@@ -64,7 +64,7 @@ export interface Database {
           coordinates?: Json
           typical_hours?: string
           description?: string
-          images?: string[]
+          photos?: Json // { horizontal: string[]; vertical: string[] }
           menu_preview?: string[]
           contact?: Json
           amenities?: string[]

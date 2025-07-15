@@ -22,7 +22,7 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
     isOpen: true,
     typicalHours: '9:00 - 18:00',
     description: '',
-    images: [''],
+    photos: { horizontal: [''], vertical: [''] },
     menuPreview: [''],
     contact: {
       phone: '',
@@ -81,7 +81,7 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
           isOpen: barraca.isOpen,
           typicalHours: barraca.typicalHours,
           description: barraca.description,
-          images: barraca.images,
+          photos: barraca.photos,
           menuPreview: barraca.menuPreview,
           contact: {
             phone: barraca.contact.phone || '',
@@ -112,7 +112,10 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
     try {
       const barracaData = {
         ...formData,
-        images: formData.images.filter(img => img.trim() !== ''),
+        photos: {
+          horizontal: formData.photos.horizontal.filter(img => img.trim() !== ''),
+          vertical: formData.photos.vertical.filter(img => img.trim() !== ''),
+        },
         menuPreview: formData.menuPreview.filter(item => item.trim() !== ''),
         amenities: formData.amenities.filter(amenity => amenity.trim() !== ''),
         ctaButtons: formData.ctaButtons.filter(button => button.text.trim() !== '' && button.action.value.trim() !== '')
@@ -133,25 +136,55 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
     }
   };
 
-  const addArrayItem = (field: 'images' | 'menuPreview' | 'amenities') => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: [...prev[field], '']
-    }));
+  const addArrayItem = (field: 'menuPreview' | 'amenities' | 'horizontal' | 'vertical') => {
+    if (field === 'horizontal' || field === 'vertical') {
+      setFormData(prev => ({
+        ...prev,
+        photos: {
+          ...prev.photos,
+          [field]: [...prev.photos[field], '']
+        }
+      }));
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [field]: [...prev[field], '']
+      }));
+    }
   };
 
-  const updateArrayItem = (field: 'images' | 'menuPreview' | 'amenities', index: number, value: string) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: prev[field].map((item, i) => i === index ? value : item)
-    }));
+  const updateArrayItem = (field: 'menuPreview' | 'amenities' | 'horizontal' | 'vertical', index: number, value: string) => {
+    if (field === 'horizontal' || field === 'vertical') {
+      setFormData(prev => ({
+        ...prev,
+        photos: {
+          ...prev.photos,
+          [field]: prev.photos[field].map((item, i) => i === index ? value : item)
+        }
+      }));
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [field]: prev[field].map((item, i) => i === index ? value : item)
+      }));
+    }
   };
 
-  const removeArrayItem = (field: 'images' | 'menuPreview' | 'amenities', index: number) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: prev[field].filter((_, i) => i !== index)
-    }));
+  const removeArrayItem = (field: 'menuPreview' | 'amenities' | 'horizontal' | 'vertical', index: number) => {
+    if (field === 'horizontal' || field === 'vertical') {
+      setFormData(prev => ({
+        ...prev,
+        photos: {
+          ...prev.photos,
+          [field]: prev.photos[field].filter((_, i) => i !== index)
+        }
+      }));
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [field]: prev[field].filter((_, i) => i !== index)
+      }));
+    }
   };
 
   // CTA Button management functions
@@ -462,29 +495,63 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
             <div>
               <div className="flex justify-between items-center mb-2">
                 <label className="block text-sm font-medium text-gray-700">
-                  {t('admin.form.images')}
+                  {t('admin.form.horizontalImages')}
                 </label>
                 <button
                   type="button"
-                  onClick={() => addArrayItem('images')}
+                  onClick={() => addArrayItem('horizontal')}
                   className="text-beach-600 hover:text-beach-800 flex items-center text-sm"
                 >
                   <Plus className="h-4 w-4 mr-1" />
-                  {t('admin.form.addImage')}
+                  {t('admin.form.addHorizontalImage')}
                 </button>
               </div>
-              {formData.images.map((image, index) => (
+              {formData.photos.horizontal.map((image, index) => (
                 <div key={index} className="flex gap-2 mb-2">
                   <input
                     type="url"
                     value={image}
-                    onChange={(e) => updateArrayItem('images', index, e.target.value)}
+                    onChange={(e) => updateArrayItem('horizontal', index, e.target.value)}
                     placeholder="https://example.com/image.jpg"
                     className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
                   />
                   <button
                     type="button"
-                    onClick={() => removeArrayItem('images', index)}
+                    onClick={() => removeArrayItem('horizontal', index)}
+                    className="p-2 text-red-600 hover:text-red-800"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </div>
+              ))}
+            </div>
+            {/* Vertical Images */}
+            <div>
+              <div className="flex justify-between items-center mb-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  {t('admin.form.verticalImages')}
+                </label>
+                <button
+                  type="button"
+                  onClick={() => addArrayItem('vertical')}
+                  className="text-beach-600 hover:text-beach-800 flex items-center text-sm"
+                >
+                  <Plus className="h-4 w-4 mr-1" />
+                  {t('admin.form.addVerticalImage')}
+                </button>
+              </div>
+              {formData.photos.vertical.map((image, index) => (
+                <div key={index} className="flex gap-2 mb-2">
+                  <input
+                    type="url"
+                    value={image}
+                    onChange={(e) => updateArrayItem('vertical', index, e.target.value)}
+                    placeholder="https://example.com/image.jpg"
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => removeArrayItem('vertical', index)}
                     className="p-2 text-red-600 hover:text-red-800"
                   >
                     <Trash2 className="h-4 w-4" />

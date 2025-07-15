@@ -49,6 +49,27 @@ const BarracaDetailPage: React.FC = () => {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
+          <div className="flex items-center justify-center mb-6">
+            <img
+              src="/logo-icon-color.png"
+              alt="Logo Icon"
+              className="w-24 h-24 min-w-24 max-w-24 object-contain"
+            />
+            <div className="flex flex-col justify-center ml-4 h-24">
+              <span
+                className="leading-none font-bold tracking-tight text-beach-700"
+                style={{ fontSize: '2.2rem', lineHeight: 1.1, letterSpacing: '0.04em' }}
+              >
+                CARIOCA
+              </span>
+              <span
+                className="leading-none font-medium tracking-tight text-beach-500"
+                style={{ fontSize: '1.3rem', lineHeight: 1.1, maxWidth: '80%', alignSelf: 'center', letterSpacing: '0.08em' }}
+              >
+                COASTAL CLUB
+              </span>
+            </div>
+          </div>
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600 mx-auto mb-4"></div>
           <h1 className="text-xl font-semibold text-gray-900">Loading barraca...</h1>
         </div>
@@ -56,12 +77,12 @@ const BarracaDetailPage: React.FC = () => {
     );
   }
 
-  // Show not found state only after loading is complete and barraca is not found
-  if (!barraca) {
+  // Show not found state only after loading is complete and barraca is not found and barracas list is not empty
+  if (!isLoading && barracas.length > 0 && !barraca) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">Barraca Not Found</h1>
+          <h1 className="text-2xl font-bold text-beach-500 mb-4">Barraca Not Found</h1>
           <Link 
             to="/discover" 
             className="bg-orange-600 text-white px-6 py-3 rounded-lg hover:bg-orange-700 transition-colors"
