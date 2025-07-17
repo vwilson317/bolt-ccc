@@ -67,7 +67,7 @@ const BarracaPageDetail: React.FC<BarracaPageDetailProps> = ({
       {/* Hero Image */}
       <div className="relative h-64 md:h-80 overflow-hidden">
         <img
-          src={barraca.photos.horizontal[0] || '/api/placeholder/400/320'}
+          src={barraca.photos.horizontal[0] || '/api/placeholder/600/400'}
           alt={barraca.name}
           className="w-full h-full object-cover"
         />
