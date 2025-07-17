@@ -52,7 +52,7 @@ const BarracaPageDetail: React.FC<BarracaPageDetailProps> = ({
               {t('barraca.notPartneredMessage')}
             </p>
             <div className="text-sm text-yellow-600">
-              {t('barraca.basicInfoOnly')}
+              Only basic information is available.
             </div>
           </div>
         </div>
