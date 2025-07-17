@@ -112,7 +112,7 @@ const StoryCarousel: React.FC = () => {
               <StoryRing
                 barracaId={barraca.id}
                 barracaName={barraca.name}
-                imageUrl={barraca.photos.horizontal[0] || barraca.photos.vertical[0]}
+                imageUrl={barraca.photos.horizontal[0] || '/api/placeholder/400/320'}
                 size="lg"
                 showLabel={true}
               />

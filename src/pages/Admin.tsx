@@ -460,7 +460,7 @@ const Admin: React.FC = () => {
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="flex items-center">
                             <img
-                              src={barraca.photos.horizontal[0] || barraca.photos.vertical[0]}
+                              src={barraca.photos.horizontal[0] || '/api/placeholder/400/320'}
                               alt={barraca.name}
                               className="h-10 w-10 rounded-lg object-cover"
                             />
