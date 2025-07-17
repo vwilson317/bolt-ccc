@@ -33,7 +33,7 @@ const ShareButton: React.FC<ShareButtonProps> = ({
   const platforms: SharePlatform[] = [
     {
       id: 'whatsapp',
-      name: t('share.platforms.whatsapp'),
+      name: 'WhatsApp',
       icon: MessageCircle,
       color: 'text-green-600',
       bgColor: 'bg-green-100',
@@ -41,7 +41,7 @@ const ShareButton: React.FC<ShareButtonProps> = ({
     },
     {
       id: 'facebook',
-      name: t('share.platforms.facebook'),
+      name: 'Facebook',
       icon: Facebook,
       color: 'text-blue-600',
       bgColor: 'bg-blue-100',
@@ -49,7 +49,7 @@ const ShareButton: React.FC<ShareButtonProps> = ({
     },
     {
       id: 'twitter',
-      name: t('share.platforms.twitter'),
+      name: 'Twitter',
       icon: Twitter,
       color: 'text-sky-600',
       bgColor: 'bg-sky-100',
@@ -57,7 +57,7 @@ const ShareButton: React.FC<ShareButtonProps> = ({
     },
     {
       id: 'instagram',
-      name: t('share.platforms.instagram'),
+      name: 'Instagram',
       icon: Instagram,
       color: 'text-pink-600',
       bgColor: 'bg-pink-100',
@@ -65,7 +65,7 @@ const ShareButton: React.FC<ShareButtonProps> = ({
     },
     {
       id: 'copy',
-      name: t('share.platforms.copy'),
+      name: 'Copy Link',
       icon: Copy,
       color: 'text-gray-600',
       bgColor: 'bg-gray-100',
@@ -109,7 +109,7 @@ const ShareButton: React.FC<ShareButtonProps> = ({
   const copyToClipboard = async (): Promise<void> => {
     try {
       await navigator.clipboard.writeText(`${formatShareText()} ${getShareUrl()}`);
-      setShareMessage(t('share.copied'));
+      setShareMessage('Link copied!');
       setTimeout(() => setShareMessage(''), 3000);
     } catch (error) {
       // Fallback for older browsers
@@ -119,7 +119,7 @@ const ShareButton: React.FC<ShareButtonProps> = ({
       textArea.select();
       document.execCommand('copy');
       document.body.removeChild(textArea);
-      setShareMessage(t('share.copied'));
+      setShareMessage('Link copied!');
       setTimeout(() => setShareMessage(''), 3000);
     }
   };
@@ -168,7 +168,7 @@ const ShareButton: React.FC<ShareButtonProps> = ({
       }
     } catch (error) {
       console.error('Error sharing:', error);
-      setShareMessage(t('share.error'));
+      setShareMessage('Error sharing');
       setTimeout(() => setShareMessage(''), 3000);
     } finally {
       setIsSharing(false);
@@ -206,7 +206,7 @@ const ShareButton: React.FC<ShareButtonProps> = ({
           onClick={() => setShowDropdown(!showDropdown)}
           disabled={isSharing}
           className={`${getButtonClasses()} bg-white/20 backdrop-blur-sm hover:bg-white/30`}
-          title={t('share.title')}
+          title="Share"
         >
           <Share2 className={`${getIconSize()} text-white`} />
         </button>
@@ -263,7 +263,7 @@ const ShareButton: React.FC<ShareButtonProps> = ({
       >
         <Share2 className={`${getIconSize()} mr-2`} />
         <span className="font-medium">
-          {isSharing ? t('share.sharing') : t('barraca.share')}
+          {isSharing ? 'Sharing...' : 'Share'}
         </span>
       </button>
     );
@@ -275,7 +275,7 @@ const ShareButton: React.FC<ShareButtonProps> = ({
       onClick={() => handleShare()}
       disabled={isSharing}
       className={`${getButtonClasses()} bg-white/20 backdrop-blur-sm hover:bg-white/30`}
-      title={t('share.title')}
+      title="Share"
     >
       <Share2 className={`${getIconSize()} text-white`} />
     </button>

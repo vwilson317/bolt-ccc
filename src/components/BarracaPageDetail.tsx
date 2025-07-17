@@ -52,7 +52,7 @@ const BarracaPageDetail: React.FC<BarracaPageDetailProps> = ({
               {t('barraca.notPartneredMessage')}
             </p>
             <div className="text-sm text-yellow-600">
-              {t('barraca.basicInfoOnly')}
+              Only basic information is available.
             </div>
           </div>
         </div>
@@ -67,7 +67,7 @@ const BarracaPageDetail: React.FC<BarracaPageDetailProps> = ({
       {/* Hero Image */}
       <div className="relative h-64 md:h-80 overflow-hidden">
         <img
-          src={barraca.photos.horizontal[0] || barraca.photos.vertical[0]}
+          src={barraca.photos.horizontal[0] || '/api/placeholder/600/400'}
           alt={barraca.name}
           className="w-full h-full object-cover"
         />
