@@ -39,8 +39,11 @@ const BarracaDetailPage: React.FC = () => {
   useEffect(() => {
     // Only redirect if we're not loading and the barraca is not found
     if (!isLoading && barracas.length > 0 && !barraca) {
-      // Redirect to discover page if barraca not found
-      navigate('/discover');
+      // Add a small delay to prevent immediate redirect
+      const timer = setTimeout(() => {
+        navigate('/discover');
+      }, 2000);
+      return () => clearTimeout(timer);
     }
   }, [barraca, navigate, isLoading, barracas.length]);
 
@@ -83,6 +86,9 @@ const BarracaDetailPage: React.FC = () => {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-beach-500 mb-4">Barraca Not Found</h1>
+          <p className="text-gray-600 mb-6">
+            The barraca with ID "{id}" could not be found. You will be redirected to the discover page shortly.
+          </p>
           <Link 
             to="/discover" 
             className="bg-orange-600 text-white px-6 py-3 rounded-lg hover:bg-orange-700 transition-colors"
@@ -94,7 +100,7 @@ const BarracaDetailPage: React.FC = () => {
     );
   }
 
-  const effectiveIsOpen = getEffectiveOpenStatus(barraca, weatherOverride);
+  const effectiveIsOpen = barraca ? getEffectiveOpenStatus(barraca, weatherOverride) : null;
 
   return (
     <div className="min-h-screen bg-gray-50">
