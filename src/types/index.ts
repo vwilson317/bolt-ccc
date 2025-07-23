@@ -1,5 +1,6 @@
 // Import translation types
 export * from './translation';
+import type { SupportedLanguage, TranslatableContentType, TranslatableFieldType } from './translation';
 
 export type BarracaPhotos = {
   horizontal: string[];
@@ -110,7 +111,6 @@ export interface Story {
   translations?: Record<SupportedLanguage, Partial<TranslatableStoryFields>>;
 }
 
-// Translatable fields for Story
 export interface TranslatableStoryFields {
   barracaName: string;
   media: Array<{
@@ -137,7 +137,6 @@ export interface FeatureFlags {
   enableTranslations: boolean; // New feature flag for translation system
 }
 
-// CTA Button Configuration Types
 export interface CTAButtonConfig {
   id: string;
   text: string;
@@ -151,7 +150,6 @@ export interface CTAButtonConfig {
   translations?: Record<SupportedLanguage, Partial<TranslatableCTAButtonFields>>;
 }
 
-// Translatable fields for CTA Button
 export interface TranslatableCTAButtonFields {
   text: string;
 }
@@ -176,7 +174,6 @@ export interface CTAVisibilityConditions {
   customCondition?: string; // Custom JavaScript condition
 }
 
-// Default CTA Button Configurations
 export interface DefaultCTAButtons {
   reserve: CTAButtonConfig;
   details?: CTAButtonConfig;
@@ -184,7 +181,6 @@ export interface DefaultCTAButtons {
   menu: CTAButtonConfig;
 }
 
-// Unique Visitor Tracking Types
 export interface VisitorData {
   uniqueVisitors: number;
   lastUpdated: number;
@@ -199,7 +195,6 @@ export interface VisitorMetrics {
   lastUpdated: Date;
 }
 
-// Product types (from barracaUruguayData.ts)
 export interface Product {
   id: string;
   name: string;
@@ -220,7 +215,6 @@ export interface Product {
   translations?: Record<SupportedLanguage, Partial<TranslatableProductFields>>;
 }
 
-// Translatable fields for Product
 export interface TranslatableProductFields {
   name: string;
   description: string;
@@ -240,7 +234,6 @@ export interface ProductCategory {
   translations?: Record<SupportedLanguage, Partial<TranslatableProductCategoryFields>>;
 }
 
-// Translatable fields for Product Category
 export interface TranslatableProductCategoryFields {
   name: string;
   description: string;
@@ -269,7 +262,6 @@ export interface CustomerReview {
   translations?: Record<SupportedLanguage, Partial<TranslatableCustomerReviewFields>>;
 }
 
-// Translatable fields for Customer Review
 export interface TranslatableCustomerReviewFields {
   title: string;
   content: string;
@@ -278,7 +270,6 @@ export interface TranslatableCustomerReviewFields {
   };
 }
 
-// Utility types for translation
 export type TranslatableContent = Barraca | Product | Story | ProductCategory | CustomerReview;
 
 export type TranslatableFields = 
@@ -289,7 +280,6 @@ export type TranslatableFields =
   | TranslatableCustomerReviewFields
   | TranslatableCTAButtonFields;
 
-// Translation context types
 export interface TranslationContext {
   currentLanguage: SupportedLanguage;
   availableLanguages: SupportedLanguage[];
@@ -307,4 +297,34 @@ export interface TranslationContext {
     fieldName: keyof TranslatableFields,
     fallbackValue?: string
   ) => Promise<string>;
+}
+
+export interface AppContextType {
+  barracas: Barraca[];
+  filteredBarracas: Barraca[];
+  weather: WeatherData | null;
+  searchFilters: SearchFilters;
+  isLoading: boolean;
+  isAdmin: boolean;
+  isSpecialAdmin: boolean;
+  emailSubscriptions: EmailSubscription[];
+  currentLanguage?: string;
+  weatherOverride: boolean;
+  overrideExpiry: Date | null;
+  selectedBarraca: Barraca | null;
+  openBarracaModal: (barraca: Barraca) => void;
+  closeBarracaModal: () => void;
+  updateSearchFilters: (filters: Partial<SearchFilters>) => void;
+  addBarraca: (barraca: Omit<Barraca, 'id' | 'createdAt' | 'updatedAt'>) => Promise<Barraca>;
+  updateBarraca: (id: string, updates: Partial<Barraca>) => Promise<Barraca>;
+  setWeatherOverride: (override: boolean) => Promise<void>;
+  deleteBarraca: (id: string) => Promise<void>;
+  subscribeEmail: (email: string) => Promise<boolean>;
+  checkEmailSubscription: (email: string) => Promise<boolean>;
+  adminLogin: (email: string, password: string) => Promise<boolean>;
+  adminLogout: () => void;
+  refreshWeather: () => Promise<void>;
+  refreshBarracas: () => Promise<void>;
+  firestoreConnected: boolean;
+  barracaStatuses: Map<string, any>; // Using any for now to avoid import issues
 }

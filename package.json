@@ -22,10 +22,16 @@
     "query:barracas": "npx dotenv -e .env -- npx tsx src/scripts/queryBarracas.ts",
     "query:weather": "npx dotenv -e .env -- npx tsx src/scripts/queryWeather.ts",
     "query:all": "npx dotenv -e .env -- npx tsx src/scripts/queryAll.ts",
-    "query:quick": "npx dotenv -e .env -- npx tsx src/scripts/quickQuery.ts"
+    "query:quick": "npx dotenv -e .env -- npx tsx src/scripts/quickQuery.ts",
+    "netlify:dev": "netlify dev",
+    "netlify:build": "netlify build",
+    "netlify:functions:build": "netlify functions:build",
+    "test:function": "tsx src/scripts/testNetlifyFunction.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.39.0",
+    "firebase": "^11.10.0",
+    "firebase-admin": "^13.4.0",
     "i18next": "^23.7.16",
     "i18next-browser-languagedetector": "^7.2.0",
     "lingo.dev": "^0.102.3",
@@ -38,6 +44,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.9.1",
+    "@types/node": "^24.1.0",
     "@types/react": "^18.3.5",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",
@@ -50,6 +57,7 @@
     "globals": "^15.9.0",
     "postcss": "^8.4.35",
     "tailwindcss": "^3.4.1",
+    "tsx": "^4.20.3",
     "typescript": "^5.5.3",
     "typescript-eslint": "^8.3.0",
     "vite": "^5.4.19",

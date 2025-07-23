@@ -5,6 +5,12 @@
 [build.environment]
   NODE_VERSION = "22"
 
+[dev]
+  functions = "netlify/functions"
+  publish = "dist"
+  port = 8888
+  targetPort = 5173
+
 [[redirects]]
   from = "/*"
   to = "/index.html"
