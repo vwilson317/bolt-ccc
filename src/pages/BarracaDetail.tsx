@@ -109,12 +109,12 @@ const BarracaDetailPage: React.FC = () => {
       {/* Header with back button and share */}
       <div className="bg-white border-b border-gray-200 sticky top-16 z-40">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
+          <div className="flex items-center justify-between h-12">
             <button
               onClick={() => navigate(-1)}
-              className="flex items-center text-gray-600 hover:text-gray-900 transition-colors"
+              className="flex items-center text-gray-600 hover:text-gray-900 transition-colors text-sm"
             >
-              <ArrowLeft className="h-5 w-5 mr-2" />
+              <ArrowLeft className="h-4 w-4 mr-1" />
               Back
             </button>
             
@@ -122,7 +122,8 @@ const BarracaDetailPage: React.FC = () => {
               <ShareButton 
                 barraca={barraca} 
                 variant="button" 
-                size="md"
+                size="sm"
+                className="!bg-pink-500 !text-white hover:!bg-pink-600 !px-3 !py-1.5 !text-sm"
               />
             )}
           </div>
@@ -130,7 +131,7 @@ const BarracaDetailPage: React.FC = () => {
       </div>
 
       {/* Main Content */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-8" style={{ marginTop: '56px' }}>
         <BarracaPageDetail 
           barraca={barraca} 
           weatherOverride={weatherOverride}

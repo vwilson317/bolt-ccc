@@ -11,7 +11,7 @@ const formatPhoneForWhatsApp = (phone: string) => {
 };
 
 interface BarracaPageDetailProps {
-  barraca: Barraca;
+  barraca: Barraca | undefined;
   weatherOverride?: boolean;
 }
 
@@ -20,6 +20,18 @@ const BarracaPageDetail: React.FC<BarracaPageDetailProps> = ({
   weatherOverride = false
 }) => {
   const { t } = useTranslation();
+
+  // Handle case where barraca is undefined (still loading)
+  if (!barraca) {
+    return (
+      <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+        <div className="p-8 text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600 mx-auto mb-4"></div>
+          <h1 className="text-xl font-semibold text-gray-900">Loading barraca...</h1>
+        </div>
+      </div>
+    );
+  }
 
   // Prevent access for non-partnered barracas
   if (!barraca.partnered) {
@@ -67,7 +79,7 @@ const BarracaPageDetail: React.FC<BarracaPageDetailProps> = ({
       {/* Hero Image */}
       <div className="relative h-64 md:h-80 overflow-hidden">
         <img
-          src={barraca.photos.horizontal[0] || '/api/placeholder/600/400'}
+          src={barraca.photos?.horizontal?.[0] || '/api/placeholder/600/400'}
           alt={barraca.name}
           className="w-full h-full object-cover"
         />
@@ -98,14 +110,7 @@ const BarracaPageDetail: React.FC<BarracaPageDetailProps> = ({
           </div>
         )}
 
-        {/* Share Button */}
-        <div className="absolute top-4 right-4">
-          <ShareButton 
-            barraca={barraca} 
-            variant="dropdown" 
-            size="md"
-          />
-        </div>
+
       </div>
 
       {/* Content */}
@@ -136,7 +141,7 @@ const BarracaPageDetail: React.FC<BarracaPageDetailProps> = ({
         </div>
 
         {/* Menu Preview */}
-        {barraca.menuPreview.length > 0 && (
+        {barraca.menuPreview && barraca.menuPreview.length > 0 && (
           <div className="mb-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-3">
               {t('barraca.menu')}
@@ -155,7 +160,7 @@ const BarracaPageDetail: React.FC<BarracaPageDetailProps> = ({
         )}
 
         {/* Amenities */}
-        {barraca.amenities.length > 0 && (
+        {barraca.amenities && barraca.amenities.length > 0 && (
           <div className="mb-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-3">
               {t('barraca.amenities')}
@@ -180,7 +185,7 @@ const BarracaPageDetail: React.FC<BarracaPageDetailProps> = ({
             {t('barraca.contact')}
           </h2>
           <div className="space-y-3">
-            {barraca.contact.phone && (
+            {barraca.contact?.phone && (
               <div className="flex items-center">
                 <Phone className="h-5 w-5 mr-3 text-gray-500" />
                 <a
@@ -191,7 +196,7 @@ const BarracaPageDetail: React.FC<BarracaPageDetailProps> = ({
                 </a>
               </div>
             )}
-            {barraca.contact.email && (
+            {barraca.contact?.email && (
               <div className="flex items-center">
                 <Mail className="h-5 w-5 mr-3 text-gray-500" />
                 <a
@@ -202,7 +207,7 @@ const BarracaPageDetail: React.FC<BarracaPageDetailProps> = ({
                 </a>
               </div>
             )}
-            {barraca.contact.website && (
+            {barraca.contact?.website && (
               <div className="flex items-center">
                 <ExternalLink className="h-5 w-5 mr-3 text-gray-500" />
                 <a
@@ -220,7 +225,7 @@ const BarracaPageDetail: React.FC<BarracaPageDetailProps> = ({
 
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-3">
-          {barraca.contact.phone && (
+          {barraca.contact?.phone && (
             <a
               href={`https://wa.me/${formatPhoneForWhatsApp(barraca.contact.phone)}`}
               target="_blank"
@@ -231,7 +236,7 @@ const BarracaPageDetail: React.FC<BarracaPageDetailProps> = ({
               {t('barraca.whatsapp')}
             </a>
           )}
-          {barraca.contact.phone && (
+          {barraca.contact?.phone && (
             <a
               href={`tel:${barraca.contact.phone}`}
               className="flex-1 bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-colors flex items-center justify-center"
@@ -249,17 +254,19 @@ const BarracaPageDetail: React.FC<BarracaPageDetailProps> = ({
               Special Offers
             </h3>
             <div className="flex flex-col sm:flex-row gap-3">
-              {barraca.ctaButtons.map((button, index) => (
-                <a
-                  key={index}
-                  href={button.action.value}
-                  target={button.action.target || "_blank"}
-                  rel="noopener noreferrer"
-                  className="flex-1 bg-beach-500 text-white px-6 py-3 rounded-lg hover:bg-beach-600 transition-colors text-center font-medium"
-                >
-                  {button.text}
-                </a>
-              ))}
+              {barraca.ctaButtons
+                .filter(button => button && button.action && button.action.value && button.text)
+                .map((button, index) => (
+                  <a
+                    key={index}
+                    href={button.action.value}
+                    target={button.action.target || "_blank"}
+                    rel="noopener noreferrer"
+                    className="flex-1 bg-beach-500 text-white px-6 py-3 rounded-lg hover:bg-beach-600 transition-colors text-center font-medium"
+                  >
+                    {button.text}
+                  </a>
+                ))}
             </div>
           </div>
         )}
