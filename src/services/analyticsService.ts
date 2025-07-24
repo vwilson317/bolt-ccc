@@ -75,8 +75,8 @@ class AnalyticsService {
   }
 
   // Track barraca interactions
-  trackBarracaView(barracaId: string, barracaName: string) {
-    this.trackEvent('Barraca', 'View', `${barracaName} (${barracaId})`);
+  trackBarracaView(barracaId: string, barracaName: string, partnered: boolean = false) {
+    this.trackEvent('Barraca', 'View', `${barracaName} (${barracaId}) - ${partnered ? 'Partnered' : 'Non-Partnered'}`);
   }
 
   trackBarracaFilter(filterType: string, filterValue: string) {
@@ -87,6 +87,18 @@ class AnalyticsService {
     this.trackEvent('Barraca', 'Search', searchTerm);
   }
 
+  trackBarracaStatusChange(barracaId: string, oldStatus: string, newStatus: string, reason: string) {
+    this.trackEvent('Barraca', 'Status Change', `${barracaId}: ${oldStatus} → ${newStatus} (${reason})`);
+  }
+
+  trackBarracaManualStatus(barracaId: string, status: string, updatedBy: string) {
+    this.trackEvent('Barraca', 'Manual Status', `${barracaId}: ${status} by ${updatedBy}`);
+  }
+
+  trackBarracaSpecialOverride(barracaId: string, override: boolean, expiresAt?: Date) {
+    this.trackEvent('Barraca', 'Special Override', `${barracaId}: ${override ? 'Enabled' : 'Disabled'}${expiresAt ? ` until ${expiresAt.toISOString()}` : ''}`);
+  }
+
   // Track weather interactions
   trackWeatherView(location: string) {
     this.trackEvent('Weather', 'View', location);
@@ -94,6 +106,14 @@ class AnalyticsService {
 
   trackWeatherRefresh(location: string) {
     this.trackEvent('Weather', 'Refresh', location);
+  }
+
+  trackWeatherOverride(active: boolean, expiresAt?: Date) {
+    this.trackEvent('Weather', 'Override', `${active ? 'Enabled' : 'Disabled'}${expiresAt ? ` until ${expiresAt.toISOString()}` : ''}`);
+  }
+
+  trackWeatherDependentBarracas(affectedCount: number) {
+    this.trackEvent('Weather', 'Dependent Barracas', `Updated ${affectedCount} barracas`);
   }
 
   // Track story interactions
@@ -114,12 +134,81 @@ class AnalyticsService {
     this.trackEvent('User', 'Language Change', `${fromLang} → ${toLang}`);
   }
 
-  trackAdminLogin(success: boolean) {
-    this.trackEvent('Admin', 'Login', success ? 'Success' : 'Failed');
+  trackVisitorSession(sessionId: string, isNewVisitor: boolean) {
+    this.trackEvent('User', 'Session', `${sessionId} - ${isNewVisitor ? 'New' : 'Returning'} Visitor`);
+  }
+
+  trackUniqueVisitor(visitorId: string, totalCount: number) {
+    this.trackEvent('User', 'Unique Visitor', `${visitorId} - Total: ${totalCount}`);
+  }
+
+  // Track admin actions
+  trackAdminLogin(success: boolean, adminType: 'regular' | 'special' = 'regular') {
+    this.trackEvent('Admin', 'Login', `${success ? 'Success' : 'Failed'} - ${adminType}`);
   }
 
   trackAdminAction(action: string, details?: string) {
     this.trackEvent('Admin', action, details);
+  }
+
+  trackAdminBarracaManagement(action: string, barracaId: string, details?: string) {
+    this.trackEvent('Admin', `Barraca ${action}`, `${barracaId} - ${details || ''}`);
+  }
+
+  trackAdminWeatherOverride(active: boolean, reason?: string) {
+    this.trackEvent('Admin', 'Weather Override', `${active ? 'Enabled' : 'Disabled'}${reason ? ` - ${reason}` : ''}`);
+  }
+
+  trackAdminManualStatus(barracaId: string, status: string) {
+    this.trackEvent('Admin', 'Manual Status', `${barracaId}: ${status}`);
+  }
+
+  trackAdminSpecialOverride(barracaId: string, override: boolean, expiresAt?: Date) {
+    this.trackEvent('Admin', 'Special Override', `${barracaId}: ${override ? 'Enabled' : 'Disabled'}${expiresAt ? ` until ${expiresAt.toISOString()}` : ''}`);
+  }
+
+  // Track notification interactions
+  trackNotificationPermission(granted: boolean) {
+    this.trackEvent('Notification', 'Permission', granted ? 'Granted' : 'Denied');
+  }
+
+  trackNotificationTokenSaved(success: boolean) {
+    this.trackEvent('Notification', 'Token Saved', success ? 'Success' : 'Failed');
+  }
+
+  trackNotificationReceived(title: string) {
+    this.trackEvent('Notification', 'Received', title);
+  }
+
+  trackNotificationClicked(title: string) {
+    this.trackEvent('Notification', 'Clicked', title);
+  }
+
+  // Track weekend hours interactions
+  trackWeekendHoursView(barracaId: string, day: string) {
+    this.trackEvent('Weekend Hours', 'View', `${barracaId} - ${day}`);
+  }
+
+  trackWeekendHoursEnabled(barracaId: string, enabled: boolean) {
+    this.trackEvent('Weekend Hours', 'Toggle', `${barracaId}: ${enabled ? 'Enabled' : 'Disabled'}`);
+  }
+
+  // Track partnered vs non-partnered interactions
+  trackPartneredBarracaInteraction(barracaId: string, action: string) {
+    this.trackEvent('Partnered Barraca', action, barracaId);
+  }
+
+  trackNonPartneredBarracaInteraction(barracaId: string, action: string) {
+    this.trackEvent('Non-Partnered Barraca', action, barracaId);
+  }
+
+  // Track external API interactions
+  trackExternalApiCall(endpoint: string, success: boolean, responseTime?: number) {
+    this.trackEvent('External API', endpoint, success ? 'Success' : 'Failed', responseTime);
+  }
+
+  trackExternalStatusUpdate(barracaId: string, success: boolean) {
+    this.trackEvent('External API', 'Status Update', `${barracaId}: ${success ? 'Success' : 'Failed'}`);
   }
 
   // Track performance metrics
@@ -189,6 +278,35 @@ class AnalyticsService {
     this.trackEvent('PWA', 'Install', `${prompted ? 'Prompted' : 'Not Prompted'} - ${installed ? 'Installed' : 'Not Installed'}`);
   }
 
+  // Track Firestore interactions
+  trackFirestoreConnection(success: boolean) {
+    this.trackEvent('Firestore', 'Connection', success ? 'Connected' : 'Failed');
+  }
+
+  trackFirestoreSync(collection: string, success: boolean, recordCount?: number) {
+    this.trackEvent('Firestore', 'Sync', `${collection}: ${success ? 'Success' : 'Failed'}${recordCount ? ` (${recordCount} records)` : ''}`);
+  }
+
+  // Track Supabase interactions
+  trackSupabaseQuery(table: string, operation: string, success: boolean) {
+    this.trackEvent('Supabase', 'Query', `${table}.${operation}: ${success ? 'Success' : 'Failed'}`);
+  }
+
+  // Track real-time subscriptions
+  trackRealtimeSubscription(channel: string, success: boolean) {
+    this.trackEvent('Realtime', 'Subscription', `${channel}: ${success ? 'Connected' : 'Failed'}`);
+  }
+
+  // Track feature usage
+  trackFeatureUsage(feature: string, action: string, details?: string) {
+    this.trackEvent('Feature', feature, `${action}${details ? ` - ${details}` : ''}`);
+  }
+
+  // Track business metrics
+  trackBusinessMetric(metric: string, value: number, unit?: string) {
+    this.trackEvent('Business', metric, unit, Math.round(value));
+  }
+
   // Get analytics status
   getStatus() {
     return {
@@ -237,9 +355,9 @@ export const trackEvent = (category: string, action: string, label?: string, val
   }
 };
 
-export const trackBarracaView = (barracaId: string, barracaName: string) => {
+export const trackBarracaView = (barracaId: string, barracaName: string, partnered?: boolean) => {
   try {
-    return analytics?.trackBarracaView?.(barracaId, barracaName);
+    return analytics?.trackBarracaView?.(barracaId, barracaName, partnered);
   } catch (error) {
     console.warn('⚠️ Barraca view tracking failed:', error);
   }
@@ -261,6 +379,30 @@ export const trackBarracaSearch = (searchTerm: string) => {
   }
 };
 
+export const trackBarracaStatusChange = (barracaId: string, oldStatus: string, newStatus: string, reason: string) => {
+  try {
+    return analytics?.trackBarracaStatusChange?.(barracaId, oldStatus, newStatus, reason);
+  } catch (error) {
+    console.warn('⚠️ Barraca status change tracking failed:', error);
+  }
+};
+
+export const trackBarracaManualStatus = (barracaId: string, status: string, updatedBy: string) => {
+  try {
+    return analytics?.trackBarracaManualStatus?.(barracaId, status, updatedBy);
+  } catch (error) {
+    console.warn('⚠️ Barraca manual status tracking failed:', error);
+  }
+};
+
+export const trackBarracaSpecialOverride = (barracaId: string, override: boolean, expiresAt?: Date) => {
+  try {
+    return analytics?.trackBarracaSpecialOverride?.(barracaId, override, expiresAt);
+  } catch (error) {
+    console.warn('⚠️ Barraca special override tracking failed:', error);
+  }
+};
+
 export const trackWeatherView = (location: string) => {
   try {
     return analytics?.trackWeatherView?.(location);
@@ -274,6 +416,22 @@ export const trackWeatherRefresh = (location: string) => {
     return analytics?.trackWeatherRefresh?.(location);
   } catch (error) {
     console.warn('⚠️ Weather refresh tracking failed:', error);
+  }
+};
+
+export const trackWeatherOverride = (active: boolean, expiresAt?: Date) => {
+  try {
+    return analytics?.trackWeatherOverride?.(active, expiresAt);
+  } catch (error) {
+    console.warn('⚠️ Weather override tracking failed:', error);
+  }
+};
+
+export const trackWeatherDependentBarracas = (affectedCount: number) => {
+  try {
+    return analytics?.trackWeatherDependentBarracas?.(affectedCount);
+  } catch (error) {
+    console.warn('⚠️ Weather dependent barracas tracking failed:', error);
   }
 };
 
@@ -309,9 +467,25 @@ export const trackLanguageChange = (fromLang: string, toLang: string) => {
   }
 };
 
-export const trackAdminLogin = (success: boolean) => {
+export const trackVisitorSession = (sessionId: string, isNewVisitor: boolean) => {
   try {
-    return analytics?.trackAdminLogin?.(success);
+    return analytics?.trackVisitorSession?.(sessionId, isNewVisitor);
+  } catch (error) {
+    console.warn('⚠️ Visitor session tracking failed:', error);
+  }
+};
+
+export const trackUniqueVisitor = (visitorId: string, totalCount: number) => {
+  try {
+    return analytics?.trackUniqueVisitor?.(visitorId, totalCount);
+  } catch (error) {
+    console.warn('⚠️ Unique visitor tracking failed:', error);
+  }
+};
+
+export const trackAdminLogin = (success: boolean, adminType?: 'regular' | 'special') => {
+  try {
+    return analytics?.trackAdminLogin?.(success, adminType);
   } catch (error) {
     console.warn('⚠️ Admin login tracking failed:', error);
   }
@@ -322,6 +496,118 @@ export const trackAdminAction = (action: string, details?: string) => {
     return analytics?.trackAdminAction?.(action, details);
   } catch (error) {
     console.warn('⚠️ Admin action tracking failed:', error);
+  }
+};
+
+export const trackAdminBarracaManagement = (action: string, barracaId: string, details?: string) => {
+  try {
+    return analytics?.trackAdminBarracaManagement?.(action, barracaId, details);
+  } catch (error) {
+    console.warn('⚠️ Admin barraca management tracking failed:', error);
+  }
+};
+
+export const trackAdminWeatherOverride = (active: boolean, reason?: string) => {
+  try {
+    return analytics?.trackAdminWeatherOverride?.(active, reason);
+  } catch (error) {
+    console.warn('⚠️ Admin weather override tracking failed:', error);
+  }
+};
+
+export const trackAdminManualStatus = (barracaId: string, status: string) => {
+  try {
+    return analytics?.trackAdminManualStatus?.(barracaId, status);
+  } catch (error) {
+    console.warn('⚠️ Admin manual status tracking failed:', error);
+  }
+};
+
+export const trackAdminSpecialOverride = (barracaId: string, override: boolean, expiresAt?: Date) => {
+  try {
+    return analytics?.trackAdminSpecialOverride?.(barracaId, override, expiresAt);
+  } catch (error) {
+    console.warn('⚠️ Admin special override tracking failed:', error);
+  }
+};
+
+export const trackNotificationPermission = (granted: boolean) => {
+  try {
+    return analytics?.trackNotificationPermission?.(granted);
+  } catch (error) {
+    console.warn('⚠️ Notification permission tracking failed:', error);
+  }
+};
+
+export const trackNotificationTokenSaved = (success: boolean) => {
+  try {
+    return analytics?.trackNotificationTokenSaved?.(success);
+  } catch (error) {
+    console.warn('⚠️ Notification token saved tracking failed:', error);
+  }
+};
+
+export const trackNotificationReceived = (title: string) => {
+  try {
+    return analytics?.trackNotificationReceived?.(title);
+  } catch (error) {
+    console.warn('⚠️ Notification received tracking failed:', error);
+  }
+};
+
+export const trackNotificationClicked = (title: string) => {
+  try {
+    return analytics?.trackNotificationClicked?.(title);
+  } catch (error) {
+    console.warn('⚠️ Notification clicked tracking failed:', error);
+  }
+};
+
+export const trackWeekendHoursView = (barracaId: string, day: string) => {
+  try {
+    return analytics?.trackWeekendHoursView?.(barracaId, day);
+  } catch (error) {
+    console.warn('⚠️ Weekend hours view tracking failed:', error);
+  }
+};
+
+export const trackWeekendHoursEnabled = (barracaId: string, enabled: boolean) => {
+  try {
+    return analytics?.trackWeekendHoursEnabled?.(barracaId, enabled);
+  } catch (error) {
+    console.warn('⚠️ Weekend hours enabled tracking failed:', error);
+  }
+};
+
+export const trackPartneredBarracaInteraction = (barracaId: string, action: string) => {
+  try {
+    return analytics?.trackPartneredBarracaInteraction?.(barracaId, action);
+  } catch (error) {
+    console.warn('⚠️ Partnered barraca interaction tracking failed:', error);
+  }
+};
+
+export const trackNonPartneredBarracaInteraction = (barracaId: string, action: string) => {
+  try {
+    return analytics?.trackNonPartneredBarracaInteraction?.(barracaId, action);
+  } catch (error) {
+    console.warn('⚠️ Non-partnered barraca interaction tracking failed:', error);
+  }
+};
+
+export const trackExternalApiCall = (endpoint: string, success: boolean, responseTime?: number) => {
+  try {
+    return analytics?.trackExternalApiCall?.(endpoint, success, responseTime);
+  } catch (error) {
+    console.warn('⚠️ External API call tracking failed:', error);
+  }
+};
+
+export const trackExternalStatusUpdate = (barracaId: string, success: boolean) => {
+  try {
+    return analytics?.trackExternalStatusUpdate?.(barracaId, success);
+  } catch (error) {
+    console.warn('⚠️ External status update tracking failed:', error);
   }
 };
 
@@ -418,6 +704,54 @@ export const trackPWAInstall = (prompted: boolean, installed: boolean) => {
     return analytics?.trackPWAInstall?.(prompted, installed);
   } catch (error) {
     console.warn('⚠️ PWA install tracking failed:', error);
+  }
+};
+
+export const trackFirestoreConnection = (success: boolean) => {
+  try {
+    return analytics?.trackFirestoreConnection?.(success);
+  } catch (error) {
+    console.warn('⚠️ Firestore connection tracking failed:', error);
+  }
+};
+
+export const trackFirestoreSync = (collection: string, success: boolean, recordCount?: number) => {
+  try {
+    return analytics?.trackFirestoreSync?.(collection, success, recordCount);
+  } catch (error) {
+    console.warn('⚠️ Firestore sync tracking failed:', error);
+  }
+};
+
+export const trackSupabaseQuery = (table: string, operation: string, success: boolean) => {
+  try {
+    return analytics?.trackSupabaseQuery?.(table, operation, success);
+  } catch (error) {
+    console.warn('⚠️ Supabase query tracking failed:', error);
+  }
+};
+
+export const trackRealtimeSubscription = (channel: string, success: boolean) => {
+  try {
+    return analytics?.trackRealtimeSubscription?.(channel, success);
+  } catch (error) {
+    console.warn('⚠️ Realtime subscription tracking failed:', error);
+  }
+};
+
+export const trackFeatureUsage = (feature: string, action: string, details?: string) => {
+  try {
+    return analytics?.trackFeatureUsage?.(feature, action, details);
+  } catch (error) {
+    console.warn('⚠️ Feature usage tracking failed:', error);
+  }
+};
+
+export const trackBusinessMetric = (metric: string, value: number, unit?: string) => {
+  try {
+    return analytics?.trackBusinessMetric?.(metric, value, unit);
+  } catch (error) {
+    console.warn('⚠️ Business metric tracking failed:', error);
   }
 };
 

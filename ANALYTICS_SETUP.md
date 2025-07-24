@@ -16,26 +16,77 @@ Your Carioca Coastal Club app now includes comprehensive Google Analytics 4 (GA4
 - ✅ **Error Tracking** - JavaScript errors and unhandled promises
 
 ### Custom Events
-- 🏖️ **Barraca Interactions**
-  - Barraca views
-  - Filter usage
-  - Search terms
-- 🌤️ **Weather Features**
-  - Weather widget views
-  - Weather refresh actions
-- 📖 **Story Features**
-  - Story views
-  - Story sharing
-- 👤 **User Engagement**
-  - Email subscriptions
-  - Language changes
-  - CTA clicks
-- 🔧 **Admin Actions**
-  - Login attempts (success/failure)
-  - Barraca management actions
-- 📱 **PWA Features**
-  - Install prompts
-  - Installation success
+
+#### 🏖️ **Barraca Interactions**
+- Barraca views (with partnered/non-partnered distinction)
+- Filter usage
+- Search terms
+- Status changes (open/closed transitions)
+- Manual status updates
+- Special admin overrides
+
+#### 🌤️ **Weather Features**
+- Weather widget views
+- Weather refresh actions
+- Weather override usage (admin actions)
+- Weather-dependent barraca updates
+
+#### 📖 **Story Features**
+- Story views
+- Story sharing
+
+#### 👤 **User Engagement**
+- Email subscriptions
+- Language changes
+- CTA clicks
+- Visitor sessions (new vs returning)
+- Unique visitor tracking
+
+#### 🔧 **Admin Actions**
+- Login attempts (success/failure) with admin type
+- Barraca management actions
+- Weather override controls
+- Manual status management
+- Special override management
+
+#### 📱 **PWA Features**
+- Install prompts
+- Installation success
+
+#### 🔔 **Notification System**
+- Permission requests
+- Token saving success/failure
+- Notification received events
+- Notification click tracking
+
+#### 📅 **Weekend Hours**
+- Weekend hours views
+- Weekend hours enable/disable actions
+
+#### 🤝 **Partnered vs Non-Partnered**
+- Separate tracking for partnered barraca interactions
+- Separate tracking for non-partnered barraca interactions
+
+#### 🔌 **External API & Database**
+- External API calls with response times
+- External status updates
+- Firestore connection status
+- Firestore sync operations
+- Supabase query tracking
+- Real-time subscription status
+
+#### 📊 **Feature Usage**
+- Weather widget usage
+- Story viewer usage
+- Language switcher usage
+- Email subscription usage
+- PWA install usage
+
+#### 💼 **Business Metrics**
+- Total barracas count
+- Partnered barracas count
+- Active sessions
+- Average response times
 
 ## Setup Instructions
 
@@ -102,10 +153,15 @@ const {
   trackBarracaView,
   trackBarracaFilter,
   trackBarracaSearch,
+  trackBarracaStatusChange,
+  trackBarracaManualStatus,
+  trackBarracaSpecialOverride,
   
   // Weather tracking
   trackWeatherView,
   trackWeatherRefresh,
+  trackWeatherOverride,
+  trackWeatherDependentBarracas,
   
   // Story tracking
   trackStoryView,
@@ -114,11 +170,35 @@ const {
   // User tracking
   trackEmailSubscription,
   trackLanguageChange,
+  trackVisitorSession,
+  trackUniqueVisitor,
   trackUserJourney,
   
   // Admin tracking
   trackAdminLogin,
   trackAdminAction,
+  trackAdminBarracaManagement,
+  trackAdminWeatherOverride,
+  trackAdminManualStatus,
+  trackAdminSpecialOverride,
+  
+  // Notification tracking
+  trackNotificationPermission,
+  trackNotificationTokenSaved,
+  trackNotificationReceived,
+  trackNotificationClicked,
+  
+  // Weekend hours tracking
+  trackWeekendHoursView,
+  trackWeekendHoursEnabled,
+  
+  // Partnered vs non-partnered tracking
+  trackPartneredBarracaInteraction,
+  trackNonPartneredBarracaInteraction,
+  
+  // External API tracking
+  trackExternalApiCall,
+  trackExternalStatusUpdate,
   
   // Performance tracking
   trackPerformance,
@@ -143,6 +223,16 @@ const {
   // PWA tracking
   trackPWAInstall,
   
+  // Database tracking
+  trackFirestoreConnection,
+  trackFirestoreSync,
+  trackSupabaseQuery,
+  trackRealtimeSubscription,
+  
+  // Feature and business tracking
+  trackFeatureUsage,
+  trackBusinessMetric,
+  
   // Status
   getStatus
 } = useAnalytics();
@@ -154,8 +244,15 @@ Your admin panel now includes an Analytics tab with:
 
 - 📊 **Analytics Status** - Shows if GA is active
 - 📈 **Key Metrics** - Page views, visitors, bounce rate, session duration
+- 🌤️ **Weather Override Usage** - How often weather override is used
+- 🔔 **Notification Interactions** - Notification permission and usage
+- ⭐ **Partnered Barraca Views** - Views of partnered barracas
+- 📅 **Weekend Hours Views** - Usage of weekend hours feature
+- 🗄️ **System Metrics** - Database queries, API calls, real-time subscriptions
 - 📄 **Top Pages** - Most visited pages
 - 📱 **Device Types** - Mobile vs Desktop breakdown
+- 🎯 **Feature Usage** - Most used features
+- 💼 **Business Metrics** - Key business indicators
 
 ## Privacy and GDPR Compliance
 
@@ -165,11 +262,14 @@ Your admin panel now includes an Analytics tab with:
 - Device and browser information
 - Performance metrics
 - Error logs
+- Feature usage patterns
+- Business metrics (aggregated)
 
 ### Data NOT Collected
 - Personal information (names, emails, phone numbers)
 - IP addresses (anonymized by Google)
 - Sensitive user data
+- Individual user behavior patterns
 
 ### Cookie Notice
 Consider adding a cookie consent banner for EU users:
@@ -227,6 +327,9 @@ trackEvent('User', 'Preference', 'Language: Portuguese');
 
 // Track feature usage
 trackEvent('Feature', 'Usage', 'Weather Widget');
+
+// Track business metrics
+trackBusinessMetric('Total Barracas', 45, 'locations');
 ```
 
 ### Enhanced Ecommerce (Future)
@@ -236,6 +339,45 @@ For future ecommerce features:
 // Track barraca bookings
 trackEvent('Ecommerce', 'Purchase', 'Barraca Booking', 50);
 ```
+
+## New Metrics Added
+
+### Weather Override Tracking
+- Track when weather override is enabled/disabled
+- Monitor weather-dependent barraca updates
+- Track admin weather override actions
+
+### Notification System
+- Track notification permission requests
+- Monitor notification token saving
+- Track notification received and clicked events
+
+### Visitor Analytics
+- Track unique visitors with fingerprinting
+- Monitor new vs returning visitors
+- Track session patterns
+
+### Partnered vs Non-Partnered
+- Separate tracking for different barraca types
+- Monitor interaction patterns
+- Track manual status changes
+
+### Weekend Hours
+- Track weekend hours feature usage
+- Monitor enable/disable actions
+- Track view patterns
+
+### System Health
+- Monitor Firestore connections
+- Track Supabase query performance
+- Monitor real-time subscription status
+- Track external API call success rates
+
+### Business Intelligence
+- Track total barraca counts
+- Monitor partnered barraca metrics
+- Track active session counts
+- Monitor response times
 
 ## Support
 
@@ -253,5 +395,7 @@ If you need help with analytics setup or have questions about tracking specific 
 3. **Deploy and test** the analytics implementation
 4. **Monitor data** in GA4 dashboard
 5. **Add custom tracking** for specific user actions as needed
+6. **Review new metrics** in the admin dashboard
+7. **Set up custom reports** for business insights
 
-Your analytics are now ready to provide valuable insights into how users interact with your beach vendor discovery platform! 🏖️📊 
+Your analytics are now ready to provide comprehensive insights into how users interact with your beach vendor discovery platform! 🏖️📊 
