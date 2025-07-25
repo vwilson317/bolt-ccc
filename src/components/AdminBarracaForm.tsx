@@ -66,8 +66,8 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
   ];
 
   const ctaButtonStyles = ['primary', 'secondary', 'outline', 'ghost'];
-  const ctaButtonTypes = ['url', 'phone', 'email', 'whatsapp', 'reservation', 'custom'];
-  const iconOptions = ['Calendar', 'Eye', 'MessageCircle', 'Menu', 'Phone', 'Mail', 'ExternalLink', 'Star'];
+  const ctaButtonTypes = ['url', 'phone', 'email', 'whatsapp', 'ig', 'reservation', 'custom'];
+  const iconOptions = ['Calendar', 'Eye', 'MessageCircle', 'Menu', 'Phone', 'Mail', 'ExternalLink', 'Star', 'Instagram'];
 
   useEffect(() => {
     if (barracaId) {
@@ -598,10 +598,10 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
             {/* Contact Information */}
             <div>
               <h4 className="text-lg font-medium text-gray-900 mb-3">{t('admin.form.contact')}</h4>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    {t('admin.form.whatsapp')}
+                    WhatsApp
                   </label>
                   <input
                     type="tel"
@@ -625,21 +625,7 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
                       ...prev,
                       contact: { ...prev.contact, email: e.target.value }
                     }))}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    {t('admin.form.instagram')}
-                  </label>
-                  <input
-                    type="url"
-                    value={formData.contact.website}
-                    onChange={(e) => setFormData(prev => ({
-                      ...prev,
-                      contact: { ...prev.contact, website: e.target.value }
-                    }))}
-                    placeholder="https://instagram.com/barraca"
+                    placeholder="contato@barraca.com"
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
                   />
                 </div>
@@ -719,7 +705,13 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
                         type="text"
                         value={button.action.value}
                         onChange={(e) => updateCTAButton(index, { action: { ...button.action, value: e.target.value } })}
-                        placeholder="URL, phone, email, etc."
+                        placeholder={
+                          button.action.type === 'ig' ? 'Instagram URL (e.g., https://instagram.com/username)' :
+                          button.action.type === 'whatsapp' ? 'Phone number (e.g., +55 21 99999-0000)' :
+                          button.action.type === 'email' ? 'Email address' :
+                          button.action.type === 'phone' ? 'Phone number' :
+                          'URL, phone, email, etc.'
+                        }
                         className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
                       />
                       <div className="flex gap-2">

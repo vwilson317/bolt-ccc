@@ -1,5 +1,5 @@
 import { CTAButtonConfig, CTAButtonAction, CTAVisibilityConditions, DefaultCTAButtons, Barraca } from '../types';
-import { Calendar, Eye, MessageCircle, Menu, Phone, Mail, ExternalLink, Star } from 'lucide-react';
+import { Calendar, Eye, MessageCircle, Menu, Phone, Mail, ExternalLink, Star, Instagram } from 'lucide-react';
 
 /**
  * Default CTA button configurations
@@ -36,21 +36,6 @@ export const getDefaultCTAButtons = (t: (key: string) => string): DefaultCTAButt
     visibilityConditions: {},
     icon: 'MessageCircle',
     enabled: true
-  },
-  menu: {
-    id: 'default-menu',
-    text: t('cta.menu'),
-    action: {
-      type: 'url',
-      value: '/menu',
-      target: '_blank',
-      trackingEvent: 'cta_menu_clicked'
-    },
-    style: 'ghost',
-    position: 3,
-    visibilityConditions: {},
-    icon: 'Menu',
-    enabled: true
   }
 });
 
@@ -65,7 +50,8 @@ export const validateCTAButton = (button: CTAButtonConfig): { isValid: boolean; 
     errors.push('Button ID is required');
   }
 
-  if (!button.text || button.text.trim() === '') {
+  // Allow empty text for icon-only buttons (like Instagram)
+  if (button.text === undefined || button.text === null) {
     errors.push('Button text is required');
   }
 
@@ -197,7 +183,7 @@ export const getCTAButtonsForBarraca = (
     buttons = barraca.ctaButtons.filter(button => {
       const validation = validateCTAButton(button);
       if (!validation.isValid) {
-        console.warn(`Invalid CTA button configuration for ${barraca.name}:`, validation.errors);
+        console.warn(`❌ Invalid CTA button configuration for ${barraca.name}:`, validation.errors);
         return false;
       }
       return shouldShowCTAButton(button, barraca, context);
@@ -255,6 +241,11 @@ export const handleCTAButtonClick = (action: CTAButtonAction, barraca: Barraca) 
       window.open(`https://wa.me/${whatsappPhone}`, '_blank', 'noopener,noreferrer');
       break;
 
+    case 'ig':
+      // Handle Instagram links - open in new tab
+      window.open(action.value, '_blank', 'noopener,noreferrer');
+      break;
+
     case 'reservation':
       // Handle reservation logic - could open a modal, navigate to booking page, etc.
       console.log('Opening reservation for:', barraca.name);
@@ -289,7 +280,8 @@ export const getCTAButtonIcon = (iconName?: string) => {
     Phone,
     Mail,
     ExternalLink,
-    Star
+    Star,
+    Instagram
   };
 
   return iconName ? iconMap[iconName] : null;

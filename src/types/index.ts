@@ -24,7 +24,6 @@ export interface Barraca {
   contact: {
     phone?: string;
     email?: string;
-    website?: string;
   };
   amenities: string[];
   weatherDependent: boolean;
@@ -155,7 +154,7 @@ export interface TranslatableCTAButtonFields {
 }
 
 export interface CTAButtonAction {
-  type: 'url' | 'phone' | 'email' | 'whatsapp' | 'reservation' | 'details' | 'custom';
+  type: 'url' | 'phone' | 'email' | 'whatsapp' | 'ig' | 'reservation' | 'details' | 'custom';
   value: string; // URL, phone number, email, etc.
   target?: '_blank' | '_self'; // For URL actions
   trackingEvent?: string; // Analytics tracking
