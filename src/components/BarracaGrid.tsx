@@ -4,6 +4,7 @@ import { MapPin, Clock, MessageCircle, Instagram, Wifi, Umbrella, Hash, Users, M
 import { Barraca } from '../types';
 import StoryRing from './StoryRing';
 import CTAButtonGroup from './CTAButtonGroup';
+import LazyImage from './LazyImage';
 import { useStory } from '../contexts/StoryContext';
 import { useApp } from '../contexts/AppContext';
 import { getEffectiveOpenStatus } from '../utils/environmentUtils';
@@ -61,11 +62,11 @@ const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
           onClick={() => barraca.partnered && openBarracaModal(barraca)}
         >
           {/* Mobile-Optimized Image Section */}
-          <div className="relative min-h-[200px] max-h-[280px] md:aspect-[3/2] flex-shrink-0 bg-gray-100 flex items-center justify-center">
-            <img
-              src={barraca.photos.horizontal[0] || '/api/placeholder/600/400'}
+          <div className="relative min-h-[200px] max-h-[280px] md:aspect-[3/2] flex-shrink-0 bg-gray-100">
+            <LazyImage
+              src={barraca.photos.horizontal[0] || 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400"%3E%3Crect width="600" height="400" fill="%23f3f4f6"/%3E%3Ctext x="300" y="200" text-anchor="middle" dy=".3em" fill="%239ca3af" font-family="Arial" font-size="16"%3ENo Image%3C/text%3E%3C/svg%3E'}
               alt={barraca.name}
-              className={`w-full h-auto max-h-full object-contain`}
+              className="w-full h-full object-contain"
             />
             
             {/* Simplified Overlay - Only Essential Info */}
@@ -114,7 +115,7 @@ const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
                 <StoryRing
                   barracaId={barraca.id}
                   barracaName={barraca.name}
-                  imageUrl={barraca.photos.horizontal[0] || '/api/placeholder/600/400'}
+                  imageUrl={barraca.photos.horizontal[0] || 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400"%3E%3Crect width="600" height="400" fill="%23f3f4f6"/%3E%3Ctext x="300" y="200" text-anchor="middle" dy=".3em" fill="%239ca3af" font-family="Arial" font-size="16"%3ENo Image%3C/text%3E%3C/svg%3E'}
                   size="sm"
                   showLabel={false}
                 />
