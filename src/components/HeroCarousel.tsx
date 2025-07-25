@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { ChevronLeft, ChevronRight, MapPin, Check, X as XIcon } from 'lucide-react';
 import { useApp } from '../contexts/AppContext';
 import { getEffectiveOpenStatus } from '../utils/environmentUtils';
+import LazyImage from './LazyImage';
 
 const HeroCarousel: React.FC = () => {
   const { t } = useTranslation();
@@ -133,16 +134,17 @@ const HeroCarousel: React.FC = () => {
               index === currentSlide ? 'opacity-100' : 'opacity-0'
             }`}
           >
-            <div
-              className="w-full h-full bg-cover bg-center"
-              style={{
-                backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(${
-                  window.innerWidth < 768
-                    ? (barraca.photos.vertical[0] || barraca.photos.horizontal[0])
-                    : (barraca.photos.horizontal[0] || barraca.photos.vertical[0])
-                })`
-              }}
+            <img
+              src={
+                window.innerWidth < 768
+                  ? (barraca.photos.vertical[0] || barraca.photos.horizontal[0])
+                  : (barraca.photos.horizontal[0] || barraca.photos.vertical[0])
+              }
+              alt={barraca.name}
+              className="absolute inset-0 w-full h-full object-cover"
+              loading="eager"
             />
+            <div className="absolute inset-0 bg-black/40" />
           </div>
         ))}
       </div>
