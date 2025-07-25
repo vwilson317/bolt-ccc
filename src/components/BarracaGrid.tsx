@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { MapPin, Clock, MessageCircle, Instagram, Wifi, Umbrella, Hash, Users, MousePointer } from 'lucide-react';
+import { MapPin, Clock, MessageCircle, Instagram, Wifi, Umbrella, Hash, Users, MousePointer, Mail } from 'lucide-react';
 import { Barraca } from '../types';
 import StoryRing from './StoryRing';
 import CTAButtonGroup from './CTAButtonGroup';
@@ -223,28 +223,18 @@ const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
                 <div className="flex items-center justify-between">
                   {/* Contact Icons - Larger Touch Targets */}
                   <div className="flex space-x-2">
-                    {barraca.contact.phone && (
+                    {barraca.contact.email && (
                       <a
-                        href={`https://wa.me/${formatPhoneForWhatsApp(barraca.contact.phone)}`}
+                        href={`mailto:${barraca.contact.email}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="p-2.5 bg-green-100 text-green-600 rounded-lg hover:bg-green-200 transition-colors"
-                        title="WhatsApp"
+                        className="p-2.5 bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200 transition-colors"
+                        title="Email"
                       >
-                        <MessageCircle className="h-4 w-4" />
+                        <Mail className="h-4 w-4" />
                       </a>
                     )}
-                    {barraca.contact.website && (
-                      <a
-                        href={barraca.contact.website}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="p-2.5 bg-pink-100 text-pink-600 rounded-lg hover:bg-pink-200 transition-colors"
-                        title="Instagram"
-                      >
-                        <Instagram className="h-4 w-4" />
-                      </a>
-                    )}
+                    {/* WhatsApp and Instagram icons removed from contact. Only available as CTA buttons. */}
                   </div>
                   
                   {/* Configurable CTA Buttons */}

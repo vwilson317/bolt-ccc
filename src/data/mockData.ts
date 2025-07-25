@@ -54,6 +54,21 @@ const sampleCTAButtons: CTAButtonConfig[] = [
     visibilityConditions: {},
     icon: 'MessageCircle',
     enabled: true
+  },
+  {
+    id: 'follow-instagram',
+    text: 'Follow Us',
+    action: {
+      type: 'ig',
+      value: 'https://instagram.com/barraca_example',
+      target: '_blank',
+      trackingEvent: 'instagram_follow_clicked'
+    },
+    style: 'outline',
+    position: 4,
+    visibilityConditions: {},
+    icon: 'Instagram',
+    enabled: true
   }
 ];
 

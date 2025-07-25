@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { X, MapPin, Clock, Phone, Mail, ExternalLink, MessageCircle, Star } from 'lucide-react';
+import { X, MapPin, Clock, Mail, ExternalLink, MessageCircle, Star } from 'lucide-react';
 import { Barraca } from '../types';
 import { getEffectiveOpenStatus } from '../utils/environmentUtils';
 import ShareButton from './ShareButton';
@@ -187,7 +187,7 @@ const BarracaDetail: React.FC<BarracaDetailProps> = ({ barraca, onClose, weather
             <div className="space-y-3">
               {barraca.contact.phone && (
                 <div className="flex items-center">
-                  <Phone className="h-5 w-5 mr-3 text-gray-500" />
+                  <MessageCircle className="h-5 w-5 mr-3 text-gray-500" />
                   <a
                     href={`tel:${barraca.contact.phone}`}
                     className="text-blue-600 hover:text-blue-800"
@@ -241,7 +241,7 @@ const BarracaDetail: React.FC<BarracaDetailProps> = ({ barraca, onClose, weather
                 href={`tel:${barraca.contact.phone}`}
                 className="flex-1 bg-beach-500 text-white px-6 py-3 rounded-lg hover:bg-beach-600 transition-colors flex items-center justify-center"
               >
-                <Phone className="h-5 w-5 mr-2" />
+                <MessageCircle className="h-5 w-5 mr-2" />
                 {t('barraca.call')}
               </a>
             )}
