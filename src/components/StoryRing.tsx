@@ -2,7 +2,6 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Play, Check } from 'lucide-react';
 import { useStory } from '../contexts/StoryContext';
-import LazyImage from './LazyImage';
 
 interface StoryRingProps {
   barracaId: string;
@@ -59,10 +58,13 @@ const StoryRing: React.FC<StoryRingProps> = ({
             : 'bg-gradient-to-r from-beach-400 via-beach-500 to-ocean-600'
         }`}>
           <div className="w-full h-full rounded-full bg-white p-0.5">
-            <LazyImage
+            <img
               src={imageUrl}
               alt={barracaName}
               className="w-full h-full object-cover rounded-full"
+              onError={(e) => {
+                e.currentTarget.src = '';
+              }}
             />
           </div>
         </div>

@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { X, Pause, Play, Volume2, VolumeX } from 'lucide-react';
 import { useStory } from '../contexts/StoryContext';
-import LazyImage from './LazyImage';
 
 const StoryViewer: React.FC = () => {
   const {
@@ -259,7 +258,7 @@ const StoryViewer: React.FC = () => {
       <div className="absolute top-4 left-0 right-0 z-20 flex items-center justify-between px-4 pt-4">
         <div className="flex items-center space-x-3 text-white">
           <div className="w-8 h-8 rounded-full border-2 border-white/30 overflow-hidden">
-            <LazyImage
+            <img
               src={currentStory.media[0]?.url || currentMedia.url}
               alt={currentStory.barracaName}
               className="w-full h-full object-cover"
@@ -358,14 +357,13 @@ const StoryViewer: React.FC = () => {
                 onEnded={nextMedia}
               />
             ) : (
-              <LazyImage
+              <img
                 ref={mediaRef as React.RefObject<HTMLImageElement>}
                 src={currentMedia.url}
                 alt={currentMedia.caption || ''}
                 className="max-w-full max-h-full object-contain"
                 onLoad={handleMediaLoad}
                 onError={handleMediaError}
-                isHero={true}
               />
             )}
           </>

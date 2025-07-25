@@ -2,7 +2,6 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Heart, Users, MapPin, Smartphone, MessageCircle, Instagram, Calendar, Gift } from 'lucide-react';
 import EmailSubscription from '../components/EmailSubscription';
-import LazyImage from '../components/LazyImage';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 
 const About: React.FC = () => {
@@ -195,7 +194,7 @@ const About: React.FC = () => {
             {team.map((member, index) => (
               <div key={index} className={`text-center stagger-${index + 1}`}>
                 <div className="mb-6">
-                  <LazyImage
+                  <img
                     src={member.image}
                     alt={member.name}
                     className="w-32 h-32 rounded-full mx-auto object-cover shadow-lg"
