@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, Play } from 'lucide-react';
 import { useStory } from '../contexts/StoryContext';
 import { Story } from '../types';
-import LazyImage from './LazyImage';
 
 const StoryBanner: React.FC = () => {
   const { stories, featureFlags, openStoryViewer } = useStory();
@@ -50,11 +49,10 @@ const StoryBanner: React.FC = () => {
     <div className="relative h-32 sm:h-40 md:h-48 overflow-hidden bg-gray-900 border-b border-gray-200">
       {/* Background Image */}
       <div className="absolute inset-0">
-        <LazyImage
+        <img
           src={currentStory.media[0].url}
           alt={currentStory.barracaName}
           className="w-full h-full object-cover"
-          isHero={true}
         />
         <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/30 to-black/60" />
       </div>
@@ -68,7 +66,7 @@ const StoryBanner: React.FC = () => {
               <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 ${
                 currentStory.isViewed ? 'border-gray-400' : 'border-white'
               } overflow-hidden`}>
-                <LazyImage
+                <img
                   src={currentStory.media[0].url}
                   alt={currentStory.barracaName}
                   className="w-full h-full object-cover"

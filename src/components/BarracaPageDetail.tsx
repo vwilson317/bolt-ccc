@@ -4,7 +4,6 @@ import { MapPin, Clock, Phone, Mail, ExternalLink, MessageCircle, Star } from 'l
 import { Barraca } from '../types';
 import { getEffectiveOpenStatus } from '../utils/environmentUtils';
 import ShareButton from './ShareButton';
-import LazyImage from './LazyImage';
 
 // Helper function to format phone number for WhatsApp
 const formatPhoneForWhatsApp = (phone: string) => {
@@ -79,11 +78,10 @@ const BarracaPageDetail: React.FC<BarracaPageDetailProps> = ({
     <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
       {/* Hero Image */}
       <div className="relative h-64 md:h-80 overflow-hidden">
-        <LazyImage
+        <img
           src={barraca.photos?.horizontal?.[0] || '/api/placeholder/600/400'}
           alt={barraca.name}
           className="w-full h-full object-cover"
-          isHero={true}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
         
