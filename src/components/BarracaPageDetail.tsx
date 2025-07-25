@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { MapPin, Clock, Mail, ExternalLink, MessageCircle, Star } from 'lucide-react';
+import { MapPin, Clock, Phone, Mail, ExternalLink, MessageCircle, Star } from 'lucide-react';
 import { Barraca } from '../types';
 import { getEffectiveOpenStatus } from '../utils/environmentUtils';
 import ShareButton from './ShareButton';
