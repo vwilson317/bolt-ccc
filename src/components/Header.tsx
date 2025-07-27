@@ -133,10 +133,10 @@ const Header: React.FC = () => {
             </Link>
           </nav>
 
-          {/* Language Selector, Bolt Badge & Mobile Menu */}
+          {/* Language Selector & Mobile Menu */}
           <div className="flex items-center space-x-4">
-            {/* Bolt Badge */}
-            <div className="hidden sm:flex items-center space-x-2">
+            {/* Bolt Badge - Temporarily disabled */}
+            {/* <div className="hidden sm:flex items-center space-x-2">
               <a 
                 href="https://bolt.new/" 
                 target="_blank" 
@@ -154,7 +154,7 @@ const Header: React.FC = () => {
                   Built with Bolt
                 </span>
               </a>
-            </div>
+            </div> */}
 
             {/* Language Selector */}
             <div className="relative">
@@ -269,8 +269,8 @@ const Header: React.FC = () => {
                 {t('nav.admin')}
               </Link>
               
-              {/* Mobile Bolt Badge */}
-              <div className={`pt-4 border-t transition-colors duration-300 ${
+              {/* Mobile Bolt Badge - Temporarily disabled */}
+              {/* <div className={`pt-4 border-t transition-colors duration-300 ${
                 isScrolled || isAdminLoginPage || isBarracaDetailPage || isMenuOpen ? 'border-gray-200' : 'border-white/20'
               }`}>
                 <a 
@@ -290,7 +290,7 @@ const Header: React.FC = () => {
                     Built with Bolt
                   </span>
                 </a>
-              </div>
+              </div> */}
             </nav>
           </div>
         )}

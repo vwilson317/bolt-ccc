@@ -59,8 +59,8 @@ function AppContent() {
         />
       )}
       
-      {/* Firestore Status Indicator */}
-      <FirestoreStatusIndicator />
+      {/* Firestore Status Indicator - Temporarily disabled */}
+      {/* <FirestoreStatusIndicator /> */}
       
       {/* <EnvironmentBadge />
       <EnvironmentInfo /> */}
