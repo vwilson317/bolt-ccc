@@ -48,7 +48,7 @@ const ManualStatusPanel: React.FC<ManualStatusPanelProps> = ({ onRefresh }) => {
       await BarracaService.setManualStatus(barracaId, newStatus);
       setMessage({ type: 'success', text: 'Status updated successfully!' });
       await loadBarracas(); // Refresh the list
-      onRefresh(); // Refresh the main barracas list
+      // Real-time updates will handle the main barracas list refresh automatically via Firestore
     } catch (error) {
       setMessage({ type: 'error', text: 'Failed to update status' });
       console.error('Error updating manual status:', error);
