@@ -7,14 +7,35 @@ import {
   trackBarracaView,
   trackBarracaFilter,
   trackBarracaSearch,
+  trackBarracaStatusChange,
+  trackBarracaManualStatus,
+  trackBarracaSpecialOverride,
   trackWeatherView,
   trackWeatherRefresh,
+  trackWeatherOverride,
+  trackWeatherDependentBarracas,
   trackStoryView,
   trackStoryShare,
   trackEmailSubscription,
   trackLanguageChange,
+  trackVisitorSession,
+  trackUniqueVisitor,
   trackAdminLogin,
   trackAdminAction,
+  trackAdminBarracaManagement,
+  trackAdminWeatherOverride,
+  trackAdminManualStatus,
+  trackAdminSpecialOverride,
+  trackNotificationPermission,
+  trackNotificationTokenSaved,
+  trackNotificationReceived,
+  trackNotificationClicked,
+  trackWeekendHoursView,
+  trackWeekendHoursEnabled,
+  trackPartneredBarracaInteraction,
+  trackNonPartneredBarracaInteraction,
+  trackExternalApiCall,
+  trackExternalStatusUpdate,
   trackPerformance,
   trackError,
   trackUserJourney,
@@ -27,6 +48,12 @@ import {
   trackSocialShare,
   trackFormSubmission,
   trackPWAInstall,
+  trackFirestoreConnection,
+  trackFirestoreSync,
+  trackSupabaseQuery,
+  trackRealtimeSubscription,
+  trackFeatureUsage,
+  trackBusinessMetric,
   getAnalyticsStatus
 } from '../services/analyticsService';
 
@@ -175,10 +202,15 @@ export const useAnalytics = () => {
     trackBarracaView: createSafeTrackingFunction(trackBarracaView),
     trackBarracaFilter: createSafeTrackingFunction(trackBarracaFilter),
     trackBarracaSearch: createSafeTrackingFunction(trackBarracaSearch),
+    trackBarracaStatusChange: createSafeTrackingFunction(trackBarracaStatusChange),
+    trackBarracaManualStatus: createSafeTrackingFunction(trackBarracaManualStatus),
+    trackBarracaSpecialOverride: createSafeTrackingFunction(trackBarracaSpecialOverride),
     
     // Weather tracking
     trackWeatherView: createSafeTrackingFunction(trackWeatherView),
     trackWeatherRefresh: createSafeTrackingFunction(trackWeatherRefresh),
+    trackWeatherOverride: createSafeTrackingFunction(trackWeatherOverride),
+    trackWeatherDependentBarracas: createSafeTrackingFunction(trackWeatherDependentBarracas),
     
     // Story tracking
     trackStoryView: createSafeTrackingFunction(trackStoryView),
@@ -187,11 +219,35 @@ export const useAnalytics = () => {
     // User tracking
     trackEmailSubscription: createSafeTrackingFunction(trackEmailSubscription),
     trackLanguageChange: createSafeTrackingFunction(trackLanguageChange),
+    trackVisitorSession: createSafeTrackingFunction(trackVisitorSession),
+    trackUniqueVisitor: createSafeTrackingFunction(trackUniqueVisitor),
     trackUserJourney: createSafeTrackingFunction(trackUserJourney),
     
     // Admin tracking
     trackAdminLogin: createSafeTrackingFunction(trackAdminLogin),
     trackAdminAction: createSafeTrackingFunction(trackAdminAction),
+    trackAdminBarracaManagement: createSafeTrackingFunction(trackAdminBarracaManagement),
+    trackAdminWeatherOverride: createSafeTrackingFunction(trackAdminWeatherOverride),
+    trackAdminManualStatus: createSafeTrackingFunction(trackAdminManualStatus),
+    trackAdminSpecialOverride: createSafeTrackingFunction(trackAdminSpecialOverride),
+    
+    // Notification tracking
+    trackNotificationPermission: createSafeTrackingFunction(trackNotificationPermission),
+    trackNotificationTokenSaved: createSafeTrackingFunction(trackNotificationTokenSaved),
+    trackNotificationReceived: createSafeTrackingFunction(trackNotificationReceived),
+    trackNotificationClicked: createSafeTrackingFunction(trackNotificationClicked),
+    
+    // Weekend hours tracking
+    trackWeekendHoursView: createSafeTrackingFunction(trackWeekendHoursView),
+    trackWeekendHoursEnabled: createSafeTrackingFunction(trackWeekendHoursEnabled),
+    
+    // Partnered vs non-partnered tracking
+    trackPartneredBarracaInteraction: createSafeTrackingFunction(trackPartneredBarracaInteraction),
+    trackNonPartneredBarracaInteraction: createSafeTrackingFunction(trackNonPartneredBarracaInteraction),
+    
+    // External API tracking
+    trackExternalApiCall: createSafeTrackingFunction(trackExternalApiCall),
+    trackExternalStatusUpdate: createSafeTrackingFunction(trackExternalStatusUpdate),
     
     // Performance tracking
     trackPerformance: createSafeTrackingFunction(trackPerformance),
@@ -215,6 +271,16 @@ export const useAnalytics = () => {
     
     // PWA tracking
     trackPWAInstall: createSafeTrackingFunction(trackPWAInstall),
+    
+    // Database tracking
+    trackFirestoreConnection: createSafeTrackingFunction(trackFirestoreConnection),
+    trackFirestoreSync: createSafeTrackingFunction(trackFirestoreSync),
+    trackSupabaseQuery: createSafeTrackingFunction(trackSupabaseQuery),
+    trackRealtimeSubscription: createSafeTrackingFunction(trackRealtimeSubscription),
+    
+    // Feature and business tracking
+    trackFeatureUsage: createSafeTrackingFunction(trackFeatureUsage),
+    trackBusinessMetric: createSafeTrackingFunction(trackBusinessMetric),
     
     // Status
     getStatus: useCallback(() => {

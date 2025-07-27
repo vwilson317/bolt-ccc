@@ -10,6 +10,7 @@ import StoryViewer from './components/StoryViewer';
 import EnvironmentBadge from './components/EnvironmentBadge';
 import EnvironmentInfo from './components/EnvironmentInfo';
 import BarracaDetail from './components/BarracaDetail';
+import FirestoreStatusIndicator from './components/FirestoreStatusIndicator';
 import Home from './pages/Home';
 import Discover from './pages/Discover';
 import About from './pages/About';
@@ -57,6 +58,9 @@ function AppContent() {
           weatherOverride={weatherOverride}
         />
       )}
+      
+      {/* Firestore Status Indicator */}
+      <FirestoreStatusIndicator />
       
       {/* <EnvironmentBadge />
       <EnvironmentInfo /> */}

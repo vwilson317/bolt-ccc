@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { Power, PowerOff, CheckCircle, XCircle } from 'lucide-react';
 import { BarracaService } from '../services/barracaService';
 import { Barraca } from '../types';
+import { getEffectiveOpenStatus } from '../utils/environmentUtils';
+import { useApp } from '../contexts/AppContext';
 
 interface SpecialAdminPanelProps {
   barracas: Barraca[];
@@ -11,6 +13,7 @@ interface SpecialAdminPanelProps {
 
 const SpecialAdminPanel: React.FC<SpecialAdminPanelProps> = ({ barracas, onRefresh }) => {
   const { t } = useTranslation();
+  const { weatherOverride } = useApp();
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
@@ -21,8 +24,7 @@ const SpecialAdminPanel: React.FC<SpecialAdminPanelProps> = ({ barracas, onRefre
     try {
       await BarracaService.specialAdminOpenBarraca(barracaId, 24); // Default 24 hours
       setMessage({ type: 'success', text: 'Barraca opened successfully!' });
-      // Call onRefresh without reloading the page
-      onRefresh();
+      // Real-time updates will handle the UI refresh automatically via Firestore
     } catch (error) {
       setMessage({ type: 'error', text: 'Failed to open barraca' });
       console.error('Error opening barraca:', error);
@@ -38,8 +40,7 @@ const SpecialAdminPanel: React.FC<SpecialAdminPanelProps> = ({ barracas, onRefre
     try {
       await BarracaService.specialAdminCloseBarraca(barracaId);
       setMessage({ type: 'success', text: 'Barraca closed successfully!' });
-      // Call onRefresh without reloading the page
-      onRefresh();
+      // Real-time updates will handle the UI refresh automatically via Firestore
     } catch (error) {
       setMessage({ type: 'error', text: 'Failed to close barraca' });
       console.error('Error closing barraca:', error);
@@ -80,13 +81,13 @@ const SpecialAdminPanel: React.FC<SpecialAdminPanelProps> = ({ barracas, onRefre
       <div className="space-y-2 max-h-96 overflow-y-auto">
         {barracas && barracas.length > 0 ? (
           barracas.map((barraca) => {
-            const isCurrentlyOpen = barraca.isOpen;
+            const isCurrentlyOpen = getEffectiveOpenStatus(barraca, weatherOverride || false);
             
             return (
               <div key={barraca.id} className="flex items-center justify-between p-3 border border-gray-200 rounded-lg hover:bg-gray-50">
                 <div className="flex items-center space-x-3">
                   <div className={`w-3 h-3 rounded-full ${
-                    isCurrentlyOpen ? 'bg-green-500' : 'bg-red-500'
+                    isCurrentlyOpen === true ? 'bg-green-500' : isCurrentlyOpen === false ? 'bg-red-500' : 'bg-gray-400'
                   }`} />
                   <div>
                     <div className="font-medium text-gray-900">
@@ -98,21 +99,23 @@ const SpecialAdminPanel: React.FC<SpecialAdminPanelProps> = ({ barracas, onRefre
                 
                 <div className="flex items-center space-x-2">
                   <span className={`text-sm px-2 py-1 rounded-full ${
-                    isCurrentlyOpen 
+                    isCurrentlyOpen === true 
                       ? 'bg-green-100 text-green-800' 
-                      : 'bg-red-100 text-red-800'
+                      : isCurrentlyOpen === false
+                      ? 'bg-red-100 text-red-800'
+                      : 'bg-gray-100 text-gray-600'
                   }`}>
-                    {isCurrentlyOpen ? 'Open' : 'Closed'}
+                    {isCurrentlyOpen === true ? 'Open' : isCurrentlyOpen === false ? 'Closed' : 'Undetermined'}
                   </span>
                   
                   <button
-                    onClick={() => isCurrentlyOpen ? handleCloseBarraca(barraca.id) : handleOpenBarraca(barraca.id)}
+                    onClick={() => isCurrentlyOpen === true ? handleCloseBarraca(barraca.id) : handleOpenBarraca(barraca.id)}
                     disabled={loading}
                     className={`px-3 py-1 text-white text-sm rounded-md hover:opacity-90 disabled:opacity-50 flex items-center space-x-1 ${
-                      isCurrentlyOpen ? 'bg-red-600 hover:bg-red-700' : 'bg-green-600 hover:bg-green-700'
+                      isCurrentlyOpen === true ? 'bg-red-600 hover:bg-red-700' : 'bg-green-600 hover:bg-green-700'
                     }`}
                   >
-                    {isCurrentlyOpen ? (
+                    {isCurrentlyOpen === true ? (
                       <>
                         <PowerOff className="h-3 w-3" />
                         <span>Close</span>

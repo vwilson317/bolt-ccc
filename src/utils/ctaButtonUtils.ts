@@ -1,5 +1,9 @@
 import { CTAButtonConfig, CTAButtonAction, CTAVisibilityConditions, DefaultCTAButtons, Barraca } from '../types';
 import { Calendar, Eye, MessageCircle, Menu, Phone, Mail, ExternalLink, Star, Instagram } from 'lucide-react';
+<<<<<<< HEAD
+=======
+import { getEffectiveOpenStatus } from './environmentUtils';
+>>>>>>> dev
 
 /**
  * Default CTA button configurations
@@ -36,6 +40,24 @@ export const getDefaultCTAButtons = (t: (key: string) => string): DefaultCTAButt
     visibilityConditions: {},
     icon: 'MessageCircle',
     enabled: true
+<<<<<<< HEAD
+=======
+  },
+  menu: {
+    id: 'default-menu',
+    text: t('cta.menu'),
+    action: {
+      type: 'url',
+      value: '/menu',
+      target: '_blank',
+      trackingEvent: 'cta_menu_clicked'
+    },
+    style: 'outline',
+    position: 3,
+    visibilityConditions: {},
+    icon: 'Menu',
+    enabled: true
+>>>>>>> dev
   }
 });
 
@@ -111,12 +133,12 @@ export const shouldShowCTAButton = (
   const { visibilityConditions } = button;
   const { currentTime = new Date(), isLoggedIn = false, weatherConditions = 'good', weatherOverride = false } = context;
 
-  // Calculate effective open status considering weather override
-  const effectiveIsOpen = weatherOverride ? false : barraca.isOpen;
+  // Calculate effective open status considering weather override and special admin override
+  const effectiveIsOpen = getEffectiveOpenStatus(barraca, weatherOverride);
 
   // Check open/closed requirements using effective status
-  if (visibilityConditions.requiresOpen && !effectiveIsOpen) return false;
-  if (visibilityConditions.requiresClosed && effectiveIsOpen) return false;
+  if (visibilityConditions.requiresOpen && effectiveIsOpen !== true) return false;
+  if (visibilityConditions.requiresClosed && effectiveIsOpen === true) return false;
 
   // Check member-only requirement
   if (visibilityConditions.memberOnly && !isLoggedIn) return false;
@@ -149,7 +171,7 @@ export const shouldShowCTAButton = (
     try {
       // Simple evaluation - in production, use a safer expression evaluator
       const condition = visibilityConditions.customCondition
-        .replace(/\$\{barraca\.isOpen\}/g, effectiveIsOpen.toString())
+        .replace(/\$\{barraca\.isOpen\}/g, (effectiveIsOpen === true).toString())
         .replace(/\$\{barraca\.location\}/g, `"${barraca.location}"`)
         .replace(/\$\{isLoggedIn\}/g, isLoggedIn.toString());
       

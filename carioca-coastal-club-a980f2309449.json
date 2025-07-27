@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "carioca-coastal-club",
+  "private_key_id": "a980f230944960d7b3b1bcc19142e76eee2255f0",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQC+AY9OZGgtpQqT\nK6EMX1IjoS7BeTeR/D85mdZRRp99EiP/c0WSID4xsYbc4jj5q2EWd4VJtrJJhb/+\nt2O+q98NeLkyW6eEJiYI5AWALs6WS3r0bMGMWPntsD3ObzNE15KdLemLUk02mIbW\n/GH2Mi3spIau9+daLTn0jfFOd0CkemXH+XDaQpPZm7wnW8E+o0a61NREjqBnk0xu\n+dZoIvQlBJSZFaeZT1+mxvJiApFa1LK/mjRAsC2QIhgdQkAvidaAfyMPW5f+3awH\nTUJsHbCTcRcwkkSrfJdHl/aJo12dxIj1vIgPsPsE9XViKl8ENlMzs+yWOe3kSsPZ\nZVu7lcg5AgMBAAECggEAAWYMtRXvSrdjtfR02EeNriZLgZA/8jgSNWfrkwgVzaDN\nToioRbHX5gY+7k/PqGN++2BwWlFOYSpV9jeeiUKwdDkusHn1EveJQU3/uLM/gTg3\nhLvrNc+u2/V3kwDbDAHuj0UiqmGgoLWr4m0TrIavM1t9A/szra8rtXWOW0FB+CP3\nl8blNxAmK3YmBI1uZWwWeKZJkINP1qHR1byNmpX+GuptJ/QKC5Vj6I1JLTtIh115\nNZI7G/feIgeqzR0chJvaN08xk9KKu+Av4QM+qkD+7rMUDSZ+s3Y21A60cNGWpWeI\nlpmNJzxzeGi6f7wGell9FwwCbN9vOIK5FGvmCA3f3QKBgQDnpso+ESt8yzDyQ/av\nsUp9pveIQ4DcsgrveiZ4wrSetv+DBALgIql5rmCeHSryMuncMM11x5MBseytX+Y7\n4dimxnuQErwvpnBepQZ0sP9SlwX+zFTLvuOhFQ4bAlfa1pIUDz23rLC1djvb9DWt\nP/C+Jdguv8azx+60pYazvP0dZQKBgQDR+i/drjsvJIk5Zb5V3ThLcz8Lz8SRXsYo\nkWLRTQZPpCFrxSvl3fwAn13ZlqEt3o1bpEdzw+e98VSBiq7zg9gbKoSVw6VY//sp\nz+GHo9xsCIeHiEGen8j3HVaxo1DssW7eE9ZIeSUhre2yeovR+3p1l/RX+Atu2jB/\nRb8x/dmsRQKBgQCIko791MWcx3bN/j+8CXxvZDbfwVyBwP4tfgicfb5bLGyr43uG\nhSkBsksILQ4ayOWTibo4TDdhcnKlLLriZx6CBNbodAM63Je3VPffaFK/cIZ6WCFO\nFfbCC1XLmrANNx/cb7flSAzOjyxvWyUiRWY71LgFp88QQzl6i3RFF5Dq+QKBgQDG\nWnXfDpigBv6ONvufNxPXym1zJfjFbmb4qaZUm1Nr5lsf6Cl4wsMsf19zjWSC5SpZ\nuI064YRIHPI8URrFtPVvbDHFHAVVVrMXo2Wj8XnmoAQPVvrN8pkwPwnHUsS+Yzqd\nFNYmrjISZ7AUGsl8OfhLn5jVhN6gAAMyJ1veyLNYlQKBgQCx274s1FI2ThOFJ6oD\nONGrn44loRpQ/O/plDRUW+FuJdK9BPq3RT0qxHO+7CIqPY0bGUxs8yBvgzZpd262\nC0Zwm38XWZAYu6Lxjvfb9mVnBPuAwQ4AQ20UsLXY0L4btfA+ghk9BcHUrxuMToJs\nwdWrUXcsxiLUPpEkgz/JVYp9HQ==\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-3gncn@carioca-coastal-club.iam.gserviceaccount.com",
+  "client_id": "115134927459241421743",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-3gncn%40carioca-coastal-club.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

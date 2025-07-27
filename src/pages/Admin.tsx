@@ -575,8 +575,9 @@ const Admin: React.FC = () => {
           <SpecialAdminPanel 
             barracas={barracas}
             onRefresh={() => {
-              // This will trigger a refresh of the barracas data
-              window.location.reload();
+              // Trigger a refresh of the barracas data without page reload
+              // The real-time updates should handle this automatically via Firestore
+              console.log('Special admin panel refresh requested');
             }}
           />
         )}
@@ -584,8 +585,9 @@ const Admin: React.FC = () => {
         {activeTab === 'manual' && (
           <ManualStatusPanel 
             onRefresh={() => {
-              // This will trigger a refresh of the barracas data
-              window.location.reload();
+              // Trigger a refresh of the barracas data without page reload
+              // The real-time updates should handle this automatically via Firestore
+              console.log('Manual status panel refresh requested');
             }}
           />
         )}

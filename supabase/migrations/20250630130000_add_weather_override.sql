@@ -41,18 +41,44 @@ CREATE INDEX IF NOT EXISTS idx_weather_override_expires_at ON weather_override(e
 ALTER TABLE weather_override ENABLE ROW LEVEL SECURITY;
 
 -- Create policies
-CREATE POLICY "Public can read weather override"
-  ON weather_override
-  FOR SELECT
-  TO public
-  USING (true);
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'weather_override'
+      AND policyname = 'Public can read weather override'
+  ) THEN
+    EXECUTE $policy$
+      CREATE POLICY "Public can read weather override"
+        ON weather_override
+        FOR SELECT
+        TO public
+        USING (true);
+    $policy$;
+  END IF;
+END
+$$;
 
-CREATE POLICY "Authenticated users can manage weather override"
-  ON weather_override
-  FOR ALL
-  TO authenticated
-  USING (true)
-  WITH CHECK (true);
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'weather_override'
+      AND policyname = 'Authenticated users can manage weather override'
+  ) THEN
+    EXECUTE $policy$
+      CREATE POLICY "Authenticated users can manage weather override"
+        ON weather_override
+        FOR ALL
+        TO authenticated
+        USING (true)
+        WITH CHECK (true);
+    $policy$;
+  END IF;
+END
+$$;
 
 -- Function to get current weather override status
 CREATE OR REPLACE FUNCTION get_weather_override()
@@ -114,10 +140,22 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Create updated_at trigger
-CREATE TRIGGER update_weather_override_updated_at
-  BEFORE UPDATE ON weather_override
-  FOR EACH ROW
-  EXECUTE FUNCTION update_updated_at_column();
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_trigger
+    WHERE tgname = 'update_weather_override_updated_at'
+      AND tgrelid = 'weather_override'::regclass
+  ) THEN
+    EXECUTE $trig$
+      CREATE TRIGGER update_weather_override_updated_at
+        BEFORE UPDATE ON weather_override
+        FOR EACH ROW
+        EXECUTE FUNCTION update_updated_at_column();
+    $trig$;
+  END IF;
+END
+$$;
 
 -- Insert initial inactive override
 INSERT INTO weather_override (is_active, expires_at) 
@@ -125,4 +163,16 @@ VALUES (false, NULL)
 ON CONFLICT DO NOTHING;
 
 -- Enable real-time subscriptions
-ALTER PUBLICATION supabase_realtime ADD TABLE weather_override; 
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_publication_tables
+    WHERE pubname = 'supabase_realtime'
+      AND schemaname = 'public'
+      AND tablename = 'weather_override'
+  ) THEN
+    EXECUTE 'ALTER PUBLICATION supabase_realtime ADD TABLE weather_override';
+  END IF;
+END
+$$; 

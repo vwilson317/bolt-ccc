@@ -59,10 +59,22 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Create trigger for admin_users updated_at
-CREATE TRIGGER update_admin_users_updated_at
-  BEFORE UPDATE ON admin_users
-  FOR EACH ROW
-  EXECUTE FUNCTION update_admin_users_updated_at();
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_trigger
+    WHERE tgname = 'update_admin_users_updated_at'
+      AND tgrelid = 'admin_users'::regclass
+  ) THEN
+    EXECUTE $trig$
+      CREATE TRIGGER update_admin_users_updated_at
+        BEFORE UPDATE ON admin_users
+        FOR EACH ROW
+        EXECUTE FUNCTION update_admin_users_updated_at();
+    $trig$;
+  END IF;
+END
+$$;
 
 -- Create function for special admin to quickly open a barraca
 CREATE OR REPLACE FUNCTION special_admin_open_barraca(
@@ -234,34 +246,72 @@ ON CONFLICT (email) DO NOTHING;
 ALTER TABLE admin_users ENABLE ROW LEVEL SECURITY;
 
 -- Policy: Only superusers can read all admin users
-CREATE POLICY "Superusers can read all admin users" ON admin_users
-  FOR SELECT USING (
-    EXISTS (
-      SELECT 1 FROM admin_users 
-      WHERE email = current_user 
-      AND role = 'superuser'
-    )
-  );
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'admin_users'
+      AND policyname = 'Superusers can read all admin users'
+  ) THEN
+    EXECUTE $policy$
+      CREATE POLICY "Superusers can read all admin users" ON admin_users
+        FOR SELECT USING (
+          EXISTS (
+            SELECT 1 FROM admin_users
+            WHERE email = current_user
+            AND role = 'superuser'
+          )
+        );
+    $policy$;
+  END IF;
+END
+$$;
 
--- Policy: Only superusers can insert admin users
-CREATE POLICY "Superusers can insert admin users" ON admin_users
-  FOR INSERT WITH CHECK (
-    EXISTS (
-      SELECT 1 FROM admin_users 
-      WHERE email = current_user 
-      AND role = 'superuser'
-    )
-  );
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'admin_users'
+      AND policyname = 'Superusers can insert admin users'
+  ) THEN
+    EXECUTE $policy$
+      CREATE POLICY "Superusers can insert admin users" ON admin_users
+        FOR INSERT WITH CHECK (
+          EXISTS (
+            SELECT 1 FROM admin_users
+            WHERE email = current_user
+            AND role = 'superuser'
+          )
+        );
+    $policy$;
+  END IF;
+END
+$$;
 
 -- Policy: Only superusers can update admin users
-CREATE POLICY "Superusers can update admin users" ON admin_users
-  FOR UPDATE USING (
-    EXISTS (
-      SELECT 1 FROM admin_users 
-      WHERE email = current_user 
-      AND role = 'superuser'
-    )
-  );
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'admin_users'
+      AND policyname = 'Superusers can update admin users'
+  ) THEN
+    EXECUTE $policy$
+      CREATE POLICY "Superusers can update admin users" ON admin_users
+        FOR UPDATE USING (
+          EXISTS (
+            SELECT 1 FROM admin_users
+            WHERE email = current_user
+            AND role = 'superuser'
+          )
+        );
+    $policy$;
+  END IF;
+END
+$$;
 
 -- Add comments for the new functions
 COMMENT ON FUNCTION special_admin_open_barraca IS 'Special admin function to quickly open a barraca for specified duration';

@@ -5,6 +5,14 @@ import { WeatherService } from '../services/weatherService';
 import { BarracaService } from '../services/barracaService';
 import { EmailService } from '../services/emailService';
 import { WeatherOverrideService, WeatherOverride } from '../services/weatherOverrideService';
+import { getToken } from 'firebase/messaging';
+import { NotificationService } from '../services/notificationService';
+// @ts-expect-error: If types are missing for uuid, install @types/uuid or add a declaration file
+import { v4 as uuidv4 } from 'uuid';
+import { FirestoreService, type BarracaStatus } from '../services/firestoreService';
+import { firebaseApp, messaging } from '../lib/firebase';
+
+export { firebaseApp, messaging };
 
 interface AppContextType {
   barracas: Barraca[];
@@ -32,6 +40,8 @@ interface AppContextType {
   adminLogout: () => void;
   refreshWeather: () => Promise<void>;
   refreshBarracas: () => Promise<void>;
+  firestoreConnected: boolean;
+  barracaStatuses: Map<string, BarracaStatus>;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -68,13 +78,69 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const [weatherOverride, setWeatherOverride] = useState(false);
   const [overrideExpiry, setOverrideExpiry] = useState<Date | null>(null);
   const [selectedBarraca, setSelectedBarraca] = useState<Barraca | null>(null);
+  const [fcmToken, setFcmToken] = useState<string | null>(null);
+  const [sessionId, setSessionId] = useState<string>(() => {
+    let id = localStorage.getItem('session_id');
+    if (!id) {
+      id = uuidv4();
+      localStorage.setItem('session_id', id);
+    }
+    // Always return a string
+    return id || '';
+  });
+  const [barracaStatuses, setBarracaStatuses] = useState<Map<string, BarracaStatus>>(new Map());
+  const [firestoreConnected, setFirestoreConnected] = useState(false);
+
+  // Enhanced barraca fetching with Firestore status
+  const fetchBarracasWithStatus = useCallback(async (): Promise<Barraca[]> => {
+    try {
+      const fetchedBarracas = await fetchBarracas();
+      
+      // Enhance barracas with real-time status from Firestore
+      const enhancedBarracas = fetchedBarracas.map(barraca => {
+        const firestoreStatus = barracaStatuses.get(barraca.id);
+        
+        if (firestoreStatus) {
+          // Use Firestore status if available
+          return {
+            ...barraca,
+            isOpen: firestoreStatus.isOpen,
+            manualStatus: firestoreStatus.manualStatus,
+            specialAdminOverride: firestoreStatus.specialAdminOverride,
+            specialAdminOverrideExpires: firestoreStatus.specialAdminOverrideExpires
+          };
+        }
+        
+        // Fallback to database status
+        return barraca;
+      });
+
+      return enhancedBarracas;
+    } catch (error) {
+      console.error('Failed to fetch barracas with status:', error);
+      throw error;
+    }
+  }, [barracaStatuses]);
+
+  // Sync barracas to Firestore when they're loaded
+  const syncBarracasToFirestore = useCallback(async (barracas: Barraca[]) => {
+    try {
+      console.log('🔄 Syncing barracas to Firestore...');
+      for (const barraca of barracas) {
+        await FirestoreService.syncBarracaToFirestore(barraca);
+      }
+      console.log(`✅ Synced ${barracas.length} barracas to Firestore`);
+    } catch (error) {
+      console.error('Failed to sync barracas to Firestore:', error);
+    }
+  }, []);
 
   // Load barracas from database on mount
   useEffect(() => {
     const loadBarracas = async () => {
       setIsLoading(true);
       try {
-        const fetchedBarracas = await fetchBarracas();
+        const fetchedBarracas = await fetchBarracasWithStatus();
         
         // Move barraca with barracaNumber '80' to the front if it exists
         const index80 = fetchedBarracas.findIndex(b => b.barracaNumber === '80');
@@ -82,6 +148,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
           const [barraca80] = fetchedBarracas.splice(index80, 1);
           fetchedBarracas.unshift(barraca80);
         }
+        
         // Sort barracas: partnered first, then non-partnered, with location sorting within each group
         fetchedBarracas.sort((a, b) => {
           // First, sort by partnered status (partnered first)
@@ -91,6 +158,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
           // Then, sort by location within each group
           return a.location.localeCompare(b.location);
         });
+        
         // Ensure barraca 80 stays first
         if (index80 > -1) {
           const indexAfterSort = fetchedBarracas.findIndex(b => b.barracaNumber === '80');
@@ -99,7 +167,11 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
             fetchedBarracas.unshift(barraca80);
           }
         }
+        
         setBarracas(fetchedBarracas);
+        
+        // Sync to Firestore after loading
+        await syncBarracasToFirestore(fetchedBarracas);
       } catch (error) {
         console.error('Failed to load barracas:', error);
         // Keep empty array if loading fails
@@ -109,7 +181,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     };
 
     loadBarracas();
-  }, []);
+  }, [fetchBarracasWithStatus, syncBarracasToFirestore]);
 
   // Load email subscriptions from database on mount
   useEffect(() => {
@@ -140,6 +212,40 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     };
 
     loadWeatherOverride();
+  }, []);
+
+  // Initialize Firestore real-time subscriptions
+  useEffect(() => {
+    let unsubscribe: (() => void) | null = null;
+
+    const setupFirestoreSubscriptions = async () => {
+      try {
+        // Subscribe to all barraca status updates
+        unsubscribe = FirestoreService.subscribeToAllBarracaStatus((statuses) => {
+          const statusMap = new Map<string, BarracaStatus>();
+          statuses.forEach(status => {
+            statusMap.set(status.barracaId, status);
+          });
+          setBarracaStatuses(statusMap);
+          setFirestoreConnected(true);
+        });
+
+        console.log('✅ Firestore real-time subscriptions initialized');
+      } catch (error) {
+        console.error('❌ Failed to initialize Firestore subscriptions:', error);
+        setFirestoreConnected(false);
+      }
+    };
+
+    setupFirestoreSubscriptions();
+
+    // Cleanup on unmount
+    return () => {
+      if (unsubscribe) {
+        unsubscribe();
+      }
+      FirestoreService.cleanup();
+    };
   }, []);
 
   // Enhanced filter logic for comprehensive search
@@ -222,6 +328,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     
     return () => clearInterval(interval);
   }, [overrideExpiry]); // Remove weatherOverride from dependencies to prevent loops
+
   const updateSearchFilters = useCallback((filters: Partial<SearchFilters>) => {
     setSearchFilters(prev => ({ ...prev, ...filters }));
   }, []);
@@ -230,6 +337,10 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     try {
       const newBarraca = await BarracaService.create(barracaData);
       setBarracas(prev => [...prev, newBarraca]);
+      
+      // Sync new barraca to Firestore
+      await FirestoreService.syncBarracaToFirestore(newBarraca);
+      
       return newBarraca;
     } catch (error) {
       console.error('Failed to add barraca:', error);
@@ -243,6 +354,10 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
       setBarracas(prev => prev.map(barraca => 
         barraca.id === id ? updatedBarraca : barraca
       ));
+      
+      // Sync updated barraca to Firestore
+      await FirestoreService.syncBarracaToFirestore(updatedBarraca);
+      
       return updatedBarraca;
     } catch (error) {
       console.error('Failed to update barraca:', error);
@@ -254,6 +369,8 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     try {
       await BarracaService.delete(id);
       setBarracas(prev => prev.filter(barraca => barraca.id !== id));
+      
+      // Note: Firestore cleanup would be handled by the external app or admin panel
     } catch (error) {
       console.error('Failed to delete barraca:', error);
       throw error;
@@ -284,6 +401,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
       throw error;
     }
   }, []);
+
   const subscribeEmail = useCallback(async (email: string): Promise<boolean> => {
     try {
       const success = await EmailService.subscribe(email);
@@ -342,7 +460,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
         if (updatedCount > 0) {
           // Refresh barracas from database to get updated status
           try {
-            const refreshedBarracas = await fetchBarracas();
+            const refreshedBarracas = await fetchBarracasWithStatus();
             setBarracas(refreshedBarracas);
           } catch (error) {
             console.error('Failed to refresh barracas after weather update:', error);
@@ -354,7 +472,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [fetchBarracasWithStatus]);
 
   const openBarracaModal = useCallback((barraca: Barraca) => {
     setSelectedBarraca(barraca);
@@ -364,9 +482,10 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     setSelectedBarraca(null);
   }, []);
 
+  // Update the existing refreshBarracas function
   const refreshBarracas = useCallback(async () => {
     try {
-      const fetchedBarracas = await fetchBarracas();
+      const fetchedBarracas = await fetchBarracasWithStatus();
       
       // Sort barracas: partnered first, then non-partnered, with location sorting within each group
       fetchedBarracas.sort((a, b) => {
@@ -383,7 +502,36 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
       console.error('Failed to refresh barracas:', error);
       throw error;
     }
-  }, []);
+  }, [fetchBarracasWithStatus]);
+
+  useEffect(() => {
+    // Register service worker and get FCM token
+    const setupFCM = async () => {
+      if (!messaging) return;
+      try {
+        const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+        // Request permission
+        const permission = await Notification.requestPermission();
+        if (permission === 'granted') {
+          // Get token using getToken from firebase/messaging
+          const token = await getToken(messaging, { serviceWorkerRegistration: registration });
+          setFcmToken(token);
+        }
+      } catch (err) {
+        console.error('FCM setup error:', err);
+      }
+    };
+    if ('serviceWorker' in navigator && messaging) {
+      setupFCM();
+    }
+  }, [messaging]);
+
+  useEffect(() => {
+    // Save FCM token to Supabase when available
+    if (fcmToken && sessionId && sessionId !== '') {
+      NotificationService.saveToken(sessionId, fcmToken);
+    }
+  }, [fcmToken, sessionId]);
 
   const value: AppContextType = {
     barracas,
@@ -410,7 +558,9 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     adminLogin,
     adminLogout,
     refreshWeather,
-    refreshBarracas
+    refreshBarracas,
+    firestoreConnected,
+    barracaStatuses
   };
 
   return (
