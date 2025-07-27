@@ -1,9 +1,6 @@
 import { CTAButtonConfig, CTAButtonAction, CTAVisibilityConditions, DefaultCTAButtons, Barraca } from '../types';
 import { Calendar, Eye, MessageCircle, Menu, Phone, Mail, ExternalLink, Star, Instagram } from 'lucide-react';
-<<<<<<< HEAD
-=======
 import { getEffectiveOpenStatus } from './environmentUtils';
->>>>>>> dev
 
 /**
  * Default CTA button configurations
@@ -40,8 +37,6 @@ export const getDefaultCTAButtons = (t: (key: string) => string): DefaultCTAButt
     visibilityConditions: {},
     icon: 'MessageCircle',
     enabled: true
-<<<<<<< HEAD
-=======
   },
   menu: {
     id: 'default-menu',
@@ -57,7 +52,6 @@ export const getDefaultCTAButtons = (t: (key: string) => string): DefaultCTAButt
     visibilityConditions: {},
     icon: 'Menu',
     enabled: true
->>>>>>> dev
   }
 });
 
