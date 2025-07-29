@@ -7,6 +7,25 @@ export type BarracaPhotos = {
   vertical: string[];
 };
 
+export interface EventPhoto {
+  id: string;
+  url: string;
+  isHighlight: boolean; // Whether this photo should be shown in highlights
+  caption?: string;
+  timestamp: Date;
+}
+
+export interface BarracaEvent {
+  id: string;
+  title: string;
+  date: Date;
+  description: string;
+  photos: EventPhoto[]; // Raw photos including highlights
+  highlightPhotos: EventPhoto[]; // Subset of highlight photos for quick access
+  isActive: boolean; // Whether the event should be displayed
+  createdAt: Date;
+}
+
 export interface Barraca {
   id: string;
   name: string;
@@ -40,6 +59,7 @@ export interface Barraca {
   createdAt: Date;
   updatedAt: Date;
   ctaButtons?: CTAButtonConfig[]; // New configurable CTA buttons
+  previousEvents?: BarracaEvent[]; // Previous events held at this barraca
   // Translation support
   translations?: Record<SupportedLanguage, Partial<TranslatableBarracaFields>>;
 }

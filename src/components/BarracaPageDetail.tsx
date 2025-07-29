@@ -4,6 +4,7 @@ import { MapPin, Clock, Phone, Mail, ExternalLink, MessageCircle, Star } from 'l
 import { Barraca } from '../types';
 import { getEffectiveOpenStatus } from '../utils/environmentUtils';
 import ShareButton from './ShareButton';
+import EventList from './EventList';
 
 // Helper function to format phone number for WhatsApp
 const formatPhoneForWhatsApp = (phone: string) => {
