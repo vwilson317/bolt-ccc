@@ -1,12 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MapPin, Clock, MessageCircle, Instagram, Wifi, Umbrella, Hash, Users, MousePointer, Mail } from 'lucide-react';
-import { Barraca } from '../types';
+import { MapPin, Clock, MessageCircle, Instagram, Wifi, Umbrella, Hash, Users, MousePointer, Mail, Calendar } from 'lucide-react';
+import { Barraca, BarracaEvent } from '../types';
 import StoryRing from './StoryRing';
 import CTAButtonGroup from './CTAButtonGroup';
 import { useStory } from '../contexts/StoryContext';
 import { useApp } from '../contexts/AppContext';
 import { getEffectiveOpenStatus } from '../utils/environmentUtils';
+import EventStoryViewer from './EventStoryViewer';
 
 interface BarracaGridProps {
   barracas: Barraca[];
@@ -16,6 +17,7 @@ const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
   const { t } = useTranslation();
   const { stories, featureFlags } = useStory();
   const { weatherOverride, openBarracaModal } = useApp();
+  const [selectedEvent, setSelectedEvent] = useState<BarracaEvent | null>(null);
 
   const getAmenityIcon = (amenity: string) => {
     switch (amenity.toLowerCase()) {
@@ -40,6 +42,19 @@ const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
 
   const hasStories = (barracaId: string) => {
     return stories.some(story => story.barracaId === barracaId);
+  };
+
+  const getRecentEvents = (barraca: Barraca) => {
+    if (!barraca.previousEvents) return [];
+    return barraca.previousEvents
+      .filter(event => event.isActive && event.highlightPhotos.length > 0)
+      .sort((a, b) => b.date.getTime() - a.date.getTime())
+      .slice(0, 3); // Show up to 3 recent events
+  };
+
+  const handleEventStoryClick = (event: BarracaEvent, e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent opening barraca modal
+    setSelectedEvent(event);
   };
 
 
@@ -120,6 +135,44 @@ const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
                 />
               </div>
             )}
+
+            {/* Event Story Circles - Top Left */}
+            {(() => {
+              const recentEvents = getRecentEvents(barraca);
+              if (recentEvents.length === 0) return null;
+              
+              return (
+                <div className="absolute top-3 left-3 flex space-x-1">
+                  {recentEvents.map((event, index) => (
+                    <button
+                      key={event.id}
+                      onClick={(e) => handleEventStoryClick(event, e)}
+                      className="relative w-8 h-8 rounded-full overflow-hidden hover:scale-110 transition-transform duration-200"
+                      style={{ zIndex: recentEvents.length - index }}
+                      aria-label={`View ${event.title} photos`}
+                    >
+                      {/* Gradient Ring */}
+                      <div className="absolute inset-0 rounded-full p-0.5 bg-gradient-to-r from-purple-400 via-pink-500 to-red-500">
+                        <div className="w-full h-full rounded-full bg-white p-0.5">
+                          <img
+                            src={event.highlightPhotos[0]?.url}
+                            alt={event.title}
+                            className="w-full h-full object-cover rounded-full"
+                          />
+                        </div>
+                      </div>
+                      
+                      {/* Photo Count Badge */}
+                      {event.photos.length > 1 && (
+                        <div className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-3 h-3 flex items-center justify-center font-bold text-[8px]">
+                          {event.photos.length}
+                        </div>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              );
+            })()}
 
             {/* Mobile Tap Indicator - Only for partnered barracas */}
             {barraca.partnered && (
@@ -254,6 +307,15 @@ const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
           </div>
         </div>
       ))}
+
+      {/* Event Story Viewer */}
+      {selectedEvent && (
+        <EventStoryViewer
+          event={selectedEvent}
+          isOpen={!!selectedEvent}
+          onClose={() => setSelectedEvent(null)}
+        />
+      )}
     </div>
   );
 };

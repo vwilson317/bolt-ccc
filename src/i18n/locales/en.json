@@ -60,7 +60,8 @@
     "limitedInfo": "Limited info",
     "open": "Open",
     "closed": "Closed",
-    "undetermined": "Undetermined"
+    "undetermined": "Undetermined",
+    "previousEvents": "Previous Events"
   },
   "admin": {
     "login": "Admin Login",

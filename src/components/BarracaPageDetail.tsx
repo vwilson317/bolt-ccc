@@ -271,6 +271,18 @@ const BarracaPageDetail: React.FC<BarracaPageDetailProps> = ({
             </div>
           </div>
         )}
+
+        {/* Previous Events Section */}
+        {barraca.previousEvents && barraca.previousEvents.length > 0 && (
+          <div className="mt-6 pt-6 border-t border-gray-200">
+            <EventList 
+              events={barraca.previousEvents}
+              title={t('barraca.previousEvents')}
+              maxEvents={3}
+              showViewAll={true}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

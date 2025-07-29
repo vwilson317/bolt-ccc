@@ -1,6 +1,7 @@
 import { supabase, handleSupabaseError } from '../lib/supabase'
 import type { Barraca } from '../types'
 import type { Database } from '../types/database'
+import { getSampleEventsForBarraca } from '../data/sampleEvents'
 
 
 type BarracaRow = Database['public']['Tables']['barracas']['Row']
@@ -30,6 +31,8 @@ const transformBarracaFromDB = (row: BarracaRow, isOpen: boolean = false): Barra
   specialAdminOverride: row.special_admin_override || false,
   specialAdminOverrideExpires: row.special_admin_override_expires ? new Date(row.special_admin_override_expires) : null,
   ctaButtons: row.cta_buttons as any,
+  // Add sample events for testing (only for partnered barracas)
+  previousEvents: row.partnered ? getSampleEventsForBarraca(row.id) : undefined,
   createdAt: new Date(row.created_at),
   updatedAt: new Date(row.updated_at)
 })
