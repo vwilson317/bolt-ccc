@@ -625,19 +625,6 @@ export class BarracaService {
         handleSupabaseError(error, 'special admin open barraca')
       }
 
-      // Also update Firestore to ensure UI gets the update immediately
-      try {
-        const expiresAt = new Date();
-        expiresAt.setHours(expiresAt.getHours() + durationHours);
-        
-        // Import FirestoreService dynamically to avoid circular dependencies
-        const { FirestoreService } = await import('./firestoreService');
-        await FirestoreService.setSpecialAdminOverride(barracaId, true, expiresAt, 'special_admin');
-      } catch (firestoreError) {
-        console.warn('Failed to update Firestore for special admin override:', firestoreError);
-        // Don't fail the operation if Firestore update fails
-      }
-
       return data || false
     } catch (error) {
       console.error('Error opening barraca with special admin:', error)
@@ -653,16 +640,6 @@ export class BarracaService {
 
       if (error) {
         handleSupabaseError(error, 'special admin close barraca')
-      }
-
-      // Also update Firestore to ensure UI gets the update immediately
-      try {
-        // Import FirestoreService dynamically to avoid circular dependencies
-        const { FirestoreService } = await import('./firestoreService');
-        await FirestoreService.setSpecialAdminOverride(barracaId, false, undefined, 'special_admin');
-      } catch (firestoreError) {
-        console.warn('Failed to update Firestore for special admin override:', firestoreError);
-        // Don't fail the operation if Firestore update fails
       }
 
       return data || false

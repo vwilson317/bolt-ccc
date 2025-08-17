@@ -22,7 +22,8 @@ const Admin: React.FC = () => {
     emailSubscriptions,
     setWeatherOverride,
     weatherOverride,
-    overrideExpiry
+    overrideExpiry,
+    refreshBarracas
   } = useApp();
   const { trackAdminLogin, trackAdminAction } = useAnalytics();
   
@@ -211,10 +212,7 @@ const Admin: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <SpecialAdminPanel 
             barracas={barracas}
-            onRefresh={() => {
-              // This will trigger a refresh of the barracas data
-              window.location.reload();
-            }}
+            onRefresh={refreshBarracas}
           />
         </div>
       </div>
@@ -574,11 +572,7 @@ const Admin: React.FC = () => {
         {activeTab === 'special' && (
           <SpecialAdminPanel 
             barracas={barracas}
-            onRefresh={() => {
-              // Trigger a refresh of the barracas data without page reload
-              // The real-time updates should handle this automatically via Firestore
-              console.log('Special admin panel refresh requested');
-            }}
+            onRefresh={refreshBarracas}
           />
         )}
 

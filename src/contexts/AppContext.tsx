@@ -71,8 +71,40 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     status: 'all'
   });
   const [isLoading, setIsLoading] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [isSpecialAdmin, setIsSpecialAdmin] = useState(false);
+  
+  // Initialize admin state from localStorage
+  const [isAdmin, setIsAdmin] = useState(() => {
+    const savedAdminState = localStorage.getItem('admin_session');
+    if (savedAdminState) {
+      try {
+        const parsed = JSON.parse(savedAdminState);
+        // Check if session is still valid (24 hours)
+        if (parsed.timestamp && (Date.now() - parsed.timestamp) < 24 * 60 * 60 * 1000) {
+          return parsed.isAdmin || false;
+        }
+      } catch (error) {
+        console.warn('Error parsing admin session:', error);
+      }
+    }
+    return false;
+  });
+  
+  const [isSpecialAdmin, setIsSpecialAdmin] = useState(() => {
+    const savedAdminState = localStorage.getItem('admin_session');
+    if (savedAdminState) {
+      try {
+        const parsed = JSON.parse(savedAdminState);
+        // Check if session is still valid (24 hours)
+        if (parsed.timestamp && (Date.now() - parsed.timestamp) < 24 * 60 * 60 * 1000) {
+          return parsed.isSpecialAdmin || false;
+        }
+      } catch (error) {
+        console.warn('Error parsing admin session:', error);
+      }
+    }
+    return false;
+  });
+  
   const [emailSubscriptions, setEmailSubscriptions] = useState<EmailSubscription[]>([]);
   const [currentLanguage, setCurrentLanguage] = useState<string>('en');
   const [weatherOverride, setWeatherOverride] = useState(false);
@@ -94,14 +126,12 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   // Enhanced barraca fetching with Firestore status
   const fetchBarracasWithStatus = useCallback(async (): Promise<Barraca[]> => {
     try {
-      const fetchedBarracas = await fetchBarracas();
+      const barracas = await BarracaService.getAll();
       
-      // Enhance barracas with real-time status from Firestore
-      const enhancedBarracas = fetchedBarracas.map(barraca => {
+      // Overlay Firestore status on top of database data
+      const barracasWithStatus = barracas.map(barraca => {
         const firestoreStatus = barracaStatuses.get(barraca.id);
-        
         if (firestoreStatus) {
-          // Use Firestore status if available
           return {
             ...barraca,
             isOpen: firestoreStatus.isOpen,
@@ -110,37 +140,74 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
             specialAdminOverrideExpires: firestoreStatus.specialAdminOverrideExpires
           };
         }
-        
-        // Fallback to database status
         return barraca;
       });
-
-      return enhancedBarracas;
+      
+      return barracasWithStatus;
     } catch (error) {
-      console.error('Failed to fetch barracas with status:', error);
+      console.error('Error fetching barracas with status:', error);
       throw error;
     }
   }, [barracaStatuses]);
 
-  // Sync barracas to Firestore when they're loaded
-  const syncBarracasToFirestore = useCallback(async (barracas: Barraca[]) => {
-    try {
-      console.log('🔄 Syncing barracas to Firestore...');
-      for (const barraca of barracas) {
-        await FirestoreService.syncBarracaToFirestore(barraca);
+  // Utility function to check and clear expired admin sessions
+  const checkAndClearExpiredSession = useCallback(() => {
+    const savedAdminState = localStorage.getItem('admin_session');
+    if (savedAdminState) {
+      try {
+        const parsed = JSON.parse(savedAdminState);
+        // Check if session is expired (24 hours)
+        if (parsed.timestamp && (Date.now() - parsed.timestamp) >= 24 * 60 * 60 * 1000) {
+          localStorage.removeItem('admin_session');
+          setIsAdmin(false);
+          setIsSpecialAdmin(false);
+          console.log('Admin session expired and cleared');
+        }
+      } catch (error) {
+        console.warn('Error checking admin session:', error);
+        localStorage.removeItem('admin_session');
       }
-      console.log(`✅ Synced ${barracas.length} barracas to Firestore`);
-    } catch (error) {
-      console.error('Failed to sync barracas to Firestore:', error);
     }
   }, []);
+
+  // Utility function to extend admin session
+  const extendAdminSession = useCallback(() => {
+    const savedAdminState = localStorage.getItem('admin_session');
+    if (savedAdminState) {
+      try {
+        const parsed = JSON.parse(savedAdminState);
+        const updatedSessionData = {
+          ...parsed,
+          timestamp: Date.now()
+        };
+        localStorage.setItem('admin_session', JSON.stringify(updatedSessionData));
+      } catch (error) {
+        console.warn('Error extending admin session:', error);
+      }
+    }
+  }, []);
+
+  // Check for expired sessions on mount
+  useEffect(() => {
+    checkAndClearExpiredSession();
+  }, [checkAndClearExpiredSession]);
+
+  // Set up periodic session check (every hour)
+  useEffect(() => {
+    const interval = setInterval(() => {
+      checkAndClearExpiredSession();
+    }, 60 * 60 * 1000); // Check every hour
+
+    return () => clearInterval(interval);
+  }, [checkAndClearExpiredSession]);
 
   // Load barracas from database on mount
   useEffect(() => {
     const loadBarracas = async () => {
       setIsLoading(true);
       try {
-        const fetchedBarracas = await fetchBarracasWithStatus();
+        console.log('🔄 Loading barracas from Supabase...');
+        const fetchedBarracas = await BarracaService.getAll();
         
         // Move barraca with barracaNumber '80' to the front if it exists
         const index80 = fetchedBarracas.findIndex(b => b.barracaNumber === '80');
@@ -169,9 +236,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
         }
         
         setBarracas(fetchedBarracas);
-        
-        // Sync to Firestore after loading
-        await syncBarracasToFirestore(fetchedBarracas);
+        console.log('✅ Barracas loaded from Supabase');
       } catch (error) {
         console.error('Failed to load barracas:', error);
         // Keep empty array if loading fails
@@ -181,7 +246,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     };
 
     loadBarracas();
-  }, [fetchBarracasWithStatus, syncBarracasToFirestore]);
+  }, []);
 
   // Load email subscriptions from database on mount
   useEffect(() => {
@@ -350,35 +415,39 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
 
   const addBarraca = useCallback(async (barracaData: Omit<Barraca, 'id' | 'createdAt' | 'updatedAt'>) => {
     try {
+      // Extend admin session if user is admin
+      if (isAdmin || isSpecialAdmin) {
+        extendAdminSession();
+      }
+      
       const newBarraca = await BarracaService.create(barracaData);
       setBarracas(prev => [...prev, newBarraca]);
-      
-      // Sync new barraca to Firestore
-      await FirestoreService.syncBarracaToFirestore(newBarraca);
       
       return newBarraca;
     } catch (error) {
       console.error('Failed to add barraca:', error);
       throw error;
     }
-  }, []);
+  }, [isAdmin, isSpecialAdmin, extendAdminSession]);
 
   const updateBarraca = useCallback(async (id: string, updates: Partial<Barraca>) => {
     try {
+      // Extend admin session if user is admin
+      if (isAdmin || isSpecialAdmin) {
+        extendAdminSession();
+      }
+      
       const updatedBarraca = await BarracaService.update(id, updates);
       setBarracas(prev => prev.map(barraca => 
         barraca.id === id ? updatedBarraca : barraca
       ));
-      
-      // Sync updated barraca to Firestore
-      await FirestoreService.syncBarracaToFirestore(updatedBarraca);
       
       return updatedBarraca;
     } catch (error) {
       console.error('Failed to update barraca:', error);
       throw error;
     }
-  }, []);
+  }, [isAdmin, isSpecialAdmin, extendAdminSession]);
 
   const deleteBarraca = useCallback(async (id: string) => {
     try {
@@ -447,12 +516,30 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     if (email === 'admin@cariocacoastal.com' && password === 'admin123') {
       setIsAdmin(true);
       setIsSpecialAdmin(false); // Ensure special admin is false
+      
+      // Save admin session to localStorage
+      const sessionData = {
+        isAdmin: true,
+        isSpecialAdmin: false,
+        timestamp: Date.now()
+      };
+      localStorage.setItem('admin_session', JSON.stringify(sessionData));
+      
       return true;
     }
     // Special admin authentication
     if (email === 'special@cariocacoastal.com' && password === 'special123') {
       setIsAdmin(true);
       setIsSpecialAdmin(true); // Set special admin flag
+      
+      // Save admin session to localStorage
+      const sessionData = {
+        isAdmin: true,
+        isSpecialAdmin: true,
+        timestamp: Date.now()
+      };
+      localStorage.setItem('admin_session', JSON.stringify(sessionData));
+      
       return true;
     }
     return false;
@@ -461,6 +548,9 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const adminLogout = useCallback(() => {
     setIsAdmin(false);
     setIsSpecialAdmin(false);
+    
+    // Clear admin session from localStorage
+    localStorage.removeItem('admin_session');
   }, []);
 
   const refreshWeather = useCallback(async () => {
@@ -500,7 +590,13 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   // Update the existing refreshBarracas function
   const refreshBarracas = useCallback(async () => {
     try {
-      const fetchedBarracas = await fetchBarracasWithStatus();
+      // Extend admin session if user is admin
+      if (isAdmin || isSpecialAdmin) {
+        extendAdminSession();
+      }
+      
+      console.log('🔄 Refreshing barracas from Supabase...');
+      const fetchedBarracas = await BarracaService.getAll();
       
       // Sort barracas: partnered first, then non-partnered, with location sorting within each group
       fetchedBarracas.sort((a, b) => {
@@ -513,11 +609,12 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
       });
       
       setBarracas(fetchedBarracas);
+      console.log('✅ Barracas refreshed from Supabase');
     } catch (error) {
       console.error('Failed to refresh barracas:', error);
       throw error;
     }
-  }, [fetchBarracasWithStatus]);
+  }, [isAdmin, isSpecialAdmin, extendAdminSession]);
 
   useEffect(() => {
     // Register service worker and get FCM token
