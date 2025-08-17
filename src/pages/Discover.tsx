@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Search, Filter, MapPin, X, CheckCircle, XCircle } from 'lucide-react';
+import { Search, Filter, MapPin, X, CheckCircle, XCircle, Star } from 'lucide-react';
 import { useApp } from '../contexts/AppContext';
 import { useStory } from '../contexts/StoryContext';
 import { useWeather } from '../contexts/WeatherContext';
@@ -8,6 +8,7 @@ import BarracaGrid from '../components/BarracaGrid';
 import StoryCarousel from '../components/StoryCarousel';
 import WeatherWidget from '../components/WeatherWidget';
 import LocationFilterCheckboxes from '../components/LocationFilterCheckboxes';
+import StarRating from '../components/StarRating';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 
 const Discover: React.FC = () => {
@@ -37,6 +38,13 @@ const Discover: React.FC = () => {
     { value: 'closed', label: t('discover.filters.closed'), icon: XCircle }
   ];
 
+  const ratingOptions = [
+    { value: undefined, label: t('discover.filters.allRatings'), icon: null },
+    { value: 3, label: t('discover.filters.excellent'), icon: Star, rating: 3 },
+    { value: 2, label: t('discover.filters.great'), icon: Star, rating: 2 },
+    { value: 1, label: t('discover.filters.good'), icon: Star, rating: 1 }
+  ];
+
   const handleSearchChange = (query: string) => {
     updateSearchFilters({ query });
   };
@@ -51,6 +59,10 @@ const Discover: React.FC = () => {
     updateSearchFilters({ status });
   };
 
+  const handleRatingFilter = (rating: 1 | 2 | 3 | undefined) => {
+    updateSearchFilters({ rating });
+  };
+
   const handleLocationsChange = React.useCallback((locations: string[]) => {
     // Update both location (for backward compatibility) and locations array
     if (locations.length === 1) {
@@ -63,10 +75,10 @@ const Discover: React.FC = () => {
   }, [updateSearchFilters]);
 
   const clearFilters = () => {
-    updateSearchFilters({ query: '', openNow: false, location: '', locations: [], status: 'all' });
+    updateSearchFilters({ query: '', openNow: false, location: '', locations: [], status: 'all', rating: undefined });
   };
 
-  const hasActiveFilters = searchFilters.query || searchFilters.location || searchFilters.locations.length > 0 || searchFilters.status !== 'all';
+  const hasActiveFilters = searchFilters.query || searchFilters.location || searchFilters.locations.length > 0 || searchFilters.status !== 'all' || searchFilters.rating !== undefined;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -139,28 +151,59 @@ const Discover: React.FC = () => {
 
           {/* Always Visible Filter Panel */}
           {showFilters && (
-            <div className="bg-white rounded-xl p-4 shadow-lg border border-gray-200 mb-6">
-              <div className="space-y-4">
+            <div className="bg-white rounded-xl p-3 md:p-4 shadow-sm border border-gray-200 mb-6">
+              <div className="space-y-3">
                 {/* Availability Filter */}
                 <div>
-                  <div className="flex items-center mb-3">
-                    <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
-                    <h3 className="text-sm font-medium text-gray-700" data-lingo-skip>Availability</h3>
+                  <div className="flex items-center mb-2">
+                    <CheckCircle className="h-3.5 w-3.5 text-green-500 mr-1.5" />
+                    <h3 className="text-xs md:text-sm font-medium text-gray-700" data-lingo-skip>Availability</h3>
                   </div>
-                  <div className="flex gap-2 bg-gray-100 rounded-lg p-1 w-fit">
+                  <div className="flex gap-1 md:gap-2 bg-gray-100 rounded-lg p-1 w-fit">
                     {availabilityOptions.map((option) => {
                       const Icon = option.icon;
                       return (
                         <button
                           key={option.value}
                           onClick={() => handleAvailabilityFilter(option.value as 'all' | 'open' | 'closed')}
-                          className={`flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                          className={`flex items-center px-2 md:px-3 py-1.5 md:py-2 rounded-md text-xs md:text-sm font-medium transition-colors ${
                             searchFilters.status === option.value
                               ? 'bg-beach-500 text-white shadow-sm'
                               : 'text-gray-600 hover:text-gray-900 hover:bg-white'
                           }`}
                         >
-                          {Icon && <Icon className="h-4 w-4 mr-1" />}
+                          {Icon && <Icon className="h-3.5 w-3.5 md:h-4 md:w-4 mr-1" />}
+                          {option.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Rating Filter */}
+                <div>
+                  <div className="flex items-center mb-2">
+                    <Star className="h-3.5 w-3.5 text-yellow-500 mr-1.5" />
+                    <h3 className="text-xs md:text-sm font-medium text-gray-700" data-lingo-skip>Rating</h3>
+                  </div>
+                  <div className="flex gap-1 md:gap-2 bg-gray-100 rounded-lg p-1 w-fit">
+                    {ratingOptions.map((option) => {
+                      const Icon = option.icon;
+                      return (
+                        <button
+                          key={option.value ?? 'all'}
+                          onClick={() => handleRatingFilter(option.value)}
+                          className={`flex items-center px-2 md:px-3 py-1.5 md:py-2 rounded-md text-xs md:text-sm font-medium transition-colors ${
+                            searchFilters.rating === option.value
+                              ? 'bg-yellow-500 text-white shadow-sm'
+                              : 'text-gray-600 hover:text-gray-900 hover:bg-white'
+                          }`}
+                        >
+                          {option.rating ? (
+                            <StarRating rating={option.rating} size="sm" className="mr-1" />
+                          ) : (
+                            Icon && <Icon className="h-3.5 w-3.5 md:h-4 md:w-4 mr-1" />
+                          )}
                           {option.label}
                         </button>
                       );
@@ -180,15 +223,15 @@ const Discover: React.FC = () => {
 
           {/* Active Filters Display - Compact */}
           {hasActiveFilters && (
-            <div className="flex flex-wrap gap-2 mb-6">
+            <div className="flex flex-wrap gap-1.5 md:gap-2 mb-6">
               {searchFilters.query && (
-                <span className="bg-beach-100 text-beach-800 px-3 py-1 rounded-full text-sm flex items-center">
+                <span className="bg-beach-100 text-beach-800 px-2 md:px-3 py-1 rounded-full text-xs md:text-sm flex items-center">
                   <Search className="h-3 w-3 mr-1" />
                   "{searchFilters.query}"
                 </span>
               )}
               {searchFilters.status !== 'all' && (
-                <span className={`px-3 py-1 rounded-full text-sm flex items-center ${
+                <span className={`px-2 md:px-3 py-1 rounded-full text-xs md:text-sm flex items-center ${
                   searchFilters.status === 'open' 
                     ? 'bg-green-100 text-green-800' 
                     : 'bg-red-100 text-red-800'
@@ -202,7 +245,7 @@ const Discover: React.FC = () => {
                 </span>
               )}
               {searchFilters.locations.length > 0 && (
-                <span className="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm flex items-center">
+                <span className="bg-purple-100 text-purple-800 px-2 md:px-3 py-1 rounded-full text-xs md:text-sm flex items-center">
                   <MapPin className="h-3 w-3 mr-1" />
                   {searchFilters.locations.length === 1 
                     ? searchFilters.locations[0]
@@ -210,6 +253,13 @@ const Discover: React.FC = () => {
                     ? searchFilters.locations.join(', ')
                     : `${searchFilters.locations.length} locations`
                   }
+                </span>
+              )}
+              {searchFilters.rating && (
+                <span className="bg-yellow-100 text-yellow-800 px-2 md:px-3 py-1 rounded-full text-xs md:text-sm flex items-center">
+                  <Star className="h-3 w-3 mr-1" />
+                  <StarRating rating={searchFilters.rating} size="sm" className="mr-1" />
+                  {searchFilters.rating === 3 ? 'Excellent' : searchFilters.rating === 2 ? 'Great' : 'Good'}
                 </span>
               )}
             </div>

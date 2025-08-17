@@ -40,11 +40,48 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
     },
     specialAdminOverride: false,
     specialAdminOverrideExpires: null as Date | null,
+    rating: undefined as 1 | 2 | 3 | undefined,
     ctaButtons: [] as CTAButtonConfig[]
   });
 
   const [isSaving, setIsSaving] = useState(false);
   const [showCTAConfig, setShowCTAConfig] = useState(false);
+  const [imageErrors, setImageErrors] = useState<Record<string, boolean>>({});
+  const [saveMessage, setSaveMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
+  // Helper function to validate image URL
+  const validateImageUrl = (url: string): boolean => {
+    if (!url) return false;
+    try {
+      const urlObj = new URL(url);
+      return ['http:', 'https:'].includes(urlObj.protocol);
+    } catch {
+      return false;
+    }
+  };
+
+  // Helper function to handle image load errors
+  const handleImageError = (imageKey: string) => {
+    setImageErrors(prev => ({ ...prev, [imageKey]: true }));
+  };
+
+  // Helper function to handle image load success
+  const handleImageSuccess = (imageKey: string) => {
+    setImageErrors(prev => ({ ...prev, [imageKey]: false }));
+  };
+
+  // Popular image hosting services
+  const imageHostingServices = [
+    { name: 'Imgur', url: 'https://imgur.com/upload' },
+    { name: 'Cloudinary', url: 'https://cloudinary.com/console/media_library' },
+    { name: 'Unsplash', url: 'https://unsplash.com' },
+    { name: 'Pexels', url: 'https://pexels.com' },
+    { name: 'Pixabay', url: 'https://pixabay.com' }
+  ];
+
+  const openImageHostingService = (serviceUrl: string) => {
+    window.open(serviceUrl, '_blank');
+  };
 
   // Complete list of South Zone neighborhoods
   const southZoneNeighborhoods = [
@@ -99,6 +136,7 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
           },
           specialAdminOverride: barraca.specialAdminOverride,
           specialAdminOverrideExpires: barraca.specialAdminOverrideExpires,
+          rating: barraca.rating,
           ctaButtons: barraca.ctaButtons || []
         });
       }
@@ -108,13 +146,28 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSaving(true);
+    setSaveMessage(null);
 
     try {
+      // Ensure at least one horizontal image exists
+      const filteredHorizontalImages = formData.photos.horizontal.filter(img => img.trim() !== '');
+      const filteredVerticalImages = formData.photos.vertical.filter(img => img.trim() !== '');
+      
+      // Add placeholder image if no horizontal images provided
+      const finalHorizontalImages = filteredHorizontalImages.length > 0 
+        ? filteredHorizontalImages 
+        : ['/api/placeholder/600/400'];
+
+      // Generate barraca number if not provided
+      const finalBarracaNumber = formData.barracaNumber.trim() || 
+        (barracas.length + 1).toString().padStart(3, '0');
+
       const barracaData = {
         ...formData,
+        barracaNumber: finalBarracaNumber,
         photos: {
-          horizontal: formData.photos.horizontal.filter(img => img.trim() !== ''),
-          vertical: formData.photos.vertical.filter(img => img.trim() !== ''),
+          horizontal: finalHorizontalImages,
+          vertical: filteredVerticalImages,
         },
         menuPreview: formData.menuPreview.filter(item => item.trim() !== ''),
         amenities: formData.amenities.filter(amenity => amenity.trim() !== ''),
@@ -123,14 +176,23 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
 
       if (barracaId) {
         await updateBarraca(barracaId, barracaData);
+        setSaveMessage({ type: 'success', text: 'Barraca updated successfully!' });
       } else {
         await addBarraca(barracaData);
+        setSaveMessage({ type: 'success', text: 'Barraca created successfully!' });
       }
 
-      onSave();
+      // Auto-hide success message after 3 seconds
+      setTimeout(() => {
+        setSaveMessage(null);
+        onSave();
+      }, 3000);
     } catch (error) {
       console.error('Failed to save barraca:', error);
-      // Error message could be added here
+      setSaveMessage({ 
+        type: 'error', 
+        text: `Failed to save barraca: ${error instanceof Error ? error.message : 'Unknown error'}` 
+      });
     } finally {
       setIsSaving(false);
     }
@@ -162,6 +224,12 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
           [field]: prev.photos[field].map((item, i) => i === index ? value : item)
         }
       }));
+      
+      // Clear image error when URL is changed
+      const imageKey = `${field}-${index}`;
+      if (imageErrors[imageKey]) {
+        setImageErrors(prev => ({ ...prev, [imageKey]: false }));
+      }
     } else {
       setFormData(prev => ({
         ...prev,
@@ -185,6 +253,23 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
         [field]: prev[field].filter((_, i) => i !== index)
       }));
     }
+  };
+
+  // Reorder images
+  const reorderImage = (field: 'horizontal' | 'vertical', fromIndex: number, toIndex: number) => {
+    setFormData(prev => {
+      const images = [...prev.photos[field]];
+      const [movedImage] = images.splice(fromIndex, 1);
+      images.splice(toIndex, 0, movedImage);
+      
+      return {
+        ...prev,
+        photos: {
+          ...prev.photos,
+          [field]: images
+        }
+      };
+    });
   };
 
   // CTA Button management functions
@@ -241,6 +326,28 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Success/Error Messages */}
+        {saveMessage && (
+          <div className={`p-4 rounded-lg border ${
+            saveMessage.type === 'success' 
+              ? 'bg-green-50 border-green-200 text-green-800' 
+              : 'bg-red-50 border-red-200 text-red-800'
+          }`}>
+            <div className="flex items-center">
+              {saveMessage.type === 'success' ? (
+                <svg className="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+              ) : (
+                <svg className="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                </svg>
+              )}
+              <span className="font-medium">{saveMessage.text}</span>
+            </div>
+          </div>
+        )}
+
         {/* Basic Information */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
@@ -288,6 +395,26 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
           </div>
         </div>
 
+        {/* Rating */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Rating
+          </label>
+          <select
+            value={formData.rating || ''}
+            onChange={(e) => setFormData(prev => ({ 
+              ...prev, 
+              rating: e.target.value ? parseInt(e.target.value) as 1 | 2 | 3 : undefined 
+            }))}
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
+          >
+            <option value="">No Rating</option>
+            <option value="1">⭐ Good (1 star)</option>
+            <option value="2">⭐⭐ Great (2 stars)</option>
+            <option value="3">⭐⭐⭐ Excellent (3 stars)</option>
+          </select>
+        </div>
+
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
             {t('admin.form.description')} {t('admin.form.required')}
@@ -329,6 +456,338 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
               />
               <span className="ml-2 text-sm text-gray-700">{t('admin.form.partnered')}</span>
             </label>
+          </div>
+        </div>
+
+        {/* Images - Available for all barracas */}
+        <div>
+          <h4 className="text-lg font-medium text-gray-900 mb-3">{t('admin.form.images')}</h4>
+          
+          {/* Preview Section */}
+          {formData.photos.horizontal.length > 0 && formData.photos.horizontal[0].trim() !== '' && (
+            <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+              <h5 className="text-sm font-medium text-gray-700 mb-3">Preview:</h5>
+              <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+                <img
+                  src={formData.photos.horizontal[0]}
+                  alt="Preview"
+                  className="w-full h-48 object-cover"
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none';
+                  }}
+                />
+                <div className="p-4">
+                  <h3 className="font-semibold text-gray-900">{formData.name || 'Barraca Name'}</h3>
+                  <p className="text-sm text-gray-600">{formData.location || 'Location'}</p>
+                  {formData.description && (
+                    <p className="text-sm text-gray-700 mt-2 line-clamp-2">{formData.description}</p>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Horizontal Images */}
+          <div className="mb-6">
+            <div className="flex justify-between items-center mb-3">
+              <label className="block text-sm font-medium text-gray-700">
+                {t('admin.form.horizontalImages')} (Landscape)
+              </label>
+              <button
+                type="button"
+                onClick={() => addArrayItem('horizontal')}
+                className="text-beach-600 hover:text-beach-800 flex items-center text-sm bg-beach-50 px-3 py-1 rounded-lg hover:bg-beach-100 transition-colors"
+              >
+                <Plus className="h-4 w-4 mr-1" />
+                {t('admin.form.addHorizontalImage')}
+              </button>
+            </div>
+            
+            <div className="space-y-3">
+              {formData.photos.horizontal.map((image, index) => (
+                <div key={index} className="flex gap-3 items-start">
+                  <div className="flex-1">
+                    <input
+                      type="url"
+                      value={image}
+                      onChange={(e) => updateArrayItem('horizontal', index, e.target.value)}
+                      placeholder="https://example.com/image.jpg"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
+                    />
+                    {image && (
+                      <div className="mt-2">
+                        {!validateImageUrl(image) && (
+                          <div className="text-red-500 text-xs mb-1">Invalid URL format</div>
+                        )}
+                        <img
+                          src={image}
+                          alt={`Horizontal image ${index + 1}`}
+                          className={`w-full h-32 object-cover rounded-lg border ${
+                            imageErrors[`horizontal-${index}`] 
+                              ? 'border-red-300 bg-red-50' 
+                              : 'border-gray-200'
+                          }`}
+                          onError={() => handleImageError(`horizontal-${index}`)}
+                          onLoad={() => handleImageSuccess(`horizontal-${index}`)}
+                        />
+                        {imageErrors[`horizontal-${index}`] && (
+                          <div className="text-red-500 text-xs mt-1">Failed to load image</div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    {index > 0 && (
+                      <button
+                        type="button"
+                        onClick={() => reorderImage('horizontal', index, index - 1)}
+                        className="p-1 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded transition-colors"
+                        title="Move up"
+                      >
+                        <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                        </svg>
+                      </button>
+                    )}
+                    {index < formData.photos.horizontal.length - 1 && (
+                      <button
+                        type="button"
+                        onClick={() => reorderImage('horizontal', index, index + 1)}
+                        className="p-1 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded transition-colors"
+                        title="Move down"
+                      >
+                        <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </button>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => removeArrayItem('horizontal', index)}
+                      className="p-1 text-red-600 hover:text-red-800 hover:bg-red-50 rounded transition-colors"
+                      title="Remove image"
+                    >
+                      <Trash2 className="h-3 w-3" />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+            
+            {formData.photos.horizontal.length === 0 && (
+              <div className="text-center py-8 border-2 border-dashed border-gray-300 rounded-lg bg-gray-50">
+                <div className="text-gray-500">
+                  <svg className="mx-auto h-12 w-12 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  <p className="text-sm">No horizontal images added</p>
+                  <p className="text-xs text-gray-400 mt-1">Add landscape images for better display</p>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Vertical Images */}
+          <div>
+            <div className="flex justify-between items-center mb-3">
+              <label className="block text-sm font-medium text-gray-700">
+                {t('admin.form.verticalImages')} (Portrait)
+              </label>
+              <button
+                type="button"
+                onClick={() => addArrayItem('vertical')}
+                className="text-beach-600 hover:text-beach-800 flex items-center text-sm bg-beach-50 px-3 py-1 rounded-lg hover:bg-beach-100 transition-colors"
+              >
+                <Plus className="h-4 w-4 mr-1" />
+                {t('admin.form.addVerticalImage')}
+              </button>
+            </div>
+            
+            <div className="space-y-3">
+              {formData.photos.vertical.map((image, index) => (
+                <div key={index} className="flex gap-3 items-start">
+                  <div className="flex-1">
+                    <input
+                      type="url"
+                      value={image}
+                      onChange={(e) => updateArrayItem('vertical', index, e.target.value)}
+                      placeholder="https://example.com/image.jpg"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
+                    />
+                    {image && (
+                      <div className="mt-2">
+                        {!validateImageUrl(image) && (
+                          <div className="text-red-500 text-xs mb-1">Invalid URL format</div>
+                        )}
+                        <img
+                          src={image}
+                          alt={`Vertical image ${index + 1}`}
+                          className={`w-24 h-32 object-cover rounded-lg border ${
+                            imageErrors[`vertical-${index}`] 
+                              ? 'border-red-300 bg-red-50' 
+                              : 'border-gray-200'
+                          }`}
+                          onError={() => handleImageError(`vertical-${index}`)}
+                          onLoad={() => handleImageSuccess(`vertical-${index}`)}
+                        />
+                        {imageErrors[`vertical-${index}`] && (
+                          <div className="text-red-500 text-xs mt-1">Failed to load image</div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    {index > 0 && (
+                      <button
+                        type="button"
+                        onClick={() => reorderImage('vertical', index, index - 1)}
+                        className="p-1 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded transition-colors"
+                        title="Move up"
+                      >
+                        <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                        </svg>
+                      </button>
+                    )}
+                    {index < formData.photos.vertical.length - 1 && (
+                      <button
+                        type="button"
+                        onClick={() => reorderImage('vertical', index, index + 1)}
+                        className="p-1 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded transition-colors"
+                        title="Move down"
+                      >
+                        <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </button>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => removeArrayItem('vertical', index)}
+                      className="p-1 text-red-600 hover:text-red-800 hover:bg-red-50 rounded transition-colors"
+                      title="Remove image"
+                    >
+                      <Trash2 className="h-3 w-3" />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+            
+            {formData.photos.vertical.length === 0 && (
+              <div className="text-center py-8 border-2 border-dashed border-gray-300 rounded-lg bg-gray-50">
+                <div className="text-gray-500">
+                  <svg className="mx-auto h-12 w-12 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  <p className="text-sm">No vertical images added</p>
+                  <p className="text-xs text-gray-400 mt-1">Add portrait images for mobile display</p>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Image Hosting Services */}
+          <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+            <div className="flex items-start justify-between">
+              <div className="flex items-start">
+                <svg className="h-5 w-5 text-green-400 mt-0.5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
+                </svg>
+                <div className="text-sm text-green-700">
+                  <p className="font-medium mb-1">Need images? Try these hosting services:</p>
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {imageHostingServices.map((service) => (
+                      <button
+                        key={service.name}
+                        type="button"
+                        onClick={() => openImageHostingService(service.url)}
+                        className="text-xs bg-green-100 hover:bg-green-200 text-green-800 px-2 py-1 rounded transition-colors"
+                      >
+                        {service.name}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Image Summary */}
+          <div className="mt-4 p-4 bg-gray-50 border border-gray-200 rounded-lg">
+            <div className="flex items-center justify-between">
+              <div className="text-sm text-gray-700">
+                <span className="font-medium">Image Summary:</span>
+                <span className="ml-2">
+                  {formData.photos.horizontal.filter(img => img.trim() !== '').length} horizontal, 
+                  {formData.photos.vertical.filter(img => img.trim() !== '').length} vertical
+                </span>
+              </div>
+              <div className="flex items-center space-x-2">
+                {formData.photos.horizontal.filter(img => img.trim() !== '').length === 0 && (
+                  <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded">No horizontal images</span>
+                )}
+                {Object.values(imageErrors).some(error => error) && (
+                  <span className="text-xs bg-red-100 text-red-800 px-2 py-1 rounded">Some images failed to load</span>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Image Tips */}
+          <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+            <div className="flex items-start">
+              <svg className="h-5 w-5 text-blue-400 mt-0.5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+              </svg>
+              <div className="text-sm text-blue-700">
+                <p className="font-medium mb-1">Image Tips:</p>
+                <ul className="space-y-1 text-xs">
+                  <li>• Horizontal images: Use landscape photos (16:9 or 4:3 ratio) for best display</li>
+                  <li>• Vertical images: Use portrait photos (3:4 or 9:16 ratio) for mobile view</li>
+                  <li>• Supported formats: JPG, PNG, WebP</li>
+                  <li>• Recommended size: At least 800px wide for horizontal, 600px tall for vertical</li>
+                  <li>• First horizontal image will be used as the main cover photo</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Contact Information - Available for all barracas */}
+        <div>
+          <h4 className="text-lg font-medium text-gray-900 mb-3">{t('admin.form.contact')}</h4>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                WhatsApp
+              </label>
+              <input
+                type="tel"
+                value={formData.contact.phone}
+                onChange={(e) => setFormData(prev => ({
+                  ...prev,
+                  contact: { ...prev.contact, phone: e.target.value }
+                }))}
+                placeholder="+55 21 99999-0000"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                {t('admin.form.email')}
+              </label>
+              <input
+                type="email"
+                value={formData.contact.email}
+                onChange={(e) => setFormData(prev => ({
+                  ...prev,
+                  contact: { ...prev.contact, email: e.target.value }
+                }))}
+                placeholder="contato@barraca.com"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
+              />
+            </div>
           </div>
         </div>
 
@@ -491,75 +950,6 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
               )}
             </div>
 
-            {/* Images */}
-            <div>
-              <div className="flex justify-between items-center mb-2">
-                <label className="block text-sm font-medium text-gray-700">
-                  {t('admin.form.horizontalImages')}
-                </label>
-                <button
-                  type="button"
-                  onClick={() => addArrayItem('horizontal')}
-                  className="text-beach-600 hover:text-beach-800 flex items-center text-sm"
-                >
-                  <Plus className="h-4 w-4 mr-1" />
-                  {t('admin.form.addHorizontalImage')}
-                </button>
-              </div>
-              {formData.photos.horizontal.map((image, index) => (
-                <div key={index} className="flex gap-2 mb-2">
-                  <input
-                    type="url"
-                    value={image}
-                    onChange={(e) => updateArrayItem('horizontal', index, e.target.value)}
-                    placeholder="https://example.com/image.jpg"
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => removeArrayItem('horizontal', index)}
-                    className="p-2 text-red-600 hover:text-red-800"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </button>
-                </div>
-              ))}
-            </div>
-            {/* Vertical Images */}
-            <div>
-              <div className="flex justify-between items-center mb-2">
-                <label className="block text-sm font-medium text-gray-700">
-                  {t('admin.form.verticalImages')}
-                </label>
-                <button
-                  type="button"
-                  onClick={() => addArrayItem('vertical')}
-                  className="text-beach-600 hover:text-beach-800 flex items-center text-sm"
-                >
-                  <Plus className="h-4 w-4 mr-1" />
-                  {t('admin.form.addVerticalImage')}
-                </button>
-              </div>
-              {formData.photos.vertical.map((image, index) => (
-                <div key={index} className="flex gap-2 mb-2">
-                  <input
-                    type="url"
-                    value={image}
-                    onChange={(e) => updateArrayItem('vertical', index, e.target.value)}
-                    placeholder="https://example.com/image.jpg"
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => removeArrayItem('vertical', index)}
-                    className="p-2 text-red-600 hover:text-red-800"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </button>
-                </div>
-              ))}
-            </div>
-
             {/* Menu Preview */}
             <div>
               <div className="flex justify-between items-center mb-2">
@@ -593,43 +983,6 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
                   </button>
                 </div>
               ))}
-            </div>
-
-            {/* Contact Information */}
-            <div>
-              <h4 className="text-lg font-medium text-gray-900 mb-3">{t('admin.form.contact')}</h4>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    WhatsApp
-                  </label>
-                  <input
-                    type="tel"
-                    value={formData.contact.phone}
-                    onChange={(e) => setFormData(prev => ({
-                      ...prev,
-                      contact: { ...prev.contact, phone: e.target.value }
-                    }))}
-                    placeholder="+55 21 99999-0000"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    {t('admin.form.email')}
-                  </label>
-                  <input
-                    type="email"
-                    value={formData.contact.email}
-                    onChange={(e) => setFormData(prev => ({
-                      ...prev,
-                      contact: { ...prev.contact, email: e.target.value }
-                    }))}
-                    placeholder="contato@barraca.com"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
-                  />
-                </div>
-              </div>
             </div>
 
             {/* Amenities */}

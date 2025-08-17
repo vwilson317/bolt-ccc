@@ -96,6 +96,7 @@ CREATE TABLE IF NOT EXISTS barracas (
   amenities TEXT[],
   weather_dependent BOOLEAN,
   cta_buttons JSONB,
+  rating INTEGER CHECK (rating >= 1 AND rating <= 3),
   created_at TIMESTAMPTZ,
   updated_at TIMESTAMPTZ
 );
@@ -113,7 +114,7 @@ END $$;
 TRUNCATE TABLE visitor_analytics, weather_cache, email_subscriptions, stories, business_hours, barracas CASCADE;
 
 -- Insert comprehensive barraca data for development
-INSERT INTO barracas (id, name, barraca_number, location, coordinates, is_open, typical_hours, description, images, menu_preview, contact, amenities, weather_dependent, cta_buttons, created_at, updated_at) VALUES
+INSERT INTO barracas (id, name, barraca_number, location, coordinates, is_open, typical_hours, description, images, menu_preview, contact, amenities, weather_dependent, cta_buttons, rating, created_at, updated_at) VALUES
 
 -- Premium Retail
 ('barraca-uruguay', 'Barraca Uruguay', '203', 'Ipanema', 
@@ -126,6 +127,7 @@ INSERT INTO barracas (id, name, barraca_number, location, coordinates, is_open, 
  ARRAY['Personal Shopper', 'Gift Wrapping', 'Size Consultation', 'Product Customization', 'VIP Fitting Room', 'Delivery Service', 'Loyalty Program', 'Style Advisory'],
  false,
  '[{"id": "shop-online", "text": "Loja Online", "action": {"type": "url", "value": "https://barracauruguay.com.br/loja", "target": "_blank"}, "style": "primary", "position": 1, "visibilityConditions": {}, "icon": "ExternalLink", "enabled": true}]'::jsonb,
+ 3,
  '2023-06-15 10:00:00+00', NOW()),
 
 -- Traditional Barracas
@@ -138,7 +140,7 @@ INSERT INTO barracas (id, name, barraca_number, location, coordinates, is_open, 
  '{"phone": "+55 21 99999-1234", "email": "zeca@barraca.com"}',
  ARRAY['WiFi', 'Umbrellas', 'Chairs', 'Bathrooms', 'Shower', 'Storage Lockers'],
  true,
- '[]'::jsonb, '2024-01-15 10:00:00+00', '2024-01-20 15:30:00+00'),
+ '[]'::jsonb, 3, '2024-01-15 10:00:00+00', '2024-01-20 15:30:00+00'),
 
 ('dev-002', 'Sol e Mar', '015', 'Ipanema', 
  '{"lat": -22.9838, "lng": -43.2096}', 
@@ -149,7 +151,7 @@ INSERT INTO barracas (id, name, barraca_number, location, coordinates, is_open, 
  '{"phone": "+55 21 99999-5678", "website": "www.solemar.com.br"}',
  ARRAY['WiFi', 'Charging Stations', 'Beach Volleyball', 'Yoga Classes', 'DJ Sets', 'Photo Spots'],
  false,
- '[]'::jsonb, '2024-01-10 09:00:00+00', '2024-01-18 14:20:00+00'),
+ '[]'::jsonb, 3, '2024-01-10 09:00:00+00', '2024-01-18 14:20:00+00'),
 
 -- Upscale Options
 ('dev-003', 'Carioca Vibes', '032', 'Leblon', 
@@ -161,7 +163,7 @@ INSERT INTO barracas (id, name, barraca_number, location, coordinates, is_open, 
  '{"phone": "+55 21 99999-9012", "email": "info@cariocavibes.com", "website": "www.cariocavibes.com"}',
  ARRAY['VIP Cabanas', 'Personal Service', 'WiFi', 'Premium Sound System', 'Valet Parking', 'Concierge'],
  true,
- '[]'::jsonb, '2024-01-12 11:00:00+00', '2024-01-19 16:45:00+00'),
+ '[]'::jsonb, 3, '2024-01-12 11:00:00+00', '2024-01-19 16:45:00+00'),
 
 -- Wellness & Health
 ('dev-004', 'Praia Zen', '008', 'Barra da Tijuca', 
@@ -173,7 +175,7 @@ INSERT INTO barracas (id, name, barraca_number, location, coordinates, is_open, 
  '{"phone": "+55 21 99999-3456", "email": "wellness@praiazen.com"}',
  ARRAY['Meditation Area', 'Yoga Mats', 'Wellness Workshops', 'Healthy Menu', 'Massage Services', 'Juice Bar'],
  false,
- '[]'::jsonb, '2024-01-08 07:00:00+00', '2024-01-17 12:30:00+00'),
+ '[]'::jsonb, 3, '2024-01-08 07:00:00+00', '2024-01-17 12:30:00+00'),
 
 -- Party & Entertainment
 ('dev-005', 'Posto 9 Beach Bar', '009', 'Ipanema', 
@@ -185,7 +187,7 @@ INSERT INTO barracas (id, name, barraca_number, location, coordinates, is_open, 
  '{"phone": "+55 21 99999-7890", "website": "www.posto9bar.com"}',
  ARRAY['Live Music', 'Dance Floor', 'WiFi', 'Beach Games', 'Sound System', 'Event Space'],
  true,
- '[]'::jsonb, '2024-01-05 11:00:00+00', '2024-01-16 18:00:00+00'),
+ '[]'::jsonb, 3, '2024-01-05 11:00:00+00', '2024-01-16 18:00:00+00'),
 
 -- Family-Friendly
 ('dev-006', 'Leme Paradise', '003', 'Leme', 
@@ -197,7 +199,7 @@ INSERT INTO barracas (id, name, barraca_number, location, coordinates, is_open, 
  '{"phone": "+55 21 99999-4567", "email": "contato@lemeparadise.com"}',
  ARRAY['Kids Area', 'Beach Games', 'Family Tables', 'Shade Umbrellas', 'Playground', 'Baby Changing'],
  false,
- '[]'::jsonb, '2024-01-03 08:30:00+00', '2024-01-15 17:00:00+00'),
+ '[]'::jsonb, 3, '2024-01-03 08:30:00+00', '2024-01-15 17:00:00+00'),
 
 -- Sunset Specialists
 ('dev-007', 'Arpoador Sunset', '021', 'Arpoador', 
@@ -209,7 +211,7 @@ INSERT INTO barracas (id, name, barraca_number, location, coordinates, is_open, 
  '{"phone": "+55 21 99999-2468", "website": "www.arpoadorbar.com"}',
  ARRAY['Sunset Views', 'Cocktail Bar', 'WiFi', 'Photography Spot', 'Wine Cellar', 'Romantic Setting'],
  true,
- '[]'::jsonb, '2024-01-01 14:00:00+00', '2024-01-14 20:30:00+00'),
+ '[]'::jsonb, 3, '2024-01-01 14:00:00+00', '2024-01-14 20:30:00+00'),
 
 -- Exclusive Clubs
 ('dev-008', 'São Conrado Beach Club', '045', 'São Conrado', 
@@ -221,7 +223,7 @@ INSERT INTO barracas (id, name, barraca_number, location, coordinates, is_open, 
  '{"phone": "+55 21 99999-1357", "email": "vip@saoconradobeach.com", "website": "www.saoconradobeach.com"}',
  ARRAY['VIP Service', 'Pool Access', 'Hang Gliding Views', 'Premium Dining', 'Spa Services', 'Helicopter Landing'],
  false,
- '[]'::jsonb, '2024-01-02 09:00:00+00', '2024-01-13 16:00:00+00'),
+ '[]'::jsonb, 3, '2024-01-02 09:00:00+00', '2024-01-13 16:00:00+00'),
 
 -- Sports & Activities
 ('dev-009', 'Barra Sports Club', '067', 'Barra da Tijuca', 
@@ -233,7 +235,7 @@ INSERT INTO barracas (id, name, barraca_number, location, coordinates, is_open, 
  '{"phone": "+55 21 99999-6789", "email": "info@barrasports.com"}',
  ARRAY['Surf Lessons', 'Kayak Rental', 'Fitness Classes', 'Equipment Storage', 'Changing Rooms', 'Trainer Services'],
  false,
- '[]'::jsonb, '2023-12-20 06:00:00+00', '2024-01-10 19:00:00+00'),
+ '[]'::jsonb, 3, '2023-12-20 06:00:00+00', '2024-01-10 19:00:00+00'),
 
 -- Cultural Experience
 ('dev-010', 'Cultura Carioca', '088', 'Flamengo', 
@@ -245,7 +247,7 @@ INSERT INTO barracas (id, name, barraca_number, location, coordinates, is_open, 
  '{"phone": "+55 21 99999-3333", "email": "cultura@carioca.com"}',
  ARRAY['Live Samba', 'Art Gallery', 'Cultural Workshops', 'Local Guides', 'Traditional Crafts', 'History Tours'],
  false,
- '[]'::jsonb, '2023-11-15 10:00:00+00', '2024-01-05 18:00:00+00'),
+ '[]'::jsonb, 3, '2023-11-15 10:00:00+00', '2024-01-05 18:00:00+00'),
 
 -- Late Night
 ('dev-011', 'Noite na Praia', '099', 'Copacabana', 
@@ -257,7 +259,7 @@ INSERT INTO barracas (id, name, barraca_number, location, coordinates, is_open, 
  '{"phone": "+55 21 99999-0000", "email": "noite@praia.com"}',
  ARRAY['DJ Booth', 'Dance Area', 'VIP Tables', 'Bottle Service', 'Security', 'Adult Only Zone'],
  false,
- '[]'::jsonb, '2023-10-01 18:00:00+00', '2024-01-08 01:30:00+00'),
+ '[]'::jsonb, 3, '2023-10-01 18:00:00+00', '2024-01-08 01:30:00+00'),
 
 -- Budget-Friendly
 ('dev-012', 'Praia Popular', '012', 'Urca', 
@@ -269,7 +271,7 @@ INSERT INTO barracas (id, name, barraca_number, location, coordinates, is_open, 
  '{"phone": "+55 21 99999-1111", "email": "popular@praia.com"}',
  ARRAY['Basic Chairs', 'Simple Umbrellas', 'Student Friendly', 'Group Tables', 'Budget Options', 'Free WiFi'],
  false,
- '[]'::jsonb, '2023-09-01 09:00:00+00', '2024-01-12 16:00:00+00');
+ '[]'::jsonb, 3, '2023-09-01 09:00:00+00', '2024-01-12 16:00:00+00');
 
 -- Insert comprehensive business hours for development testing
 INSERT INTO business_hours (barraca_id, day_of_week, is_open, open_time_utc, close_time_utc, break_start_utc, break_end_utc, notes) VALUES

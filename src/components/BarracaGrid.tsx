@@ -4,6 +4,7 @@ import { MapPin, Clock, MessageCircle, Instagram, Wifi, Umbrella, Hash, Users, M
 import { Barraca } from '../types';
 import StoryRing from './StoryRing';
 import CTAButtonGroup from './CTAButtonGroup';
+import StarRating from './StarRating';
 import { useStory } from '../contexts/StoryContext';
 import { useApp } from '../contexts/AppContext';
 import { getEffectiveOpenStatus } from '../utils/environmentUtils';
@@ -16,6 +17,8 @@ const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
   const { t } = useTranslation();
   const { stories, featureFlags } = useStory();
   const { weatherOverride, openBarracaModal } = useApp();
+
+
 
   const getAmenityIcon = (amenity: string) => {
     switch (amenity.toLowerCase()) {
@@ -99,15 +102,15 @@ const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
               })()}
             </div>
 
-            {/* Barraca Number - Bottom Left */}
+            {/* Barraca Number - Top Left */}
             {barraca.barracaNumber && (
-              <div className="absolute bottom-3 left-3">
+              <div className="absolute top-3 left-3">
                 <span className="bg-black/70 text-white px-2 py-1 rounded-md text-xs font-medium" data-lingo-skip>
                   #{barraca.barracaNumber}
                 </span>
               </div>
             )}
-
+            
             {/* Story Ring - Top Center (Mobile Optimized) */}
             {featureFlags.enableStoryBanner && hasStories(barraca.id) && (
               <div className="absolute top-3 left-1/2 transform -translate-x-1/2">
@@ -140,7 +143,17 @@ const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
                   barraca.partnered ? 'text-gray-900' : 'text-gray-600'
                 }`}>
                   {barraca.name}
-                </h3> 
+                </h3>
+                {/* Star Rating - Aligned with barraca name */}
+                {barraca.rating && (
+                  <div className="flex-shrink-0">
+                    <StarRating 
+                      rating={barraca.rating} 
+                      size="sm"
+                      showLabel={true}
+                    />
+                  </div>
+                )}
               </div>
               
               {/* Location - Only show location for non-partnered barracas */}

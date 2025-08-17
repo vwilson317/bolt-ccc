@@ -22,9 +22,20 @@ const SpecialAdminPanel: React.FC<SpecialAdminPanelProps> = ({ barracas, onRefre
     setMessage(null);
     
     try {
+      console.log('🔄 Opening barraca:', barracaId);
       await BarracaService.specialAdminOpenBarraca(barracaId, 24); // Default 24 hours
+      console.log('✅ Barraca opened successfully');
       setMessage({ type: 'success', text: 'Barraca opened successfully!' });
-      // Real-time updates will handle the UI refresh automatically via Firestore
+      
+      // Trigger a background refresh after a short delay
+      setTimeout(() => {
+        if (onRefresh) {
+          onRefresh().catch(error => {
+            console.warn('Background refresh failed:', error);
+          });
+        }
+      }, 500);
+      
     } catch (error) {
       setMessage({ type: 'error', text: 'Failed to open barraca' });
       console.error('Error opening barraca:', error);
@@ -38,9 +49,20 @@ const SpecialAdminPanel: React.FC<SpecialAdminPanelProps> = ({ barracas, onRefre
     setMessage(null);
     
     try {
+      console.log('🔄 Closing barraca:', barracaId);
       await BarracaService.specialAdminCloseBarraca(barracaId);
+      console.log('✅ Barraca closed successfully');
       setMessage({ type: 'success', text: 'Barraca closed successfully!' });
-      // Real-time updates will handle the UI refresh automatically via Firestore
+      
+      // Trigger a background refresh after a short delay
+      setTimeout(() => {
+        if (onRefresh) {
+          onRefresh().catch(error => {
+            console.warn('Background refresh failed:', error);
+          });
+        }
+      }, 500);
+      
     } catch (error) {
       setMessage({ type: 'error', text: 'Failed to close barraca' });
       console.error('Error closing barraca:', error);

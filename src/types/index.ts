@@ -37,6 +37,7 @@ export interface Barraca {
   manualStatus?: 'open' | 'closed' | 'undefined'; // Manual status for non-partnered barracas
   specialAdminOverride: boolean; // Special admin override
   specialAdminOverrideExpires: Date | null; // When override expires
+  rating?: 1 | 2 | 3; // Star rating (1-3 stars)
   createdAt: Date;
   updatedAt: Date;
   ctaButtons?: CTAButtonConfig[]; // New configurable CTA buttons
@@ -69,6 +70,7 @@ export interface SearchFilters {
   location: string; // Keep for backward compatibility
   locations: string[]; // New field for multiple location support
   status: 'all' | 'open' | 'closed'; // Enhanced status filter
+  rating?: 1 | 2 | 3; // Filter by star rating
 }
 
 export interface EmailSubscription {

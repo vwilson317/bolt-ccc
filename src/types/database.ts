@@ -29,6 +29,7 @@ export interface Database {
           manual_status: string | null
           special_admin_override: boolean
           special_admin_override_expires: string | null
+          rating: number | null
           cta_buttons: Json
           created_at: string
           updated_at: string
@@ -52,6 +53,7 @@ export interface Database {
           manual_status?: string | null
           special_admin_override?: boolean
           special_admin_override_expires?: string | null
+          rating?: number | null
           cta_buttons?: Json
           created_at?: string
           updated_at?: string
@@ -75,6 +77,7 @@ export interface Database {
           manual_status?: string | null
           special_admin_override?: boolean
           special_admin_override_expires?: string | null
+          rating?: number | null
           cta_buttons?: Json
           created_at?: string
           updated_at?: string

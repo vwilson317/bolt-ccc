@@ -311,7 +311,11 @@
     "filters": {
       "all": "All",
       "open": "Open",
-      "closed": "Closed"
+      "closed": "Closed",
+      "allRatings": "All Ratings",
+      "excellent": "Excellent",
+      "great": "Great",
+      "good": "Good"
     }
   },
   "stories": {
