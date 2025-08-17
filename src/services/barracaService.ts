@@ -1,6 +1,7 @@
 import { supabase, handleSupabaseError } from '../lib/supabase'
 import type { Barraca } from '../types'
 import type { Database } from '../types/database'
+import { v4 as uuidv4 } from 'uuid'
 
 
 type BarracaRow = Database['public']['Tables']['barracas']['Row']
@@ -37,6 +38,7 @@ const transformBarracaFromDB = (row: BarracaRow, isOpen: boolean = false): Barra
 
 // Transform application type to database insert
 const transformBarracaToDB = (barraca: Omit<Barraca, 'id' | 'createdAt' | 'updatedAt'>): BarracaInsert => ({
+  id: uuidv4(), // Generate UUID for new barracas using uuid library
   name: barraca.name,
   barraca_number: barraca.barracaNumber || null,
   location: barraca.location,
