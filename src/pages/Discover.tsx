@@ -151,28 +151,28 @@ const Discover: React.FC = () => {
 
           {/* Always Visible Filter Panel */}
           {showFilters && (
-            <div className="bg-white rounded-xl p-4 shadow-lg border border-gray-200 mb-6">
-              <div className="space-y-4">
+            <div className="bg-white rounded-xl p-3 md:p-4 shadow-sm border border-gray-200 mb-6">
+              <div className="space-y-3">
                 {/* Availability Filter */}
                 <div>
-                  <div className="flex items-center mb-3">
-                    <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
-                    <h3 className="text-sm font-medium text-gray-700" data-lingo-skip>Availability</h3>
+                  <div className="flex items-center mb-2">
+                    <CheckCircle className="h-3.5 w-3.5 text-green-500 mr-1.5" />
+                    <h3 className="text-xs md:text-sm font-medium text-gray-700" data-lingo-skip>Availability</h3>
                   </div>
-                  <div className="flex gap-2 bg-gray-100 rounded-lg p-1 w-fit">
+                  <div className="flex gap-1 md:gap-2 bg-gray-100 rounded-lg p-1 w-fit">
                     {availabilityOptions.map((option) => {
                       const Icon = option.icon;
                       return (
                         <button
                           key={option.value}
                           onClick={() => handleAvailabilityFilter(option.value as 'all' | 'open' | 'closed')}
-                          className={`flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                          className={`flex items-center px-2 md:px-3 py-1.5 md:py-2 rounded-md text-xs md:text-sm font-medium transition-colors ${
                             searchFilters.status === option.value
                               ? 'bg-beach-500 text-white shadow-sm'
                               : 'text-gray-600 hover:text-gray-900 hover:bg-white'
                           }`}
                         >
-                          {Icon && <Icon className="h-4 w-4 mr-1" />}
+                          {Icon && <Icon className="h-3.5 w-3.5 md:h-4 md:w-4 mr-1" />}
                           {option.label}
                         </button>
                       );
@@ -182,18 +182,18 @@ const Discover: React.FC = () => {
 
                 {/* Rating Filter */}
                 <div>
-                  <div className="flex items-center mb-3">
-                    <Star className="h-4 w-4 text-yellow-500 mr-2" />
-                    <h3 className="text-sm font-medium text-gray-700" data-lingo-skip>Rating</h3>
+                  <div className="flex items-center mb-2">
+                    <Star className="h-3.5 w-3.5 text-yellow-500 mr-1.5" />
+                    <h3 className="text-xs md:text-sm font-medium text-gray-700" data-lingo-skip>Rating</h3>
                   </div>
-                  <div className="flex gap-2 bg-gray-100 rounded-lg p-1 w-fit">
+                  <div className="flex gap-1 md:gap-2 bg-gray-100 rounded-lg p-1 w-fit">
                     {ratingOptions.map((option) => {
                       const Icon = option.icon;
                       return (
                         <button
                           key={option.value ?? 'all'}
                           onClick={() => handleRatingFilter(option.value)}
-                          className={`flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                          className={`flex items-center px-2 md:px-3 py-1.5 md:py-2 rounded-md text-xs md:text-sm font-medium transition-colors ${
                             searchFilters.rating === option.value
                               ? 'bg-yellow-500 text-white shadow-sm'
                               : 'text-gray-600 hover:text-gray-900 hover:bg-white'
@@ -202,7 +202,7 @@ const Discover: React.FC = () => {
                           {option.rating ? (
                             <StarRating rating={option.rating} size="sm" className="mr-1" />
                           ) : (
-                            Icon && <Icon className="h-4 w-4 mr-1" />
+                            Icon && <Icon className="h-3.5 w-3.5 md:h-4 md:w-4 mr-1" />
                           )}
                           {option.label}
                         </button>
@@ -223,15 +223,15 @@ const Discover: React.FC = () => {
 
           {/* Active Filters Display - Compact */}
           {hasActiveFilters && (
-            <div className="flex flex-wrap gap-2 mb-6">
+            <div className="flex flex-wrap gap-1.5 md:gap-2 mb-6">
               {searchFilters.query && (
-                <span className="bg-beach-100 text-beach-800 px-3 py-1 rounded-full text-sm flex items-center">
+                <span className="bg-beach-100 text-beach-800 px-2 md:px-3 py-1 rounded-full text-xs md:text-sm flex items-center">
                   <Search className="h-3 w-3 mr-1" />
                   "{searchFilters.query}"
                 </span>
               )}
               {searchFilters.status !== 'all' && (
-                <span className={`px-3 py-1 rounded-full text-sm flex items-center ${
+                <span className={`px-2 md:px-3 py-1 rounded-full text-xs md:text-sm flex items-center ${
                   searchFilters.status === 'open' 
                     ? 'bg-green-100 text-green-800' 
                     : 'bg-red-100 text-red-800'
@@ -245,7 +245,7 @@ const Discover: React.FC = () => {
                 </span>
               )}
               {searchFilters.locations.length > 0 && (
-                <span className="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm flex items-center">
+                <span className="bg-purple-100 text-purple-800 px-2 md:px-3 py-1 rounded-full text-xs md:text-sm flex items-center">
                   <MapPin className="h-3 w-3 mr-1" />
                   {searchFilters.locations.length === 1 
                     ? searchFilters.locations[0]
@@ -256,7 +256,7 @@ const Discover: React.FC = () => {
                 </span>
               )}
               {searchFilters.rating && (
-                <span className="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm flex items-center">
+                <span className="bg-yellow-100 text-yellow-800 px-2 md:px-3 py-1 rounded-full text-xs md:text-sm flex items-center">
                   <Star className="h-3 w-3 mr-1" />
                   <StarRating rating={searchFilters.rating} size="sm" className="mr-1" />
                   {searchFilters.rating === 3 ? 'Excellent' : searchFilters.rating === 2 ? 'Great' : 'Good'}
