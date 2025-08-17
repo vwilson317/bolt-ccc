@@ -11,7 +11,7 @@ export interface Database {
     Tables: {
       barracas: {
         Row: {
-          id: string
+          id: string // UUID format
           name: string
           barraca_number: string | null
           location: string
@@ -35,7 +35,7 @@ export interface Database {
           updated_at: string
         }
         Insert: {
-          id?: string
+          id?: string // UUID format
           name: string
           barraca_number?: string | null
           location: string
@@ -59,7 +59,7 @@ export interface Database {
           updated_at?: string
         }
         Update: {
-          id?: string
+          id?: string // UUID format
           name?: string
           barraca_number?: string | null
           location?: string
@@ -147,7 +147,7 @@ export interface Database {
       stories: {
         Row: {
           id: string
-          barraca_id: string
+          barraca_id: string // UUID format
           media_url: string
           media_type: string
           caption: string | null
@@ -158,7 +158,7 @@ export interface Database {
         }
         Insert: {
           id?: string
-          barraca_id: string
+          barraca_id: string // UUID format
           media_url: string
           media_type: string
           caption?: string | null
@@ -169,7 +169,7 @@ export interface Database {
         }
         Update: {
           id?: string
-          barraca_id?: string
+          barraca_id?: string // UUID format
           media_url?: string
           media_type?: string
           caption?: string | null
@@ -277,7 +277,7 @@ export interface Database {
           limit_count?: number
         }
         Returns: {
-          id: string
+          id: string // UUID format
           name: string
           location: string
           is_open: boolean
@@ -292,7 +292,7 @@ export interface Database {
           limit_count?: number
         }
         Returns: {
-          id: string
+          id: string // UUID format
           name: string
           location: string
           is_open: boolean
@@ -309,21 +309,21 @@ export interface Database {
       }
       is_barraca_open_now: {
         Args: {
-          barraca_id_param: string
+          barraca_id_param: string // UUID format
           check_time?: string
         }
         Returns: boolean
       }
       is_weekend_hours_active: {
         Args: {
-          barraca_id_param: string
+          barraca_id_param: string // UUID format
           check_time?: string
         }
         Returns: boolean
       }
       set_weekend_hours: {
         Args: {
-          barraca_id_param: string
+          barraca_id_param: string // UUID format
           friday_open?: string
           friday_close?: string
           saturday_open?: string
@@ -335,27 +335,27 @@ export interface Database {
       }
       disable_weekend_hours: {
         Args: {
-          barraca_id_param: string
+          barraca_id_param: string // UUID format
         }
         Returns: void
       }
       special_admin_open_barraca: {
         Args: {
-          barraca_id_param: string
+          barraca_id_param: string // UUID format
           duration_hours?: number
         }
         Returns: boolean
       }
       special_admin_close_barraca: {
         Args: {
-          barraca_id_param: string
+          barraca_id_param: string // UUID format
         }
         Returns: boolean
       }
       get_special_admin_overrides: {
         Args: {}
         Returns: {
-          barraca_id: string
+          barraca_id: string // UUID format
           barraca_name: string
           override_expires: string
           hours_remaining: number

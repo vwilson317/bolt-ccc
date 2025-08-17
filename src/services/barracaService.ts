@@ -543,12 +543,22 @@ export class BarracaService {
       })
 
       if (error) {
+        // Handle the specific UUID/text type mismatch error
+        if (error.message && error.message.includes('operator does not exist: text = uuid')) {
+          console.warn(`UUID/text type mismatch for barraca ${barracaId}, treating as closed`);
+          return false;
+        }
         handleSupabaseError(error, 'get open status')
       }
 
       return data || false
     } catch (error) {
       console.error('Error getting open status:', error)
+      // If it's a type mismatch error, return false instead of throwing
+      if (error instanceof Error && error.message.includes('operator does not exist: text = uuid')) {
+        console.warn(`UUID/text type mismatch for barraca ${barracaId}, treating as closed`);
+        return false;
+      }
       throw error
     }
   }
