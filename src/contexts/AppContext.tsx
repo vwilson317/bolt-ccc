@@ -274,12 +274,27 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
         barraca.location.toLowerCase().includes(loc.toLowerCase())
       ));
 
-    return matchesQuery && matchesStatus && matchesOpenNow && matchesLocation;
+    // Rating filter
+    const matchesRating = !searchFilters.rating || barraca.rating === searchFilters.rating;
+
+    return matchesQuery && matchesStatus && matchesOpenNow && matchesLocation && matchesRating;
   }).sort((a, b) => {
-    // Maintain the same sorting: partnered first, then non-partnered, with location sorting within each group
+    // Enhanced sorting: partnered first, then by rating (highest first), then by location
     if (a.partnered !== b.partnered) {
       return a.partnered ? -1 : 1;
     }
+    
+    // Sort by rating (highest first) if both have ratings
+    if (a.rating && b.rating) {
+      if (a.rating !== b.rating) {
+        return b.rating - a.rating; // Higher rating first
+      }
+    } else if (a.rating && !b.rating) {
+      return -1; // Rated barracas first
+    } else if (!a.rating && b.rating) {
+      return 1;
+    }
+    
     return a.location.localeCompare(b.location);
   });
 

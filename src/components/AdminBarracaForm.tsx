@@ -40,6 +40,7 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
     },
     specialAdminOverride: false,
     specialAdminOverrideExpires: null as Date | null,
+    rating: undefined as 1 | 2 | 3 | undefined,
     ctaButtons: [] as CTAButtonConfig[]
   });
 
@@ -99,6 +100,7 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
           },
           specialAdminOverride: barraca.specialAdminOverride,
           specialAdminOverrideExpires: barraca.specialAdminOverrideExpires,
+          rating: barraca.rating,
           ctaButtons: barraca.ctaButtons || []
         });
       }
@@ -286,6 +288,26 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
               ))}
             </select>
           </div>
+        </div>
+
+        {/* Rating */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Rating
+          </label>
+          <select
+            value={formData.rating || ''}
+            onChange={(e) => setFormData(prev => ({ 
+              ...prev, 
+              rating: e.target.value ? parseInt(e.target.value) as 1 | 2 | 3 : undefined 
+            }))}
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
+          >
+            <option value="">No Rating</option>
+            <option value="1">⭐ Good (1 star)</option>
+            <option value="2">⭐⭐ Great (2 stars)</option>
+            <option value="3">⭐⭐⭐ Excellent (3 stars)</option>
+          </select>
         </div>
 
         <div>

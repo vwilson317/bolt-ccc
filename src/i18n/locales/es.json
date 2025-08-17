@@ -316,7 +316,11 @@
     "filters": {
       "all": "Todas",
       "open": "Abiertas",
-      "closed": "Cerradas"
+      "closed": "Cerradas",
+      "allRatings": "Todas las Calificaciones",
+      "excellent": "Excelente",
+      "great": "Genial",
+      "good": "Bueno"
     }
   },
   "stories": {

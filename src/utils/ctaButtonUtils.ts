@@ -169,7 +169,9 @@ export const shouldShowCTAButton = (
         .replace(/\$\{barraca\.location\}/g, `"${barraca.location}"`)
         .replace(/\$\{isLoggedIn\}/g, isLoggedIn.toString());
       
-      return eval(condition);
+      // Safer evaluation using Function constructor instead of eval
+      const evaluateCondition = new Function('return ' + condition);
+      return evaluateCondition();
     } catch (error) {
       console.warn('Error evaluating custom condition:', error);
       return true; // Default to showing the button if evaluation fails
