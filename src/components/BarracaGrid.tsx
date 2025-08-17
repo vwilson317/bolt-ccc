@@ -102,12 +102,6 @@ const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
               })()}
             </div>
 
-
-
-
-            
-
-
             {/* Barraca Number - Top Left */}
             {barraca.barracaNumber && (
               <div className="absolute top-3 left-3">
@@ -117,8 +111,6 @@ const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
               </div>
             )}
             
-
-
             {/* Story Ring - Top Center (Mobile Optimized) */}
             {featureFlags.enableStoryBanner && hasStories(barraca.id) && (
               <div className="absolute top-3 left-1/2 transform -translate-x-1/2">

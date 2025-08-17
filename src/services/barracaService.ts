@@ -29,6 +29,7 @@ const transformBarracaFromDB = (row: BarracaRow, isOpen: boolean = false): Barra
   manualStatus: (row.manual_status as 'open' | 'closed' | 'undefined') || 'undefined',
   specialAdminOverride: row.special_admin_override || false,
   specialAdminOverrideExpires: row.special_admin_override_expires ? new Date(row.special_admin_override_expires) : null,
+  rating: row.rating as 1 | 2 | 3 | undefined,
   ctaButtons: row.cta_buttons as any,
   createdAt: new Date(row.created_at),
   updatedAt: new Date(row.updated_at)
@@ -51,6 +52,7 @@ const transformBarracaToDB = (barraca: Omit<Barraca, 'id' | 'createdAt' | 'updat
   weekend_hours_enabled: barraca.weekendHoursEnabled,
   special_admin_override: barraca.specialAdminOverride,
   special_admin_override_expires: barraca.specialAdminOverrideExpires?.toISOString() || null,
+  rating: barraca.rating || null,
   cta_buttons: (barraca.ctaButtons as unknown as Json) || []
 })
 
