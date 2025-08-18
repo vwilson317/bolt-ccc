@@ -99,7 +99,8 @@ const Discover: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header Section */}
-      <section className="relative pt-24 pb-24">
+      <section className="relative pt-24 pb-32 min-h-[450px]">
+        
         <div className="absolute inset-0 w-full h-full bg-[url('https://pub-db19578f977b43e184c45b5084d7c029.r2.dev/editsV1/sunrise-2.jpg?auto=format&fit=crop&w=1200&q=80')] bg-cover bg-center" />
         <div className="absolute inset-0 w-full h-full bg-black/40" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -111,29 +112,34 @@ const Discover: React.FC = () => {
               {t('discover.subtitle')}
             </p>
           </div>
-        </div>
-      </section>
+          
 
-      {/* Sticky Search Bar (outside hero, behaves like WeatherMarquee) */}
-      <div className="sticky top-16 z-40 bg-white/95 backdrop-blur-sm border-y border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
-          <div className="max-w-2xl mx-auto">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-pink-500 z-10 pointer-events-none" />
-              <input
-                type="text"
-                placeholder={t('discover.searchPlaceholder')}
-                value={searchFilters.query}
-                onChange={(e) => handleSearchChange(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 text-base rounded-lg bg-white text-gray-900 placeholder-gray-400 border border-gray-200 shadow-sm focus:ring-4 focus:ring-pink-100 focus:border-pink-300 focus:outline-none transition-all duration-200"
-              />
+        </div>
+            </section>
+
+      {/* Sticky Search and Weather Group - overlaps hero with negative margin */}
+      <div className="sticky top-16 z-40">
+        {/* Weather Marquee */}
+        <WeatherMarquee colorScheme="pink" stickyOffsetClassName="top-0" />
+
+        {/* Search Bar */}
+        <div className="bg-white/95 backdrop-blur-sm border-y border-gray-100 shadow-lg">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+            <div className="max-w-2xl mx-auto">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-pink-500 z-10 pointer-events-none" />
+                <input
+                  type="text"
+                  placeholder={t('discover.searchPlaceholder')}
+                  value={searchFilters.query}
+                  onChange={(e) => handleSearchChange(e.target.value)}
+                  className="w-full pl-10 pr-4 py-3 text-base rounded-lg bg-white text-gray-900 placeholder-gray-400 border border-gray-200 shadow-sm focus:ring-4 focus:ring-pink-100 focus:border-pink-300 focus:outline-none transition-all duration-200"
+                />
+              </div>
             </div>
           </div>
         </div>
       </div>
-
-      {/* Shared Weather Marquee - Discover uses pink theme */}
-      <WeatherMarquee colorScheme="pink" stickyOffsetClassName="top-36" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Filters Row (desktop) */}

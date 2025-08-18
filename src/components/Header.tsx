@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Menu, X, Globe } from 'lucide-react';
@@ -7,15 +7,38 @@ import { useScrollPosition } from '../hooks/useScrollAnimation';
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLanguageOpen, setIsLanguageOpen] = useState(false);
+  const [heroHeight, setHeroHeight] = useState(0);
   const { t, i18n } = useTranslation();
   const location = useLocation();
-  const { isScrolled } = useScrollPosition();
+  const { isScrolled, scrollY } = useScrollPosition();
+
+  // Calculate hero height on mount and resize
+  useEffect(() => {
+    const calculateHeroHeight = () => {
+      const heroElement = document.querySelector('[data-hero-carousel]');
+      if (heroElement) {
+        setHeroHeight(heroElement.clientHeight);
+      } else {
+        // Fallback to viewport height if hero element not found
+        setHeroHeight(window.innerHeight * 0.7); // 70vh as fallback
+      }
+    };
+
+    calculateHeroHeight();
+    window.addEventListener('resize', calculateHeroHeight);
+    return () => window.removeEventListener('resize', calculateHeroHeight);
+  }, []);
 
   // Check if we're on pages that should always have a solid header
   const isAdminLoginPage = location.pathname === '/admin';
   const isBarracaDetailPage = location.pathname.startsWith('/barraca/');
   const isAboutPage = location.pathname.startsWith('/about');
-  const useSolidHeader = isScrolled || isAdminLoginPage || isBarracaDetailPage || isMenuOpen || isAboutPage;
+  const isHomePage = location.pathname === '/';
+  
+  // On home page, only show solid header when header bottom border reaches end of hero
+  const headerHeight = 64; // h-16 = 64px
+  const useSolidHeader = isAdminLoginPage || isBarracaDetailPage || isMenuOpen || isAboutPage || 
+    (isHomePage ? scrollY + headerHeight > heroHeight : isScrolled);
 
   const languages = [
     { code: 'en', name: 'English', flag: '🇺🇸' },

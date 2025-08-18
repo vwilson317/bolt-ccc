@@ -67,7 +67,7 @@ const WeatherMarquee: React.FC<WeatherMarqueeProps> = ({
   );
 
   return (
-    <div className={`sticky ${stickyOffsetClassName} z-30 ${baseBgClass} ${containerBorderClass} ${className}`}>
+    <div className={`sticky ${stickyOffsetClassName} z-30 ${baseBgClass} ${containerBorderClass} ${className} shadow-lg`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 marquee-container">
         <div className="marquee-track py-2">
           {renderSequence('A')}

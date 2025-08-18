@@ -10,8 +10,19 @@ const HeroCarousel: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [touchStartX, setTouchStartX] = useState<number | null>(null);
   const [touchStartY, setTouchStartY] = useState<number | null>(null);
+  const [scrollY, setScrollY] = useState(0);
   const touchThreshold = 50; // Minimum px to trigger swipe
   const containerRef = useRef<HTMLDivElement>(null);
+
+  // Track scroll position for parallax effect
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   // Touch event handlers for swipe gestures
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -120,6 +131,7 @@ const HeroCarousel: React.FC = () => {
   return (
     <div
       ref={containerRef}
+      data-hero-carousel
       className="relative h-[66vh] sm:h-[70vh] md:h-screen overflow-hidden"
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
@@ -140,7 +152,9 @@ const HeroCarousel: React.FC = () => {
                   window.innerWidth < 768
                     ? (barraca.photos.vertical[0] || barraca.photos.horizontal[0])
                     : (barraca.photos.horizontal[0] || barraca.photos.vertical[0])
-                })`
+                })`,
+                transform: `translateY(${scrollY * 0.5}px)`,
+                transition: 'transform 0.1s ease-out'
               }}
             />
           </div>
@@ -150,8 +164,14 @@ const HeroCarousel: React.FC = () => {
       {/* Minimal Mobile Hero Overlay */}
       <MinimalMobileHero barraca={partneredBarracas[currentSlide]} />
 
-      {/* Content Overlay (Desktop Only) */}
-      <div className="relative z-10 flex h-full text-white pointer-events-none items-start sm:items-center justify-center">
+      {/* Content Overlay (Desktop Only) with Parallax */}
+      <div 
+        className="relative z-10 flex h-full text-white pointer-events-none items-start sm:items-center justify-center"
+        style={{
+          transform: `translateY(${scrollY * 0.2}px)`,
+          transition: 'transform 0.1s ease-out'
+        }}
+      >
         <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center mt-8 sm:mt-0">
           <div className="mb-0 sm:mb-6 md:mb-8 animate-fade-in pt-4 sm:pt-0" style={{ minHeight: '33%' }}>
             <h1 className="hidden sm:block text-2xl sm:text-3xl md:text-6xl lg:text-7xl font-bold mb-3 sm:mb-4 md:mb-6 leading-tight pointer-events-auto">
