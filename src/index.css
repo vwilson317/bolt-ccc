@@ -313,3 +313,30 @@ html {
 .transition-all {
   will-change: transform, opacity;
 }
+
+/* Marquee scrolling utility for weather bar */
+@keyframes marquee-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee-container {
+  overflow: hidden;
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  white-space: nowrap;
+  animation: marquee-scroll 30s linear infinite;
+}
+
+.marquee-content {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}

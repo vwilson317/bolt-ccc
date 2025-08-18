@@ -85,6 +85,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const [pageSize] = useState(10);
   const [hasMore, setHasMore] = useState(true);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
+
   
   // Initialize admin state from localStorage
   const [isAdmin, setIsAdmin] = useState(() => {
@@ -318,15 +319,17 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
 
   // With infinite scroll, filteredBarracas is all loaded barracas
   // Apply weather override to all loaded barracas
-  const filteredBarracas = allBarracas.map(barraca => {
-    if (weatherOverride) {
-      return {
-        ...barraca,
-        isOpen: false
-      };
-    }
-    return barraca;
-  });
+  const filteredBarracas = React.useMemo(() => {
+    return allBarracas.map(barraca => {
+      if (weatherOverride) {
+        return {
+          ...barraca,
+          isOpen: false
+        };
+      }
+      return barraca;
+    });
+  }, [allBarracas, weatherOverride]);
 
   // Load weather data on mount
   useEffect(() => {
@@ -388,11 +391,14 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
       setIsLoading(true);
       try {
         const result = await fetchBarracasWithStatus(1);
+        // Reset infinite scroll state completely when filters change
         setAllBarracas(result.barracas);
         setBarracas(result.barracas);
         setTotalBarracas(result.total);
         setCurrentPage(1);
         setHasMore(result.barracas.length === pageSize);
+        // Reset loading state for infinite scroll
+        setIsLoadingMore(false);
       } catch (error) {
         console.error('Failed to refetch data with new filters:', error);
       } finally {
@@ -612,9 +618,12 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
       const nextPage = currentPage + 1;
       const result = await fetchBarracasWithStatus(nextPage);
       
-      setAllBarracas(prev => [...prev, ...result.barracas]);
-      setCurrentPage(nextPage);
-      setHasMore(result.barracas.length === pageSize);
+      // Only append if we're still on the same page and filters haven't changed
+      if (nextPage === currentPage + 1) {
+        setAllBarracas(prev => [...prev, ...result.barracas]);
+        setCurrentPage(nextPage);
+        setHasMore(result.barracas.length === pageSize);
+      }
     } catch (error) {
       console.error('Failed to load more barracas:', error);
     } finally {
@@ -635,6 +644,10 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
       
       setBarracas(result.barracas);
       setTotalBarracas(result.total);
+      // Update all barracas if we're on page 1, otherwise keep current state
+      if (currentPage === 1) {
+        setAllBarracas(result.barracas);
+      }
       console.log('✅ Barracas refreshed from Supabase');
     } catch (error) {
       console.error('Failed to refresh barracas:', error);

@@ -3,14 +3,13 @@ import { useTranslation } from 'react-i18next';
 import { Search, Filter, MapPin, X, CheckCircle, XCircle, Star, Loader2 } from 'lucide-react';
 import { useApp } from '../contexts/AppContext';
 import { useStory } from '../contexts/StoryContext';
-import { useWeather } from '../contexts/WeatherContext';
 import BarracaGrid from '../components/BarracaGrid';
 import StoryCarousel from '../components/StoryCarousel';
-import WeatherWidget from '../components/WeatherWidget';
 import LocationFilterCheckboxes from '../components/LocationFilterCheckboxes';
 import StarRating from '../components/StarRating';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
+import WeatherMarquee from '../components/WeatherMarquee';
 
 const Discover: React.FC = () => {
   const { t } = useTranslation();
@@ -24,7 +23,6 @@ const Discover: React.FC = () => {
     isLoadingMore
   } = useApp();
   const { featureFlags } = useStory();
-  const { weather } = useWeather();
   const [showFilters, setShowFilters] = useState(true);
 
   // Infinite scroll hook
@@ -54,7 +52,12 @@ const Discover: React.FC = () => {
     { value: 'closed', label: t('discover.filters.closed'), icon: XCircle }
   ];
 
-  const ratingOptions = [
+  const ratingOptions: {
+    value: 1 | 2 | 3 | undefined;
+    label: string;
+    icon: React.ComponentType<{ className?: string }> | null;
+    rating?: 1 | 2 | 3;
+  }[] = [
     { value: undefined, label: t('discover.filters.allRatings'), icon: null },
     { value: 3, label: t('discover.filters.excellent'), icon: Star, rating: 3 },
     { value: 2, label: t('discover.filters.great'), icon: Star, rating: 2 },
@@ -65,11 +68,7 @@ const Discover: React.FC = () => {
     updateSearchFilters({ query });
   };
 
-  const handleLocationFilter = (location: string) => {
-    updateSearchFilters({ 
-      location: searchFilters.location === location ? '' : location 
-    });
-  };
+  // removed unused handleLocationFilter
 
   const handleAvailabilityFilter = (status: 'all' | 'open' | 'closed') => {
     updateSearchFilters({ status });
@@ -128,20 +127,93 @@ const Discover: React.FC = () => {
         </div>
       </section>
 
+      {/* Shared Weather Marquee - Discover uses pink theme */}
+      <WeatherMarquee colorScheme="pink" />
+
       {/* Story Carousel - Only show if feature is enabled */}
       {featureFlags.enableStoryBanner && <StoryCarousel />}
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Weather Widget */}
-        {weather && (
-          <div className="mb-8">
-            <WeatherWidget />
-          </div>
-        )}
-        
-        {/* Results Header & Filters */}
+        {/* Filters Row (desktop) */}
         <div className="mb-8">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
+          <div className="flex flex-col lg:flex-row gap-6 items-start">
+            <div className="flex-1">
+              {/* Filters Panel */}
+              {showFilters && (
+                <div className="bg-white rounded-xl p-3 md:p-4 shadow-sm border border-gray-200 mb-0">
+                  <div className="space-y-3">
+                    {/* Availability Filter */}
+                    <div>
+                      <div className="flex items-center mb-2">
+                        <CheckCircle className="h-3.5 w-3.5 text-green-500 mr-1.5" />
+                        <h3 className="text-xs md:text-sm font-medium text-gray-700" data-lingo-skip>Availability</h3>
+                      </div>
+                      <div className="flex gap-1 md:gap-2 bg-gray-100 rounded-lg p-1 w-fit">
+                        {availabilityOptions.map((option) => {
+                          const Icon = option.icon;
+                          return (
+                            <button
+                              key={option.value}
+                              onClick={() => handleAvailabilityFilter(option.value as 'all' | 'open' | 'closed')}
+                              className={`flex items-center px-2 md:px-3 py-1.5 md:py-2 rounded-md text-xs md:text-sm font-medium transition-colors ${
+                                searchFilters.status === option.value
+                                  ? 'bg-beach-500 text-white shadow-sm'
+                                  : 'text-gray-600 hover:text-gray-900 hover:bg-white'
+                              }`}
+                            >
+                              {Icon && <Icon className="h-3.5 w-3.5 md:h-4 md:w-4 mr-1" />}
+                              {option.label}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    {/* Rating Filter */}
+                    <div>
+                      <div className="flex items-center mb-2">
+                        <Star className="h-3.5 w-3.5 text-yellow-500 mr-1.5" />
+                        <h3 className="text-xs md:text-sm font-medium text-gray-700" data-lingo-skip>Rating</h3>
+                      </div>
+                      <div className="flex gap-1 md:gap-2 bg-gray-100 rounded-lg p-1 w-fit">
+                        {ratingOptions.map((option) => {
+                          const Icon = option.icon;
+                          return (
+                            <button
+                              key={option.value ?? 'all'}
+                              onClick={() => handleRatingFilter(option.value)}
+                              className={`flex items-center px-2 md:px-3 py-1.5 md:py-2 rounded-md text-xs md:text-sm font-medium transition-colors ${
+                                searchFilters.rating === option.value
+                                  ? 'bg-yellow-500 text-white shadow-sm'
+                                  : 'text-gray-600 hover:text-gray-900 hover:bg-white'
+                              }`}
+                            >
+                              {option.rating ? (
+                                <StarRating rating={option.rating} size="sm" className="mr-1" />
+                              ) : (
+                                Icon && <Icon className="h-3.5 w-3.5 md:h-4 md:w-4 mr-1" />
+                              )}
+                              {option.label}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    {/* Location Filter Checkboxes */}
+                    <LocationFilterCheckboxes
+                      availableLocations={dynamicLocations}
+                      onLocationsChange={handleLocationsChange}
+                      initialLocations={searchFilters.locations.length > 0 ? searchFilters.locations : (searchFilters.location ? [searchFilters.location] : [])}
+                    />
+                  </div>
+                  
+                </div>
+              )}
+            </div>
+          </div>
+          {/* Results Header & Controls Row BELOW the widgets */}
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mt-6">
             <h2 className="text-2xl font-bold text-gray-900">
               {filteredBarracas.length} of {totalBarracas} {t('discover.resultsFound')} {totalBarracas === 1 ? t('discover.barraca') : t('discover.barracas')} {t('discover.found')}
             </h2>
@@ -165,91 +237,9 @@ const Discover: React.FC = () => {
             </div>
           </div>
 
-          {/* Always Visible Filter Panel */}
-          {showFilters && (
-            <div className="bg-white rounded-xl p-3 md:p-4 shadow-sm border border-gray-200 mb-6">
-              <div className="space-y-3">
-                {/* Availability Filter */}
-                <div>
-                  <div className="flex items-center mb-2">
-                    <CheckCircle className="h-3.5 w-3.5 text-green-500 mr-1.5" />
-                    <h3 className="text-xs md:text-sm font-medium text-gray-700" data-lingo-skip>Availability</h3>
-                  </div>
-                  <div className="flex gap-1 md:gap-2 bg-gray-100 rounded-lg p-1 w-fit">
-                    {availabilityOptions.map((option) => {
-                      const Icon = option.icon;
-                      return (
-                        <button
-                          key={option.value}
-                          onClick={() => handleAvailabilityFilter(option.value as 'all' | 'open' | 'closed')}
-                          className={`flex items-center px-2 md:px-3 py-1.5 md:py-2 rounded-md text-xs md:text-sm font-medium transition-colors ${
-                            searchFilters.status === option.value
-                              ? 'bg-beach-500 text-white shadow-sm'
-                              : 'text-gray-600 hover:text-gray-900 hover:bg-white'
-                          }`}
-                        >
-                          {Icon && <Icon className="h-3.5 w-3.5 md:h-4 md:w-4 mr-1" />}
-                          {option.label}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* Rating Filter */}
-                <div>
-                  <div className="flex items-center mb-2">
-                    <Star className="h-3.5 w-3.5 text-yellow-500 mr-1.5" />
-                    <h3 className="text-xs md:text-sm font-medium text-gray-700" data-lingo-skip>Rating</h3>
-                  </div>
-                  <div className="flex gap-1 md:gap-2 bg-gray-100 rounded-lg p-1 w-fit">
-                    {ratingOptions.map((option) => {
-                      const Icon = option.icon;
-                      return (
-                        <button
-                          key={option.value ?? 'all'}
-                          onClick={() => handleRatingFilter(option.value)}
-                          className={`flex items-center px-2 md:px-3 py-1.5 md:py-2 rounded-md text-xs md:text-sm font-medium transition-colors ${
-                            searchFilters.rating === option.value
-                              ? 'bg-yellow-500 text-white shadow-sm'
-                              : 'text-gray-600 hover:text-gray-900 hover:bg-white'
-                          }`}
-                        >
-                          {option.rating ? (
-                            <StarRating rating={option.rating} size="sm" className="mr-1" />
-                          ) : (
-                            Icon && <Icon className="h-3.5 w-3.5 md:h-4 md:w-4 mr-1" />
-                          )}
-                          {option.label}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* Location Filter Checkboxes */}
-                <LocationFilterCheckboxes
-                  availableLocations={dynamicLocations}
-                  onLocationsChange={handleLocationsChange}
-                  initialLocations={searchFilters.locations.length > 0 ? searchFilters.locations : (searchFilters.location ? [searchFilters.location] : [])}
-                />
-              </div>
-              
-              {/* Total Results Count */}
-              <div className="pt-3 border-t border-gray-100">
-                <p className="text-sm text-gray-600">
-                  Showing {filteredBarracas.length} of {totalBarracas} total barracas
-                  {hasMore && (
-                    <span className="text-beach-600 font-medium"> • Scroll to load more</span>
-                  )}
-                </p>
-              </div>
-            </div>
-          )}
-
           {/* Active Filters Display - Compact */}
           {hasActiveFilters && (
-            <div className="flex flex-wrap gap-1.5 md:gap-2 mb-6">
+            <div className="flex flex-wrap gap-1.5 md:gap-2 mt-4">
               {searchFilters.query && (
                 <span className="bg-beach-100 text-beach-800 px-2 md:px-3 py-1 rounded-full text-xs md:text-sm flex items-center">
                   <Search className="h-3 w-3 mr-1" />
