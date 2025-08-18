@@ -24,6 +24,11 @@ const Home: React.FC = () => {
   const featuresAnimation = useScrollAnimation('slideUpStagger');
   const benefitsAnimation = useScrollAnimation('zoomIn');
   const signupAnimation = useScrollAnimation('fadeInScale');
+  
+  // Background images for the email signup section
+  // Background images for the email signup section
+  const signupBgDesktop = "https://pub-db19578f977b43e184c45b5084d7c029.r2.dev/editsV1/80-group-2.jpg?width=1600&quality=80&fit=cover";
+  const signupBgMobile = "https://pub-db19578f977b43e184c45b5084d7c029.r2.dev/group-v-1.jpg?width=900&quality=80&fit=cover";
 
   const loyaltyFeatures = [
     {
@@ -204,17 +209,26 @@ const Home: React.FC = () => {
       </section>
 
       {/* Email Subscription */}
-      <section id="loyalty-signup" ref={signupAnimation.ref} className={`relative py-20 ${signupAnimation.animationClasses}`}> 
-        <div className="absolute inset-0 w-full h-full bg-[url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80')] bg-cover bg-center" />
+      <section id="loyalty-signup" ref={signupAnimation.ref} className={`relative aspect-[8.5/11] md:aspect-[3/2] ${signupAnimation.animationClasses}`}> 
+        {/* Mobile background */}
+        <div
+          className="absolute inset-0 w-full h-full bg-cover bg-center md:hidden"
+          style={{ backgroundImage: `url('${signupBgMobile}')` }}
+        />
+        {/* Desktop/Tablet background */}
+        <div
+          className="hidden md:block absolute inset-0 w-full h-full bg-cover bg-center"
+          style={{ backgroundImage: `url('${signupBgDesktop}')` }}
+        />
         <div className="absolute inset-0 w-full h-full bg-black/50" />
-        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center h-full flex flex-col justify-center">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4 drop-shadow-lg">
             {t('home.joinToday')}
           </h2>
           <p className="text-xl text-white mb-8 max-w-2xl mx-auto drop-shadow">
             {t('home.joinDescription')}
           </p>
-          <div className="bg-white/90 rounded-2xl p-8 shadow-lg inline-block w-full max-w-xl mx-auto">
+          <div className="bg-transparent md:bg-white/40 backdrop-blur-none md:backdrop-blur-sm rounded-2xl p-8 shadow-none md:shadow-lg inline-block w-full max-w-xl mx-auto opacity-100 pointer-events-auto transition-all duration-200">
             <EmailSubscription />
           </div>
         </div>

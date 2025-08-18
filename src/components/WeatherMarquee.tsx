@@ -40,9 +40,9 @@ const WeatherMarquee: React.FC<WeatherMarqueeProps> = ({
         const w = weatherByLocation[loc] || weather;
         return (
           <div className="flex items-center gap-3 mr-6" key={`${keyPrefix}-${loc}`}>
-            <div className="flex items-center gap-2 text-sm font-semibold">
-              <MapPin className="h-4 w-4" />
-              <span className="truncate" data-lingo-skip>{loc}</span>
+            <div className="flex items-center gap-1 text-sm font-semibold">
+              <MapPin className={`h-4 w-4 ${colorScheme === 'pink' ? 'text-white' : 'text-pink-500'}`} />
+              <span className={`truncate ${colorScheme === 'pink' ? 'text-white' : 'text-pink-500'}`} data-lingo-skip>{loc}</span>
             </div>
             <div className="flex items-center gap-1 text-sm opacity-95">
               <Thermometer className="h-4 w-4" />
