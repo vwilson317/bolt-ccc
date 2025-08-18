@@ -42,6 +42,12 @@ interface AppContextType {
   refreshBarracas: () => Promise<void>;
   firestoreConnected: boolean;
   barracaStatuses: Map<string, BarracaStatus>;
+  // Infinite Scroll
+  allBarracas: Barraca[];
+  hasMore: boolean;
+  loadMore: () => Promise<void>;
+  totalBarracas: number;
+  isLoadingMore: boolean;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -71,6 +77,14 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     status: 'all'
   });
   const [isLoading, setIsLoading] = useState(false);
+  
+  // Infinite scroll state
+  const [allBarracas, setAllBarracas] = useState<Barraca[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalBarracas, setTotalBarracas] = useState(0);
+  const [pageSize] = useState(10);
+  const [hasMore, setHasMore] = useState(true);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
   
   // Initialize admin state from localStorage
   const [isAdmin, setIsAdmin] = useState(() => {
@@ -123,13 +137,22 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const [barracaStatuses, setBarracaStatuses] = useState<Map<string, BarracaStatus>>(new Map());
   const [firestoreConnected, setFirestoreConnected] = useState(false);
 
-  // Enhanced barraca fetching with Firestore status
-  const fetchBarracasWithStatus = useCallback(async (): Promise<Barraca[]> => {
+  // Enhanced barraca fetching with Firestore status and pagination
+  const fetchBarracasWithStatus = useCallback(async (page: number = currentPage): Promise<{ barracas: Barraca[], total: number }> => {
     try {
-      const barracas = await BarracaService.getAll();
+      // Convert search filters to service filters
+      const serviceFilters = {
+        query: searchFilters.query || undefined,
+        location: searchFilters.location || undefined,
+        locations: searchFilters.locations.length > 0 ? searchFilters.locations : undefined,
+        status: searchFilters.status,
+        rating: searchFilters.rating
+      };
+
+      const result = await BarracaService.getAll(page, pageSize, serviceFilters);
       
       // Overlay Firestore status on top of database data
-      const barracasWithStatus = barracas.map(barraca => {
+      const barracasWithStatus = result.barracas.map(barraca => {
         const firestoreStatus = barracaStatuses.get(barraca.id);
         if (firestoreStatus) {
           return {
@@ -143,12 +166,15 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
         return barraca;
       });
       
-      return barracasWithStatus;
+      return {
+        barracas: barracasWithStatus,
+        total: result.total
+      };
     } catch (error) {
       console.error('Error fetching barracas with status:', error);
       throw error;
     }
-  }, [barracaStatuses]);
+  }, [barracaStatuses, currentPage, pageSize, searchFilters]);
 
   // Utility function to check and clear expired admin sessions
   const checkAndClearExpiredSession = useCallback(() => {
@@ -207,35 +233,12 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
       setIsLoading(true);
       try {
         console.log('🔄 Loading barracas from Supabase...');
-        const fetchedBarracas = await BarracaService.getAll();
+        const result = await fetchBarracasWithStatus(1);
         
-        // Move barraca with barracaNumber '80' to the front if it exists
-        const index80 = fetchedBarracas.findIndex(b => b.barracaNumber === '80');
-        if (index80 > -1) {
-          const [barraca80] = fetchedBarracas.splice(index80, 1);
-          fetchedBarracas.unshift(barraca80);
-        }
-        
-        // Sort barracas: partnered first, then non-partnered, with location sorting within each group
-        fetchedBarracas.sort((a, b) => {
-          // First, sort by partnered status (partnered first)
-          if (a.partnered !== b.partnered) {
-            return a.partnered ? -1 : 1;
-          }
-          // Then, sort by location within each group
-          return a.location.localeCompare(b.location);
-        });
-        
-        // Ensure barraca 80 stays first
-        if (index80 > -1) {
-          const indexAfterSort = fetchedBarracas.findIndex(b => b.barracaNumber === '80');
-          if (indexAfterSort > 0) {
-            const [barraca80] = fetchedBarracas.splice(indexAfterSort, 1);
-            fetchedBarracas.unshift(barraca80);
-          }
-        }
-        
-        setBarracas(fetchedBarracas);
+        setAllBarracas(result.barracas);
+        setBarracas(result.barracas);
+        setTotalBarracas(result.total);
+        setHasMore(result.barracas.length === pageSize);
         console.log('✅ Barracas loaded from Supabase');
       } catch (error) {
         console.error('Failed to load barracas:', error);
@@ -246,7 +249,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     };
 
     loadBarracas();
-  }, []);
+  }, [fetchBarracasWithStatus, pageSize]);
 
   // Load email subscriptions from database on mount
   useEffect(() => {
@@ -313,54 +316,16 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     };
   }, []);
 
-  // Enhanced filter logic for comprehensive search
-  const filteredBarracas = barracas.filter(barraca => {
-    // Text search: name, barraca number, location
-    const searchQuery = searchFilters.query.toLowerCase();
-    const matchesQuery = searchQuery === '' || 
-      barraca.name.toLowerCase().includes(searchQuery) ||
-      (barraca.barracaNumber && barraca.barracaNumber.toLowerCase().includes(searchQuery)) ||
-      barraca.location.toLowerCase().includes(searchQuery);
-    
-    // Status filter (all, open, closed) - respect weather override
-    const effectiveIsOpen = weatherOverride ? false : barraca.isOpen;
-    const matchesStatus = searchFilters.status === 'all' ||
-      (searchFilters.status === 'open' && effectiveIsOpen) ||
-      (searchFilters.status === 'closed' && !effectiveIsOpen);
-    
-    // Legacy openNow filter (for backward compatibility)
-    const matchesOpenNow = !searchFilters.openNow || effectiveIsOpen;
-    
-    // Location filter (neighborhood) - support both single and multiple locations
-    const matchesLocation = 
-      searchFilters.location === '' && searchFilters.locations.length === 0 ||
-      (searchFilters.location !== '' && barraca.location.toLowerCase().includes(searchFilters.location.toLowerCase())) ||
-      (searchFilters.locations.length > 0 && searchFilters.locations.some(loc => 
-        barraca.location.toLowerCase().includes(loc.toLowerCase())
-      ));
-
-    // Rating filter
-    const matchesRating = !searchFilters.rating || barraca.rating === searchFilters.rating;
-
-    return matchesQuery && matchesStatus && matchesOpenNow && matchesLocation && matchesRating;
-  }).sort((a, b) => {
-    // Enhanced sorting: partnered first, then by rating (highest first), then by location
-    if (a.partnered !== b.partnered) {
-      return a.partnered ? -1 : 1;
+  // With infinite scroll, filteredBarracas is all loaded barracas
+  // Apply weather override to all loaded barracas
+  const filteredBarracas = allBarracas.map(barraca => {
+    if (weatherOverride) {
+      return {
+        ...barraca,
+        isOpen: false
+      };
     }
-    
-    // Sort by rating (highest first) if both have ratings
-    if (a.rating && b.rating) {
-      if (a.rating !== b.rating) {
-        return b.rating - a.rating; // Higher rating first
-      }
-    } else if (a.rating && !b.rating) {
-      return -1; // Rated barracas first
-    } else if (!a.rating && b.rating) {
-      return 1;
-    }
-    
-    return a.location.localeCompare(b.location);
+    return barraca;
   });
 
   // Load weather data on mount
@@ -411,7 +376,32 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
 
   const updateSearchFilters = useCallback((filters: Partial<SearchFilters>) => {
     setSearchFilters(prev => ({ ...prev, ...filters }));
-  }, []);
+    // Reset to page 1 when filters change
+    if (currentPage !== 1) {
+      setCurrentPage(1);
+    }
+  }, [currentPage]);
+
+  // Refetch data when search filters change
+  useEffect(() => {
+    const refetchData = async () => {
+      setIsLoading(true);
+      try {
+        const result = await fetchBarracasWithStatus(1);
+        setAllBarracas(result.barracas);
+        setBarracas(result.barracas);
+        setTotalBarracas(result.total);
+        setCurrentPage(1);
+        setHasMore(result.barracas.length === pageSize);
+      } catch (error) {
+        console.error('Failed to refetch data with new filters:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    refetchData();
+  }, [searchFilters, fetchBarracasWithStatus, pageSize]);
 
   const addBarraca = useCallback(async (barracaData: Omit<Barraca, 'id' | 'createdAt' | 'updatedAt'>) => {
     try {
@@ -565,8 +555,9 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
         if (updatedCount > 0) {
           // Refresh barracas from database to get updated status
           try {
-            const refreshedBarracas = await fetchBarracasWithStatus();
-            setBarracas(refreshedBarracas);
+            const result = await fetchBarracasWithStatus(currentPage);
+            setBarracas(result.barracas);
+            setTotalBarracas(result.total);
           } catch (error) {
             console.error('Failed to refresh barracas after weather update:', error);
           }
@@ -587,6 +578,50 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     setSelectedBarraca(null);
   }, []);
 
+  // Pagination functions
+  const goToPage = useCallback(async (page: number) => {
+    if (page < 1 || page > Math.ceil(totalBarracas / pageSize)) return;
+    
+    setCurrentPage(page);
+    setIsLoading(true);
+    
+    try {
+      const result = await fetchBarracasWithStatus(page);
+      setBarracas(result.barracas);
+      setTotalBarracas(result.total);
+    } catch (error) {
+      console.error('Failed to fetch page:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [totalBarracas, pageSize, fetchBarracasWithStatus]);
+
+  const nextPage = useCallback(() => {
+    const nextPageNum = currentPage + 1;
+    if (nextPageNum <= Math.ceil(totalBarracas / pageSize)) {
+      goToPage(nextPageNum);
+    }
+  }, [currentPage, totalBarracas, pageSize, goToPage]);
+
+  // Infinite scroll functions
+  const loadMore = useCallback(async () => {
+    if (isLoadingMore || !hasMore) return;
+    
+    setIsLoadingMore(true);
+    try {
+      const nextPage = currentPage + 1;
+      const result = await fetchBarracasWithStatus(nextPage);
+      
+      setAllBarracas(prev => [...prev, ...result.barracas]);
+      setCurrentPage(nextPage);
+      setHasMore(result.barracas.length === pageSize);
+    } catch (error) {
+      console.error('Failed to load more barracas:', error);
+    } finally {
+      setIsLoadingMore(false);
+    }
+  }, [isLoadingMore, hasMore, currentPage, fetchBarracasWithStatus, pageSize]);
+
   // Update the existing refreshBarracas function
   const refreshBarracas = useCallback(async () => {
     try {
@@ -596,25 +631,16 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
       }
       
       console.log('🔄 Refreshing barracas from Supabase...');
-      const fetchedBarracas = await BarracaService.getAll();
+      const result = await fetchBarracasWithStatus(currentPage);
       
-      // Sort barracas: partnered first, then non-partnered, with location sorting within each group
-      fetchedBarracas.sort((a, b) => {
-        // First, sort by partnered status (partnered first)
-        if (a.partnered !== b.partnered) {
-          return a.partnered ? -1 : 1;
-        }
-        // Then, sort by location within each group
-        return a.location.localeCompare(b.location);
-      });
-      
-      setBarracas(fetchedBarracas);
+      setBarracas(result.barracas);
+      setTotalBarracas(result.total);
       console.log('✅ Barracas refreshed from Supabase');
     } catch (error) {
       console.error('Failed to refresh barracas:', error);
       throw error;
     }
-  }, [isAdmin, isSpecialAdmin, extendAdminSession]);
+  }, [isAdmin, isSpecialAdmin, extendAdminSession, fetchBarracasWithStatus, currentPage]);
 
   useEffect(() => {
     // Register service worker and get FCM token
@@ -672,7 +698,13 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     refreshWeather,
     refreshBarracas,
     firestoreConnected,
-    barracaStatuses
+    barracaStatuses,
+    // Infinite Scroll
+    allBarracas,
+    hasMore,
+    loadMore,
+    totalBarracas,
+    isLoadingMore
   };
 
   return (

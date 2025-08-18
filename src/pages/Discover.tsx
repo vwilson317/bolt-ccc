@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Search, Filter, MapPin, X, CheckCircle, XCircle, Star } from 'lucide-react';
+import { Search, Filter, MapPin, X, CheckCircle, XCircle, Star, Loader2 } from 'lucide-react';
 import { useApp } from '../contexts/AppContext';
 import { useStory } from '../contexts/StoryContext';
 import { useWeather } from '../contexts/WeatherContext';
@@ -9,14 +9,30 @@ import StoryCarousel from '../components/StoryCarousel';
 import WeatherWidget from '../components/WeatherWidget';
 import LocationFilterCheckboxes from '../components/LocationFilterCheckboxes';
 import StarRating from '../components/StarRating';
+import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 
 const Discover: React.FC = () => {
   const { t } = useTranslation();
-  const { filteredBarracas, searchFilters, updateSearchFilters, barracas } = useApp();
+  const { 
+    filteredBarracas, 
+    searchFilters, 
+    updateSearchFilters, 
+    totalBarracas,
+    hasMore,
+    loadMore,
+    isLoadingMore
+  } = useApp();
   const { featureFlags } = useStory();
   const { weather } = useWeather();
   const [showFilters, setShowFilters] = useState(true);
+
+  // Infinite scroll hook
+  const loadingRef = useInfiniteScroll({
+    onLoadMore: loadMore,
+    hasMore,
+    isLoading: isLoadingMore
+  });
 
   // Scroll animations
   const resultsAnimation = useScrollAnimation('slideUp');
@@ -24,13 +40,13 @@ const Discover: React.FC = () => {
   // Compute unique locations from loaded barracas
   const dynamicLocations = React.useMemo(() => {
     const locationsSet = new Set<string>();
-    barracas.forEach(b => {
+    filteredBarracas.forEach(b => {
       if (b.location && b.location.trim()) {
         locationsSet.add(b.location.trim());
       }
     });
     return Array.from(locationsSet).sort((a, b) => a.localeCompare(b));
-  }, [barracas]);
+  }, [filteredBarracas]);
 
   const availabilityOptions = [
     { value: 'all', label: t('discover.filters.all'), icon: null },
@@ -127,7 +143,7 @@ const Discover: React.FC = () => {
         <div className="mb-8">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
             <h2 className="text-2xl font-bold text-gray-900">
-              {filteredBarracas.length} {t('discover.resultsFound')} {filteredBarracas.length === 1 ? t('discover.barraca') : t('discover.barracas')} {t('discover.found')}
+              {filteredBarracas.length} of {totalBarracas} {t('discover.resultsFound')} {totalBarracas === 1 ? t('discover.barraca') : t('discover.barracas')} {t('discover.found')}
             </h2>
             <div className="flex items-center gap-3">
               {hasActiveFilters && (
@@ -218,6 +234,16 @@ const Discover: React.FC = () => {
                   initialLocations={searchFilters.locations.length > 0 ? searchFilters.locations : (searchFilters.location ? [searchFilters.location] : [])}
                 />
               </div>
+              
+              {/* Total Results Count */}
+              <div className="pt-3 border-t border-gray-100">
+                <p className="text-sm text-gray-600">
+                  Showing {filteredBarracas.length} of {totalBarracas} total barracas
+                  {hasMore && (
+                    <span className="text-beach-600 font-medium"> • Scroll to load more</span>
+                  )}
+                </p>
+              </div>
             </div>
           )}
 
@@ -269,7 +295,28 @@ const Discover: React.FC = () => {
         {/* Results */}
         <div ref={resultsAnimation.ref} className={resultsAnimation.animationClasses}>
           {filteredBarracas.length > 0 ? (
-            <BarracaGrid barracas={filteredBarracas} />
+            <>
+              <BarracaGrid barracas={filteredBarracas} />
+              
+              {/* Infinite Scroll Loading Indicator */}
+              {hasMore && (
+                <div ref={loadingRef} className="flex justify-center py-8">
+                  <div className="flex items-center space-x-2 text-gray-600">
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                    <span>Loading more barracas...</span>
+                  </div>
+                </div>
+              )}
+              
+              {/* End of Results */}
+              {!hasMore && filteredBarracas.length > 0 && (
+                <div className="text-center py-8">
+                  <p className="text-gray-500 text-sm">
+                    You've reached the end of all {totalBarracas} barracas
+                  </p>
+                </div>
+              )}
+            </>
           ) : (
           <div className="text-center py-16">
             <div className="bg-gray-100 rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-4">

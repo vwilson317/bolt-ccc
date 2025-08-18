@@ -55,7 +55,7 @@ const Admin: React.FC = () => {
       const success = await adminLogin(email, password);
       trackAdminLogin(success);
       if (!success) {
-        setLoginError('Invalid credentials. Try admin@cariocacoastal.com / admin123');
+        setLoginError('Invalid credentials. Please try again.');
       }
     } catch (error) {
       trackAdminLogin(false);
@@ -148,12 +148,6 @@ const Admin: React.FC = () => {
               {isLogging ? t('common.loading') : t('admin.signIn')}
             </button>
           </form>
-
-          <div className="mt-6 text-center">
-            <p className="text-sm text-gray-500 mb-2" data-lingo-skip>
-              {t('admin.credentials')}
-            </p>
-          </div>
         </div>
       </div>
     );

@@ -65,20 +65,62 @@ const isValidUUID = (id: string): boolean => {
 };
 
 export class BarracaService {
-  // Get all barracas
-  static async getAll(): Promise<Barraca[]> {
+  // Get all barracas with pagination and optional filters
+  static async getAll(
+    page: number = 1, 
+    pageSize: number = 10,
+    filters?: {
+      query?: string;
+      location?: string;
+      locations?: string[];
+      status?: 'all' | 'open' | 'closed';
+      rating?: number;
+    }
+  ): Promise<{ barracas: Barraca[], total: number }> {
     try {
-      const { data, error } = await supabase
-        .from('barracas')
-        .select('*')
-        .order('name')
+      let query = supabase.from('barracas').select('*', { count: 'exact' });
+
+      // Apply filters
+      if (filters?.query) {
+        query = query.or(`name.ilike.%${filters.query}%,barraca_number.ilike.%${filters.query}%,location.ilike.%${filters.query}%`);
+      }
+
+      if (filters?.location) {
+        query = query.ilike('location', `%${filters.location}%`);
+      }
+
+      if (filters?.locations && filters.locations.length > 0) {
+        const locationConditions = filters.locations.map(loc => `location.ilike.%${loc}%`).join(',');
+        query = query.or(locationConditions);
+      }
+
+      if (filters?.rating) {
+        query = query.eq('rating', filters.rating);
+      }
+
+      // Get total count with filters
+      const { count, error: countError } = await query;
+
+      if (countError) {
+        handleSupabaseError(countError, 'getAll barracas count');
+      }
+
+      // Calculate pagination
+      const from = (page - 1) * pageSize;
+      const to = from + pageSize - 1;
+
+      // Get paginated data with filters
+      const { data, error } = await query
+        .order('partnered', { ascending: false }) // Partnered barracas first
+        .order('name') // Then by name
+        .range(from, to);
 
       if (error) {
-        handleSupabaseError(error, 'getAll barracas')
+        handleSupabaseError(error, 'getAll barracas');
       }
 
       // Get open status for each barraca
-      const barracasWithOpenStatus = []
+      const barracasWithOpenStatus = [];
       for (const row of data || []) {
         let isOpen: boolean | null = false;
         if (isValidUUID(row.id)) {
@@ -95,19 +137,41 @@ export class BarracaService {
         barracasWithOpenStatus.push(transformBarracaFromDB(row, isOpen));
       }
 
-      // Sort by partnered status first, then by name
-      barracasWithOpenStatus.sort((a, b) => {
+      // Apply status filter after getting open status
+      let filteredBarracas = barracasWithOpenStatus;
+      if (filters?.status && filters.status !== 'all') {
+        filteredBarracas = barracasWithOpenStatus.filter(barraca => {
+          if (filters.status === 'open') {
+            return barraca.isOpen === true;
+          } else if (filters.status === 'closed') {
+            return barraca.isOpen === false;
+          }
+          return true;
+        });
+      }
+
+      // Sort by partnered status first, then by name (consistent with database ordering)
+      filteredBarracas.sort((a, b) => {
         if (a.partnered !== b.partnered) {
           return a.partnered ? -1 : 1;
         }
         return a.name.localeCompare(b.name);
       });
 
-      return barracasWithOpenStatus
+      return {
+        barracas: filteredBarracas,
+        total: count || 0
+      };
     } catch (error) {
-      console.error('Error fetching barracas:', error)
-      throw error
+      console.error('Error fetching barracas:', error);
+      throw error;
     }
+  }
+
+  // Get all barracas (backward compatibility)
+  static async getAllUnpaginated(): Promise<Barraca[]> {
+    const result = await this.getAll(1, 1000); // Large page size to get all
+    return result.barracas;
   }
 
   // Get barraca by ID
