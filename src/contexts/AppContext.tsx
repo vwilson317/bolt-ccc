@@ -17,7 +17,6 @@ export { firebaseApp, messaging };
 
 interface AppContextType {
   barracas: Barraca[];
-  filteredBarracas: Barraca[];
   weather: WeatherData | null;
   searchFilters: SearchFilters;
   isLoading: boolean;
@@ -43,12 +42,11 @@ interface AppContextType {
   refreshBarracas: () => Promise<void>;
   firestoreConnected: boolean;
   barracaStatuses: Map<string, BarracaStatus>;
-  // Infinite Scroll
-  allBarracas: Barraca[];
+  // New Infinite Scroll
+  page: number;
   hasMore: boolean;
   loadMore: () => Promise<void>;
   totalBarracas: number;
-  isLoadingMore: boolean;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -79,14 +77,10 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   });
   const [isLoading, setIsLoading] = useState(false);
   
-  // Infinite scroll state
-  const [allBarracas, setAllBarracas] = useState<Barraca[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
+  // New infinite scroll state
+  const [page, setPage] = useState(1);
   const [totalBarracas, setTotalBarracas] = useState(0);
-  const [pageSize] = useState(12);
   const [hasMore, setHasMore] = useState(true);
-  const [isLoadingMore, setIsLoadingMore] = useState(false);
-  const [serverTotalPages, setServerTotalPages] = useState(1);
 
   
   // Initialize admin state from localStorage
@@ -141,7 +135,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const [firestoreConnected, setFirestoreConnected] = useState(false);
 
   // Enhanced barraca fetching with Firestore status and pagination
-  const fetchBarracasWithStatus = useCallback(async (page: number = currentPage): Promise<{ barracas: Barraca[], total: number }> => {
+  const fetchBarracasWithStatus = useCallback(async (page: number = 1): Promise<{ barracas: Barraca[], total: number }> => {
     try {
       // Convert search filters to service filters
       const serviceFilters = {
@@ -152,7 +146,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
         rating: searchFilters.rating
       };
 
-      const result = await BarracaService.getAll(page, pageSize, serviceFilters);
+      const result = await BarracaService.getAll(page, 12, serviceFilters);
       
       // Overlay Firestore status on top of database data
       const barracasWithStatus = result.barracas.map(barraca => {
@@ -177,7 +171,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
       console.error('Error fetching barracas with status:', error);
       throw error;
     }
-  }, [barracaStatuses, currentPage, pageSize, searchFilters]);
+  }, [barracaStatuses, searchFilters]);
 
   // Utility function to check and clear expired admin sessions
   const checkAndClearExpiredSession = useCallback(() => {
@@ -230,32 +224,43 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     return () => clearInterval(interval);
   }, [checkAndClearExpiredSession]);
 
-  // Load barracas from database on mount
+  // Load barracas from database on mount with retry mechanism
   useEffect(() => {
     const loadBarracas = async () => {
       setIsLoading(true);
-      try {
-        console.log('🔄 Loading barracas from Supabase...');
-        const result = await fetchBarracasWithStatus(1);
-        
-        setAllBarracas(result.barracas);
-        setBarracas(result.barracas);
-        setTotalBarracas(result.total);
-        setServerTotalPages(Math.max(1, Math.ceil((result.total || 0) / pageSize)));
-        // Stop relying on page-size equality; use total vs unique loaded
-        const initialUnique = new Set(result.barracas.map(b => b.id)).size;
-        setHasMore(initialUnique < result.total);
-        console.log('✅ Barracas loaded from Supabase');
-      } catch (error) {
-        console.error('Failed to load barracas:', error);
-        // Keep empty array if loading fails
-      } finally {
-        setIsLoading(false);
+      let retries = 0;
+      const maxRetries = 3;
+
+      while (retries < maxRetries) {
+        try {
+          console.log('🔄 Loading barracas from Supabase...');
+          const result = await fetchBarracasWithStatus(1);
+          
+          setBarracas(result.barracas);
+          setTotalBarracas(result.total);
+          setPage(1);
+          setHasMore(result.barracas.length < result.total);
+          console.log('✅ Barracas loaded from Supabase');
+          break; // Success, exit retry loop
+        } catch (error) {
+          retries++;
+          console.error(`Failed to load barracas (attempt ${retries}/${maxRetries}):`, error);
+          
+          if (retries >= maxRetries) {
+            console.error('Max retries reached for loading barracas');
+            // Keep empty array if loading fails
+          } else {
+            // Wait before retrying (exponential backoff)
+            await new Promise(resolve => setTimeout(resolve, 1000 * retries));
+          }
+        }
       }
+      
+      setIsLoading(false);
     };
 
     loadBarracas();
-  }, [fetchBarracasWithStatus, pageSize]);
+  }, [fetchBarracasWithStatus]);
 
   // Load email subscriptions from database on mount
   useEffect(() => {
@@ -322,75 +327,9 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     };
   }, []);
 
-  // With infinite scroll, filteredBarracas is all loaded barracas
-  // Apply weather override to all loaded barracas
-  // Helpers for stable global sort compatible with incremental loads
-  const parseBarracaNumber = (num?: string): number => {
-    if (!num) return Number.POSITIVE_INFINITY;
-    const match = String(num).match(/\d+/);
-    if (!match) return Number.POSITIVE_INFINITY;
-    return parseInt(match[0], 10);
-  };
 
-  const compareBarracasForUI = (a: Barraca, b: Barraca): number => {
-    // Compute effective open considering override and special admin
-    const aEffective = getEffectiveOpenStatus(a, weatherOverride);
-    const bEffective = getEffectiveOpenStatus(b, weatherOverride);
-    const aOpen = aEffective === true;
-    const bOpen = bEffective === true;
-    if (aOpen !== bOpen) return aOpen ? -1 : 1;
 
-    // Partnered next
-    if (a.partnered !== b.partnered) return a.partnered ? -1 : 1;
-
-    // Rating desc
-    const aRating = a.rating || 0;
-    const bRating = b.rating || 0;
-    if (aRating !== bRating) return bRating - aRating;
-
-    // Barraca number asc
-    const aNum = parseBarracaNumber(a.barracaNumber);
-    const bNum = parseBarracaNumber(b.barracaNumber);
-    if (aNum !== bNum) return aNum - bNum;
-
-    // Name as final tiebreaker
-    return a.name.localeCompare(b.name);
-  };
-
-  const dedupeById = (items: Barraca[]): Barraca[] => {
-    const map = new Map<string, Barraca>();
-    for (const item of items) {
-      if (!map.has(item.id)) {
-        map.set(item.id, item);
-      }
-    }
-    return Array.from(map.values());
-  };
-
-  const filteredBarracas = React.useMemo(() => {
-    // 1) Deduplicate any accidental duplicates from paginated appends
-    const unique = dedupeById(allBarracas);
-
-    // 2) Overlay latest Firestore status on the fly, so UI updates without refetch
-    const withRealtimeStatus = unique.map(barraca => {
-      const firestoreStatus = barracaStatuses.get(barraca.id);
-      if (firestoreStatus) {
-        return {
-          ...barraca,
-          isOpen: firestoreStatus.isOpen,
-          manualStatus: firestoreStatus.manualStatus,
-          specialAdminOverride: firestoreStatus.specialAdminOverride,
-          specialAdminOverrideExpires: firestoreStatus.specialAdminOverrideExpires
-        } as Barraca;
-      }
-      return barraca;
-    });
-
-    // 3) Global stable sort for UI using effective open, partnered, rating, number, name
-    const sorted = [...withRealtimeStatus].sort(compareBarracasForUI);
-    
-    return sorted;
-  }, [allBarracas, barracaStatuses, weatherOverride]);
+  
 
   // Load weather data on mount
   useEffect(() => {
@@ -440,11 +379,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
 
   const updateSearchFilters = useCallback((filters: Partial<SearchFilters>) => {
     setSearchFilters(prev => ({ ...prev, ...filters }));
-    // Reset to page 1 when filters change
-    if (currentPage !== 1) {
-      setCurrentPage(1);
-    }
-  }, [currentPage]);
+  }, []);
 
   // Refetch data when search filters change
   useEffect(() => {
@@ -452,16 +387,10 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
       setIsLoading(true);
       try {
         const result = await fetchBarracasWithStatus(1);
-        // Reset infinite scroll state completely when filters change
-        setAllBarracas(result.barracas);
         setBarracas(result.barracas);
         setTotalBarracas(result.total);
-        setServerTotalPages(Math.max(1, Math.ceil((result.total || 0) / pageSize)));
-        setCurrentPage(1);
-        const initialUnique = new Set(result.barracas.map(b => b.id)).size;
-        setHasMore(initialUnique < result.total);
-        // Reset loading state for infinite scroll
-        setIsLoadingMore(false);
+        setPage(1);
+        setHasMore(result.barracas.length < result.total);
       } catch (error) {
         console.error('Failed to refetch data with new filters:', error);
       } finally {
@@ -470,7 +399,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     };
 
     refetchData();
-  }, [searchFilters, fetchBarracasWithStatus, pageSize]);
+  }, [searchFilters, fetchBarracasWithStatus]);
 
   const addBarraca = useCallback(async (barracaData: Omit<Barraca, 'id' | 'createdAt' | 'updatedAt'>) => {
     try {
@@ -624,7 +553,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
         if (updatedCount > 0) {
           // Refresh barracas from database to get updated status
           try {
-            const result = await fetchBarracasWithStatus(currentPage);
+            const result = await fetchBarracasWithStatus(1);
             setBarracas(result.barracas);
             setTotalBarracas(result.total);
           } catch (error) {
@@ -647,106 +576,45 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     setSelectedBarraca(null);
   }, []);
 
-  // Pagination functions
-  const goToPage = useCallback(async (page: number) => {
-    if (page < 1 || page > Math.ceil(totalBarracas / pageSize)) return;
-    
-    setCurrentPage(page);
-    setIsLoading(true);
-    
-    try {
-      const result = await fetchBarracasWithStatus(page);
-      setBarracas(result.barracas);
-      setTotalBarracas(result.total);
-    } catch (error) {
-      console.error('Failed to fetch page:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [totalBarracas, pageSize, fetchBarracasWithStatus]);
 
-  const nextPage = useCallback(() => {
-    const nextPageNum = currentPage + 1;
-    if (nextPageNum <= Math.ceil(totalBarracas / pageSize)) {
-      goToPage(nextPageNum);
-    }
-  }, [currentPage, totalBarracas, pageSize, goToPage]);
 
-  // Infinite scroll functions
+  // New infinite scroll loadMore function with retry mechanism
   const loadMore = useCallback(async () => {
-    if (isLoadingMore || !hasMore) return;
+    if (isLoading || !hasMore) return;
 
-    setIsLoadingMore(true);
-    try {
-      // Accumulate enough unique items to fill a page by scanning subsequent server pages
-      const uniqueSoFar = dedupeById(allBarracas);
-      const seenIds = new Set(uniqueSoFar.map(b => b.id));
-      const targetBatchSize = pageSize;
-      const accumulated: Barraca[] = [];
+    setIsLoading(true);
+    let retries = 0;
+    const maxRetries = 3;
 
-      let pageToFetch = currentPage + 1;
-      let latestTotal = totalBarracas;
-
-      const MAX_PAGES_PER_CALL = 5;
-      let pagesScanned = 0;
-      while (
-        accumulated.length < targetBatchSize &&
-        pageToFetch <= serverTotalPages &&
-        pagesScanned < MAX_PAGES_PER_CALL
-      ) {
-        const { barracas: batch, total } = await fetchBarracasWithStatus(pageToFetch);
-        latestTotal = total;
-        const uniqueNew = batch.filter(b => !seenIds.has(b.id));
-        if (uniqueNew.length > 0) {
-          for (const b of uniqueNew) {
-            if (accumulated.length < targetBatchSize) {
-              accumulated.push(b);
-              seenIds.add(b.id);
-            } else {
-              break;
-            }
-          }
+    while (retries < maxRetries) {
+      try {
+        const nextPageNum = page + 1;
+        const result = await fetchBarracasWithStatus(nextPageNum);
+        
+        // Append new barracas to existing ones
+        setBarracas(prev => [...prev, ...result.barracas]);
+        setTotalBarracas(result.total);
+        setPage(nextPageNum);
+        setHasMore(result.barracas.length > 0 && (page * 12 + result.barracas.length) < result.total);
+        break; // Success, exit retry loop
+      } catch (error) {
+        retries++;
+        console.error(`Failed to load more barracas (attempt ${retries}/${maxRetries}):`, error);
+        
+        if (retries >= maxRetries) {
+          console.error('Max retries reached for loading more barracas');
+          // Could show a user-friendly error message here
+        } else {
+          // Wait before retrying (exponential backoff)
+          await new Promise(resolve => setTimeout(resolve, 1000 * retries));
         }
-        // Advance to next server page regardless to ensure progress
-        pageToFetch += 1;
-        pagesScanned += 1;
       }
-
-      // Update totals and server pages
-      if (latestTotal !== totalBarracas) {
-        setTotalBarracas(latestTotal);
-      }
-      const newServerTotalPages = Math.max(1, Math.ceil((latestTotal || 0) / pageSize));
-      if (newServerTotalPages !== serverTotalPages) {
-        setServerTotalPages(newServerTotalPages);
-      }
-
-      // Append what we found, if any
-      if (accumulated.length > 0) {
-        setAllBarracas(prev => [...prev, ...accumulated]);
-      }
-      // Move current page to the last scanned page - 1 since we incremented after loop
-      const lastScannedPage = Math.min(pageToFetch - 1, newServerTotalPages);
-      if (lastScannedPage > currentPage) {
-        setCurrentPage(lastScannedPage);
-      }
-
-      // Decide if more pages remain
-      const uniqueCount = seenIds.size;
-      const moreServerPagesRemain = lastScannedPage < newServerTotalPages;
-      const moreUniqueThanTotal = latestTotal > 0 ? uniqueCount < latestTotal : true;
-      if (accumulated.length === 0) {
-        // No new unique items found in this scan window; stop to prevent thrashing
-        setHasMore(false);
-      } else {
-        setHasMore(moreServerPagesRemain && moreUniqueThanTotal);
-      }
-    } catch (error) {
-      console.error('Failed to load more barracas:', error);
-    } finally {
-      setIsLoadingMore(false);
     }
-  }, [isLoadingMore, hasMore, currentPage, fetchBarracasWithStatus, pageSize, allBarracas, totalBarracas, serverTotalPages]);
+    
+    setIsLoading(false);
+  }, [isLoading, hasMore, page, fetchBarracasWithStatus]);
+
+
 
   // Update the existing refreshBarracas function
   const refreshBarracas = useCallback(async () => {
@@ -757,20 +625,18 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
       }
       
       console.log('🔄 Refreshing barracas from Supabase...');
-      const result = await fetchBarracasWithStatus(currentPage);
+      const result = await fetchBarracasWithStatus(1);
       
       setBarracas(result.barracas);
       setTotalBarracas(result.total);
-      // Update all barracas if we're on page 1, otherwise keep current state
-      if (currentPage === 1) {
-        setAllBarracas(result.barracas);
-      }
+      setPage(1);
+      setHasMore(result.barracas.length < result.total);
       console.log('✅ Barracas refreshed from Supabase');
     } catch (error) {
       console.error('Failed to refresh barracas:', error);
       throw error;
     }
-  }, [isAdmin, isSpecialAdmin, extendAdminSession, fetchBarracasWithStatus, currentPage]);
+  }, [isAdmin, isSpecialAdmin, extendAdminSession, fetchBarracasWithStatus]);
 
   useEffect(() => {
     // Register service worker and get FCM token
@@ -803,7 +669,6 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
 
   const value: AppContextType = {
     barracas,
-    filteredBarracas,
     weather,
     searchFilters,
     isLoading,
@@ -829,12 +694,11 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     refreshBarracas,
     firestoreConnected,
     barracaStatuses,
-    // Infinite Scroll
-    allBarracas,
+    // New Infinite Scroll
+    page,
     hasMore,
     loadMore,
-    totalBarracas,
-    isLoadingMore
+    totalBarracas
   };
 
   return (

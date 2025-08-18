@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Search, Filter, MapPin, X, CheckCircle, XCircle, Star, Loader2 } from 'lucide-react';
 import { useApp } from '../contexts/AppContext';
@@ -7,30 +7,31 @@ import BarracaGrid from '../components/BarracaGrid';
 import StoryCarousel from '../components/StoryCarousel';
 import LocationFilterCheckboxes from '../components/LocationFilterCheckboxes';
 import StarRating from '../components/StarRating';
-import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
+
+import { useInfiniteScrollV2 } from '../hooks/useInfiniteScrollV2';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 import WeatherMarquee from '../components/WeatherMarquee';
 
 const Discover: React.FC = () => {
   const { t } = useTranslation();
   const { 
-    filteredBarracas, 
+    barracas, 
     searchFilters, 
     updateSearchFilters, 
     totalBarracas,
     hasMore,
     loadMore,
-    isLoadingMore,
     isLoading
   } = useApp();
   const { featureFlags } = useStory();
-  const [showFilters, setShowFilters] = useState(true);
+    const [showFilters, setShowFilters] = useState(true);
 
-  // Infinite scroll hook
-  const loadingRef = useInfiniteScroll({
+  // New infinite scroll hook
+  const loadingRef = useInfiniteScrollV2({
     onLoadMore: loadMore,
     hasMore,
-    isLoading: isLoading || isLoadingMore
+    isLoading,
+    threshold: 800
   });
 
   // Scroll animations
@@ -39,13 +40,26 @@ const Discover: React.FC = () => {
   // Compute unique locations from loaded barracas
   const dynamicLocations = React.useMemo(() => {
     const locationsSet = new Set<string>();
-    filteredBarracas.forEach(b => {
+    barracas.forEach(b => {
       if (b.location && b.location.trim()) {
         locationsSet.add(b.location.trim());
       }
     });
     return Array.from(locationsSet).sort((a, b) => a.localeCompare(b));
-  }, [filteredBarracas]);
+  }, [barracas]);
+
+  // Auto-prefetch if the viewport isn't filled (up to 3 attempts)
+  const prefetchAttemptsRef = useRef(0);
+  useEffect(() => {
+    if (!hasMore || isLoading) return;
+    if (prefetchAttemptsRef.current >= 3) return;
+    const doc = document.documentElement;
+    const viewportFilled = doc.scrollHeight > window.innerHeight + 200;
+    if (!viewportFilled) {
+      prefetchAttemptsRef.current += 1;
+      loadMore();
+    }
+  }, [barracas.length, hasMore, isLoading, loadMore]);
 
   const availabilityOptions = [
     { value: 'all', label: t('discover.filters.all'), icon: null },
@@ -65,9 +79,10 @@ const Discover: React.FC = () => {
     { value: 1, label: t('discover.filters.good'), icon: Star, rating: 1 }
   ];
 
-  const handleSearchChange = (query: string) => {
+  // Debounced search handler
+  const handleSearchChange = useCallback((query: string) => {
     updateSearchFilters({ query });
-  };
+  }, [updateSearchFilters]);
 
   // removed unused handleLocationFilter
 
@@ -223,7 +238,7 @@ const Discover: React.FC = () => {
           {/* Results Header & Controls Row BELOW the widgets */}
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mt-6">
             <h2 className="text-2xl font-bold text-gray-900">
-              {filteredBarracas.length} of {totalBarracas} {t('discover.resultsFound')} {totalBarracas === 1 ? t('discover.barraca') : t('discover.barracas')} {t('discover.found')}
+              {barracas.length} of {totalBarracas} {t('discover.resultsFound')} {totalBarracas === 1 ? t('discover.barraca') : t('discover.barracas')} {t('discover.found')}
             </h2>
             <div className="flex items-center gap-3">
               {hasActiveFilters && (
@@ -292,9 +307,9 @@ const Discover: React.FC = () => {
 
         {/* Results */}
         <div ref={resultsAnimation.ref} className={resultsAnimation.animationClasses}>
-          {filteredBarracas.length > 0 ? (
+          {barracas.length > 0 ? (
             <>
-              <BarracaGrid barracas={filteredBarracas} />
+              <BarracaGrid barracas={barracas} />
               
               {/* Infinite Scroll Loading Indicator */}
               {hasMore && (
@@ -307,7 +322,7 @@ const Discover: React.FC = () => {
               )}
               
               {/* End of Results */}
-              {!hasMore && filteredBarracas.length > 0 && (
+              {!hasMore && barracas.length > 0 && (
                 <div className="text-center py-8">
                   <p className="text-gray-500 text-sm">
                     You've reached the end of all {totalBarracas} barracas
