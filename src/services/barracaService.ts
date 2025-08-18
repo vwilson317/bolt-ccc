@@ -1,5 +1,5 @@
 import { supabase, handleSupabaseError } from '../lib/supabase'
-import type { Barraca } from '../types'
+import type { Barraca, BarracaPhotos } from '../types'
 import type { Database } from '../types/database'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -9,17 +9,50 @@ type BarracaInsert = Database['public']['Tables']['barracas']['Insert']
 type BarracaUpdate = Database['public']['Tables']['barracas']['Update']
 type Json = Database['public']['Tables']['barracas']['Row']['cta_buttons']
 
+// Sorting helpers
+const parseBarracaNumber = (num?: string): number => {
+  if (!num) return Number.POSITIVE_INFINITY;
+  const match = String(num).match(/\d+/);
+  if (!match) return Number.POSITIVE_INFINITY;
+  return parseInt(match[0], 10);
+};
+
+const compareBarracas = (a: Barraca, b: Barraca): number => {
+  // 1) Open first
+  if (a.isOpen !== b.isOpen) {
+    return a.isOpen ? -1 : 1;
+  }
+  // 2) Partnered next
+  if (a.partnered !== b.partnered) {
+    return a.partnered ? -1 : 1;
+  }
+  // 3) Rating desc
+  const aRating = a.rating || 0;
+  const bRating = b.rating || 0;
+  if (aRating !== bRating) {
+    return bRating - aRating;
+  }
+  // 4) Barraca number asc
+  const aNum = parseBarracaNumber(a.barracaNumber);
+  const bNum = parseBarracaNumber(b.barracaNumber);
+  if (aNum !== bNum) {
+    return aNum - bNum;
+  }
+  // Stable fallback by name
+  return a.name.localeCompare(b.name);
+};
+
 // Transform database row to application type
-const transformBarracaFromDB = (row: BarracaRow, isOpen: boolean = false): Barraca => ({
+const transformBarracaFromDB = (row: BarracaRow, isOpen?: boolean | null): Barraca => ({
   id: row.id,
   name: row.name,
   barracaNumber: row.barraca_number || undefined,
   location: row.location,
   coordinates: row.coordinates as { lat: number; lng: number },
-  isOpen,
+  isOpen: isOpen ?? false,
   typicalHours: row.typical_hours,
   description: row.description,
-  photos: row.photos,
+  photos: (row.photos as unknown as BarracaPhotos) || { horizontal: [], vertical: [] },
   menuPreview: row.menu_preview,
   contact: row.contact as any,
   amenities: row.amenities,
@@ -68,7 +101,7 @@ export class BarracaService {
   // Get all barracas with pagination and optional filters (optimized)
   static async getAll(
     page: number = 1, 
-    pageSize: number = 10,
+    pageSize: number = 12,
     filters?: {
       query?: string;
       location?: string;
@@ -120,6 +153,9 @@ export class BarracaService {
         return transformBarracaFromDB(row, isOpen);
       });
 
+      // Sort by open, partnered, rating, number
+      barracas.sort(compareBarracas);
+
       // Get total count from the first row (all rows have the same total_count)
       const total = data[0]?.total_count || 0;
 
@@ -139,7 +175,7 @@ export class BarracaService {
   // Fallback method using the original approach
   private static async getAllFallback(
     page: number = 1, 
-    pageSize: number = 10,
+    pageSize: number = 12,
     filters?: {
       query?: string;
       location?: string;
@@ -218,6 +254,9 @@ export class BarracaService {
         });
       }
 
+      // Sort by open, partnered, rating, number
+      filteredBarracas.sort(compareBarracas);
+
       console.log(`✅ Fallback method loaded ${filteredBarracas.length} barracas (total: ${count || 0})`);
 
       return {
@@ -239,7 +278,7 @@ export class BarracaService {
   // Lightweight method for grid view - only fetches essential columns
   static async getGridData(
     page: number = 1,
-    pageSize: number = 10,
+    pageSize: number = 12,
     filters?: {
       query?: string;
       location?: string;
@@ -281,6 +320,9 @@ export class BarracaService {
         
         return transformBarracaFromDB(row, isOpen);
       });
+
+      // Sort by open, partnered, rating, number
+      barracas.sort(compareBarracas);
 
       const total = data[0]?.total_count || 0;
 

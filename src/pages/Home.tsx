@@ -138,7 +138,7 @@ const Home: React.FC = () => {
               <ArrowRight className="ml-2 h-5 w-5" />
             </Link>
           </div>
-          <BarracaGrid barracas={barracas.slice(0, 4)} />
+          <BarracaGrid barracas={barracas.slice(0, 12)} />
         </div>
       </section>
 

@@ -20,7 +20,8 @@ const Discover: React.FC = () => {
     totalBarracas,
     hasMore,
     loadMore,
-    isLoadingMore
+    isLoadingMore,
+    isLoading
   } = useApp();
   const { featureFlags } = useStory();
   const [showFilters, setShowFilters] = useState(true);
@@ -29,7 +30,7 @@ const Discover: React.FC = () => {
   const loadingRef = useInfiniteScroll({
     onLoadMore: loadMore,
     hasMore,
-    isLoading: isLoadingMore
+    isLoading: isLoading || isLoadingMore
   });
 
   // Scroll animations
@@ -99,7 +100,7 @@ const Discover: React.FC = () => {
     <div className="min-h-screen bg-gray-50">
       {/* Header Section */}
       <section className="relative pt-24 pb-12">
-        <div className="absolute inset-0 w-full h-full bg-[url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80')] bg-cover bg-center" />
+        <div className="absolute inset-0 w-full h-full bg-[url('https://pub-db19578f977b43e184c45b5084d7c029.r2.dev/editsV1/sunrise-2.jpg?auto=format&fit=crop&w=1200&q=80')] bg-cover bg-center" />
         <div className="absolute inset-0 w-full h-full bg-black/40" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8">
@@ -114,13 +115,13 @@ const Discover: React.FC = () => {
           {/* Enhanced Search Bar */}
           <div className="max-w-2xl mx-auto">
             <div className="relative">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-pink-400 z-10 pointer-events-none" />
               <input
                 type="text"
                 placeholder={t('discover.searchPlaceholder')}
                 value={searchFilters.query}
                 onChange={(e) => handleSearchChange(e.target.value)}
-                className="w-full pl-12 pr-4 py-4 text-lg rounded-2xl border-0 shadow-lg focus:ring-4 focus:ring-white/30 focus:outline-none transition-all duration-200"
+                className="w-full pl-12 pr-4 py-4 text-lg rounded-xl bg-transparent backdrop-blur-sm text-white placeholder-white/70 border border-white/30 shadow-none focus:ring-4 focus:ring-white/30 focus:outline-none transition-all duration-200"
               />
             </div>
           </div>

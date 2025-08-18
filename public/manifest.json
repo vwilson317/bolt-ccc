@@ -1,7 +1,7 @@
 {
   "name": "Carioca Coastal Club",
   "short_name": "Carioca Coastal Club",
-  "description": "Discover the best beach vendors (barracas) in Rio de Janeiro. Real-time weather, status updates, and more.",
+  "description": "Directory of all barracas in Rio de Janeiro with a loyalty program.",
   "theme_color": "#ffffff",
   "background_color": "#ffffff",
   "display": "standalone",
