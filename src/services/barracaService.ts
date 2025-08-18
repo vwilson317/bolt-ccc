@@ -65,7 +65,7 @@ const isValidUUID = (id: string): boolean => {
 };
 
 export class BarracaService {
-  // Get all barracas with pagination and optional filters
+  // Get all barracas with pagination and optional filters (optimized)
   static async getAll(
     page: number = 1, 
     pageSize: number = 10,
@@ -78,6 +78,79 @@ export class BarracaService {
     }
   ): Promise<{ barracas: Barraca[], total: number }> {
     try {
+      console.log('🔄 Attempting to use optimized database function...');
+      
+      // Use the optimized database function that computes open status in a single query
+      const { data, error } = await supabase.rpc('get_barracas_with_open_status', {
+        page_number: page,
+        page_size: pageSize,
+        search_query: filters?.query || null,
+        location_filter: filters?.location || null,
+        location_filters: filters?.locations || null,
+        status_filter: filters?.status || 'all',
+        rating_filter: filters?.rating || null
+      });
+
+      if (error) {
+        console.error('❌ Error with optimized function:', error);
+        console.log('🔄 Falling back to original method...');
+        return this.getAllFallback(page, pageSize, filters);
+      }
+
+      if (!data || data.length === 0) {
+        console.log('📭 No data returned from optimized function');
+        return { barracas: [], total: 0 };
+      }
+
+      console.log('✅ Optimized function successful, processing data...');
+
+      // Transform the data (open status is already computed)
+      const barracas = data.map((row: any) => {
+        // Handle non-UUID IDs
+        let isOpen: boolean | null = row.is_open;
+        if (!isValidUUID(row.id)) {
+          if (!row.partnered) {
+            isOpen = null;
+          } else {
+            isOpen = false;
+          }
+          console.warn(`Non-UUID barraca id: ${row.id}`);
+        }
+        
+        return transformBarracaFromDB(row, isOpen);
+      });
+
+      // Get total count from the first row (all rows have the same total_count)
+      const total = data[0]?.total_count || 0;
+
+      console.log(`✅ Successfully loaded ${barracas.length} barracas (total: ${total})`);
+
+      return {
+        barracas,
+        total
+      };
+    } catch (error) {
+      console.error('❌ Error in optimized getAll:', error);
+      console.log('🔄 Falling back to original method...');
+      return this.getAllFallback(page, pageSize, filters);
+    }
+  }
+
+  // Fallback method using the original approach
+  private static async getAllFallback(
+    page: number = 1, 
+    pageSize: number = 10,
+    filters?: {
+      query?: string;
+      location?: string;
+      locations?: string[];
+      status?: 'all' | 'open' | 'closed';
+      rating?: number;
+    }
+  ): Promise<{ barracas: Barraca[], total: number }> {
+    try {
+      console.log('🔄 Using fallback method...');
+      
       let query = supabase.from('barracas').select('*', { count: 'exact' });
 
       // Apply filters
@@ -98,35 +171,30 @@ export class BarracaService {
         query = query.eq('rating', filters.rating);
       }
 
-      // Get total count with filters
-      const { count, error: countError } = await query;
-
-      if (countError) {
-        handleSupabaseError(countError, 'getAll barracas count');
-      }
-
       // Calculate pagination
       const from = (page - 1) * pageSize;
       const to = from + pageSize - 1;
 
       // Get paginated data with filters
-      const { data, error } = await query
-        .order('partnered', { ascending: false }) // Partnered barracas first
-        .order('name') // Then by name
+      const { data, count, error } = await query
+        .order('partnered', { ascending: false })
+        .order('name')
         .range(from, to);
 
       if (error) {
-        handleSupabaseError(error, 'getAll barracas');
+        handleSupabaseError(error, 'getAll fallback barracas');
       }
 
-      // Get open status for each barraca
-      const barracasWithOpenStatus = [];
-      for (const row of data || []) {
+      if (!data || data.length === 0) {
+        return { barracas: [], total: count || 0 };
+      }
+
+      // Get open status for each barraca (parallelized)
+      const barracasWithOpenStatus = await Promise.all((data || []).map(async (row: any) => {
         let isOpen: boolean | null = false;
         if (isValidUUID(row.id)) {
           isOpen = await BarracaService.getOpenStatus(row.id);
         } else {
-          // For non-UUIDs, treat as undetermined for non-partnered, or false for partnered
           if (!row.partnered) {
             isOpen = null;
           } else {
@@ -134,8 +202,8 @@ export class BarracaService {
           }
           console.warn(`Skipping open status check for non-UUID barraca id: ${row.id}`);
         }
-        barracasWithOpenStatus.push(transformBarracaFromDB(row, isOpen));
-      }
+        return transformBarracaFromDB(row, isOpen);
+      }));
 
       // Apply status filter after getting open status
       let filteredBarracas = barracasWithOpenStatus;
@@ -150,20 +218,14 @@ export class BarracaService {
         });
       }
 
-      // Sort by partnered status first, then by name (consistent with database ordering)
-      filteredBarracas.sort((a, b) => {
-        if (a.partnered !== b.partnered) {
-          return a.partnered ? -1 : 1;
-        }
-        return a.name.localeCompare(b.name);
-      });
+      console.log(`✅ Fallback method loaded ${filteredBarracas.length} barracas (total: ${count || 0})`);
 
       return {
         barracas: filteredBarracas,
         total: count || 0
       };
     } catch (error) {
-      console.error('Error fetching barracas:', error);
+      console.error('❌ Error in fallback method:', error);
       throw error;
     }
   }
@@ -172,6 +234,61 @@ export class BarracaService {
   static async getAllUnpaginated(): Promise<Barraca[]> {
     const result = await this.getAll(1, 1000); // Large page size to get all
     return result.barracas;
+  }
+
+  // Lightweight method for grid view - only fetches essential columns
+  static async getGridData(
+    page: number = 1,
+    pageSize: number = 10,
+    filters?: {
+      query?: string;
+      location?: string;
+      locations?: string[];
+      status?: 'all' | 'open' | 'closed';
+      rating?: number;
+    }
+  ): Promise<{ barracas: Barraca[], total: number }> {
+    try {
+      // Use the optimized database function but with a simpler version for grid
+      const { data, error } = await supabase.rpc('get_barracas_with_open_status', {
+        page_number: page,
+        page_size: pageSize,
+        search_query: filters?.query || null,
+        location_filter: filters?.location || null,
+        location_filters: filters?.locations || null,
+        status_filter: filters?.status || 'all',
+        rating_filter: filters?.rating || null
+      });
+
+      if (error) {
+        handleSupabaseError(error, 'getGridData barracas');
+      }
+
+      if (!data || data.length === 0) {
+        return { barracas: [], total: 0 };
+      }
+
+      // Transform with minimal data for grid view
+      const barracas = data.map((row: any) => {
+        let isOpen: boolean | null = row.is_open;
+        if (!isValidUUID(row.id)) {
+          if (!row.partnered) {
+            isOpen = null;
+          } else {
+            isOpen = false;
+          }
+        }
+        
+        return transformBarracaFromDB(row, isOpen);
+      });
+
+      const total = data[0]?.total_count || 0;
+
+      return { barracas, total };
+    } catch (error) {
+      console.error('Error fetching grid data:', error);
+      throw error;
+    }
   }
 
   // Get barraca by ID

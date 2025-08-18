@@ -8,6 +8,7 @@ import StarRating from './StarRating';
 import { useStory } from '../contexts/StoryContext';
 import { useApp } from '../contexts/AppContext';
 import { getEffectiveOpenStatus } from '../utils/environmentUtils';
+import { getFetchPriority } from '../utils/imageUtils';
 
 interface BarracaGridProps {
   barracas: Barraca[];
@@ -55,7 +56,7 @@ const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
-      {barracas.map((barraca) => (
+      {barracas.map((barraca, index) => (
         <div 
           key={barraca.id} 
           className={`bg-white rounded-xl md:rounded-2xl shadow-md hover:shadow-lg transition-all duration-200 overflow-hidden flex flex-col relative ${
@@ -68,6 +69,9 @@ const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
             <img
               src={barraca.photos.horizontal[0] || '/api/placeholder/600/400'}
               alt={barraca.name}
+              loading="lazy"
+              decoding="async"
+              fetchPriority={getFetchPriority(index)}
               className={`w-full h-auto max-h-full object-contain`}
             />
             
