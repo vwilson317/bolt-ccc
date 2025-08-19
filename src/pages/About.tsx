@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Heart, Users, MapPin, Smartphone, MessageCircle, Instagram, Calendar, Gift } from 'lucide-react';
-import EmailSubscription from '../components/EmailSubscription';
+import EmailSubscriptionSection from '../components/EmailSubscriptionSection';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 
 const About: React.FC = () => {
@@ -215,72 +215,13 @@ const About: React.FC = () => {
         </div>
       </section>
 
-      {/* Contact Section */}
-      <section ref={contactAnimation.ref} className={`py-16 bg-gradient-to-b from-gray-50 to-white ${contactAnimation.animationClasses}`}>
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              {t('about.getInTouch')}
-            </h2>
-            <p className="text-lg text-gray-600">
-              {t('about.getInTouchDescription')}
-            </p>
-          </div> */}
-          
-          {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-            <div className="bg-white rounded-2xl p-8 shadow-lg">
-              <div className="flex items-center mb-4">
-                <div className="bg-green-100 p-3 rounded-lg mr-4">
-                  <MessageCircle className="h-6 w-6 text-green-600" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-gray-900">{t('about.whatsapp')}</h3>
-                  <p className="text-gray-600">{t('about.whatsappDescription')}</p>
-                </div>
-              </div>
-              <a 
-                href="https://wa.me/5521999990000" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-green-600 font-medium hover:text-green-700"
-              >
-                +55 21 99999-0000
-              </a>
-            </div>
-            
-            <div className="bg-white rounded-2xl p-8 shadow-lg">
-              <div className="flex items-center mb-4">
-                <div className="bg-pink-100 p-3 rounded-lg mr-4">
-                  <Instagram className="h-6 w-6 text-pink-600" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-gray-900">{t('about.instagram')}</h3>
-                  <p className="text-gray-600">{t('about.instagramDescription')}</p>
-                </div>
-              </div>
-              <a 
-                href="https://instagram.com/cariocacoastal" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-pink-600 font-medium hover:text-pink-700"
-              >
-                @cariocacoastal
-              </a>
-            </div>
-          </div> */}
-
-          {/* Newsletter Signup */}
-          <div className="bg-gradient-to-r from-beach-500 to-beach-600 rounded-2xl p-8 text-center">
-            <h3 className="text-2xl font-bold text-white mb-4">
-              {t('about.joinCommunity')}
-            </h3>
-            <p className="text-beach-100 mb-6">
-              {t('about.joinCommunityDescription')}
-            </p>
-            <EmailSubscription />
-          </div>
-        </div>
-      </section>
+      {/* Email Subscription */}
+      <EmailSubscriptionSection
+        title={t('about.joinCommunity')}
+        description={t('about.joinCommunityDescription')}
+        animationRef={contactAnimation.ref}
+        animationClasses={contactAnimation.animationClasses}
+      />
     </div>
   );
 };
