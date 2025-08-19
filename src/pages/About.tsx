@@ -95,7 +95,7 @@ const About: React.FC = () => {
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
       <section ref={heroAnimation.ref} className={`relative pt-24 pb-20 ${heroAnimation.animationClasses}`}>
-        <div className="absolute inset-0 w-full h-full bg-[url('https://images.unsplash.com/photo-1502086223501-7ea6ecd79368?auto=format&fit=crop&w=1200&q=80')] bg-cover bg-center" />
+        <div className="absolute inset-0 w-full h-full bg-[url('https://pub-db19578f977b43e184c45b5084d7c029.r2.dev/editsV1/sunraise.jpg?auto=format&fit=crop&w=1200&q=80')] bg-cover bg-center" />
         <div className="absolute inset-0 w-full h-full bg-black/50" />
         <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 drop-shadow-lg">
