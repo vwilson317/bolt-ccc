@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { BarChart3, Users, Eye, MousePointer, TrendingUp, Globe, Cloud, Bell, Calendar, Star, Database, Zap } from 'lucide-react';
 import { getAnalyticsStatus } from '../services/analyticsService';
+import { getGA4ApiStatus, getActiveUsers, getTotalUsers, getPageViews } from '../services/googleAnalyticsApiService';
 
 interface AnalyticsData {
   pageViews: number;
@@ -23,11 +24,15 @@ interface AnalyticsData {
   externalApiCalls: number;
   featureUsage: Array<{ feature: string; usage: number }>;
   businessMetrics: Array<{ metric: string; value: number; unit: string }>;
+  // GA4 API data
+  activeUsers: number;
+  dataSource: 'ga4' | 'simulated';
 }
 
 const AnalyticsDashboard: React.FC = () => {
   const { t } = useTranslation();
   const [analyticsStatus, setAnalyticsStatus] = useState(getAnalyticsStatus());
+  const [ga4ApiStatus, setGa4ApiStatus] = useState(getGA4ApiStatus());
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState<AnalyticsData>({
     pageViews: 0,
@@ -47,63 +52,155 @@ const AnalyticsDashboard: React.FC = () => {
     realtimeSubscriptions: 0,
     externalApiCalls: 0,
     featureUsage: [],
-    businessMetrics: []
+    businessMetrics: [],
+    activeUsers: 0,
+    dataSource: 'simulated'
   });
 
   useEffect(() => {
-    // Simulate loading analytics data
+    // Load analytics data
     const loadAnalyticsData = async () => {
       setIsLoading(true);
       
-      // In a real implementation, you would fetch data from Google Analytics API
-      // For now, we'll simulate some data
-      setTimeout(() => {
-        setData({
-          pageViews: 1247,
-          uniqueVisitors: 892,
-          bounceRate: 34.2,
-          avgSessionDuration: 145,
-          topPages: [
-            { page: '/', views: 456 },
-            { page: '/discover', views: 234 },
-            { page: '/about', views: 123 },
-            { page: '/admin', views: 89 }
-          ],
-          deviceTypes: [
-            { device: 'Mobile', percentage: 68 },
-            { device: 'Desktop', percentage: 28 },
-            { device: 'Tablet', percentage: 4 }
-          ],
-          weatherOverrideUsage: 23,
-          notificationInteractions: 156,
-          partneredBarracaViews: 789,
-          nonPartneredBarracaViews: 458,
-          weekendHoursViews: 234,
-          adminActions: 45,
-          firestoreConnections: 12,
-          supabaseQueries: 89,
-          realtimeSubscriptions: 34,
-          externalApiCalls: 67,
-          featureUsage: [
-            { feature: 'Weather Widget', usage: 445 },
-            { feature: 'Story Viewer', usage: 234 },
-            { feature: 'Language Switcher', usage: 123 },
-            { feature: 'Email Subscription', usage: 89 },
-            { feature: 'PWA Install', usage: 56 }
-          ],
-          businessMetrics: [
-            { metric: 'Total Barracas', value: 45, unit: 'locations' },
-            { metric: 'Partnered Barracas', value: 23, unit: 'locations' },
-            { metric: 'Active Sessions', value: 156, unit: 'sessions' },
-            { metric: 'Avg Response Time', value: 245, unit: 'ms' }
-          ]
-        });
-        setIsLoading(false);
-      }, 1000);
+      try {
+        // Try to fetch real GA4 data first
+        if (ga4ApiStatus.isInitialized) {
+          const [totalUsers, pageViews, activeUsers] = await Promise.all([
+            getTotalUsers(),
+            getPageViews(),
+            getActiveUsers()
+          ]);
+
+          setData(prevData => ({
+            ...prevData,
+            uniqueVisitors: totalUsers,
+            pageViews: pageViews,
+            activeUsers: activeUsers,
+            dataSource: 'ga4'
+          }));
+        }
+
+        // Load simulated data for metrics not available in GA4 API
+        setTimeout(() => {
+          setData(prevData => ({
+            ...prevData,
+            bounceRate: 34.2,
+            avgSessionDuration: 145,
+            topPages: [
+              { page: '/', views: 456 },
+              { page: '/discover', views: 234 },
+              { page: '/about', views: 123 },
+              { page: '/admin', views: 89 }
+            ],
+            deviceTypes: [
+              { device: 'Mobile', percentage: 68 },
+              { device: 'Desktop', percentage: 28 },
+              { device: 'Tablet', percentage: 4 }
+            ],
+            weatherOverrideUsage: 23,
+            notificationInteractions: 156,
+            partneredBarracaViews: 789,
+            nonPartneredBarracaViews: 458,
+            weekendHoursViews: 234,
+            adminActions: 45,
+            firestoreConnections: 12,
+            supabaseQueries: 89,
+            realtimeSubscriptions: 34,
+            externalApiCalls: 67,
+            featureUsage: [
+              { feature: 'Weather Widget', usage: 445 },
+              { feature: 'Story Viewer', usage: 234 },
+              { feature: 'Language Switcher', usage: 123 },
+              { feature: 'Email Subscription', usage: 89 },
+              { feature: 'PWA Install', usage: 56 }
+            ],
+            businessMetrics: [
+              { metric: 'Total Barracas', value: 45, unit: 'locations' },
+              { metric: 'Partnered Barracas', value: 23, unit: 'locations' },
+              { metric: 'Active Sessions', value: 156, unit: 'sessions' },
+              { metric: 'Avg Response Time', value: 245, unit: 'ms' }
+            ]
+          }));
+          setIsLoading(false);
+        }, 1000);
+
+      } catch (error) {
+        console.warn('Failed to fetch GA4 data, using simulated data:', error);
+        
+        // Fallback to simulated data
+        setTimeout(() => {
+          setData({
+            pageViews: 1247,
+            uniqueVisitors: 892,
+            bounceRate: 34.2,
+            avgSessionDuration: 145,
+            topPages: [
+              { page: '/', views: 456 },
+              { page: '/discover', views: 234 },
+              { page: '/about', views: 123 },
+              { page: '/admin', views: 89 }
+            ],
+            deviceTypes: [
+              { device: 'Mobile', percentage: 68 },
+              { device: 'Desktop', percentage: 28 },
+              { device: 'Tablet', percentage: 4 }
+            ],
+            weatherOverrideUsage: 23,
+            notificationInteractions: 156,
+            partneredBarracaViews: 789,
+            nonPartneredBarracaViews: 458,
+            weekendHoursViews: 234,
+            adminActions: 45,
+            firestoreConnections: 12,
+            supabaseQueries: 89,
+            realtimeSubscriptions: 34,
+            externalApiCalls: 67,
+            featureUsage: [
+              { feature: 'Weather Widget', usage: 445 },
+              { feature: 'Story Viewer', usage: 234 },
+              { feature: 'Language Switcher', usage: 123 },
+              { feature: 'Email Subscription', usage: 89 },
+              { feature: 'PWA Install', usage: 56 }
+            ],
+            businessMetrics: [
+              { metric: 'Total Barracas', value: 45, unit: 'locations' },
+              { metric: 'Partnered Barracas', value: 23, unit: 'locations' },
+              { metric: 'Active Sessions', value: 156, unit: 'sessions' },
+              { metric: 'Avg Response Time', value: 245, unit: 'ms' }
+            ],
+            activeUsers: 0,
+            dataSource: 'simulated'
+          });
+          setIsLoading(false);
+        }, 1000);
+      }
     };
 
     loadAnalyticsData();
-  }, []);
+
+    // Set up periodic updates for GA4 data
+    const updateInterval = setInterval(() => {
+      if (ga4ApiStatus.isInitialized) {
+        Promise.all([
+          getTotalUsers(),
+          getPageViews(),
+          getActiveUsers()
+        ]).then(([totalUsers, pageViews, activeUsers]) => {
+          setData(prevData => ({
+            ...prevData,
+            uniqueVisitors: totalUsers,
+            pageViews: pageViews,
+            activeUsers: activeUsers,
+            dataSource: 'ga4'
+          }));
+        }).catch(error => {
+          console.warn('Failed to update GA4 data:', error);
+        });
+      }
+    }, 30000); // Update every 30 seconds
+
+    return () => clearInterval(updateInterval);
+  }, [ga4ApiStatus.isInitialized]);
 
   const formatDuration = (seconds: number): string => {
     const minutes = Math.floor(seconds / 60);
@@ -129,20 +226,40 @@ const AnalyticsDashboard: React.FC = () => {
           <BarChart3 className="h-5 w-5 mr-2 text-beach-500" />
           Analytics Status
         </h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="flex items-center space-x-3">
             <div className={`w-3 h-3 rounded-full ${analyticsStatus.isInitialized ? 'bg-green-500' : 'bg-red-500'}`}></div>
             <span className="text-sm text-gray-600">
-              Status: {analyticsStatus.isInitialized ? 'Active' : 'Inactive'}
+              GA4 Tracking: {analyticsStatus.isInitialized ? 'Active' : 'Inactive'}
             </span>
           </div>
           <div className="text-sm text-gray-600">
-            GA ID: {analyticsStatus.measurementId}
+            GA4 ID: {analyticsStatus.measurementId}
           </div>
           <div className="text-sm text-gray-600">
             Environment: {analyticsStatus.environment}
           </div>
+          <div className="flex items-center space-x-3">
+            <div className={`w-3 h-3 rounded-full ${ga4ApiStatus.isInitialized ? 'bg-green-500' : 'bg-yellow-500'}`}></div>
+            <span className="text-sm text-gray-600">
+              GA4 API: {ga4ApiStatus.isInitialized ? 'Connected' : 'Not Connected'}
+            </span>
+          </div>
         </div>
+        {data.dataSource === 'ga4' && (
+          <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg">
+            <p className="text-sm text-green-800">
+              ✅ Using real Google Analytics data. Active users: {data.activeUsers}
+            </p>
+          </div>
+        )}
+        {data.dataSource === 'simulated' && (
+          <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+            <p className="text-sm text-yellow-800">
+              ⚠️ Using simulated data. Set up GA4 Data API for real-time metrics.
+            </p>
+          </div>
+        )}
       </div>
 
       {/* Key Metrics */}
@@ -165,8 +282,13 @@ const AnalyticsDashboard: React.FC = () => {
               <Users className="h-6 w-6 text-green-600" />
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Unique Visitors</p>
+              <p className="text-sm font-medium text-gray-600">
+                {data.dataSource === 'ga4' ? 'Total Users (30d)' : 'Unique Visitors'}
+              </p>
               <p className="text-2xl font-bold text-gray-900">{data.uniqueVisitors.toLocaleString()}</p>
+              {data.dataSource === 'ga4' && data.activeUsers > 0 && (
+                <p className="text-xs text-green-600 mt-1">{data.activeUsers} active now</p>
+              )}
             </div>
           </div>
         </div>
@@ -372,7 +494,10 @@ const AnalyticsDashboard: React.FC = () => {
       {/* Note */}
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
         <p className="text-sm text-blue-800">
-          <strong>Note:</strong> This is a demo dashboard. In production, you would integrate with the Google Analytics API to fetch real-time data.
+          <strong>Note:</strong> {data.dataSource === 'ga4' 
+            ? 'This dashboard is now connected to Google Analytics Data API for real-time metrics. Some metrics (bounce rate, session duration, etc.) are still simulated as they require additional GA4 API setup.'
+            : 'This is a demo dashboard. Set up Google Analytics Data API to fetch real-time data. See GOOGLE_ANALYTICS_API_SETUP.md for instructions.'
+          }
         </p>
       </div>
     </div>

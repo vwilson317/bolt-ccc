@@ -30,15 +30,15 @@ const Header: React.FC = () => {
   }, []);
 
   // Check if we're on pages that should always have a solid header
-  const isAdminLoginPage = location.pathname === '/admin';
+  const isLoginPage = location.pathname === '/login';
   const isBarracaDetailPage = location.pathname.startsWith('/barraca/');
-  const isAboutPage = location.pathname.startsWith('/about');
+  const isAboutPage = location.pathname === '/about';
   const isHomePage = location.pathname === '/';
   
-  // On home page, only show solid header when header bottom border reaches end of hero
+  // On home page and about page, only show solid header when header bottom border reaches end of hero
   const headerHeight = 64; // h-16 = 64px
-  const useSolidHeader = isAdminLoginPage || isBarracaDetailPage || isMenuOpen || isAboutPage || 
-    (isHomePage ? scrollY + headerHeight > heroHeight : isScrolled);
+  const useSolidHeader = isLoginPage || isBarracaDetailPage || isMenuOpen || 
+    ((isHomePage || isAboutPage) ? scrollY + headerHeight > heroHeight : isScrolled);
 
   const languages = [
     { code: 'en', name: 'English', flag: '🇺🇸' },
@@ -54,7 +54,7 @@ const Header: React.FC = () => {
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <header className={`fixed top-0 left-0 right-0 z-[9999] transition-all duration-300 ${
+    <header className={`fixed top-0 left-0 right-0 z-[99999] transition-all duration-300 ${
       useSolidHeader
         ? 'bg-white/95 backdrop-blur-sm border-b border-beach-100 shadow-sm' 
         : 'bg-transparent'
@@ -153,27 +153,7 @@ const Header: React.FC = () => {
           </nav>
 
           {/* Language Selector & Mobile Menu */}
-          <div className="flex items-center space-x-4 relative z-[10000]">
-            {/* Bolt Badge - Temporarily disabled */}
-            {/* <div className="hidden sm:flex items-center space-x-2">
-              <a 
-                href="https://bolt.new/" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="flex items-center space-x-2 opacity-60 hover:opacity-100 transition-opacity"
-              >
-                <img 
-                  src="/white_circle_360x360.png" 
-                  alt="Bolt" 
-                  className="h-6 w-6"
-                />
-                <span className={`text-xs transition-colors duration-300 ${
-                  isScrolled || isAdminLoginPage || isBarracaDetailPage || isMenuOpen ? 'text-gray-500' : 'text-white/70'
-                }`} data-lingo-skip>
-                  Built with Bolt
-                </span>
-              </a>
-            </div> */}
+          <div className="flex items-center space-x-4 relative z-[100000]">
 
             {/* Language Selector */}
             <div className="relative">
@@ -194,7 +174,7 @@ const Header: React.FC = () => {
               </button>
 
               {isLanguageOpen && (
-                <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-[10000]">
+                <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-[100000]">
                   {languages.map((lang) => (
                     <button
                       key={lang.code}
@@ -233,7 +213,7 @@ const Header: React.FC = () => {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className={`md:hidden border-t py-4 transition-colors duration-300 z-[10000] ${
+          <div className={`md:hidden border-t py-4 transition-colors duration-300 z-[100000] ${
             useSolidHeader
               ? 'border-gray-200 bg-white' 
               : 'border-white/20 bg-black/20 backdrop-blur-sm'

@@ -1,5 +1,5 @@
 import React from 'react';
-import { MapPin, Thermometer, Droplets, Wind, Cloud } from 'lucide-react';
+import { Thermometer, Droplets, Wind, Cloud } from 'lucide-react';
 import { useWeather } from '../contexts/WeatherContext';
 import { useApp } from '../contexts/AppContext';
 
@@ -10,6 +10,7 @@ interface WeatherMarqueeProps {
   className?: string;
   stickyOffsetClassName?: string; // e.g., 'top-16'
   useDefaultBorders?: boolean;
+  useSolidIcons?: boolean; // New prop to control icon style
 }
 
 const WeatherMarquee: React.FC<WeatherMarqueeProps> = ({
@@ -40,8 +41,8 @@ const WeatherMarquee: React.FC<WeatherMarqueeProps> = ({
         const w = weatherByLocation[loc] || weather;
         return (
           <div className="flex items-center gap-3 mr-6" key={`${keyPrefix}-${loc}`}>
-            <div className="flex items-center gap-1 text-sm font-semibold">
-              <MapPin className={`h-4 w-4 ${colorScheme === 'pink' ? 'text-white' : 'text-pink-500'}`} />
+            <div className="flex items-center gap-0.5 text-sm font-semibold">
+              <i className={`fa fa-map-marker h-4 w-4 ${colorScheme === 'pink' ? 'text-white' : 'text-pink-500'}`} aria-hidden="true"></i>
               <span className={`truncate ${colorScheme === 'pink' ? 'text-white' : 'text-pink-500'}`} data-lingo-skip>{loc}</span>
             </div>
             <div className="flex items-center gap-1 text-sm opacity-95">

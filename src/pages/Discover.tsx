@@ -135,7 +135,7 @@ const Discover: React.FC = () => {
       {/* Sticky Search and Weather Group - overlaps hero with negative margin */}
       <div className="sticky top-16 z-40">
         {/* Weather Marquee */}
-        <WeatherMarquee colorScheme="pink" stickyOffsetClassName="top-0" />
+        <WeatherMarquee colorScheme="pink" stickyOffsetClassName="top-0" useSolidIcons={true} />
 
         {/* Search Bar */}
         <div className="bg-white/95 backdrop-blur-sm border-y border-gray-100 shadow-lg">

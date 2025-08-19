@@ -163,7 +163,7 @@ const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
               {/* Location - Only show location for non-partnered barracas */}
               <div className="space-y-1">
                 <div className="flex items-center text-gray-600">
-                  <MapPin className="h-3.5 w-3.5 mr-1.5 flex-shrink-0" />
+                  <MapPin className="h-3.5 w-3.5 mr-1.5 flex-shrink-0 text-pink-500" />
                   <span className="text-sm">{barraca.location}</span>
                   {!barraca.partnered && (
                     <span className="ml-1 text-xs text-gray-400">• {t('barraca.limitedInfo')}</span>

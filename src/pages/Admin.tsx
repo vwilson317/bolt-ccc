@@ -87,17 +87,17 @@ const Admin: React.FC = () => {
               <Lock className="h-8 w-8 text-white" />
             </div>
             <h1 className="text-2xl font-bold text-gray-900 mb-2" data-lingo-skip>
-              {t('admin.login')}
+              {t('login.title')}
             </h1>
             <p className="text-gray-600" data-lingo-skip>
-              Access the admin dashboard to manage barracas
+              Sign in to access your account
             </p>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-6">
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                {t('admin.email')}
+                {t('login.email')}
               </label>
               <input
                 id="email"
@@ -106,13 +106,12 @@ const Admin: React.FC = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent transition-colors"
-                placeholder="admin@cariocacoastal.com"
               />
             </div>
 
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
-                {t('admin.password')}
+                {t('login.password')}
               </label>
               <div className="relative">
                 <input
@@ -122,7 +121,6 @@ const Admin: React.FC = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent transition-colors"
-                  placeholder="admin123"
                 />
                 <button
                   type="button"
@@ -145,7 +143,7 @@ const Admin: React.FC = () => {
               disabled={isLogging}
               className="w-full bg-gradient-to-r from-beach-500 to-beach-600 text-white py-3 rounded-lg font-semibold hover:from-beach-600 hover:to-beach-700 transform hover:scale-105 transition-all duration-200 shadow-lg disabled:opacity-50 disabled:transform-none"
             >
-              {isLogging ? t('common.loading') : t('admin.signIn')}
+              {isLogging ? t('common.loading') : t('login.signIn')}
             </button>
           </form>
         </div>

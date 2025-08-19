@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Users } from 'lucide-react';
+import { getActiveUsers, getTotalUsers, initGA4Api, getGA4ApiStatus } from '../services/googleAnalyticsApiService';
+import { trackUniqueVisitor } from '../services/analyticsService';
 
 interface VisitorData {
   uniqueVisitors: number;
@@ -11,7 +13,10 @@ interface VisitorData {
 const UniqueVisitorCounter: React.FC = () => {
   const { t } = useTranslation();
   const [visitorCount, setVisitorCount] = useState<number>(0);
+  const [activeUsers, setActiveUsers] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [dataSource, setDataSource] = useState<'ga4' | 'local'>('local');
+  const [ga4Status, setGa4Status] = useState(getGA4ApiStatus());
 
   // Generate a unique visitor ID based on browser fingerprint
   const generateVisitorId = (): string => {
@@ -44,8 +49,8 @@ const UniqueVisitorCounter: React.FC = () => {
     return Math.abs(hash).toString(36);
   };
 
-  // Check if this is a unique visitor and update count
-  const trackUniqueVisitor = async (): Promise<number> => {
+  // Check if this is a unique visitor and update count (local tracking)
+  const trackUniqueVisitorLocal = async (): Promise<number> => {
     try {
       const visitorId = generateVisitorId();
       const storageKey = 'ccc_visitor_data';
@@ -109,6 +114,9 @@ const UniqueVisitorCounter: React.FC = () => {
           }
         }
 
+        // Track in Google Analytics
+        trackUniqueVisitor(visitorId, visitorData.uniqueVisitors);
+
         // Simulate real-time update for other tabs/windows
         window.dispatchEvent(new CustomEvent('uniqueVisitorUpdate', {
           detail: { count: visitorData.uniqueVisitors }
@@ -122,6 +130,33 @@ const UniqueVisitorCounter: React.FC = () => {
     }
   };
 
+  // Fetch data from Google Analytics API
+  const fetchGA4Data = async () => {
+    try {
+      const [totalUsers, activeUsersCount] = await Promise.all([
+        getTotalUsers(),
+        getActiveUsers()
+      ]);
+
+      // Only use GA4 data if we actually have real data (non-zero)
+      if (totalUsers > 0 || activeUsersCount > 0) {
+        setVisitorCount(totalUsers);
+        setActiveUsers(activeUsersCount);
+        setDataSource('ga4');
+      } else {
+        // No real GA4 data available, fall back to local tracking
+        const count = await trackUniqueVisitorLocal();
+        setVisitorCount(count);
+        setDataSource('local');
+      }
+    } catch (error) {
+      console.warn('Failed to fetch GA4 data, falling back to local tracking:', error);
+      const count = await trackUniqueVisitorLocal();
+      setVisitorCount(count);
+      setDataSource('local');
+    }
+  };
+
   // Format number with thousands separator
   const formatNumber = (num: number): string => {
     return num.toLocaleString('en-US');
@@ -132,7 +167,9 @@ const UniqueVisitorCounter: React.FC = () => {
     if (event.key === 'ccc_visitor_data' && event.newValue) {
       try {
         const newData = JSON.parse(event.newValue);
-        setVisitorCount(newData.uniqueVisitors);
+        if (dataSource === 'local') {
+          setVisitorCount(newData.uniqueVisitors);
+        }
       } catch (error) {
         console.warn('Error parsing storage change:', error);
       }
@@ -141,7 +178,9 @@ const UniqueVisitorCounter: React.FC = () => {
 
   // Handle custom events for real-time updates
   const handleVisitorUpdate = (event: CustomEvent) => {
-    setVisitorCount(event.detail.count);
+    if (dataSource === 'local') {
+      setVisitorCount(event.detail.count);
+    }
   };
 
   useEffect(() => {
@@ -149,21 +188,52 @@ const UniqueVisitorCounter: React.FC = () => {
 
     const initializeCounter = async () => {
       try {
-        const count = await trackUniqueVisitor();
+        // Try to initialize GA4 API first
+        const ga4Initialized = await initGA4Api();
+        setGa4Status(getGA4ApiStatus());
+
+        if (ga4Initialized && ga4Status.hasRealGA4Access) {
+          // Try to use GA4 data
+          await fetchGA4Data();
+        } else {
+          // Fall back to local tracking
+          const count = await trackUniqueVisitorLocal();
+          if (mounted) {
+            setVisitorCount(count);
+            setDataSource('local');
+          }
+        }
+
         if (mounted) {
-          setVisitorCount(count);
           setIsLoading(false);
         }
       } catch (error) {
         console.error('Error initializing visitor counter:', error);
         if (mounted) {
-          setVisitorCount(5247); // Fallback
+          // Fallback to local tracking
+          const count = await trackUniqueVisitorLocal();
+          setVisitorCount(count);
+          setDataSource('local');
           setIsLoading(false);
         }
       }
     };
 
     initializeCounter();
+
+    // Set up periodic updates for GA4 data
+    const ga4UpdateInterval = setInterval(() => {
+      if (dataSource === 'ga4' && mounted) {
+        fetchGA4Data();
+      }
+    }, 30000); // Update every 30 seconds
+
+    // Set up periodic updates for active users
+    const activeUsersInterval = setInterval(() => {
+      if (dataSource === 'ga4' && mounted) {
+        getActiveUsers().then(setActiveUsers);
+      }
+    }, 10000); // Update every 10 seconds
 
     // Listen for storage changes (other tabs/windows)
     window.addEventListener('storage', handleStorageChange);
@@ -174,10 +244,12 @@ const UniqueVisitorCounter: React.FC = () => {
     // Cleanup
     return () => {
       mounted = false;
+      clearInterval(ga4UpdateInterval);
+      clearInterval(activeUsersInterval);
       window.removeEventListener('storage', handleStorageChange);
       window.removeEventListener('uniqueVisitorUpdate', handleVisitorUpdate as EventListener);
     };
-  }, []);
+  }, [dataSource, ga4Status.isInitialized]);
 
   if (isLoading) {
     return (
@@ -199,10 +271,16 @@ const UniqueVisitorCounter: React.FC = () => {
         </div>
       </div>
       <div className="text-sm text-gray-600 font-medium">
-        {t('visitor.totalUnique')}
+        {dataSource === 'ga4' ? 'New Users Since June 31st' : t('visitor.totalUnique') || 'Total Unique'}
       </div>
+      {dataSource === 'ga4' && activeUsers > 0 && (
+        <div className="text-xs text-green-600 mt-1 font-medium">
+          {activeUsers} {t('visitor.activeNow') || 'active now'}
+        </div>
+      )}
       <div className="text-xs text-gray-400 mt-1">
-        {t('visitor.realTime')}
+        {dataSource === 'ga4' ? t('visitor.fromGA4') || 'From Google Analytics' : 
+         t('visitor.realTime') || 'Real-time tracking'}
       </div>
     </div>
   );

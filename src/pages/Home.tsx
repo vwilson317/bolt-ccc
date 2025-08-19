@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { ArrowRight, MapPin, Users, Calendar, Bell, Gift } from 'lucide-react';
+import { ArrowRight, MapPin, Users, Calendar, Bell, Gift, Instagram } from 'lucide-react';
 import HeroCarousel from '../components/HeroCarousel';
 import WeatherMarquee from '../components/WeatherMarquee';
 import BarracaGrid from '../components/BarracaGrid';
@@ -23,6 +23,7 @@ const Home: React.FC = () => {
   const featuredAnimation = useScrollAnimation('slideUp');
   const featuresAnimation = useScrollAnimation('slideUpStagger');
   const benefitsAnimation = useScrollAnimation('zoomIn');
+  const instagramAnimation = useScrollAnimation('slideUp');
   const signupAnimation = useScrollAnimation('fadeInScale');
   
   // Background images for the email signup section
@@ -57,6 +58,16 @@ const Home: React.FC = () => {
     const signupSection = document.getElementById('loyalty-signup');
     if (signupSection) {
       signupSection.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'center'
+      });
+    }
+  };
+
+  const scrollToInstagram = () => {
+    const instagramSection = document.getElementById('instagram-cta');
+    if (instagramSection) {
+      instagramSection.scrollIntoView({ 
         behavior: 'smooth',
         block: 'center'
       });
@@ -98,6 +109,13 @@ const Home: React.FC = () => {
               className="bg-white text-beach-600 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-gray-50 transform hover:scale-105 transition-all duration-200 border-2 border-beach-200 shadow-lg"
             >
               {t('hero.earlyAccess')}
+            </button>
+            <button 
+              onClick={scrollToInstagram}
+              className="bg-gradient-to-r from-pink-500 to-purple-600 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:from-pink-600 hover:to-purple-700 transform hover:scale-105 transition-all duration-200 shadow-lg flex items-center justify-center"
+            >
+              <Instagram className="mr-2 h-5 w-5" />
+              {t('home.instagram.ctaButton')}
             </button>
           </div>
 
@@ -208,6 +226,60 @@ const Home: React.FC = () => {
         </div>
       </section>
 
+      {/* Instagram CTA Section */}
+      <section id="instagram-cta" ref={instagramAnimation.ref} className={`py-16 bg-gradient-to-br from-pink-50 via-purple-50 to-orange-50 ${instagramAnimation.animationClasses}`}>
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 md:p-12 shadow-xl border border-pink-100">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              {t('home.instagram.title')}
+            </h2>
+            <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
+              {t('home.instagram.description')}
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+              <a
+                href="https://instagram.com/Carioca_Coastal_Club"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-gradient-to-r from-pink-500 to-purple-600 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:from-pink-600 hover:to-purple-700 transform hover:scale-105 transition-all duration-200 shadow-lg flex items-center justify-center"
+                onClick={() => {
+                  // Track Instagram follow click
+                  if (window.gtag) {
+                    window.gtag('event', 'instagram_follow_clicked', {
+                      event_category: 'Social',
+                      event_label: 'Home Page CTA'
+                    });
+                  }
+                }}
+              >
+                <Instagram className="mr-2 h-5 w-5" strokeWidth={1.5} />
+                {t('home.instagram.followButton')}
+              </a>
+              <button 
+                onClick={scrollToSignup}
+                className="bg-white text-gray-700 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-gray-50 transform hover:scale-105 transition-all duration-200 border-2 border-gray-200 shadow-lg"
+              >
+                {t('hero.earlyAccess')}
+              </button>
+            </div>
+            <div className="grid grid-cols-3 gap-4 text-center">
+              <div className="bg-white/60 rounded-xl p-4">
+                <div className="text-2xl font-bold text-pink-600 mb-1">📸</div>
+                <div className="text-sm text-gray-600">{t('home.instagram.benefits.photos')}</div>
+              </div>
+              <div className="bg-white/60 rounded-xl p-4">
+                <div className="text-2xl font-bold text-purple-600 mb-1">🎯</div>
+                <div className="text-sm text-gray-600">{t('home.instagram.benefits.updates')}</div>
+              </div>
+              <div className="bg-white/60 rounded-xl p-4">
+                <div className="text-2xl font-bold text-orange-600 mb-1">💎</div>
+                <div className="text-sm text-gray-600">{t('home.instagram.benefits.exclusive')}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Email Subscription */}
       <section id="loyalty-signup" ref={signupAnimation.ref} className={`relative aspect-[8.5/11] md:aspect-[3/2] ${signupAnimation.animationClasses}`}> 
         {/* Mobile background */}
@@ -256,7 +328,6 @@ const Home: React.FC = () => {
                 <li><Link to="/discover" className="text-gray-300 hover:text-white transition-colors">{t('nav.discover')}</Link></li>
                 <li><Link to="/about" className="text-gray-300 hover:text-white transition-colors">{t('nav.about')}</Link></li>
                 <li><a href="#loyalty-signup" className="text-gray-300 hover:text-white transition-colors">{t('email.subscribe')}</a></li>
-                <li><Link to="/admin" className="text-gray-300 hover:text-white transition-colors">{t('nav.admin')}</Link></li>
               </ul>
             </div>
 
@@ -265,6 +336,7 @@ const Home: React.FC = () => {
               <h4 className="text-lg font-semibold mb-4">{t('home.footer.contact')}</h4>
               <ul className="space-y-2 text-gray-300">
                 <li><span data-lingo-skip>CariocaCoastalClub@gmail.com</span></li>
+                <li><span data-lingo-skip>Ig: @Carioca_Coastal_Club</span></li>
               </ul>
             </div>
           </div>

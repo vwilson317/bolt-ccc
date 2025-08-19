@@ -3,7 +3,7 @@
     "home": "Home",
     "discover": "Find Barracas",
     "about": "About",
-    "admin": "Admin"
+    "admin": "Login"
   },
   "hero": {
     "title": "Your Favorite Barraca Awaits",
@@ -62,12 +62,14 @@
     "closed": "Closed",
     "undetermined": "Undetermined"
   },
-  "admin": {
-    "login": "Admin Login",
-    "dashboard": "Admin Dashboard",
+  "login": {
+    "title": "Sign In",
     "email": "Email",
     "password": "Password",
-    "signIn": "Sign In",
+    "signIn": "Sign In"
+  },
+  "admin": {
+    "dashboard": "Admin Dashboard",
     "logout": "Logout",
     "addBarraca": "Add New Barraca",
     "editBarraca": "Edit Barraca",
@@ -215,6 +217,17 @@
       "special": "Special",
       "offers": "Offers"
     },
+    "instagram": {
+      "title": "Follow Us on Instagram",
+      "description": "Get the latest new features, discounts and event info from your favorite barracas.",
+      "ctaButton": "Follow Us",
+      "followButton": "Follow @carioca_costal_club",
+      "benefits": {
+        "photos": "Feature Updates",
+        "updates": "Real-time Updates",
+        "exclusive": "Exclusive Content"
+      }
+    },
     "footer": {
       "description": "Connecting Rio's barraca lovers with their favorite spots through chair reservations, real-time updates, and exclusive member benefits.",
       "quickLinks": "Quick Links",
@@ -325,7 +338,10 @@
   },
   "visitor": {
     "totalUnique": "Total Unique Visitors Since Launch",
-    "realTime": "Real-time counter"
+    "totalUsers": "Total Users (30 days)",
+    "realTime": "Real-time counter",
+    "activeNow": "active now",
+    "fromGA4": "From Google Analytics"
   },
   "common": {
     "loading": "Loading...",

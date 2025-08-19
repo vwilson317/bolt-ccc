@@ -3,7 +3,7 @@
     "home": "Accueil",
     "discover": "Trouver des Barracas",
     "about": "À propos",
-    "admin": "Admin"
+    "admin": "Login"
   },
   "hero": {
     "title": "Votre Barraca Préférée Vous Attend",
@@ -59,12 +59,14 @@
     "notPartneredMessage": "Cette barraca n'est pas notre partenaire. Seules les informations de base sont disponibles.",
     "limitedInfo": "Info limitée"
   },
-  "admin": {
-    "login": "Connexion Admin",
-    "dashboard": "Tableau de Bord Admin",
+  "login": {
+    "title": "Se Connecter",
     "email": "Email",
     "password": "Mot de passe",
-    "signIn": "Se Connecter",
+    "signIn": "Se Connecter"
+  },
+  "admin": {
+    "dashboard": "Tableau de Bord Admin",
     "logout": "Se Déconnecter",
     "addBarraca": "Ajouter Nouvelle Barraca",
     "editBarraca": "Modifier Barraca",
@@ -216,6 +218,17 @@
       "special": "Offres",
       "offers": "Spéciales"
     },
+    "instagram": {
+      "title": "Suivez-nous sur Instagram",
+      "description": "Recevez les dernières nouveautés, réductions et informations d'événements de vos barracas préférées.",
+      "ctaButton": "Suivez-nous",
+      "followButton": "Suivre @carioca_costal_club",
+      "benefits": {
+        "photos": "Mises à jour des Fonctionnalités",
+        "updates": "Mises à jour en Temps Réel",
+        "exclusive": "Contenu Exclusif"
+      }
+    },
     "footer": {
       "description": "Connecter les amateurs de barracas de Rio avec leurs endroits préférés grâce aux réservations de chaises, aux mises à jour en temps réel et aux avantages exclusifs pour les membres.",
       "quickLinks": "Liens Rapides",
@@ -330,7 +343,10 @@
   },
   "visitor": {
     "totalUnique": "Total des Visiteurs Uniques Depuis le Lancement",
-    "realTime": "Compteur en temps réel"
+    "totalUsers": "Total des Utilisateurs (30 jours)",
+    "realTime": "Compteur en temps réel",
+    "activeNow": "actifs maintenant",
+    "fromGA4": "De Google Analytics"
   },
   "common": {
     "loading": "Chargement...",
