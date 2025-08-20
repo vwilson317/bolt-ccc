@@ -312,7 +312,7 @@ const ShareButton: React.FC<ShareButtonProps> = ({
 
   if (variant === 'hero-overlay') {
     return (
-      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent pt-8 pb-4 px-4 transition-all duration-300 ease-out">
+      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-pink-900/90 via-pink-700/50 to-transparent pt-8 pb-4 px-4 transition-all duration-300 ease-out">
         <div className="flex items-center justify-center">
           {/* Centered social buttons */}
           <div className="flex items-center space-x-4">
