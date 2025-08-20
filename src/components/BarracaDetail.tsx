@@ -18,6 +18,7 @@ interface BarracaDetailProps {
 
 const BarracaDetail: React.FC<BarracaDetailProps> = ({ barraca, onClose, weatherOverride }) => {
   const { t } = useTranslation();
+  const [isShareOverlayVisible, setIsShareOverlayVisible] = useState(false);
 
   // Prevent access for non-partnered barracas
   if (!barraca.partnered) {
@@ -82,8 +83,10 @@ const BarracaDetail: React.FC<BarracaDetailProps> = ({ barraca, onClose, weather
             <div className="absolute top-4 left-4">
               <ShareButton 
                 barraca={barraca} 
-                variant="dropdown" 
+                variant="toggle-overlay" 
                 size="md"
+                onToggleOverlay={setIsShareOverlayVisible}
+                isOverlayVisible={isShareOverlayVisible}
               />
             </div>
             
@@ -94,6 +97,25 @@ const BarracaDetail: React.FC<BarracaDetailProps> = ({ barraca, onClose, weather
             >
               <X className="h-5 w-5 text-white" />
             </button>
+            
+            {/* Click outside to close overlay */}
+            {isShareOverlayVisible && (
+              <div 
+                className="absolute inset-0 z-10"
+                onClick={() => setIsShareOverlayVisible(false)}
+              />
+            )}
+            
+            {/* Share Overlay Bar - Conditionally Visible */}
+            {isShareOverlayVisible && (
+              <div className="absolute bottom-0 left-0 right-0 z-20">
+                <ShareButton 
+                  barraca={barraca} 
+                  variant="hero-overlay" 
+                  size="md"
+                />
+              </div>
+            )}
           </div>
         </div>
 

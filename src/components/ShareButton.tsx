@@ -5,9 +5,11 @@ import { Barraca } from '../types';
 
 interface ShareButtonProps {
   barraca: Barraca;
-  variant?: 'icon' | 'button' | 'dropdown';
+  variant?: 'icon' | 'button' | 'dropdown' | 'hero-overlay' | 'hero-overlay-text' | 'toggle-overlay';
   size?: 'sm' | 'md' | 'lg';
   className?: string;
+  onToggleOverlay?: (isVisible: boolean) => void;
+  isOverlayVisible?: boolean;
 }
 
 interface SharePlatform {
@@ -28,7 +30,9 @@ const ShareButton: React.FC<ShareButtonProps> = ({
   barraca, 
   variant = 'icon', 
   size = 'md',
-  className = '' 
+  className = '',
+  onToggleOverlay,
+  isOverlayVisible = false
 }) => {
   const { t, i18n } = useTranslation();
   const [isSharing, setIsSharing] = useState(false);
@@ -303,6 +307,82 @@ const ShareButton: React.FC<ShareButtonProps> = ({
           </div>
         )}
       </div>
+    );
+  }
+
+  if (variant === 'hero-overlay') {
+    return (
+      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent pt-8 pb-4 px-4 transition-all duration-300 ease-out">
+        <div className="flex items-center justify-center">
+          {/* Centered social buttons */}
+          <div className="flex items-center space-x-4">
+            {platforms.map((platform) => {
+              const IconComponent = platform.icon;
+              return (
+                <button
+                  key={platform.id}
+                  onClick={() => handleShare(platform.id)}
+                  disabled={isSharing}
+                  className={`flex items-center justify-center p-3 rounded-full transition-all duration-200 bg-white/20 backdrop-blur-sm hover:bg-white/30 hover:scale-110 disabled:opacity-50 shadow-lg`}
+                  title={platform.name}
+                >
+                  <IconComponent className="h-5 w-5 text-white" />
+                </button>
+              );
+            })}
+          </div>
+        </div>
+        
+        {/* Success/Error Message */}
+        {shareMessage && (
+          <div className="absolute bottom-full mb-3 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white px-4 py-2 rounded-lg text-sm whitespace-nowrap z-10 shadow-lg">
+            {shareMessage}
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  if (variant === 'hero-overlay-text') {
+    return (
+      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent pt-8 pb-4 px-4 transition-all duration-300 ease-out">
+        <div className="flex items-center justify-center">
+          {/* Centered text buttons */}
+          <div className="flex items-center space-x-3">
+            {platforms.map((platform) => (
+              <button
+                key={platform.id}
+                onClick={() => handleShare(platform.id)}
+                disabled={isSharing}
+                className={`px-4 py-2 rounded-lg transition-all duration-200 bg-white/20 backdrop-blur-sm hover:bg-white/30 disabled:opacity-50 shadow-lg text-white font-medium text-sm`}
+                title={platform.name}
+              >
+                {platform.name}
+              </button>
+            ))}
+          </div>
+        </div>
+        
+        {/* Success/Error Message */}
+        {shareMessage && (
+          <div className="absolute bottom-full mb-3 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white px-4 py-2 rounded-lg text-sm whitespace-nowrap z-10 shadow-lg">
+            {shareMessage}
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  if (variant === 'toggle-overlay') {
+    return (
+      <button
+        onClick={() => onToggleOverlay?.(!isOverlayVisible)}
+        disabled={isSharing}
+        className={`${getButtonClasses()} bg-white/20 backdrop-blur-sm hover:bg-white/30 ${isOverlayVisible ? 'bg-white/40' : ''}`}
+        title="Share"
+      >
+        <Share2 className={`${getIconSize()} text-white`} />
+      </button>
     );
   }
 
