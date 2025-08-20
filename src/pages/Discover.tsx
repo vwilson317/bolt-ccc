@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Search, Filter, MapPin, X, CheckCircle, XCircle, Star, Loader2 } from 'lucide-react';
+import { Search, Filter, MapPin, X, CheckCircle, XCircle, Star } from 'lucide-react';
 import { useApp } from '../contexts/AppContext';
 import { useStory } from '../contexts/StoryContext';
 import BarracaGrid from '../components/BarracaGrid';
@@ -315,7 +315,7 @@ const Discover: React.FC = () => {
               {hasMore && (
                 <div ref={loadingRef} className="flex justify-center py-8">
                   <div className="flex items-center space-x-2 text-gray-600">
-                    <Loader2 className="h-5 w-5 animate-spin" />
+                    <div className="w-5 h-5 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin"></div>
                     <span>Loading more barracas...</span>
                   </div>
                 </div>

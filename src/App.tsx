@@ -11,6 +11,7 @@ import EnvironmentBadge from './components/EnvironmentBadge';
 import EnvironmentInfo from './components/EnvironmentInfo';
 import BarracaDetail from './components/BarracaDetail';
 import FirestoreStatusIndicator from './components/FirestoreStatusIndicator';
+import LoadingPage from './components/LoadingPage';
 import Home from './pages/Home';
 import Discover from './pages/Discover';
 import About from './pages/About';
@@ -33,7 +34,12 @@ checkSupabaseConnection().then(connected => {
 function AppContent() {
   // Initialize analytics
   useAnalytics();
-  const { selectedBarraca, closeBarracaModal, weatherOverride } = useApp();
+  const { selectedBarraca, closeBarracaModal, weatherOverride, isInitialLoading } = useApp();
+
+  // Show loading page during initial load
+  if (isInitialLoading) {
+    return <LoadingPage />;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
