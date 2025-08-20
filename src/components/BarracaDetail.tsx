@@ -22,7 +22,7 @@ const BarracaDetail: React.FC<BarracaDetailProps> = ({ barraca, onClose, weather
   // Prevent access for non-partnered barracas
   if (!barraca.partnered) {
     return (
-      <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[1000000] flex items-center justify-center p-4" style={{ top: '64px' }}>
         <div className="bg-white rounded-2xl max-w-md w-full p-6 text-center">
           <div className="mb-4">
             <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-3">
@@ -65,8 +65,8 @@ const BarracaDetail: React.FC<BarracaDetailProps> = ({ barraca, onClose, weather
   const effectiveIsOpen = getEffectiveOpenStatus(barraca, weatherOverride || false);
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-2 md:p-4">
-      <div className="bg-white rounded-2xl w-full h-full max-w-6xl max-h-[98vh] md:max-h-[95vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[1000000] flex items-center justify-center p-2 md:p-4" style={{ top: '64px' }}>
+      <div className="bg-white rounded-2xl w-full h-full max-w-6xl max-h-[calc(100vh-80px)] overflow-y-auto">
         {/* Header */}
         <div className="relative">
           {/* Hero Image */}

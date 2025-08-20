@@ -55,11 +55,11 @@ const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 relative z-10">
       {barracas.map((barraca, index) => (
         <div 
           key={barraca.id} 
-          className={`bg-white rounded-xl md:rounded-2xl shadow-md hover:shadow-lg transition-all duration-200 overflow-hidden flex flex-col relative ${
+          className={`bg-white rounded-xl md:rounded-2xl shadow-md hover:shadow-lg transition-all duration-200 overflow-hidden flex flex-col relative z-10 ${
             barraca.partnered ? 'cursor-pointer barraca-tap-feedback barraca-selectable active:scale-[0.98] md:active:scale-100 border border-transparent md:border-transparent' : 'border-2 border-gray-300'
           }`}
           onClick={() => barraca.partnered && openBarracaModal(barraca)}

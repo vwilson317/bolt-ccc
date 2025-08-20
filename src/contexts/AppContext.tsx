@@ -175,6 +175,31 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     }
   }, [barracaStatuses, searchFilters]);
 
+  // Initial barraca fetching without dependencies for app initialization
+  const fetchInitialBarracas = useCallback(async (): Promise<{ barracas: Barraca[], total: number }> => {
+    try {
+      // Use default filters for initial load
+      const serviceFilters = {
+        query: undefined,
+        location: undefined,
+        locations: undefined,
+        status: 'all' as const,
+        rating: undefined
+      };
+
+      const result = await BarracaService.getAll(1, 12, serviceFilters);
+      
+      // Don't overlay Firestore status for initial load - it will be handled later
+      return {
+        barracas: result.barracas,
+        total: result.total
+      };
+    } catch (error) {
+      console.error('Error fetching initial barracas:', error);
+      throw error;
+    }
+  }, []);
+
   // Utility function to check and clear expired admin sessions
   const checkAndClearExpiredSession = useCallback(() => {
     const savedAdminState = localStorage.getItem('admin_session');
@@ -232,6 +257,13 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
       setIsInitialLoading(true);
       setIsLoading(true);
       
+      // Add a timeout to prevent infinite loading
+      const timeoutId = setTimeout(() => {
+        console.warn('⚠️ Initial loading timeout reached, forcing app to load');
+        setIsLoading(false);
+        setIsInitialLoading(false);
+      }, 15000); // 15 second timeout
+      
       try {
         // Load all initial data in parallel
         const [barracasResult, emailSubscriptions, weatherOverride] = await Promise.allSettled([
@@ -242,7 +274,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
             while (retries < maxRetries) {
               try {
                 console.log('🔄 Loading barracas from Supabase...');
-                const result = await fetchBarracasWithStatus(1);
+                const result = await fetchInitialBarracas();
                 setBarracas(result.barracas);
                 setTotalBarracas(result.total);
                 setPage(1);
@@ -285,14 +317,18 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
       } catch (error) {
         console.error('❌ Failed to initialize app:', error);
       } finally {
+        clearTimeout(timeoutId);
         setIsLoading(false);
         // Add a small delay to ensure smooth transition
-        setTimeout(() => setIsInitialLoading(false), 500);
+        setTimeout(() => {
+          console.log('🎉 Initial loading complete, showing app');
+          setIsInitialLoading(false);
+        }, 500);
       }
     };
 
     initializeApp();
-  }, [fetchBarracasWithStatus]);
+  }, [fetchInitialBarracas]);
 
 
 
@@ -330,9 +366,25 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     };
   }, []);
 
-
-
-  
+  // Update barracas with Firestore status when statuses change (after initial load)
+  useEffect(() => {
+    if (!isInitialLoading && barracas.length > 0 && barracaStatuses.size > 0) {
+      const updatedBarracas = barracas.map(barraca => {
+        const firestoreStatus = barracaStatuses.get(barraca.id);
+        if (firestoreStatus) {
+          return {
+            ...barraca,
+            isOpen: firestoreStatus.isOpen,
+            manualStatus: firestoreStatus.manualStatus,
+            specialAdminOverride: firestoreStatus.specialAdminOverride,
+            specialAdminOverrideExpires: firestoreStatus.specialAdminOverrideExpires
+          };
+        }
+        return barraca;
+      });
+      setBarracas(updatedBarracas);
+    }
+  }, [barracaStatuses, isInitialLoading, barracas.length]);
 
   // Load weather data on mount
   useEffect(() => {

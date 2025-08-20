@@ -132,7 +132,7 @@ const HeroCarousel: React.FC = () => {
     <div
       ref={containerRef}
       data-hero-carousel
-      className="relative h-[66vh] sm:h-[70vh] md:h-screen overflow-hidden"
+      className="relative h-[66vh] sm:h-[70vh] md:h-screen overflow-hidden z-0"
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >

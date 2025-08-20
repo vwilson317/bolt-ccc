@@ -54,7 +54,7 @@ const Header: React.FC = () => {
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <header className={`fixed top-0 left-0 right-0 z-[99999] transition-all duration-300 ${
+    <header className={`fixed top-0 left-0 right-0 z-[999999] transition-all duration-300 ${
       useSolidHeader
         ? 'bg-white/95 backdrop-blur-sm border-b border-beach-100 shadow-sm' 
         : 'bg-transparent'
@@ -153,7 +153,7 @@ const Header: React.FC = () => {
           </nav>
 
           {/* Language Selector & Mobile Menu */}
-          <div className="flex items-center space-x-4 relative z-[100000]">
+          <div className="flex items-center space-x-4 relative z-[1000000]">
 
             {/* Language Selector */}
             <div className="relative">
@@ -174,7 +174,7 @@ const Header: React.FC = () => {
               </button>
 
               {isLanguageOpen && (
-                <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-[100000]">
+                <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-[1000000]">
                   {languages.map((lang) => (
                     <button
                       key={lang.code}
@@ -213,7 +213,7 @@ const Header: React.FC = () => {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className={`md:hidden border-t py-4 transition-colors duration-300 z-[100000] ${
+          <div className={`md:hidden border-t py-4 transition-colors duration-300 z-[1000000] ${
             useSolidHeader
               ? 'border-gray-200 bg-white' 
               : 'border-white/20 bg-black/20 backdrop-blur-sm'
