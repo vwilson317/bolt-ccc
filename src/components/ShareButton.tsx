@@ -19,6 +19,11 @@ interface SharePlatform {
   hoverColor: string;
 }
 
+// Utility function to detect mobile devices
+const isMobileDevice = (): boolean => {
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+};
+
 const ShareButton: React.FC<ShareButtonProps> = ({ 
   barraca, 
   variant = 'icon', 
@@ -106,6 +111,53 @@ const ShareButton: React.FC<ShareButtonProps> = ({
     window.open(twitterUrl, '_blank', 'noopener,noreferrer');
   };
 
+  const shareToInstagram = async (): Promise<void> => {
+    const shareText = `${formatShareText()} ${getShareUrl()}`;
+    
+    if (isMobileDevice()) {
+      // For mobile devices, copy text and provide instructions
+      try {
+        await navigator.clipboard.writeText(shareText);
+        setShareMessage('Text copied! Open Instagram and paste to share');
+        setTimeout(() => setShareMessage(''), 4000);
+        
+        // Try to open Instagram app with a simple approach
+        // This will work if Instagram app is installed, otherwise it will fail gracefully
+        const instagramAppUrl = 'instagram://';
+        
+        // Use a try-catch to handle the protocol error gracefully
+        try {
+          // Create a temporary link element to test the protocol
+          const link = document.createElement('a');
+          link.href = instagramAppUrl;
+          link.style.display = 'none';
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          
+          // Set a timeout to open web version as fallback
+          setTimeout(() => {
+            window.open('https://instagram.com', '_blank', 'noopener,noreferrer');
+          }, 1500);
+          
+        } catch (error) {
+          // If protocol fails, just open web version
+          window.open('https://instagram.com', '_blank', 'noopener,noreferrer');
+        }
+        
+      } catch (error) {
+        // Fallback: just copy to clipboard and open web version
+        await copyToClipboard();
+        window.open('https://instagram.com', '_blank', 'noopener,noreferrer');
+      }
+    } else {
+      // For desktop, open Instagram in a new tab
+      window.open('https://instagram.com', '_blank', 'noopener,noreferrer');
+      setShareMessage('Instagram opened in new tab');
+      setTimeout(() => setShareMessage(''), 3000);
+    }
+  };
+
   const copyToClipboard = async (): Promise<void> => {
     try {
       await navigator.clipboard.writeText(`${formatShareText()} ${getShareUrl()}`);
@@ -157,7 +209,7 @@ const ShareButton: React.FC<ShareButtonProps> = ({
           await shareToTwitter();
           break;
         case 'instagram':
-          await copyToClipboard();
+          await shareToInstagram();
           break;
         case 'copy':
           await copyToClipboard();
