@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
 import { AppProvider, useApp } from './contexts/AppContext';
 import { StoryProvider } from './contexts/StoryContext';
 import { WeatherProvider } from './contexts/WeatherContext';
@@ -11,11 +12,13 @@ import EnvironmentBadge from './components/EnvironmentBadge';
 import EnvironmentInfo from './components/EnvironmentInfo';
 import BarracaDetail from './components/BarracaDetail';
 import FirestoreStatusIndicator from './components/FirestoreStatusIndicator';
+import LoadingPage from './components/LoadingPage';
 import Home from './pages/Home';
 import Discover from './pages/Discover';
 import About from './pages/About';
 import Admin from './pages/Admin';
 import BarracaDetailPage from './pages/BarracaDetail';
+import BarracaRegister from './pages/BarracaRegister';
 
 import { logEnvironmentInfo, checkSupabaseConnection } from './lib/supabase';
 import './i18n';
@@ -33,7 +36,12 @@ checkSupabaseConnection().then(connected => {
 function AppContent() {
   // Initialize analytics
   useAnalytics();
-  const { selectedBarraca, closeBarracaModal, weatherOverride } = useApp();
+  const { selectedBarraca, closeBarracaModal, weatherOverride, isInitialLoading } = useApp();
+
+  // Show loading page during initial load
+  if (isInitialLoading) {
+    return <LoadingPage />;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -44,6 +52,7 @@ function AppContent() {
           <Route path="/discover" element={<Discover />} />
           <Route path="/about" element={<About />} />
           <Route path="/admin" element={<Admin />} />
+          <Route path="/register" element={<BarracaRegister />} />
           <Route path="/barraca/:id" element={<BarracaDetailPage />} />
           {/* <Route path="/translation-demo" element={<TranslationDemo />} /> */}
         </Routes>
@@ -64,6 +73,40 @@ function AppContent() {
       
       {/* <EnvironmentBadge />
       <EnvironmentInfo /> */}
+      
+      {/* Global Toaster */}
+      <Toaster
+        position="top-center"
+        toastOptions={{
+          duration: 4000,
+          style: {
+            background: '#363636',
+            color: '#fff',
+            zIndex: 9999,
+            width: '100vw',
+            height: '100vh',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '1.5rem',
+            padding: '2rem',
+          },
+          success: {
+            duration: 5000,
+            iconTheme: {
+              primary: '#4ade80',
+              secondary: '#fff',
+            },
+          },
+          error: {
+            duration: 6000,
+            iconTheme: {
+              primary: '#f87171',
+              secondary: '#fff',
+            },
+          },
+        }}
+      />
     </div>
   );
 }

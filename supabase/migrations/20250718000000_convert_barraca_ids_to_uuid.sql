@@ -17,8 +17,18 @@ FROM barracas;
 -- First, drop all existing foreign key constraints that reference barracas.id
 ALTER TABLE stories DROP CONSTRAINT IF EXISTS stories_barraca_id_fkey;
 ALTER TABLE business_hours DROP CONSTRAINT IF EXISTS business_hours_barraca_id_fkey;
-ALTER TABLE menu_categories DROP CONSTRAINT IF EXISTS menu_categories_barraca_id_fkey;
-ALTER TABLE menu_items DROP CONSTRAINT IF EXISTS menu_items_barraca_id_fkey;
+
+-- Drop constraints for menu tables if they exist
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'menu_categories') THEN
+    ALTER TABLE menu_categories DROP CONSTRAINT IF EXISTS menu_categories_barraca_id_fkey;
+  END IF;
+  
+  IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'menu_items') THEN
+    ALTER TABLE menu_items DROP CONSTRAINT IF EXISTS menu_items_barraca_id_fkey;
+  END IF;
+END $$;
 
 -- Add a new UUID column
 ALTER TABLE barracas ADD COLUMN new_id UUID;
@@ -418,8 +428,18 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 -- Drop old indexes that reference the old text columns
 DROP INDEX IF EXISTS idx_stories_barraca_id;
 DROP INDEX IF EXISTS idx_business_hours_barraca_id;
-DROP INDEX IF EXISTS idx_menu_categories_barraca_id;
-DROP INDEX IF EXISTS idx_menu_items_barraca_id;
+
+-- Drop indexes for menu tables if they exist
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'menu_categories') THEN
+    DROP INDEX IF EXISTS idx_menu_categories_barraca_id;
+  END IF;
+  
+  IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'menu_items') THEN
+    DROP INDEX IF EXISTS idx_menu_items_barraca_id;
+  END IF;
+END $$;
 
 -- Create new indexes for UUID columns
 CREATE INDEX idx_stories_barraca_id ON stories(barraca_id);

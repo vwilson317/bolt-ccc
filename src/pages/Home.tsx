@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, MapPin, Users, Calendar, Bell, Gift, Instagram } from 'lucide-react';
 import HeroCarousel from '../components/HeroCarousel';
 import WeatherMarquee from '../components/WeatherMarquee';
+import RegistrationMarquee from '../components/RegistrationMarquee';
 import BarracaGrid from '../components/BarracaGrid';
 import EmailSubscriptionSection from '../components/EmailSubscriptionSection';
 import StoryCarousel from '../components/StoryCarousel';
@@ -71,8 +72,8 @@ const Home: React.FC = () => {
     }
   };
 
-  return (
-    <>
+    return (
+    <div className="relative">
       {/* Story Carousel - Only show if feature is enabled */}
       {featureFlags.enableStoryBanner && <StoryCarousel />}
       
@@ -83,7 +84,7 @@ const Home: React.FC = () => {
       <WeatherMarquee colorScheme="white" useDefaultBorders={false} className="border-t-4 border-pink-500" />
 
       {/* Call to Action Section */}
-      <section ref={ctaAnimation.ref} className={`py-16 bg-gradient-to-b from-beach-50 to-white ${ctaAnimation.animationClasses}`}>
+      <section ref={ctaAnimation.ref} className={`py-16 bg-gradient-to-b from-beach-50 to-white relative z-10 ${ctaAnimation.animationClasses}`}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
             {t('home.yourBarraca')}
@@ -136,7 +137,7 @@ const Home: React.FC = () => {
       </section>
 
       {/* Featured Barracas */}
-      <section ref={featuredAnimation.ref} className={`py-16 bg-white ${featuredAnimation.animationClasses}`}>
+      <section ref={featuredAnimation.ref} className={`py-16 bg-white relative z-10 ${featuredAnimation.animationClasses}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -158,7 +159,7 @@ const Home: React.FC = () => {
       </section>
 
       {/* Loyalty Program Features */}
-      <section ref={featuresAnimation.ref} className={`py-16 bg-gradient-to-b from-gray-50 to-white ${featuresAnimation.animationClasses}`}>
+      <section ref={featuresAnimation.ref} className={`py-16 bg-gradient-to-b from-gray-50 to-white relative z-10 ${featuresAnimation.animationClasses}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -191,7 +192,7 @@ const Home: React.FC = () => {
       </section>
 
       {/* Member Benefits */}
-      <section ref={benefitsAnimation.ref} className={`py-16 bg-white ${benefitsAnimation.animationClasses}`}>
+      <section ref={benefitsAnimation.ref} className={`py-16 bg-white relative z-10 ${benefitsAnimation.animationClasses}`}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="bg-white rounded-2xl p-8 border border-sand-100 shadow-md">
             <Users className="h-16 w-16 text-beach-500 mx-auto mb-6" />
@@ -224,7 +225,7 @@ const Home: React.FC = () => {
       </section>
 
       {/* Instagram CTA Section */}
-      <section id="instagram-cta" ref={instagramAnimation.ref} className={`py-16 bg-gradient-to-br from-pink-50 via-purple-50 to-orange-50 ${instagramAnimation.animationClasses}`}>
+      <section id="instagram-cta" ref={instagramAnimation.ref} className={`py-16 bg-gradient-to-br from-pink-50 via-purple-50 to-orange-50 relative z-10 ${instagramAnimation.animationClasses}`}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 md:p-12 shadow-xl border border-pink-100">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -286,8 +287,11 @@ const Home: React.FC = () => {
         animationClasses={signupAnimation.animationClasses}
       />
 
+      {/* Registration Marquee */}
+      {/* <RegistrationMarquee /> */}
+
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-16">
+      <footer className="bg-gray-900 text-white py-16 relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             {/* Company Info */}
@@ -347,7 +351,7 @@ const Home: React.FC = () => {
           </div>
         </div>
       </footer>
-    </>
+    </div>
   );
 };
 

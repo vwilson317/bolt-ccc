@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Search, Filter, MapPin, X, CheckCircle, XCircle, Star, Loader2 } from 'lucide-react';
+import { Search, Filter, MapPin, X, CheckCircle, XCircle, Star } from 'lucide-react';
 import { useApp } from '../contexts/AppContext';
 import { useStory } from '../contexts/StoryContext';
 import BarracaGrid from '../components/BarracaGrid';
@@ -112,9 +112,9 @@ const Discover: React.FC = () => {
   const hasActiveFilters = searchFilters.query || searchFilters.location || searchFilters.locations.length > 0 || searchFilters.status !== 'all' || searchFilters.rating !== undefined;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 relative">
       {/* Header Section */}
-      <section className="relative pt-24 pb-32 min-h-[450px]">
+      <section className="relative pt-24 pb-32 min-h-[450px] z-0">
         
         <div className="absolute inset-0 w-full h-full bg-[url('https://pub-db19578f977b43e184c45b5084d7c029.r2.dev/editsV1/sunrise-2.jpg?auto=format&fit=crop&w=1200&q=80')] bg-cover bg-center" />
         <div className="absolute inset-0 w-full h-full bg-black/40" />
@@ -133,7 +133,7 @@ const Discover: React.FC = () => {
             </section>
 
       {/* Sticky Search and Weather Group - overlaps hero with negative margin */}
-      <div className="sticky top-16 z-40">
+      <div className="sticky top-16 z-50">
         {/* Weather Marquee */}
         <WeatherMarquee colorScheme="pink" stickyOffsetClassName="top-0" useSolidIcons={true} />
 
@@ -156,7 +156,7 @@ const Discover: React.FC = () => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10 mt-4">
         {/* Filters Row (desktop) */}
         <div className="mb-8">
           <div className="flex flex-col lg:flex-row gap-6 items-start">
@@ -315,7 +315,7 @@ const Discover: React.FC = () => {
               {hasMore && (
                 <div ref={loadingRef} className="flex justify-center py-8">
                   <div className="flex items-center space-x-2 text-gray-600">
-                    <Loader2 className="h-5 w-5 animate-spin" />
+                    <div className="w-5 h-5 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin"></div>
                     <span>Loading more barracas...</span>
                   </div>
                 </div>

@@ -340,3 +340,31 @@ html {
   align-items: center;
   gap: 1.5rem;
 }
+
+/* Registration marquee scrolling animation */
+@keyframes scroll-left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-scroll-left {
+  animation: scroll-left 25s linear infinite;
+  display: flex;
+  width: max-content;
+}
+
+/* Slower animation on mobile for better readability */
+@media (max-width: 768px) {
+  .animate-scroll-left {
+    animation-duration: 35s;
+  }
+}
+
+/* Pause animation on hover */
+.animate-scroll-left:hover {
+  animation-play-state: paused;
+}

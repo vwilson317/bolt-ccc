@@ -34,10 +34,11 @@ const Header: React.FC = () => {
   const isBarracaDetailPage = location.pathname.startsWith('/barraca/');
   const isAboutPage = location.pathname === '/about';
   const isHomePage = location.pathname === '/';
+  const isRegisterPage = location.pathname === '/register';
   
   // On home page and about page, only show solid header when header bottom border reaches end of hero
   const headerHeight = 64; // h-16 = 64px
-  const useSolidHeader = isLoginPage || isBarracaDetailPage || isMenuOpen || 
+  const useSolidHeader = isLoginPage || isBarracaDetailPage || isMenuOpen || isRegisterPage ||
     ((isHomePage || isAboutPage) ? scrollY + headerHeight > heroHeight : isScrolled);
 
   const languages = [
@@ -54,7 +55,7 @@ const Header: React.FC = () => {
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <header className={`fixed top-0 left-0 right-0 z-[99999] transition-all duration-300 ${
+    <header className={`fixed top-0 left-0 right-0 z-[999999] transition-all duration-300 ${
       useSolidHeader
         ? 'bg-white/95 backdrop-blur-sm border-b border-beach-100 shadow-sm' 
         : 'bg-transparent'
@@ -137,6 +138,20 @@ const Header: React.FC = () => {
               {t('nav.about')}
             </Link>
             <Link
+              to="/register"
+              className={`font-medium transition-colors duration-200 ${
+                isActive('/register') 
+                  ? useSolidHeader
+                    ? 'text-beach-600 border-b-2 border-beach-600 pb-1' 
+                    : 'text-white border-b-2 border-white pb-1'
+                  : useSolidHeader
+                    ? 'text-gray-700 hover:text-beach-600'
+                    : 'text-white/90 hover:text-white'
+              }`}
+            >
+              Register Barraca
+            </Link>
+            <Link
               to="/admin"
               className={`font-medium transition-colors duration-200 ${
                 isActive('/admin') 
@@ -153,7 +168,7 @@ const Header: React.FC = () => {
           </nav>
 
           {/* Language Selector & Mobile Menu */}
-          <div className="flex items-center space-x-4 relative z-[100000]">
+          <div className="flex items-center space-x-4 relative z-[1000000]">
 
             {/* Language Selector */}
             <div className="relative">
@@ -174,7 +189,7 @@ const Header: React.FC = () => {
               </button>
 
               {isLanguageOpen && (
-                <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-[100000]">
+                <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-[1000000]">
                   {languages.map((lang) => (
                     <button
                       key={lang.code}
@@ -213,7 +228,7 @@ const Header: React.FC = () => {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className={`md:hidden border-t py-4 transition-colors duration-300 z-[100000] ${
+          <div className={`md:hidden border-t py-4 transition-colors duration-300 z-[1000000] ${
             useSolidHeader
               ? 'border-gray-200 bg-white' 
               : 'border-white/20 bg-black/20 backdrop-blur-sm'
@@ -251,6 +266,17 @@ const Header: React.FC = () => {
                 }`}
               >
                 {t('nav.about')}
+              </Link>
+              <Link
+                to="/register"
+                onClick={() => setIsMenuOpen(false)}
+                className={`font-medium transition-colors duration-200 ${
+                  isActive('/register') 
+                    ? useSolidHeader ? 'text-beach-600' : 'text-white'
+                    : useSolidHeader ? 'text-gray-700' : 'text-white/90'
+                }`}
+              >
+                Register Barraca
               </Link>
               <Link
                 to="/admin"

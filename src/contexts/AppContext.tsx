@@ -20,6 +20,7 @@ interface AppContextType {
   weather: WeatherData | null;
   searchFilters: SearchFilters;
   isLoading: boolean;
+  isInitialLoading: boolean;
   isAdmin: boolean;
   isSpecialAdmin: boolean;
   emailSubscriptions: EmailSubscription[];
@@ -76,6 +77,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     status: 'all'
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
   
   // New infinite scroll state
   const [page, setPage] = useState(1);
@@ -173,6 +175,31 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     }
   }, [barracaStatuses, searchFilters]);
 
+  // Initial barraca fetching without dependencies for app initialization
+  const fetchInitialBarracas = useCallback(async (): Promise<{ barracas: Barraca[], total: number }> => {
+    try {
+      // Use default filters for initial load
+      const serviceFilters = {
+        query: undefined,
+        location: undefined,
+        locations: undefined,
+        status: 'all' as const,
+        rating: undefined
+      };
+
+      const result = await BarracaService.getAll(1, 12, serviceFilters);
+      
+      // Don't overlay Firestore status for initial load - it will be handled later
+      return {
+        barracas: result.barracas,
+        total: result.total
+      };
+    } catch (error) {
+      console.error('Error fetching initial barracas:', error);
+      throw error;
+    }
+  }, []);
+
   // Utility function to check and clear expired admin sessions
   const checkAndClearExpiredSession = useCallback(() => {
     const savedAdminState = localStorage.getItem('admin_session');
@@ -224,74 +251,86 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     return () => clearInterval(interval);
   }, [checkAndClearExpiredSession]);
 
-  // Load barracas from database on mount with retry mechanism
+  // Comprehensive initial loading effect
   useEffect(() => {
-    const loadBarracas = async () => {
+    const initializeApp = async () => {
+      setIsInitialLoading(true);
       setIsLoading(true);
-      let retries = 0;
-      const maxRetries = 3;
-
-      while (retries < maxRetries) {
-        try {
-          console.log('🔄 Loading barracas from Supabase...');
-          const result = await fetchBarracasWithStatus(1);
-          
-          setBarracas(result.barracas);
-          setTotalBarracas(result.total);
-          setPage(1);
-          setHasMore(result.barracas.length < result.total);
-          console.log('✅ Barracas loaded from Supabase');
-          break; // Success, exit retry loop
-        } catch (error) {
-          retries++;
-          console.error(`Failed to load barracas (attempt ${retries}/${maxRetries}):`, error);
-          
-          if (retries >= maxRetries) {
-            console.error('Max retries reached for loading barracas');
-            // Keep empty array if loading fails
-          } else {
-            // Wait before retrying (exponential backoff)
-            await new Promise(resolve => setTimeout(resolve, 1000 * retries));
-          }
-        }
-      }
       
-      setIsLoading(false);
-    };
-
-    loadBarracas();
-  }, [fetchBarracasWithStatus]);
-
-  // Load email subscriptions from database on mount
-  useEffect(() => {
-    const loadEmailSubscriptions = async () => {
+      // Add a timeout to prevent infinite loading
+      const timeoutId = setTimeout(() => {
+        console.warn('⚠️ Initial loading timeout reached, forcing app to load');
+        setIsLoading(false);
+        setIsInitialLoading(false);
+      }, 15000); // 15 second timeout
+      
       try {
-        const subscriptions = await EmailService.getActiveSubscriptions();
-        setEmailSubscriptions(subscriptions);
+        // Load all initial data in parallel
+        const [barracasResult, emailSubscriptions, weatherOverride] = await Promise.allSettled([
+          (async () => {
+            let retries = 0;
+            const maxRetries = 3;
+            
+            while (retries < maxRetries) {
+              try {
+                console.log('🔄 Loading barracas from Supabase...');
+                const result = await fetchInitialBarracas();
+                setBarracas(result.barracas);
+                setTotalBarracas(result.total);
+                setPage(1);
+                setHasMore(result.barracas.length < result.total);
+                console.log('✅ Barracas loaded from Supabase');
+                return result;
+              } catch (error) {
+                retries++;
+                console.error(`Failed to load barracas (attempt ${retries}/${maxRetries}):`, error);
+                
+                if (retries >= maxRetries) {
+                  console.error('Max retries reached for loading barracas');
+                  throw error;
+                } else {
+                  await new Promise(resolve => setTimeout(resolve, 1000 * retries));
+                }
+              }
+            }
+          })(),
+          EmailService.getActiveSubscriptions(),
+          WeatherOverrideService.getStatus()
+        ]);
+
+        // Handle email subscriptions result
+        if (emailSubscriptions.status === 'fulfilled') {
+          setEmailSubscriptions(emailSubscriptions.value);
+        } else {
+          console.error('Failed to load email subscriptions:', emailSubscriptions.reason);
+        }
+
+        // Handle weather override result
+        if (weatherOverride.status === 'fulfilled') {
+          setWeatherOverride(weatherOverride.value.is_active);
+          setOverrideExpiry(weatherOverride.value.expires_at);
+        } else {
+          console.error('Failed to load weather override status:', weatherOverride.reason);
+        }
+
+        console.log('✅ Initial app data loaded');
       } catch (error) {
-        console.error('Failed to load email subscriptions:', error);
-        // Keep empty array if loading fails
+        console.error('❌ Failed to initialize app:', error);
+      } finally {
+        clearTimeout(timeoutId);
+        setIsLoading(false);
+        // Add a small delay to ensure smooth transition
+        setTimeout(() => {
+          console.log('🎉 Initial loading complete, showing app');
+          setIsInitialLoading(false);
+        }, 500);
       }
     };
 
-    loadEmailSubscriptions();
-  }, []);
+    initializeApp();
+  }, [fetchInitialBarracas]);
 
-  // Load weather override status from database on mount
-  useEffect(() => {
-    const loadWeatherOverride = async () => {
-      try {
-        const override = await WeatherOverrideService.getStatus();
-        setWeatherOverride(override.is_active);
-        setOverrideExpiry(override.expires_at);
-      } catch (error) {
-        console.error('Failed to load weather override status:', error);
-        // Keep default values if loading fails
-      }
-    };
 
-    loadWeatherOverride();
-  }, []);
 
   // Initialize Firestore real-time subscriptions
   useEffect(() => {
@@ -327,9 +366,25 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     };
   }, []);
 
-
-
-  
+  // Update barracas with Firestore status when statuses change (after initial load)
+  useEffect(() => {
+    if (!isInitialLoading && barracas.length > 0 && barracaStatuses.size > 0) {
+      const updatedBarracas = barracas.map(barraca => {
+        const firestoreStatus = barracaStatuses.get(barraca.id);
+        if (firestoreStatus) {
+          return {
+            ...barraca,
+            isOpen: firestoreStatus.isOpen,
+            manualStatus: firestoreStatus.manualStatus,
+            specialAdminOverride: firestoreStatus.specialAdminOverride,
+            specialAdminOverrideExpires: firestoreStatus.specialAdminOverrideExpires
+          };
+        }
+        return barraca;
+      });
+      setBarracas(updatedBarracas);
+    }
+  }, [barracaStatuses, isInitialLoading, barracas.length]);
 
   // Load weather data on mount
   useEffect(() => {
@@ -672,6 +727,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     weather,
     searchFilters,
     isLoading,
+    isInitialLoading,
     isAdmin,
     isSpecialAdmin,
     emailSubscriptions,

@@ -85,7 +85,7 @@ const StoryCarousel: React.FC = () => {
   if (barracasWithStories.length === 0) return null;
 
   return (
-    <div className="relative bg-white border-b border-gray-200 py-4">
+    <div className="relative bg-white border-b border-gray-200 py-4 z-0">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-gray-900">
