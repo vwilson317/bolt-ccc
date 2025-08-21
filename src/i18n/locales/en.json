@@ -417,11 +417,11 @@
       "amenitiesPlaceholder": "What services do you offer?",
       "addAmenity": "Add Amenity",
       "removeAmenity": "Remove",
-      "environment": "Environment & Atmosphere",
-      "environmentDescription": "Select the type of environment and atmosphere your barraca provides",
-      "customEnvironment": "Custom Environment Types",
-      "customEnvironmentPlaceholder": "Custom environment type",
-      "addCustomEnvironment": "Add Custom Environment Type",
+      "vibe": "Vibe & Atmosphere",
+      "vibeDescription": "Select the type of vibe and atmosphere your barraca provides",
+      "customVibe": "Custom Vibe Types",
+      "customVibePlaceholder": "Custom vibe type",
+      "addCustomVibe": "Add Custom Vibe Type",
       "remove": "Remove",
       "defaultPhoto": "Default Photo",
       "defaultPhotoDescription": "Upload a high-resolution photo that showcases what makes your barraca unique",
@@ -481,6 +481,19 @@
       "creditCard": "Credit Card Accepted",
       "delivery": "Delivery Service",
       "reservations": "Reservations"
+    },
+    "vibes": {
+      "familyFriendly": "Family Friendly",
+      "lgbtq": "LGBTQ+",
+      "relaxed": "Relaxed",
+      "volleyball": "Volleyball",
+      "frescoball": "Frescoball",
+      "party": "Party",
+      "sports": "Sports",
+      "romantic": "Romantic",
+      "quiet": "Quiet",
+      "beachGames": "Beach Games",
+      "fitness": "Fitness"
     }
   },
   "adminRegistrations": {
@@ -547,5 +560,10 @@
   "marquee": {
     "title": "Thank you to our registered barracas",
     "loading": "Loading registered barracas..."
+  },
+  "toast": {
+    "success": "Registration submitted successfully!",
+    "error": "Error submitting registration. Please try again.",
+    "loading": "Submitting registration..."
   }
 }

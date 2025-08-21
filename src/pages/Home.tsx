@@ -288,7 +288,7 @@ const Home: React.FC = () => {
       />
 
       {/* Registration Marquee */}
-      <RegistrationMarquee />
+      {/* <RegistrationMarquee /> */}
 
       {/* Footer */}
       <footer className="bg-gray-900 text-white py-16 relative z-10">

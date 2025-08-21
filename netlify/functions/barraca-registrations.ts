@@ -87,11 +87,11 @@ export const handler: Handler = async (event) => {
     }
 
     // Validate contact object
-    if (!body.contact.phone || !body.contact.email) {
+    if (!body.contact.phone) {
       return {
         statusCode: 400,
         headers,
-        body: JSON.stringify({ error: 'Phone and email are required in contact information' }),
+        body: JSON.stringify({ error: 'Phone is required in contact information' }),
       };
     }
 
@@ -106,7 +106,7 @@ export const handler: Handler = async (event) => {
       nearestPosto: body.nearestPosto?.trim() || undefined,
       contact: {
         phone: body.contact.phone.trim(),
-        email: body.contact.email.trim(),
+        email: body.contact.email?.trim() || undefined,
         instagram: body.contact.instagram?.trim() || undefined,
         website: body.contact.website?.trim() || undefined,
       },
