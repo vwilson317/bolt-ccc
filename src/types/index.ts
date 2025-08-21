@@ -300,6 +300,51 @@ export interface TranslationContext {
   ) => Promise<string>;
 }
 
+export interface BarracaRegistration {
+  id?: string;
+  name: string;
+  barracaNumber?: string;
+  location: string;
+  coordinates: {
+    lat: number;
+    lng: number;
+  };
+  typicalHours: string;
+  description: string;
+  nearestPosto?: string;
+  contact: {
+    phone: string;
+    email: string;
+    instagram?: string;
+    website?: string;
+  };
+  amenities: string[];
+  environment: string[]; // Environment types like Family Friendly, LGBTQ+, etc.
+  defaultPhoto?: string;
+  weekendHoursEnabled: boolean;
+  weekendHours?: {
+    friday: { open: string; close: string };
+    saturday: { open: string; close: string };
+    sunday: { open: string; close: string };
+  };
+  additionalInfo?: string;
+  // Partnership opportunities
+  qrCodes?: boolean;
+  repeatDiscounts?: boolean;
+  hotelPartnerships?: boolean;
+  contentCreation?: boolean;
+  onlineOrders?: boolean;
+  // Contact preferences for photos and status updates
+  contactForPhotos?: boolean;
+  contactForStatus?: boolean;
+  preferredContactMethod?: 'whatsapp' | 'instagram' | 'email';
+  status: 'pending' | 'approved' | 'rejected';
+  submittedAt: Date;
+  reviewedAt?: Date;
+  reviewedBy?: string;
+  adminNotes?: string;
+}
+
 export interface AppContextType {
   barracas: Barraca[];
   filteredBarracas: Barraca[];

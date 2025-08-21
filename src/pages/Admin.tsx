@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Lock, Plus, Edit2, Trash2, Eye, EyeOff, Users, Mail, BarChart3, Power, Settings } from 'lucide-react';
+import { Lock, Plus, Edit2, Trash2, Eye, EyeOff, Users, Mail, BarChart3, Power, Settings, MessageSquare } from 'lucide-react';
 import { useApp } from '../contexts/AppContext';
 import { useAnalytics } from '../hooks/useAnalytics';
 import { getEffectiveOpenStatus } from '../utils/environmentUtils';
@@ -9,6 +9,7 @@ import AdminStats from '../components/AdminStats';
 import AnalyticsDashboard from '../components/AnalyticsDashboard';
 import SpecialAdminPanel from '../components/SpecialAdminPanel';
 import ManualStatusPanel from '../components/ManualStatusPanel';
+import AdminRegistrations from '../components/AdminRegistrations';
 
 const Admin: React.FC = () => {
   const { t } = useTranslation();
@@ -32,7 +33,7 @@ const Admin: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLogging, setIsLogging] = useState(false);
   const [loginError, setLoginError] = useState('');
-  const [activeTab, setActiveTab] = useState<'barracas' | 'stats' | 'emails' | 'analytics' | 'special' | 'manual'>('barracas');
+  const [activeTab, setActiveTab] = useState<'barracas' | 'registrations' | 'stats' | 'emails' | 'analytics' | 'special' | 'manual'>('barracas');
   const [editingBarraca, setEditingBarraca] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -277,6 +278,17 @@ const Admin: React.FC = () => {
                 {t('admin.manageBarracas')}
               </button>
               <button
+                onClick={() => setActiveTab('registrations')}
+                className={`w-full sm:w-auto py-2 px-1 border-b-2 font-medium text-sm transition-colors ${
+                  activeTab === 'registrations'
+                    ? 'border-beach-500 text-beach-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                }`}
+              >
+                <MessageSquare className="h-4 w-4 inline mr-2" />
+                Registrations
+              </button>
+              <button
                 onClick={() => setActiveTab('stats')}
                 className={`w-full sm:w-auto py-2 px-1 border-b-2 font-medium text-sm transition-colors ${
                   activeTab === 'stats'
@@ -504,6 +516,15 @@ const Admin: React.FC = () => {
               </div>
             </div>
           </div>
+        )}
+
+        {activeTab === 'registrations' && (
+          <AdminRegistrations 
+            onRegistrationConverted={() => {
+              // Refresh barracas when a registration is converted
+              refreshBarracas();
+            }}
+          />
         )}
 
         {activeTab === 'stats' && <AdminStats />}

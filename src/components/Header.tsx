@@ -34,10 +34,11 @@ const Header: React.FC = () => {
   const isBarracaDetailPage = location.pathname.startsWith('/barraca/');
   const isAboutPage = location.pathname === '/about';
   const isHomePage = location.pathname === '/';
+  const isRegisterPage = location.pathname === '/register';
   
   // On home page and about page, only show solid header when header bottom border reaches end of hero
   const headerHeight = 64; // h-16 = 64px
-  const useSolidHeader = isLoginPage || isBarracaDetailPage || isMenuOpen || 
+  const useSolidHeader = isLoginPage || isBarracaDetailPage || isMenuOpen || isRegisterPage ||
     ((isHomePage || isAboutPage) ? scrollY + headerHeight > heroHeight : isScrolled);
 
   const languages = [
@@ -135,6 +136,20 @@ const Header: React.FC = () => {
               }`}
             >
               {t('nav.about')}
+            </Link>
+            <Link
+              to="/register"
+              className={`font-medium transition-colors duration-200 ${
+                isActive('/register') 
+                  ? useSolidHeader
+                    ? 'text-beach-600 border-b-2 border-beach-600 pb-1' 
+                    : 'text-white border-b-2 border-white pb-1'
+                  : useSolidHeader
+                    ? 'text-gray-700 hover:text-beach-600'
+                    : 'text-white/90 hover:text-white'
+              }`}
+            >
+              Register Barraca
             </Link>
             <Link
               to="/admin"
@@ -251,6 +266,17 @@ const Header: React.FC = () => {
                 }`}
               >
                 {t('nav.about')}
+              </Link>
+              <Link
+                to="/register"
+                onClick={() => setIsMenuOpen(false)}
+                className={`font-medium transition-colors duration-200 ${
+                  isActive('/register') 
+                    ? useSolidHeader ? 'text-beach-600' : 'text-white'
+                    : useSolidHeader ? 'text-gray-700' : 'text-white/90'
+                }`}
+              >
+                Register Barraca
               </Link>
               <Link
                 to="/admin"

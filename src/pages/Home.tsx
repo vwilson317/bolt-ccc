@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, MapPin, Users, Calendar, Bell, Gift, Instagram } from 'lucide-react';
 import HeroCarousel from '../components/HeroCarousel';
 import WeatherMarquee from '../components/WeatherMarquee';
+import RegistrationMarquee from '../components/RegistrationMarquee';
 import BarracaGrid from '../components/BarracaGrid';
 import EmailSubscriptionSection from '../components/EmailSubscriptionSection';
 import StoryCarousel from '../components/StoryCarousel';
@@ -285,6 +286,9 @@ const Home: React.FC = () => {
         animationRef={signupAnimation.ref}
         animationClasses={signupAnimation.animationClasses}
       />
+
+      {/* Registration Marquee */}
+      <RegistrationMarquee />
 
       {/* Footer */}
       <footer className="bg-gray-900 text-white py-16 relative z-10">
