@@ -72,12 +72,17 @@ export const handler: Handler = async (event) => {
   }
 
   try {
+    console.log('Processing registration submission...');
+    console.log('Request body:', event.body);
+    
     const body = JSON.parse(event.body || '{}');
+    console.log('Parsed body:', JSON.stringify(body, null, 2));
 
     // Validate required fields
     const requiredFields = ['name', 'ownerName', 'location', 'typicalHours', 'description', 'contact', 'nearestPosto'];
     for (const field of requiredFields) {
       if (!body[field]) {
+        console.error(`Missing required field: ${field}`);
         return {
           statusCode: 400,
           headers,
@@ -88,6 +93,7 @@ export const handler: Handler = async (event) => {
 
     // Validate contact object
     if (!body.contact.phone) {
+      console.error('Phone is required in contact information');
       return {
         statusCode: 400,
         headers,
@@ -129,8 +135,12 @@ export const handler: Handler = async (event) => {
       preferredContactMethod: body.preferredContactMethod || undefined,
     };
 
+    console.log('Cleaned registration data:', JSON.stringify(registrationData, null, 2));
+
     // Submit the registration
+    console.log('Submitting registration to service...');
     const registration = await BarracaRegistrationService.submit(registrationData);
+    console.log('Registration submitted successfully:', registration);
 
     return {
       statusCode: 201,
@@ -147,13 +157,19 @@ export const handler: Handler = async (event) => {
     };
   } catch (error) {
     console.error('Error processing registration:', error);
+    console.error('Error details:', {
+      message: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined,
+      name: error instanceof Error ? error.name : undefined
+    });
     
     return {
       statusCode: 500,
       headers,
       body: JSON.stringify({
         error: 'Internal server error',
-        message: 'Failed to submit registration',
+        message: error instanceof Error ? error.message : 'Failed to submit registration',
+        details: process.env.NODE_ENV === 'development' ? error instanceof Error ? error.stack : undefined : undefined
       }),
     };
   }

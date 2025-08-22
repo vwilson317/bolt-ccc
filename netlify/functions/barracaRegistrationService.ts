@@ -5,6 +5,15 @@ import { v4 as uuidv4 } from 'uuid';
 const getEnvironmentConfig = () => {
   const env = process.env.VITE_APP_ENV || 'dev'
   
+  console.log('Environment configuration:', {
+    env,
+    VITE_APP_ENV: process.env.VITE_APP_ENV,
+    VITE_SUPABASE_URL: process.env.VITE_SUPABASE_URL,
+    VITE_SUPABASE_URL_PROD: process.env.VITE_SUPABASE_URL_PROD,
+    VITE_SUPABASE_ANON_KEY: process.env.VITE_SUPABASE_ANON_KEY,
+    VITE_SUPABASE_ANON_KEY_PROD: process.env.VITE_SUPABASE_ANON_KEY_PROD,
+  });
+  
   const configs = {
     dev: {
       url: process.env.VITE_SUPABASE_URL_DEV || process.env.VITE_SUPABASE_URL,
@@ -28,10 +37,28 @@ const getEnvironmentConfig = () => {
     }
   }
   
-  return configs[env as keyof typeof configs] || configs.dev
+  const config = configs[env as keyof typeof configs] || configs.dev;
+  
+  console.log('Selected config:', {
+    env,
+    url: config.url ? `${config.url.substring(0, 20)}...` : 'undefined',
+    anonKey: config.anonKey ? `${config.anonKey.substring(0, 20)}...` : 'undefined',
+    schema: config.schema
+  });
+  
+  return config;
 }
 
 const config = getEnvironmentConfig();
+
+// Validate configuration
+if (!config.url || !config.anonKey) {
+  console.error('Missing Supabase configuration:', {
+    url: config.url ? 'present' : 'missing',
+    anonKey: config.anonKey ? 'present' : 'missing'
+  });
+  throw new Error('Missing Supabase URL or anonymous key');
+}
 
 // Create Supabase client for Netlify functions
 const supabase = createClient(config.url!, config.anonKey!, {
@@ -115,8 +142,11 @@ export class BarracaRegistrationService {
   // Submit a new barraca registration
   static async submit(registration: any): Promise<any> {
     try {
+      console.log('Starting registration submission...');
       const registrationData = transformRegistrationToDB(registration);
+      console.log('Transformed data:', JSON.stringify(registrationData, null, 2));
 
+      console.log('Attempting to insert into database...');
       const { data, error } = await supabase
         .from('barraca_registrations')
         .insert(registrationData)
@@ -124,13 +154,24 @@ export class BarracaRegistrationService {
         .single();
 
       if (error) {
-        console.error('Error submitting registration:', error);
+        console.error('Database error:', error);
+        console.error('Error details:', {
+          code: error.code,
+          message: error.message,
+          details: error.details,
+          hint: error.hint
+        });
         throw new Error(`Failed to submit registration: ${error.message}`);
       }
 
-      return transformRegistrationFromDB(data);
+      console.log('Database insert successful:', data);
+      const result = transformRegistrationFromDB(data);
+      console.log('Transformed result:', result);
+      
+      return result;
     } catch (error) {
       console.error('Error in submit registration:', error);
+      console.error('Error stack:', error instanceof Error ? error.stack : 'No stack trace');
       throw error;
     }
   }
