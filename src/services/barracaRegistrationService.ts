@@ -48,22 +48,27 @@ const transformRegistrationFromDB = (row: any): BarracaRegistration => ({
   typicalHours: row.typical_hours,
   description: row.description,
   nearestPosto: row.nearest_posto,
-  contact: row.contact,
-  amenities: row.amenities,
-  environment: row.environment,
+  contact: {
+    phone: row.contact?.phone || '',
+    email: row.contact?.email || '',
+    instagram: row.contact?.instagram || undefined,
+    website: row.contact?.website || undefined
+  },
+  amenities: row.amenities || [],
+  environment: row.environment || [],
   defaultPhoto: row.default_photo,
-  weekendHoursEnabled: row.weekend_hours_enabled,
+  weekendHoursEnabled: row.weekend_hours_enabled || false,
   weekendHours: row.weekend_hours,
   additionalInfo: row.additional_info,
   // Partnership opportunities
-  qrCodes: row.qr_codes,
-  repeatDiscounts: row.repeat_discounts,
-  hotelPartnerships: row.hotel_partnerships,
-  contentCreation: row.content_creation,
-  onlineOrders: row.online_orders,
+  qrCodes: row.qr_codes || false,
+  repeatDiscounts: row.repeat_discounts || false,
+  hotelPartnerships: row.hotel_partnerships || false,
+  contentCreation: row.content_creation || false,
+  onlineOrders: row.online_orders || false,
   // Contact preferences for photos and status updates
-  contactForPhotos: row.contact_for_photos,
-  contactForStatus: row.contact_for_status,
+  contactForPhotos: row.contact_for_photos || false,
+  contactForStatus: row.contact_for_status || false,
   preferredContactMethod: row.preferred_contact_method,
   status: row.status,
   submittedAt: new Date(row.submitted_at),
@@ -221,15 +226,15 @@ export class BarracaRegistrationService {
         photos: { horizontal: [], vertical: [] }, // Empty photos initially
         menuPreview: [], // Initialize empty menu preview
         contact: {
-          phone: registration.contact.phone,
-          email: registration.contact.email,
-          website: registration.contact.website
+          phone: registration.contact?.phone || '',
+          email: registration.contact?.email || '',
+          website: registration.contact?.website || undefined
         },
-        amenities: registration.amenities,
+        amenities: registration.amenities || [],
         weatherDependent: false, // Default to not weather dependent
         partnered: false, // Default to non-partnered
-        weekendHoursEnabled: registration.weekendHoursEnabled,
-        weekendHours: registration.weekendHours,
+        weekendHoursEnabled: registration.weekendHoursEnabled || false,
+        weekendHours: registration.weekendHours || undefined,
         manualStatus: 'undefined',
         specialAdminOverride: false,
         specialAdminOverrideExpires: null,
