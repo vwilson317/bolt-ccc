@@ -112,14 +112,14 @@ const About: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <section ref={heroAnimation.ref} className={`relative pt-24 pb-20 ${heroAnimation.animationClasses}`}>
+      <section ref={heroAnimation.ref} className={`relative pt-20 pb-12 ${heroAnimation.animationClasses}`}>
         <div className="absolute inset-0 w-full h-full bg-[url('https://pub-db19578f977b43e184c45b5084d7c029.r2.dev/editsV1/about%20edits/about-banner-sm.jpg?auto=format&fit=crop&w=1200&q=80')] bg-cover bg-center" />
-        <div className="absolute inset-0 w-full h-full bg-black/50" />
+        <div className="absolute inset-0 w-full h-full bg-black/60" />
         <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 drop-shadow-lg">
+          <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-4 md:mb-6 drop-shadow-lg">
             {t('about.title')}
           </h1>
-          <p className="text-xl text-white max-w-3xl mx-auto leading-relaxed drop-shadow">
+          <p className="text-lg md:text-xl text-white max-w-2xl md:max-w-3xl mx-auto leading-relaxed drop-shadow">
             {t('about.subtitle')}
           </p>
         </div>
