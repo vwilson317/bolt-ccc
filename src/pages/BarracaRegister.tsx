@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import toast from 'react-hot-toast';
-import { Save, MapPin, Clock, Phone, Mail, Instagram, Camera, X } from 'lucide-react';
+import { Save, MapPin, Clock, Phone, Mail, Instagram, Camera, X, Handshake } from 'lucide-react';
 import { BarracaRegistration } from '../types';
 import RegistrationMarquee from '../components/RegistrationMarquee';
 
@@ -9,38 +9,40 @@ const BarracaRegister: React.FC = () => {
   const { t } = useTranslation();
   
   const [formData, setFormData] = useState<Partial<BarracaRegistration>>({
-    name: '',
-    barracaNumber: '',
-    location: '',
+    name: 'Test Barraca Copacabana',
+    ownerName: 'João Silva',
+    barracaNumber: 'TEST-001',
+    location: 'Copacabana',
     coordinates: { lat: -22.9711, lng: -43.1822 },
     typicalHours: '9:00 - 18:00',
-    description: '',
-    nearestPosto: '',
+    description: 'This is a test barraca for testing the registration system. We offer great food and drinks with a beautiful beach view.',
+    nearestPosto: 'Posto 6',
     contact: {
-      phone: '',
-      email: '',
-      instagram: ''
+      phone: '21 99999-9999',
+      email: 'test@barraca.com',
+      instagram: '@testbarraca'
     },
-    amenities: [''],
-    environment: [],
+    countryCode: '+55',
+    amenities: ['WiFi', 'Food', 'Shower'],
+    environment: ['relaxed', 'familyFriendly'],
     defaultPhoto: '',
-    weekendHoursEnabled: false,
+    weekendHoursEnabled: true,
     weekendHours: {
       friday: { open: '10:00', close: '22:00' },
       saturday: { open: '10:00', close: '22:00' },
       sunday: { open: '10:00', close: '20:00' }
     },
-    additionalInfo: '',
+    additionalInfo: 'This is a test registration to verify the system works correctly.',
     // Partnership opportunities
-    qrCodes: false,
-    repeatDiscounts: false,
+    qrCodes: true,
+    repeatDiscounts: true,
     hotelPartnerships: false,
-    contentCreation: false,
+    contentCreation: true,
     onlineOrders: false,
     // Contact preferences for photos and status updates
-    contactForPhotos: false,
-    contactForStatus: false,
-    preferredContactMethod: undefined
+    contactForPhotos: true,
+    contactForStatus: true,
+    preferredContactMethod: 'whatsapp'
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -216,6 +218,24 @@ const BarracaRegister: React.FC = () => {
     return emailRegex.test(email);
   };
 
+  // Helper function to strip country code from phone number for display
+  const getDisplayPhoneNumber = (phone: string, countryCode: string) => {
+    if (!phone) return '';
+    // Remove the country code if it's at the beginning of the phone number
+    const codeToRemove = countryCode.replace('+', '');
+    if (phone.startsWith(countryCode) || phone.startsWith(codeToRemove)) {
+      return phone.replace(new RegExp(`^(${countryCode}|${codeToRemove})\\s*`), '').trim();
+    }
+    return phone;
+  };
+
+  // Helper function to get the full phone number with country code
+  const getFullPhoneNumber = (phone: string, countryCode: string) => {
+    if (!phone) return '';
+    const cleanPhone = phone.replace(/\s+/g, ' ').trim();
+    return `${countryCode} ${cleanPhone}`;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -244,7 +264,7 @@ const BarracaRegister: React.FC = () => {
         amenities: formData.amenities?.filter(amenity => amenity.trim() !== '') || [],
         environment: formData.environment?.filter(env => env.trim() !== '') || [],
         contact: {
-          phone: formData.contact?.phone?.trim() || '',
+          phone: getFullPhoneNumber(formData.contact?.phone?.trim() || '', formData.countryCode || '+55'),
           email: formData.contact?.email?.trim() || '',
           instagram: formData.contact?.instagram?.trim() || ''
         }
@@ -260,7 +280,8 @@ const BarracaRegister: React.FC = () => {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to submit registration');
+        const responseText = await response.text();
+        throw new Error(`Failed to submit registration: ${response.status} ${responseText}`);
       }
 
       // Dismiss loading toast and show success toast
@@ -273,6 +294,7 @@ const BarracaRegister: React.FC = () => {
       setTimeout(() => {
         setFormData({
           name: '',
+          ownerName: '',
           barracaNumber: '',
           location: '',
           coordinates: { lat: -22.9711, lng: -43.1822 },
@@ -284,6 +306,7 @@ const BarracaRegister: React.FC = () => {
             email: '',
             instagram: ''
           },
+          countryCode: '+55',
           amenities: [''],
           environment: [],
           defaultPhoto: '',
@@ -303,7 +326,7 @@ const BarracaRegister: React.FC = () => {
           // Contact preferences for photos and status updates
           contactForPhotos: false,
           contactForStatus: false,
-          preferredContactMethod: undefined
+          preferredContactMethod: 'whatsapp'
         });
         // Clear validation errors
         setValidationErrors({});
@@ -334,7 +357,7 @@ const BarracaRegister: React.FC = () => {
         <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-4xl max-h-[90vh] overflow-y-auto">
           <div className="text-center mb-8">
             <div className="bg-gradient-to-r from-beach-500 to-beach-600 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4">
-              <MapPin className="h-8 w-8 text-white" />
+              <Handshake className="h-8 w-8 text-white" />
             </div>
             <h1 className="text-2xl font-bold text-gray-900 mb-2">
               {t('registration.title')}
@@ -368,6 +391,22 @@ const BarracaRegister: React.FC = () => {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
+                  {t('registration.form.ownerName')} *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={formData.ownerName}
+                  onChange={(e) => handleInputChange('ownerName', e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
+                  placeholder={t('registration.form.ownerNamePlaceholder')}
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
                   {t('registration.form.barracaNumber')}
                 </label>
                 <input
@@ -377,6 +416,25 @@ const BarracaRegister: React.FC = () => {
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
                   placeholder={t('registration.form.barracaNumberPlaceholder')}
                 />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  {t('registration.form.nearestPosto')} *
+                </label>
+                <select
+                  required
+                  value={formData.nearestPosto || ''}
+                  onChange={(e) => handleInputChange('nearestPosto', e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
+                >
+                  <option value="">{t('registration.form.selectPosto')}</option>
+                  {Array.from({ length: 20 }, (_, i) => i + 1).map(num => (
+                    <option key={num} value={`Posto ${num}`}>
+                      Posto {num}
+                    </option>
+                  ))}
+                </select>
               </div>
             </div>
 
@@ -413,23 +471,7 @@ const BarracaRegister: React.FC = () => {
               />
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Nearest Posto
-              </label>
-              <select
-                value={formData.nearestPosto || ''}
-                onChange={(e) => handleInputChange('nearestPosto', e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
-              >
-                <option value="">Select a posto</option>
-                {Array.from({ length: 20 }, (_, i) => i + 1).map(num => (
-                  <option key={num} value={`Posto ${num}`}>
-                    Posto {num}
-                  </option>
-                ))}
-              </select>
-            </div>
+
           </div>
 
           {/* Contact Information */}
@@ -443,20 +485,51 @@ const BarracaRegister: React.FC = () => {
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   {t('registration.form.phone')} *
                 </label>
-                <div className="relative">
-                  <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                  <input
-                    type="tel"
-                    required
-                    value={formData.contact?.phone}
-                    onChange={(e) => handleContactChange('phone', e.target.value)}
-                    className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent ${
-                      validationErrors.phone 
-                        ? 'border-red-300 focus:ring-red-500' 
-                        : 'border-gray-300 focus:ring-beach-500'
-                    }`}
-                    placeholder="(11) 98765-4321 or 11987654321"
-                  />
+                <div className="flex">
+                  <div className="relative w-28">
+                    <select
+                      value={formData.countryCode || '+55'}
+                      onChange={(e) => handleInputChange('countryCode', e.target.value)}
+                      className="w-full pl-2 pr-6 py-3 border border-gray-300 rounded-l-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent bg-white text-gray-900 text-sm font-medium"
+                      style={{ fontSize: '14px' }}
+                    >
+                      <option value="+55" className="text-gray-900">🇧🇷 +55</option>
+                      <option value="+1" className="text-gray-900">🇺🇸 +1</option>
+                      <option value="+44" className="text-gray-900">🇬🇧 +44</option>
+                      <option value="+33" className="text-gray-900">🇫🇷 +33</option>
+                      <option value="+49" className="text-gray-900">🇩🇪 +49</option>
+                      <option value="+34" className="text-gray-900">🇪🇸 +34</option>
+                      <option value="+39" className="text-gray-900">🇮🇹 +39</option>
+                      <option value="+81" className="text-gray-900">🇯🇵 +81</option>
+                      <option value="+86" className="text-gray-900">🇨🇳 +86</option>
+                      <option value="+91" className="text-gray-900">🇮🇳 +91</option>
+                      <option value="+7" className="text-gray-900">🇷🇺 +7</option>
+                      <option value="+61" className="text-gray-900">🇦🇺 +61</option>
+                      <option value="+52" className="text-gray-900">🇲🇽 +52</option>
+                      <option value="+54" className="text-gray-900">🇦🇷 +54</option>
+                      <option value="+56" className="text-gray-900">🇨🇱 +56</option>
+                      <option value="+57" className="text-gray-900">🇨🇴 +57</option>
+                      <option value="+58" className="text-gray-900">🇻🇪 +58</option>
+                      <option value="+593" className="text-gray-900">🇪🇨 +593</option>
+                      <option value="+595" className="text-gray-900">🇵🇾 +595</option>
+                      <option value="+598" className="text-gray-900">🇺🇾 +598</option>
+                    </select>
+                  </div>
+                  <div className="relative flex-1">
+                    <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                    <input
+                      type="tel"
+                      required
+                      value={getDisplayPhoneNumber(formData.contact?.phone || '', formData.countryCode || '+55')}
+                      onChange={(e) => handleContactChange('phone', e.target.value)}
+                      className={`w-full pl-10 pr-4 py-3 border border-l-0 rounded-r-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent ${
+                        validationErrors.phone 
+                          ? 'border-red-300 focus:ring-red-500' 
+                          : 'border-gray-300 focus:ring-beach-500'
+                      }`}
+                      placeholder="(11) 98765-4321 or 11987654321"
+                    />
+                  </div>
                 </div>
                 {validationErrors.phone && (
                   <p className="mt-1 text-sm text-red-600">{validationErrors.phone}</p>
@@ -718,6 +791,44 @@ const BarracaRegister: React.FC = () => {
               {t('registration.form.partnershipDescription')}
             </p>
             
+            <div className="flex justify-between items-center mb-4">
+              <div className="text-sm text-gray-600">
+                {(() => {
+                  const selectedCount = [
+                    formData.qrCodes,
+                    formData.repeatDiscounts,
+                    formData.hotelPartnerships,
+                    formData.contentCreation,
+                    formData.onlineOrders
+                  ].filter(Boolean).length;
+                  return t('registration.form.partnershipsSelected', { count: selectedCount });
+                })()}
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  const allSelected = formData.qrCodes && formData.repeatDiscounts && 
+                    formData.hotelPartnerships && formData.contentCreation && formData.onlineOrders;
+                  
+                  setFormData(prev => ({
+                    ...prev,
+                    qrCodes: !allSelected,
+                    repeatDiscounts: !allSelected,
+                    hotelPartnerships: !allSelected,
+                    contentCreation: !allSelected,
+                    onlineOrders: !allSelected
+                  }));
+                }}
+                className="px-4 py-2 text-sm font-medium text-beach-600 hover:bg-beach-50 rounded-lg border border-beach-200 transition-colors"
+              >
+                {formData.qrCodes && formData.repeatDiscounts && 
+                 formData.hotelPartnerships && formData.contentCreation && formData.onlineOrders
+                  ? t('registration.form.clearAllPartnerships')
+                  : t('registration.form.selectAllPartnerships')
+                }
+              </button>
+            </div>
+            
             <div className="space-y-4">
               <div className="flex items-center space-x-3">
                 <input
@@ -796,6 +907,36 @@ const BarracaRegister: React.FC = () => {
               {t('registration.form.contactPreferencesDescription')}
             </p>
             
+            <div className="flex justify-between items-center mb-4">
+              <div className="text-sm text-gray-600">
+                {(() => {
+                  const selectedCount = [
+                    formData.contactForPhotos,
+                    formData.contactForStatus
+                  ].filter(Boolean).length;
+                  return t('registration.form.preferencesSelected', { count: selectedCount });
+                })()}
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  const allSelected = formData.contactForPhotos && formData.contactForStatus;
+                  
+                  setFormData(prev => ({
+                    ...prev,
+                    contactForPhotos: !allSelected,
+                    contactForStatus: !allSelected
+                  }));
+                }}
+                className="px-4 py-2 text-sm font-medium text-beach-600 hover:bg-beach-50 rounded-lg border border-beach-200 transition-colors"
+              >
+                {formData.contactForPhotos && formData.contactForStatus
+                  ? t('registration.form.clearAllPreferences')
+                  : t('registration.form.selectAllPreferences')
+                }
+              </button>
+            </div>
+            
             <div className="space-y-4">
               <div className="flex items-center space-x-3">
                 <input
@@ -855,8 +996,12 @@ const BarracaRegister: React.FC = () => {
                </p>
                
                <div className="flex items-center justify-center w-full">
-                 <label className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
-                   <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                 <label className={`flex flex-col items-center justify-center w-full h-64 border-2 border-dashed rounded-lg cursor-pointer transition-all duration-200 ${
+                   formData.defaultPhoto 
+                     ? 'border-beach-300 bg-beach-50 hover:bg-beach-100' 
+                     : 'border-gray-300 bg-gray-50 hover:bg-gray-100'
+                 }`}>
+                   <div className="flex flex-col items-center justify-center pt-5 pb-6 w-full h-full">
                      {formData.defaultPhoto ? (
                        <div className="relative w-full h-full">
                          <img 
@@ -864,21 +1009,31 @@ const BarracaRegister: React.FC = () => {
                            alt="Barraca preview" 
                            className="w-full h-full object-cover rounded-lg"
                          />
-                         <button
-                           type="button"
-                           onClick={() => handleInputChange('defaultPhoto', '')}
-                           className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
-                         >
-                           <X className="w-4 h-4" />
-                         </button>
+                         <div className="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-20 transition-all duration-200 rounded-lg flex items-center justify-center">
+                           <button
+                             type="button"
+                             onClick={(e) => {
+                               e.preventDefault();
+                               e.stopPropagation();
+                               handleInputChange('defaultPhoto', '');
+                             }}
+                             className="opacity-0 hover:opacity-100 bg-red-500 text-white rounded-full p-2 hover:bg-red-600 transition-all duration-200"
+                             title="Remove photo"
+                           >
+                             <X className="w-5 h-5" />
+                           </button>
+                         </div>
+                         <div className="absolute bottom-2 left-2 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded">
+                           {t('registration.form.clickToChangePhoto')}
+                         </div>
                        </div>
                      ) : (
                        <>
                          <Camera className="w-8 h-8 mb-4 text-gray-500" />
                          <p className="mb-2 text-sm text-gray-500">
-                           <span className="font-semibold">Click to upload</span> or drag and drop
+                           <span className="font-semibold">{t('registration.form.clickToUpload')}</span> {t('registration.form.dragAndDrop')}
                          </p>
-                         <p className="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
+                         <p className="text-xs text-gray-500">{t('registration.form.fileTypes')}</p>
                        </>
                      )}
                    </div>
@@ -889,6 +1044,12 @@ const BarracaRegister: React.FC = () => {
                      onChange={(e) => {
                        const file = e.target.files?.[0];
                        if (file) {
+                         // Validate file size (10MB limit)
+                         if (file.size > 10 * 1024 * 1024) {
+                           toast.error(t('registration.form.fileSizeError'));
+                           return;
+                         }
+                         
                          const reader = new FileReader();
                          reader.onload = (e) => {
                            handleInputChange('defaultPhoto', e.target?.result as string);

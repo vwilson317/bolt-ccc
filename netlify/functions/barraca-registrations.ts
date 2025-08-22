@@ -1,5 +1,5 @@
 import { Handler } from '@netlify/functions';
-import { BarracaRegistrationService } from '../../src/services/barracaRegistrationService';
+import { BarracaRegistrationService } from './barracaRegistrationService';
 
 export const handler: Handler = async (event) => {
   // Enable CORS
@@ -75,7 +75,7 @@ export const handler: Handler = async (event) => {
     const body = JSON.parse(event.body || '{}');
 
     // Validate required fields
-    const requiredFields = ['name', 'location', 'typicalHours', 'description', 'contact'];
+    const requiredFields = ['name', 'ownerName', 'location', 'typicalHours', 'description', 'contact', 'nearestPosto'];
     for (const field of requiredFields) {
       if (!body[field]) {
         return {
@@ -98,12 +98,13 @@ export const handler: Handler = async (event) => {
     // Clean and prepare the data
     const registrationData = {
       name: body.name.trim(),
+      ownerName: body.ownerName.trim(),
       barracaNumber: body.barracaNumber?.trim() || undefined,
       location: body.location.trim(),
       coordinates: body.coordinates || { lat: -22.9711, lng: -43.1822 },
       typicalHours: body.typicalHours.trim(),
       description: body.description.trim(),
-      nearestPosto: body.nearestPosto?.trim() || undefined,
+      nearestPosto: body.nearestPosto.trim(),
       contact: {
         phone: body.contact.phone.trim(),
         email: body.contact.email?.trim() || undefined,

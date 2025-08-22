@@ -262,6 +262,10 @@ const AdminRegistrations: React.FC<AdminRegistrationsProps> = ({ onRegistrationC
                         <span>{registration.location}</span>
                       </div>
                       <div className="flex items-center space-x-1">
+                        <span className="font-medium">Owner:</span>
+                        <span>{registration.ownerName}</span>
+                      </div>
+                      <div className="flex items-center space-x-1">
                         <Phone className="w-4 h-4" />
                         <span>{registration.contact.phone}</span>
                       </div>
@@ -344,6 +348,10 @@ const AdminRegistrations: React.FC<AdminRegistrationsProps> = ({ onRegistrationC
                       <p className="mt-1 text-sm text-gray-900">{selectedRegistration.name}</p>
                     </div>
                     <div>
+                      <label className="block text-sm font-medium text-gray-700">Owner Name</label>
+                      <p className="mt-1 text-sm text-gray-900">{selectedRegistration.ownerName}</p>
+                    </div>
+                    <div>
                       <label className="block text-sm font-medium text-gray-700">Barraca Number</label>
                       <p className="mt-1 text-sm text-gray-900">{selectedRegistration.barracaNumber || 'N/A'}</p>
                     </div>
@@ -354,6 +362,10 @@ const AdminRegistrations: React.FC<AdminRegistrationsProps> = ({ onRegistrationC
                     <div>
                       <label className="block text-sm font-medium text-gray-700">Hours</label>
                       <p className="mt-1 text-sm text-gray-900">{selectedRegistration.typicalHours}</p>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">Nearest Posto</label>
+                      <p className="mt-1 text-sm text-gray-900">{selectedRegistration.nearestPosto}</p>
                     </div>
                   </div>
                 </div>
@@ -405,13 +417,7 @@ const AdminRegistrations: React.FC<AdminRegistrationsProps> = ({ onRegistrationC
                   </div>
                 )}
 
-                {/* Nearest Posto */}
-                {selectedRegistration.nearestPosto && (
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Nearest Posto</label>
-                    <p className="text-sm text-gray-900">{selectedRegistration.nearestPosto}</p>
-                  </div>
-                )}
+
 
                 {/* Amenities */}
                 {selectedRegistration.amenities.length > 0 && (

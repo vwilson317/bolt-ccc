@@ -76,20 +76,15 @@ function AppContent() {
       
       {/* Global Toaster */}
       <Toaster
-        position="top-center"
+        position="bottom-center"
         toastOptions={{
           duration: 4000,
           style: {
             background: '#363636',
             color: '#fff',
             zIndex: 9999,
-            width: '100vw',
-            height: '100vh',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: '1.5rem',
-            padding: '2rem',
+            borderRadius: '8px',
+            padding: '12px 16px',
           },
           success: {
             duration: 5000,
