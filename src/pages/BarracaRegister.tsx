@@ -72,7 +72,7 @@ const BarracaRegister: React.FC = () => {
     'Niterói'
   ];
 
-  // Common amenities
+  // Common amenities 
   const commonAmenities = [
     t('registration.amenities.WiFi'),
     t('registration.amenities.Shower'),
