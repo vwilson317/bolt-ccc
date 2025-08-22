@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 const transformRegistrationToDB = (registration: Omit<BarracaRegistration, 'id' | 'submittedAt'>): any => ({
   id: uuidv4(),
   name: registration.name,
+  owner_name: registration.ownerName,
   barraca_number: registration.barracaNumber || null,
   location: registration.location,
   coordinates: registration.coordinates,
@@ -40,6 +41,7 @@ const transformRegistrationToDB = (registration: Omit<BarracaRegistration, 'id' 
 const transformRegistrationFromDB = (row: any): BarracaRegistration => ({
   id: row.id,
   name: row.name,
+  ownerName: row.owner_name,
   barracaNumber: row.barraca_number,
   location: row.location,
   coordinates: row.coordinates,
@@ -190,11 +192,15 @@ export class BarracaRegistrationService {
   // Convert approved registration to barraca
   static async convertToBarraca(registrationId: string): Promise<any> {
     try {
+      console.log('Starting conversion of registration:', registrationId);
+      
       // First get the registration
       const registration = await this.getById(registrationId);
       if (!registration) {
         throw new Error('Registration not found');
       }
+
+      console.log('Found registration:', registration.name, 'Status:', registration.status);
 
       if (registration.status !== 'approved') {
         throw new Error('Can only convert approved registrations');
@@ -213,14 +219,15 @@ export class BarracaRegistrationService {
         typicalHours: registration.typicalHours,
         description: registration.description,
         photos: { horizontal: [], vertical: [] }, // Empty photos initially
-        menuPreview: registration.menuPreview,
+        menuPreview: [], // Initialize empty menu preview
         contact: {
           phone: registration.contact.phone,
           email: registration.contact.email,
           website: registration.contact.website
         },
-                 amenities: registration.amenities,
-         partnered: false, // Default to non-partnered
+        amenities: registration.amenities,
+        weatherDependent: false, // Default to not weather dependent
+        partnered: false, // Default to non-partnered
         weekendHoursEnabled: registration.weekendHoursEnabled,
         weekendHours: registration.weekendHours,
         manualStatus: 'undefined',
@@ -230,11 +237,17 @@ export class BarracaRegistrationService {
         ctaButtons: []
       };
 
+      console.log('Creating barraca with data:', barracaData);
+
       // Create the barraca
       const barraca = await BarracaService.create(barracaData);
 
+      console.log('Barraca created successfully:', barraca.id);
+
       // Update registration to mark as converted
       await this.updateStatus(registrationId, 'approved', 'Converted to barraca', 'system');
+
+      console.log('Registration updated successfully');
 
       return barraca;
     } catch (error) {
