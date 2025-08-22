@@ -299,6 +299,16 @@
         "name": "Ricardo Del Razo",
         "role": "Head of Special Partnerships",
         "bio": "Strategic partnership expert with experience in developing and maintaining key business relationships."
+      },
+      "janeese": {
+        "name": "Janeese Hollingshead",
+        "role": "CFO",
+        "bio": "Financial expert with extensive experience in strategic financial planning and business growth management."
+      },
+      "leticia": {
+        "name": "Leticia Castilhos",
+        "role": "Director of Social Media",
+        "bio": "Digital marketing specialist focused on building engaging online communities and driving brand awareness through social media."
       }
     },
     "getInTouch": "Get in Touch",
@@ -378,13 +388,17 @@
   },
   "registration": {
     "title": "Register Your Barraca",
-    "subtitle": "Join our community and connect with loyal customers. Fill out the form below to register your barraca.",
+    "subtitle": "Register your barraca so we can work together. Fill out the form below to get started.",
     "form": {
       "basicInfo": "Basic Information",
       "name": "Barraca Name",
       "namePlaceholder": "Enter your barraca name",
+      "ownerName": "Owner Name",
+      "ownerNamePlaceholder": "Enter owner's full name",
       "barracaNumber": "Barraca Number",
-      "barracaNumberPlaceholder": "e.g., 001, 002",
+      "barracaNumberPlaceholder": "e.g., 1, 2",
+      "nearestPosto": "Nearest Posto",
+      "selectPosto": "Select a posto",
       "location": "Location",
       "locationPlaceholder": "Enter your location or neighborhood",
       "description": "Description",
@@ -437,12 +451,23 @@
       "contentCreationDescription": "Would you be willing to produce content together for Instagram/TikTok?",
       "onlineOrders": "Online Orders",
       "onlineOrdersDescription": "Would you be willing to take orders via our site (orders sent to your WhatsApp)?",
+      "selectAllPartnerships": "Select All Partnerships",
+      "clearAllPartnerships": "Clear All Partnerships",
       "contactPreferences": "Contact Preferences",
       "contactPreferencesDescription": "Optional: Let us know if you're willing to be contacted for photos and status updates",
       "contactForPhotos": "Contact for Photos",
       "contactForPhotosDescription": "Can we contact you via WhatsApp or Instagram to collect photos of your barraca?",
       "contactForStatus": "Contact for Status Updates",
       "contactForStatusDescription": "Can we contact you for open/closed status updates?",
+      "selectAllPreferences": "Select All Preferences",
+      "clearAllPreferences": "Clear All Preferences",
+      "partnershipsSelected": "{{count}} of 5 partnerships selected",
+      "preferencesSelected": "{{count}} of 2 preferences selected",
+      "clickToChangePhoto": "Click to change photo",
+      "clickToUpload": "Click to upload",
+      "dragAndDrop": "or drag and drop",
+      "fileTypes": "PNG, JPG, GIF up to 10MB",
+      "fileSizeError": "File size must be less than 10MB",
       "preferredContactMethod": "Preferred Contact Method",
       "selectContactMethod": "Select your preferred contact method",
       "whatsapp": "WhatsApp",
@@ -558,7 +583,7 @@
     "loading": "Loading registrations..."
   },
   "marquee": {
-    "title": "Thank you to our registered barracas",
+    "title": "Thank you for registering",
     "loading": "Loading registered barracas..."
   },
   "toast": {

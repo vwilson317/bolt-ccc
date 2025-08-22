@@ -8,7 +8,7 @@ async function queryAll() {
     process.exit(1);
   }
   const supabase = createClient(supabaseUrl, supabaseKey);
-  const tables = ['barracas', 'email_subscriptions', 'weather_cache', 'visitor_analytics', 'stories'];
+  const tables = ['barracas', 'email_subscriptions', 'weather_cache', 'visitor_analytics', 'stories', 'barraca_registrations'];
   for (const table of tables) {
     const { count, error } = await supabase
       .from(table)

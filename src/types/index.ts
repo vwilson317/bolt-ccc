@@ -303,6 +303,7 @@ export interface TranslationContext {
 export interface BarracaRegistration {
   id?: string;
   name: string;
+  ownerName: string;
   barracaNumber?: string;
   location: string;
   coordinates: {
@@ -311,13 +312,14 @@ export interface BarracaRegistration {
   };
   typicalHours: string;
   description: string;
-  nearestPosto?: string;
+  nearestPosto: string;
   contact: {
     phone: string;
     email: string;
     instagram?: string;
     website?: string;
   };
+  countryCode?: string;
   amenities: string[];
   environment: string[]; // Environment types like Family Friendly, LGBTQ+, etc.
   defaultPhoto?: string;
