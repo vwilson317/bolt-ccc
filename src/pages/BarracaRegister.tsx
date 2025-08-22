@@ -74,10 +74,10 @@ const BarracaRegister: React.FC = () => {
 
   // Common amenities
   const commonAmenities = [
-    'WiFi',
-    'Shower',
-    'Food',
-    'Lockers'  
+    t('registration.amenities.WiFi'),
+    t('registration.amenities.Shower'),
+    t('registration.amenities.Food'),
+    t('registration.amenities.Lockers')  
 ];
 
   // Common vibe types from translations
