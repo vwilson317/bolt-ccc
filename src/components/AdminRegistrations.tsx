@@ -57,15 +57,22 @@ const AdminRegistrations: React.FC<AdminRegistrationsProps> = ({ onRegistrationC
     
     try {
       setProcessing(true);
+      console.log('Starting approval process for registration:', selectedRegistration.id);
+      
+      // First update the status
+      console.log('Updating registration status to approved...');
       await BarracaRegistrationService.updateStatus(
         selectedRegistration.id!,
         'approved',
         adminNotes,
         'admin'
       );
+      console.log('Registration status updated successfully');
       
       // Convert to barraca if approved
+      console.log('Converting registration to barraca...');
       await BarracaRegistrationService.convertToBarraca(selectedRegistration.id!);
+      console.log('Registration converted to barraca successfully');
       
       setShowModal(false);
       setSelectedRegistration(null);
@@ -78,9 +85,12 @@ const AdminRegistrations: React.FC<AdminRegistrationsProps> = ({ onRegistrationC
       if (onRegistrationConverted) {
         onRegistrationConverted();
       }
+      
+      // Show success message
+      alert('Registration approved and converted to barraca successfully!');
     } catch (error) {
       console.error('Error approving registration:', error);
-      alert('Failed to approve registration');
+      alert(`Failed to approve registration: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       setProcessing(false);
     }

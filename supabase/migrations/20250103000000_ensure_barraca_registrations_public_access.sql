@@ -84,6 +84,7 @@ CREATE POLICY "Allow admins to update registrations" ON barraca_registrations
         current_setting('request.jwt.claims', true)::json->>'role' = 'admin'
         OR current_setting('request.jwt.claims', true)::json->>'role' = 'superuser'
         OR current_setting('request.jwt.claims', true)::json->>'role' = 'service_role'
+        OR current_setting('request.jwt.claims', true) IS NULL
     );
 
 -- Allow admins to delete registrations (when authenticated)
@@ -92,6 +93,7 @@ CREATE POLICY "Allow admins to delete registrations" ON barraca_registrations
         current_setting('request.jwt.claims', true)::json->>'role' = 'admin'
         OR current_setting('request.jwt.claims', true)::json->>'role' = 'superuser'
         OR current_setting('request.jwt.claims', true)::json->>'role' = 'service_role'
+        OR current_setting('request.jwt.claims', true) IS NULL
     );
 
 -- Add a comment to document the purpose
