@@ -6,6 +6,24 @@ interface RegistrationMarqueeProps {
   className?: string;
 }
 
+// Helper function to open Instagram link appropriately
+const openInstagramLink = (instagramHandle: string) => {
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  const cleanHandle = instagramHandle.replace('@', '').replace('https://instagram.com/', '');
+  
+  if (isMobile) {
+    // Try to open Instagram app first, fallback to web
+    window.location.href = `instagram://user?username=${cleanHandle}`;
+    // Fallback after a short delay
+    setTimeout(() => {
+      window.open(`https://instagram.com/${cleanHandle}`, '_blank');
+    }, 1000);
+  } else {
+    // Desktop: open in new tab
+    window.open(`https://instagram.com/${cleanHandle}`, '_blank');
+  }
+};
+
 // Mock data for testing the marquee display
 const mockApprovedRegistrations: BarracaRegistration[] = [
   {
@@ -15,7 +33,11 @@ const mockApprovedRegistrations: BarracaRegistration[] = [
     coordinates: { lat: -22.9707, lng: -43.1824 },
     typicalHours: '8:00 - 18:00',
     description: 'Traditional beach barraca with fresh coconut water',
-    contact: { phone: '+55 21 99999-9999', email: 'joao@example.com' },
+    contact: { 
+      phone: '+55 21 99999-9999', 
+      email: 'joao@example.com',
+      instagram: '@barracadojoao'
+    },
     amenities: ['chairs', 'umbrellas'],
     environment: ['family-friendly', 'relaxed'],
     weekendHoursEnabled: true,
@@ -29,7 +51,11 @@ const mockApprovedRegistrations: BarracaRegistration[] = [
     coordinates: { lat: -22.9871, lng: -43.2034 },
     typicalHours: '7:00 - 19:00',
     description: 'Famous for caipirinhas and beach volleyball',
-    contact: { phone: '+55 21 98888-8888', email: 'maria@example.com' },
+    contact: { 
+      phone: '+55 21 98888-8888', 
+      email: 'maria@example.com',
+      instagram: '@barracadamaria'
+    },
     amenities: ['chairs', 'umbrellas', 'volleyball'],
     environment: ['sports', 'party'],
     weekendHoursEnabled: true,
@@ -43,7 +69,11 @@ const mockApprovedRegistrations: BarracaRegistration[] = [
     coordinates: { lat: -22.9871, lng: -43.2034 },
     typicalHours: '8:30 - 17:30',
     description: 'Premium beach experience with gourmet snacks',
-    contact: { phone: '+55 21 97777-7777', email: 'pedro@example.com' },
+    contact: { 
+      phone: '+55 21 97777-7777', 
+      email: 'pedro@example.com',
+      instagram: '@barracadopedro'
+    },
     amenities: ['chairs', 'umbrellas', 'food'],
     environment: ['relaxed', 'family-friendly'],
     weekendHoursEnabled: true,
@@ -57,7 +87,11 @@ const mockApprovedRegistrations: BarracaRegistration[] = [
     coordinates: { lat: -22.9871, lng: -43.2034 },
     typicalHours: '6:00 - 18:00',
     description: 'Surfer-friendly barraca with healthy options',
-    contact: { phone: '+55 21 96666-6666', email: 'ana@example.com' },
+    contact: { 
+      phone: '+55 21 96666-6666', 
+      email: 'ana@example.com',
+      instagram: '@barracadaana'
+    },
     amenities: ['chairs', 'umbrellas', 'surf-rental'],
     environment: ['sports', 'relaxed'],
     weekendHoursEnabled: true,
@@ -71,7 +105,11 @@ const mockApprovedRegistrations: BarracaRegistration[] = [
     coordinates: { lat: -23.0067, lng: -43.3656 },
     typicalHours: '7:30 - 19:30',
     description: 'Family-oriented barraca with kids activities',
-    contact: { phone: '+55 21 95555-5555', email: 'carlos@example.com' },
+    contact: { 
+      phone: '+55 21 95555-5555', 
+      email: 'carlos@example.com',
+      instagram: '@barracadocarlos'
+    },
     amenities: ['chairs', 'umbrellas', 'kids-zone'],
     environment: ['family-friendly', 'relaxed'],
     weekendHoursEnabled: true,
@@ -85,7 +123,11 @@ const mockApprovedRegistrations: BarracaRegistration[] = [
     coordinates: { lat: -23.0067, lng: -43.3656 },
     typicalHours: '8:00 - 18:00',
     description: 'LGBTQ+ friendly barraca with inclusive atmosphere',
-    contact: { phone: '+55 21 94444-4444', email: 'sofia@example.com' },
+    contact: { 
+      phone: '+55 21 94444-4444', 
+      email: 'sofia@example.com',
+      instagram: '@barracadasofia'
+    },
     amenities: ['chairs', 'umbrellas', 'music'],
     environment: ['lgbtq+', 'party'],
     weekendHoursEnabled: true,
@@ -99,7 +141,11 @@ const mockApprovedRegistrations: BarracaRegistration[] = [
     coordinates: { lat: -23.0067, lng: -43.3656 },
     typicalHours: '6:30 - 17:00',
     description: 'Natural paradise barraca with organic food',
-    contact: { phone: '+55 21 93333-3333', email: 'roberto@example.com' },
+    contact: { 
+      phone: '+55 21 93333-3333', 
+      email: 'roberto@example.com',
+      instagram: '@barracadoroberto'
+    },
     amenities: ['chairs', 'umbrellas', 'organic-food'],
     environment: ['relaxed', 'family-friendly'],
     weekendHoursEnabled: true,
@@ -113,7 +159,11 @@ const mockApprovedRegistrations: BarracaRegistration[] = [
     coordinates: { lat: -23.0067, lng: -43.3656 },
     typicalHours: '7:00 - 18:00',
     description: 'Eco-friendly barraca with sustainable practices',
-    contact: { phone: '+55 21 92222-2222', email: 'fernanda@example.com' },
+    contact: { 
+      phone: '+55 21 92222-2222', 
+      email: 'fernanda@example.com',
+      instagram: '@barracadafernanda'
+    },
     amenities: ['chairs', 'umbrellas', 'eco-friendly'],
     environment: ['relaxed', 'family-friendly'],
     weekendHoursEnabled: true,
@@ -141,14 +191,15 @@ const RegistrationMarquee: React.FC<RegistrationMarqueeProps> = ({ className = '
           if (response.ok) {
             const data = await response.json();
             setApprovedRegistrations(data.registrations || []);
+          } else {
+            console.warn('API not available, using mock data');
+            setApprovedRegistrations(mockApprovedRegistrations);
           }
         }
       } catch (error) {
         console.error('Error fetching approved registrations:', error);
         // Fallback to mock data if API fails
-        if (process.env.NODE_ENV === 'development') {
-          setApprovedRegistrations(mockApprovedRegistrations);
-        }
+        setApprovedRegistrations(mockApprovedRegistrations);
       } finally {
         setLoading(false);
       }
@@ -182,22 +233,47 @@ const RegistrationMarquee: React.FC<RegistrationMarqueeProps> = ({ className = '
   const marqueeItems = [...approvedRegistrations, ...approvedRegistrations];
 
   return (
-    <div className={`bg-white border-t border-b border-gray-100 py-6 ${className}`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-4">
-          <h3 className="text-lg font-semibold text-gray-900">
+    <div className={`sticky top-16 z-30 bg-white border-y border-gray-100 shadow-lg ${className}`}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 marquee-container">
+        <div className="text-center py-2">
+          <h3 className="text-lg font-semibold text-gray-900 flex items-center justify-center">
             {t('marquee.title')}
+            <span className="ml-2 text-3xl">🫶🏽</span>
           </h3>
         </div>
         
-        <div className="relative overflow-hidden">
-          <div className="flex animate-scroll-left">
+        <div className="marquee-track py-2">
+          <div className="marquee-content pr-8">
             {marqueeItems.map((registration, index) => (
               <div
                 key={`${registration.id}-${index}`}
-                className="flex-shrink-0 mx-3 text-gray-700 font-medium text-sm whitespace-nowrap bg-gray-50 px-4 py-2 rounded-lg border border-gray-200 hover:bg-gray-100 transition-colors duration-200"
+                className="flex items-center gap-3 mr-6 text-sm font-semibold text-gray-700 hover:text-gray-900 transition-colors duration-200 cursor-pointer"
+                onClick={() => registration.contact.instagram && openInstagramLink(registration.contact.instagram)}
               >
-                {registration.name}
+                <span className="text-pink-500">🤙🏽</span>
+                <span className="truncate">{registration.name}</span>
+                {registration.contact.instagram && (
+                  <span className="text-pink-500 hover:text-pink-700">
+                    @{registration.contact.instagram.replace('@', '')}
+                  </span>
+                )}
+              </div>
+            ))}
+          </div>
+          <div className="marquee-content pr-8">
+            {marqueeItems.map((registration, index) => (
+              <div
+                key={`${registration.id}-${index}-duplicate`}
+                className="flex items-center gap-3 mr-6 text-sm font-semibold text-gray-700 hover:text-gray-900 transition-colors duration-200 cursor-pointer"
+                onClick={() => registration.contact.instagram && openInstagramLink(registration.contact.instagram)}
+              >
+                <span className="text-pink-500">🤙🏽</span>
+                <span className="truncate">{registration.name}</span>
+                {registration.contact.instagram && (
+                  <span className="text-pink-500 hover:text-pink-700">
+                    @{registration.contact.instagram.replace('@', '')}
+                  </span>
+                )}
               </div>
             ))}
           </div>
