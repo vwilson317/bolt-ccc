@@ -510,7 +510,11 @@
       "bathroom": "Banheiro",
       "creditCard": "Cartão de Crédito Aceito",
       "delivery": "Serviço de Entrega",
-      "reservations": "Reservas"
+      "reservations": "Reservas",
+      "WiFi": "Wi-Fi",
+      "Shower": "Chuveiro",
+      "Food": "Comida",
+      "Lockers": "Armários"
     },
     "vibes": {
       "familyFriendly": "Familiar",

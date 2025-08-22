@@ -475,7 +475,11 @@
       "bathroom": "Salle de Bain",
       "creditCard": "Carte de Crédit Acceptée",
       "delivery": "Service de Livraison",
-      "reservations": "Réservations"
+      "reservations": "Réservations",
+      "WiFi": "Wi-Fi",
+      "Shower": "Douche",
+      "Food": "Nourriture",
+      "Lockers": "Casiers"
     },
     "vibes": {
       "familyFriendly": "Familial",

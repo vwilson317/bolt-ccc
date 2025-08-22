@@ -505,7 +505,11 @@
       "bathroom": "Bathroom",
       "creditCard": "Credit Card Accepted",
       "delivery": "Delivery Service",
-      "reservations": "Reservations"
+      "reservations": "Reservations",
+      "WiFi": "Wi-Fi",
+      "Shower": "Shower",
+      "Food": "Food",
+      "Lockers": "Lockers"
     },
     "vibes": {
       "familyFriendly": "Family Friendly",
