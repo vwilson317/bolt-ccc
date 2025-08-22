@@ -9,39 +9,39 @@ const BarracaRegister: React.FC = () => {
   const { t } = useTranslation();
   
   const [formData, setFormData] = useState<Partial<BarracaRegistration>>({
-    name: 'Test Barraca Copacabana',
-    ownerName: 'João Silva',
-    barracaNumber: 'TEST-001',
-    location: 'Copacabana',
+    name: '',
+    ownerName: '',
+    barracaNumber: '',
+    location: '',
     coordinates: { lat: -22.9711, lng: -43.1822 },
-    typicalHours: '9:00 - 18:00',
-    description: 'This is a test barraca for testing the registration system. We offer great food and drinks with a beautiful beach view.',
-    nearestPosto: 'Posto 6',
+    typicalHours: '',
+    description: '',
+    nearestPosto: '',
     contact: {
-      phone: '21 99999-9999',
-      email: 'test@barraca.com',
-      instagram: '@testbarraca'
+      phone: '',
+      email: '',
+      instagram: ''
     },
     countryCode: '+55',
-    amenities: ['WiFi', 'Food', 'Shower'],
-    environment: ['relaxed', 'familyFriendly'],
+    amenities: [],
+    environment: [],
     defaultPhoto: '',
-    weekendHoursEnabled: true,
+    weekendHoursEnabled: false,
     weekendHours: {
       friday: { open: '10:00', close: '22:00' },
       saturday: { open: '10:00', close: '22:00' },
       sunday: { open: '10:00', close: '20:00' }
     },
-    additionalInfo: 'This is a test registration to verify the system works correctly.',
+    additionalInfo: '',
     // Partnership opportunities
-    qrCodes: true,
-    repeatDiscounts: true,
+    qrCodes: false,
+    repeatDiscounts: false,
     hotelPartnerships: false,
-    contentCreation: true,
+    contentCreation: false,
     onlineOrders: false,
     // Contact preferences for photos and status updates
-    contactForPhotos: true,
-    contactForStatus: true,
+    contactForPhotos: false,
+    contactForStatus: false,
     preferredContactMethod: 'whatsapp'
   });
 
