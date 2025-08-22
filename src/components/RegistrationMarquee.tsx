@@ -253,11 +253,11 @@ const RegistrationMarquee: React.FC<RegistrationMarqueeProps> = ({ className = '
                   <div
                     key={`${registration.id}-${index}`}
                     className="flex items-center gap-3 mr-6 text-sm font-semibold text-gray-700 hover:text-gray-900 transition-colors duration-200 cursor-pointer"
-                    onClick={() => registration.contact.instagram && openInstagramLink(registration.contact.instagram)}
+                    onClick={() => registration.contact?.instagram && openInstagramLink(registration.contact.instagram)}
                   >
                     <span className="text-pink-500">🤙🏽</span>
                     <span className="truncate">{registration.name}</span>
-                    {registration.contact.instagram && (
+                    {registration.contact?.instagram && (
                       <span className="text-pink-500 hover:text-pink-700">
                         @{registration.contact.instagram.replace('@', '')}
                       </span>
@@ -270,11 +270,11 @@ const RegistrationMarquee: React.FC<RegistrationMarqueeProps> = ({ className = '
                   <div
                     key={`${registration.id}-${index}-duplicate`}
                     className="flex items-center gap-3 mr-6 text-sm font-semibold text-gray-700 hover:text-gray-900 transition-colors duration-200 cursor-pointer"
-                    onClick={() => registration.contact.instagram && openInstagramLink(registration.contact.instagram)}
+                    onClick={() => registration.contact?.instagram && openInstagramLink(registration.contact.instagram)}
                   >
                     <span className="text-pink-500">🤙🏽</span>
                     <span className="truncate">{registration.name}</span>
-                    {registration.contact.instagram && (
+                    {registration.contact?.instagram && (
                       <span className="text-pink-500 hover:text-pink-700">
                         @{registration.contact.instagram.replace('@', '')}
                       </span>

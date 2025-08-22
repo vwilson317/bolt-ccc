@@ -38,7 +38,9 @@ const transformRegistrationToDB = (registration: Omit<BarracaRegistration, 'id' 
 });
 
 // Transform database row to registration object
-const transformRegistrationFromDB = (row: any): BarracaRegistration => ({
+const transformRegistrationFromDB = (row: any): BarracaRegistration => {
+  try {
+    return {
   id: row.id,
   name: row.name,
   ownerName: row.owner_name,
@@ -49,10 +51,10 @@ const transformRegistrationFromDB = (row: any): BarracaRegistration => ({
   description: row.description,
   nearestPosto: row.nearest_posto,
   contact: {
-    phone: row.contact?.phone || '',
-    email: row.contact?.email || '',
-    instagram: row.contact?.instagram || undefined,
-    website: row.contact?.website || undefined
+    phone: (row.contact && row.contact.phone) ? row.contact.phone : '',
+    email: (row.contact && row.contact.email) ? row.contact.email : '',
+    instagram: (row.contact && row.contact.instagram) ? row.contact.instagram : undefined,
+    website: (row.contact && row.contact.website) ? row.contact.website : undefined
   },
   amenities: row.amenities || [],
   environment: row.environment || [],
@@ -75,7 +77,13 @@ const transformRegistrationFromDB = (row: any): BarracaRegistration => ({
   reviewedAt: row.reviewed_at ? new Date(row.reviewed_at) : undefined,
   reviewedBy: row.reviewed_by,
   adminNotes: row.admin_notes
-});
+    };
+  } catch (error) {
+    console.error('Error in transformRegistrationFromDB:', error);
+    console.error('Row data:', row);
+    throw error;
+  }
+};
 
 export class BarracaRegistrationService {
   // Submit a new barraca registration
