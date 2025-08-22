@@ -233,49 +233,56 @@ const RegistrationMarquee: React.FC<RegistrationMarqueeProps> = ({ className = '
   const marqueeItems = [...approvedRegistrations, ...approvedRegistrations];
 
   return (
-    <div className={`sticky top-16 z-30 bg-white border-y border-gray-100 shadow-lg ${className}`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 marquee-container">
-        <div className="text-center py-2">
-          <h3 className="text-lg font-semibold text-gray-900 flex items-center justify-center">
-            {t('marquee.title')}
-            <span className="ml-2 text-3xl">🫶🏽</span>
-          </h3>
-        </div>
-        
-        <div className="marquee-track py-2">
-          <div className="marquee-content pr-8">
-            {marqueeItems.map((registration, index) => (
-              <div
-                key={`${registration.id}-${index}`}
-                className="flex items-center gap-3 mr-6 text-sm font-semibold text-gray-700 hover:text-gray-900 transition-colors duration-200 cursor-pointer"
-                onClick={() => registration.contact.instagram && openInstagramLink(registration.contact.instagram)}
-              >
-                <span className="text-pink-500">🤙🏽</span>
-                <span className="truncate">{registration.name}</span>
-                {registration.contact.instagram && (
-                  <span className="text-pink-500 hover:text-pink-700">
-                    @{registration.contact.instagram.replace('@', '')}
-                  </span>
-                )}
-              </div>
-            ))}
+    <div className={`sticky top-16 z-30 bg-white border-b-2 border-pink-500 shadow-lg -mt-px ${className}`}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center py-2">
+          {/* Title on the left */}
+          <div className="flex-shrink-0 mr-6">
+            <h3 className="text-sm font-semibold text-gray-900 flex items-center">
+              <span className="bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent">
+                {t('marquee.title')}
+              </span>
+            </h3>
           </div>
-          <div className="marquee-content pr-8">
-            {marqueeItems.map((registration, index) => (
-              <div
-                key={`${registration.id}-${index}-duplicate`}
-                className="flex items-center gap-3 mr-6 text-sm font-semibold text-gray-700 hover:text-gray-900 transition-colors duration-200 cursor-pointer"
-                onClick={() => registration.contact.instagram && openInstagramLink(registration.contact.instagram)}
-              >
-                <span className="text-pink-500">🤙🏽</span>
-                <span className="truncate">{registration.name}</span>
-                {registration.contact.instagram && (
-                  <span className="text-pink-500 hover:text-pink-700">
-                    @{registration.contact.instagram.replace('@', '')}
-                  </span>
-                )}
+          
+          {/* Scrolling names on the right */}
+          <div className="flex-1 marquee-container">
+            <div className="marquee-track">
+              <div className="marquee-content pr-8">
+                {marqueeItems.map((registration, index) => (
+                  <div
+                    key={`${registration.id}-${index}`}
+                    className="flex items-center gap-3 mr-6 text-sm font-semibold text-gray-700 hover:text-gray-900 transition-colors duration-200 cursor-pointer"
+                    onClick={() => registration.contact.instagram && openInstagramLink(registration.contact.instagram)}
+                  >
+                    <span className="text-pink-500">🤙🏽</span>
+                    <span className="truncate">{registration.name}</span>
+                    {registration.contact.instagram && (
+                      <span className="text-pink-500 hover:text-pink-700">
+                        @{registration.contact.instagram.replace('@', '')}
+                      </span>
+                    )}
+                  </div>
+                ))}
               </div>
-            ))}
+              <div className="marquee-content pr-8">
+                {marqueeItems.map((registration, index) => (
+                  <div
+                    key={`${registration.id}-${index}-duplicate`}
+                    className="flex items-center gap-3 mr-6 text-sm font-semibold text-gray-700 hover:text-gray-900 transition-colors duration-200 cursor-pointer"
+                    onClick={() => registration.contact.instagram && openInstagramLink(registration.contact.instagram)}
+                  >
+                    <span className="text-pink-500">🤙🏽</span>
+                    <span className="truncate">{registration.name}</span>
+                    {registration.contact.instagram && (
+                      <span className="text-pink-500 hover:text-pink-700">
+                        @{registration.contact.instagram.replace('@', '')}
+                      </span>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>

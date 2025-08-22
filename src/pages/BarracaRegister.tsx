@@ -326,11 +326,11 @@ const BarracaRegister: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-beach-50 to-beach-100 pt-20">
+    <div className="min-h-screen bg-gradient-to-br from-beach-50 to-beach-100">
       {/* Registration Marquee at the top */}
-      <RegistrationMarquee className="mb-8" />
+      <RegistrationMarquee />
       
-      <div className="flex items-center justify-center p-4">
+      <div className="flex items-center justify-center p-4 pt-24">
         <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-4xl max-h-[90vh] overflow-y-auto">
           <div className="text-center mb-8">
             <div className="bg-gradient-to-r from-beach-500 to-beach-600 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4">
