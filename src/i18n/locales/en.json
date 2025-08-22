@@ -299,6 +299,16 @@
         "name": "Ricardo Del Razo",
         "role": "Head of Special Partnerships",
         "bio": "Strategic partnership expert with experience in developing and maintaining key business relationships."
+      },
+      "janeese": {
+        "name": "Janeese Hollingshead",
+        "role": "CFO",
+        "bio": "Financial expert with extensive experience in strategic financial planning and business growth management."
+      },
+      "leticia": {
+        "name": "Leticia Castilhos",
+        "role": "Director of Social Media",
+        "bio": "Digital marketing specialist focused on building engaging online communities and driving brand awareness through social media."
       }
     },
     "getInTouch": "Get in Touch",

@@ -298,6 +298,16 @@
         "name": "Ricardo Del Razo",
         "role": "Jefe de Alianzas Especiales",
         "bio": "Experto en alianzas estratégicas con experiencia en desarrollar y mantener relaciones comerciales clave."
+      },
+      "janeese": {
+        "name": "Janeese Hollingshead",
+        "role": "CFO",
+        "bio": "Experta financiera con amplia experiencia en planificación financiera estratégica y gestión de crecimiento empresarial."
+      },
+      "leticia": {
+        "name": "Leticia Castilhos",
+        "role": "Directora de Redes Sociales",
+        "bio": "Especialista en marketing digital enfocada en construir comunidades online comprometidas y aumentar la conciencia de marca a través de las redes sociales."
       }
     },
     "getInTouch": "Ponte en Contacto",
