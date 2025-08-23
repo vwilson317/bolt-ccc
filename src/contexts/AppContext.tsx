@@ -12,6 +12,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { FirestoreService, type BarracaStatus } from '../services/firestoreService';
 import { firebaseApp, messaging } from '../lib/firebase';
 import { getEffectiveOpenStatus } from '../utils/environmentUtils';
+import { preloadImages } from '../utils/imageUtils';
 
 export { firebaseApp, messaging };
 
@@ -297,6 +298,26 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
           EmailService.getActiveSubscriptions(),
           WeatherOverrideService.getStatus()
         ]);
+
+        // Preload hero images for first render before dismissing loader
+        if (barracasResult.status === 'fulfilled') {
+          try {
+            const initialBarracas = barracasResult.value.barracas || [];
+            const partnered = initialBarracas.filter(b => b.partnered);
+            const top = partnered.slice(0, 4);
+            const heroUrls: string[] = [];
+            top.forEach(b => {
+              const horiz = (b.photos && b.photos.horizontal && b.photos.horizontal[0]) || '';
+              const vert = (b.photos && b.photos.vertical && b.photos.vertical[0]) || '';
+              if (horiz) heroUrls.push(horiz);
+              if (vert) heroUrls.push(vert);
+            });
+            await preloadImages(heroUrls, 4000);
+          } catch (e) {
+            // Non-fatal; continue
+            console.warn('Hero image preloading skipped or failed:', e);
+          }
+        }
 
         // Handle email subscriptions result
         if (emailSubscriptions.status === 'fulfilled') {

@@ -72,3 +72,36 @@ export function shouldPreloadImage(index: number, preloadCount: number = 3): boo
 export function getFetchPriority(index: number, preloadCount: number = 3): 'high' | 'low' {
   return shouldPreloadImage(index, preloadCount) ? 'high' : 'low';
 }
+
+/**
+ * Preload a single image. Resolves on load or error to avoid blocking forever.
+ */
+export function preloadImage(url: string): Promise<void> {
+  return new Promise((resolve) => {
+    if (!url) {
+      resolve();
+      return;
+    }
+    const img = new Image();
+    const done = () => {
+      img.onload = null;
+      img.onerror = null;
+      resolve();
+    };
+    img.onload = done;
+    img.onerror = done;
+    img.src = url;
+  });
+}
+
+/**
+ * Preload multiple images with an optional timeout safeguard.
+ */
+export async function preloadImages(urls: string[], timeoutMs: number = 4000): Promise<void> {
+  const uniqueUrls = Array.from(new Set(urls.filter(Boolean)));
+  if (uniqueUrls.length === 0) return;
+
+  const preloadAll = Promise.all(uniqueUrls.map(preloadImage)).then(() => undefined);
+  const timeout = new Promise<void>((resolve) => setTimeout(resolve, timeoutMs));
+  await Promise.race([preloadAll, timeout]);
+}
