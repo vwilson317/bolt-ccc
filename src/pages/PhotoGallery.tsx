@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { X, ChevronLeft, ChevronRight, Download, Share2, Calendar, MapPin, ExternalLink, Image } from 'lucide-react';
 import { photoService, PhotoGalleryData, Location } from '../services/photoService';
 import BackNavigation from '../components/BackNavigation';
+import SEOHead from '../components/SEOHead';
 
 // Hook to detect mobile device
 const useIsMobile = () => {
@@ -160,6 +161,12 @@ const PhotoGallery: React.FC = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-beach-50 to-beach-100 pt-20">
+        {/* Default SEO Head while loading */}
+        <SEOHead
+          title="Loading Photo Gallery - Carioca Coastal Club"
+          description="Loading photo gallery from Carioca Coastal Club"
+        />
+        
         <div className="max-w-6xl mx-auto px-4 py-8">
           <div className="animate-pulse">
             <div className="h-8 bg-gray-200 rounded w-1/3 mb-8"></div>
@@ -177,6 +184,12 @@ const PhotoGallery: React.FC = () => {
   if (!galleryData) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-beach-50 to-beach-100 pt-20">
+        {/* SEO Head for not found state */}
+        <SEOHead
+          title="Gallery Not Found - Carioca Coastal Club"
+          description="The requested photo gallery was not found"
+        />
+        
         <div className="max-w-6xl mx-auto px-4 py-8 text-center">
           <h1 className="text-2xl font-bold text-gray-800 mb-4">
             {t('photos.galleryNotFound', 'Gallery not found')}
@@ -192,8 +205,23 @@ const PhotoGallery: React.FC = () => {
     );
   }
 
+  // Get the main photo (first photo) for Open Graph sharing
+  const mainPhoto = galleryData?.photos[0];
+  const mainPhotoUrl = mainPhoto?.url;
+  const galleryTitle = galleryData?.title || 'Photo Gallery';
+  const galleryDescription = galleryData?.description || `Gallery containing ${galleryData?.photos.length || 0} photos from ${galleryTitle}`;
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-beach-50 to-beach-100 pt-20">
+      {/* SEO Head with dynamic Open Graph tags */}
+      <SEOHead
+        title={`${galleryTitle} - Carioca Coastal Club`}
+        description={galleryDescription}
+        image={mainPhotoUrl}
+        type="article"
+        url={window.location.href}
+      />
+      
       <div className="max-w-6xl mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-8">

@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Calendar, ExternalLink, ChevronRight, MapPin } from 'lucide-react';
 import { photoService, PhotoDate, Location } from '../services/photoService';
 import EmailSubscriptionSection from '../components/EmailSubscriptionSection';
+import SEOHead from '../components/SEOHead';
 
 const Photos: React.FC = () => {
   const { t } = useTranslation();
@@ -89,6 +90,12 @@ const Photos: React.FC = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-beach-50 to-beach-100 pt-20">
+        {/* SEO Head for loading state */}
+        <SEOHead
+          title="Loading Photos - Carioca Coastal Club"
+          description="Loading photo galleries from Carioca Coastal Club"
+        />
+        
         <div className="max-w-4xl mx-auto px-4 py-8">
           <div className="animate-pulse">
             <div className="h-8 bg-gray-200 rounded w-1/3 mb-8"></div>
@@ -111,6 +118,14 @@ const Photos: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-beach-50 to-beach-100 pt-20">
+      {/* SEO Head for Photos page */}
+      <SEOHead
+        title="Photo Gallery - Carioca Coastal Club"
+        description="Browse our collection of beautiful photos from Rio de Janeiro's beaches and beach vendors (barracas). Discover the vibrant beach culture of Carioca."
+        image="/logo_320x320.png"
+        type="website"
+      />
+      
       <div className="max-w-4xl mx-auto px-4 py-8">
         {/* Photo Dates Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
