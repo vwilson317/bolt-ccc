@@ -9,8 +9,8 @@ export const mockPhotoDates: PhotoDate[] = [
     thumbnail: 'https://pub-db19578f977b43e184c45b5084d7c029.r2.dev/2025-08-24/IMG_4133.jpg',
     description: 'Second day of our ad campaign. The kids joined us in games most of the day because the weather wasn\'t great. They did really good work, and we all had fun, which is what matters most.',
     location: [
-      { name: 'Barraca Da Ana #56', barracaId: 'mock-1' },
-      { name: 'Barraca Uruguay #80', barracaId: 'mock-2' }
+      { name: 'Barraca Da Ana #56', barracaId: '7e150f39-daa0-4190-98b6-5e551b264240' },
+      { name: 'Barraca Uruguay #80', barracaId: 'af17c0e3-fe61-4ecd-9e35-dfdde641819e' }
     ]
   },
   {
@@ -21,8 +21,8 @@ export const mockPhotoDates: PhotoDate[] = [
     thumbnail: 'https://pub-db19578f977b43e184c45b5084d7c029.r2.dev/2025-08-23/IMG_3035.jpg',
     description: 'Advertising campaign for Aug 23rd, 2025. In addition to pushing advertising on IG, we decided to see if the kids selling things on the beach could help us. We gave them a QR code and asked people to go to our site, then follow us. It was a huge success!',
     location: [
-      { name: 'Rainha Do Leblon #181', barracaId: 'mock-1' },
-      { name: 'Barraca do Nem 145', barracaId: 'mock-2' }
+      { name: 'Rainha Do Leblon #181', barracaId: '4b415c52-0475-490d-90a7-b38dcefa7bc7' },
+      { name: 'Barraca do Nem #145', barracaId: 'c9425204-d298-4db8-a2cc-17aef5f1e546' }
     ],
   },
   {
@@ -33,7 +33,7 @@ export const mockPhotoDates: PhotoDate[] = [
     thumbnail: 'https://pub-db19578f977b43e184c45b5084d7c029.r2.dev/launch-party/IMG_2350-2.jpg',
     description: 'The official launch party. We had a really great turnout. We\'re grateful to have met so many unique, kind people.',
     location: [
-      { name: 'Barraca Uruguay #80', barracaId: 'mock-1' }
+      { name: 'Barraca Uruguay #80', barracaId: 'af17c0e3-fe61-4ecd-9e35-dfdde641819e' }
     ],
   }
 ];
@@ -45,8 +45,8 @@ export const mockPhotoGalleries: Record<string, PhotoGalleryData> = {
     title: 'Ad Campaign Day 1',
     description: 'Advertising campaign for Aug 23rd, 2025. Employeed people on the beach to promote new instagram account.',
     location: [
-      { name: 'Barraca Da Ana #56', barracaId: 'mock-1' },
-      { name: 'Barraca Uruguay #80', barracaId: 'mock-2' }
+      { name: 'Barraca Da Ana #56', barracaId: '7e150f39-daa0-4190-98b6-5e551b264240' },
+      { name: 'Barraca Uruguay #80', barracaId: 'af17c0e3-fe61-4ecd-9e35-dfdde641819e' }
     ],
     archiveUrl: 'https://photos.app.goo.gl/Wx6ZJqL39iqYkWiQ8',
     photos: [

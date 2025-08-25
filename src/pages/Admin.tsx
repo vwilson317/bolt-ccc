@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Lock, Plus, Edit2, Trash2, Eye, EyeOff, Users, Mail, BarChart3, Power, Settings, MessageSquare } from 'lucide-react';
+import { Lock, Plus, Edit2, Trash2, Eye, EyeOff, Users, Mail, BarChart3, Power, Settings, MessageSquare, Copy, Check, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useApp } from '../contexts/AppContext';
 import { useAnalytics } from '../hooks/useAnalytics';
 import { getEffectiveOpenStatus } from '../utils/environmentUtils';
@@ -37,6 +37,11 @@ const Admin: React.FC = () => {
   const [editingBarraca, setEditingBarraca] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+  
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
 
   // Helper function to format time until expiry
   const formatTimeUntilExpiry = (expiry: Date) => {
@@ -45,6 +50,108 @@ const Admin: React.FC = () => {
     const hours = Math.floor(diff / (1000 * 60 * 60));
     const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
     return `${hours}h ${minutes}m`;
+  };
+
+  // Helper function to copy ID to clipboard
+  const copyToClipboard = async (id: string) => {
+    try {
+      await navigator.clipboard.writeText(id);
+      setCopiedId(id);
+      setTimeout(() => setCopiedId(null), 2000); // Reset after 2 seconds
+      trackAdminAction('Copy Barraca ID', `ID: ${id}`);
+    } catch (error) {
+      console.error('Failed to copy to clipboard:', error);
+      // Fallback for older browsers
+      const textArea = document.createElement('textarea');
+      textArea.value = id;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      setCopiedId(id);
+      setTimeout(() => setCopiedId(null), 2000);
+      trackAdminAction('Copy Barraca ID', `ID: ${id}`);
+    }
+  };
+
+  // Pagination helper functions
+  const totalPages = Math.ceil(barracas.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentBarracas = barracas.slice(startIndex, endIndex);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    trackAdminAction('Pagination', `Page ${page}`);
+  };
+
+  const handleItemsPerPageChange = (newItemsPerPage: number) => {
+    setItemsPerPage(newItemsPerPage);
+    setCurrentPage(1); // Reset to first page when changing items per page
+    trackAdminAction('Items Per Page Change', `${newItemsPerPage} items`);
+  };
+
+  // Reset pagination when switching tabs
+  React.useEffect(() => {
+    setCurrentPage(1);
+  }, [activeTab]);
+
+  // Keyboard navigation for pagination
+  React.useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (activeTab !== 'barracas') return;
+      
+      if (event.key === 'ArrowLeft' && currentPage > 1) {
+        event.preventDefault();
+        handlePageChange(currentPage - 1);
+      } else if (event.key === 'ArrowRight' && currentPage < totalPages) {
+        event.preventDefault();
+        handlePageChange(currentPage + 1);
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [activeTab, currentPage, totalPages]);
+
+  const getPageNumbers = () => {
+    const pages = [];
+    const maxVisiblePages = 5;
+    
+    if (totalPages <= maxVisiblePages) {
+      // Show all pages if total is small
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      // Show first page, last page, and pages around current
+      if (currentPage <= 3) {
+        // Near the beginning
+        for (let i = 1; i <= 4; i++) {
+          pages.push(i);
+        }
+        pages.push('...');
+        pages.push(totalPages);
+      } else if (currentPage >= totalPages - 2) {
+        // Near the end
+        pages.push(1);
+        pages.push('...');
+        for (let i = totalPages - 3; i <= totalPages; i++) {
+          pages.push(i);
+        }
+      } else {
+        // In the middle
+        pages.push(1);
+        pages.push('...');
+        for (let i = currentPage - 1; i <= currentPage + 1; i++) {
+          pages.push(i);
+        }
+        pages.push('...');
+        pages.push(totalPages);
+      }
+    }
+    
+    return pages;
   };
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -164,41 +271,20 @@ const Admin: React.FC = () => {
                 Special Admin Panel
               </h1>
               
-              {/* Desktop Logout Button */}
+              {/* Desktop Logout Button - Always visible when logged in */}
               <button
                 onClick={adminLogout}
-                className="hidden sm:block px-6 py-2 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700 transition-colors shadow-sm border-2 border-red-700"
+                className="flex items-center px-4 sm:px-6 py-2 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700 transition-colors shadow-sm border-2 border-red-700"
               >
-                LOGOUT
+                <Power className="h-4 w-4 mr-2" />
+                <span className="hidden sm:inline">{t('admin.logout')}</span>
+                <span className="sm:hidden">Logout</span>
               </button>
               
-              {/* Mobile Menu Button */}
-              <button
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="sm:hidden p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-beach-500"
-              >
-                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-              </button>
+
             </div>
             
-            {/* Mobile Menu */}
-            {mobileMenuOpen && (
-              <div className="sm:hidden border-t border-gray-200 bg-white">
-                <div className="px-2 pt-2 pb-3 space-y-1">
-                  <button
-                    onClick={() => {
-                      adminLogout();
-                      setMobileMenuOpen(false);
-                    }}
-                    className="w-full text-left px-3 py-2 text-base font-medium text-red-600 hover:text-red-800 hover:bg-red-50 rounded-md"
-                  >
-                    Logout
-                  </button>
-                </div>
-              </div>
-            )}
+
           </div>
         </div>
 
@@ -226,8 +312,9 @@ const Admin: React.FC = () => {
             {/* Desktop Logout Button */}
             <button
               onClick={adminLogout}
-              className="hidden sm:block px-4 py-2 text-sm text-gray-600 hover:text-gray-900 transition-colors"
+              className="hidden sm:flex items-center px-4 py-2 text-sm text-red-600 hover:text-red-800 hover:bg-red-50 rounded-lg transition-colors"
             >
+              <Power className="h-4 w-4 mr-2" />
               {t('admin.logout')}
             </button>
             
@@ -251,9 +338,10 @@ const Admin: React.FC = () => {
                     adminLogout();
                     setMobileMenuOpen(false);
                   }}
-                  className="w-full text-left px-3 py-2 text-base font-medium text-red-600 hover:text-red-800 hover:bg-red-50 rounded-md"
+                  className="w-full text-left px-3 py-2 text-base font-medium text-red-600 hover:text-red-800 hover:bg-red-50 rounded-md flex items-center"
                 >
-                  Logout
+                  <Power className="h-4 w-4 mr-2" />
+                  {t('admin.logout')}
                 </button>
               </div>
             </div>
@@ -366,6 +454,18 @@ const Admin: React.FC = () => {
                     )}
                   </div>
                 )}
+                <div className="text-sm text-gray-600">
+                  {t('admin.pagination.showing', {
+                    start: startIndex + 1,
+                    end: Math.min(endIndex, barracas.length),
+                    total: barracas.length
+                  })}
+                  {totalPages > 1 && (
+                    <span className="ml-2 text-gray-500">
+                      (Page {currentPage} of {totalPages})
+                    </span>
+                  )}
+                </div>
               </div>
               <div className="flex space-x-3">
                 <button
@@ -443,6 +543,9 @@ const Admin: React.FC = () => {
                         {t('admin.table.barraca')}
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        ID
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         {t('admin.table.location')}
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -457,7 +560,17 @@ const Admin: React.FC = () => {
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
-                    {barracas.map((barraca) => (
+                    {currentBarracas.length === 0 ? (
+                      <tr>
+                        <td colSpan={6} className="px-6 py-12 text-center">
+                          <div className="text-gray-500">
+                            <p className="text-lg font-medium mb-2">No barracas found</p>
+                            <p className="text-sm">Try adjusting your search or filters</p>
+                          </div>
+                        </td>
+                      </tr>
+                    ) : (
+                      currentBarracas.map((barraca) => (
                       <tr key={barraca.id} className="hover:bg-gray-50">
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="flex items-center">
@@ -477,6 +590,22 @@ const Admin: React.FC = () => {
                               )}
                             </div>
                           </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <button
+                            onClick={() => copyToClipboard(barraca.id)}
+                            className="flex items-center space-x-2 text-sm text-gray-600 hover:text-beach-600 transition-colors group"
+                            title="Click to copy ID"
+                          >
+                            <span className="font-mono text-xs bg-gray-100 px-2 py-1 rounded group-hover:bg-beach-100 transition-colors">
+                              {barraca.id.slice(0, 8)}...
+                            </span>
+                            {copiedId === barraca.id ? (
+                              <Check className="h-4 w-4 text-green-600" />
+                            ) : (
+                              <Copy className="h-4 w-4 text-gray-400 group-hover:text-beach-600" />
+                            )}
+                          </button>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                           {barraca.location}
@@ -510,10 +639,73 @@ const Admin: React.FC = () => {
                           </div>
                         </td>
                       </tr>
-                    ))}
+                    ))
+                    )}
                   </tbody>
                 </table>
               </div>
+                             {totalPages > 1 && (
+                 <div className="flex justify-center items-center space-x-2 py-4 border-t border-gray-200">
+                   <button
+                     onClick={() => handlePageChange(currentPage - 1)}
+                     disabled={currentPage === 1}
+                     className="p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-beach-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                     aria-label={t('admin.pagination.previous')}
+                   >
+                     <ChevronLeft className="h-5 w-5" />
+                   </button>
+                   
+                   <div className="flex items-center space-x-1">
+                     {getPageNumbers().map((page, index) => (
+                       <button
+                         key={index}
+                         onClick={() => {
+                           if (typeof page === 'number') {
+                             handlePageChange(page);
+                           }
+                         }}
+                         disabled={typeof page !== 'number'}
+                         className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
+                           typeof page === 'number' && page === currentPage
+                             ? 'bg-beach-500 text-white shadow-sm'
+                             : typeof page === 'number'
+                             ? 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
+                             : 'text-gray-400 cursor-default'
+                         }`}
+                         aria-label={typeof page === 'number' ? `Page ${page}` : undefined}
+                         aria-current={typeof page === 'number' && page === currentPage ? 'page' : undefined}
+                       >
+                         {page}
+                       </button>
+                     ))}
+                   </div>
+                   
+                   <button
+                     onClick={() => handlePageChange(currentPage + 1)}
+                     disabled={currentPage === totalPages}
+                     className="p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-beach-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                     aria-label={t('admin.pagination.next')}
+                   >
+                     <ChevronRight className="h-5 w-5" />
+                   </button>
+                 </div>
+               )}
+                                            <div className="flex justify-center items-center space-x-2 py-4 border-t border-gray-200">
+                 <label htmlFor="itemsPerPage" className="text-sm font-medium text-gray-700">
+                   {t('admin.pagination.itemsPerPage')}
+                 </label>
+                 <select
+                   id="itemsPerPage"
+                   value={itemsPerPage}
+                   onChange={(e) => handleItemsPerPageChange(Number(e.target.value))}
+                   className="px-3 py-1 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-beach-500 focus:border-beach-500 transition-colors"
+                 >
+                   <option value={5}>5</option>
+                   <option value={10}>10</option>
+                   <option value={20}>20</option>
+                   <option value={50}>50</option>
+                 </select>
+               </div>
             </div>
           </div>
         )}

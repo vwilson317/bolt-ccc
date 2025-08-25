@@ -198,9 +198,22 @@ const PhotoGallery: React.FC = () => {
           />
           
           <div className="bg-gradient-to-br from-white via-beach-50 to-white rounded-2xl shadow-xl p-8 border border-beach-100">
-            <div className="flex items-start justify-between mb-6">
+            {/* Mobile Layout */}
+            <div className="md:hidden mb-6">
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-beach-800 to-beach-600 bg-clip-text text-transparent mb-3 tracking-tight">
+                {galleryData.title}
+              </h1>
+              <div className="flex items-center space-x-2 text-gray-600 mb-3">
+                <Calendar className="h-5 w-5 text-beach-500" />
+                <span className="font-medium">{formatDate(galleryData.date)}</span>
+              </div>
+              {renderLocation(galleryData.location)}
+            </div>
+
+            {/* Desktop Layout */}
+            <div className="hidden md:flex items-start justify-between mb-6">
               <div className="flex-1">
-                <h1 className="text-3xl md:text-5xl font-bold bg-gradient-to-r from-beach-800 to-beach-600 bg-clip-text text-transparent mb-3 tracking-tight">
+                <h1 className="text-5xl font-bold bg-gradient-to-r from-beach-800 to-beach-600 bg-clip-text text-transparent mb-3 tracking-tight">
                   {galleryData.title}
                 </h1>
                 <div className="flex items-center space-x-6 text-gray-600">
@@ -258,6 +271,15 @@ const PhotoGallery: React.FC = () => {
             </div>
           </div>
         </div>
+
+        {/* Photo Count Badge - Mobile Only */}
+        {isMobile && (
+          <div className="mb-4 flex justify-center">
+            <div className="bg-beach-500 text-white px-4 py-2 rounded-full text-sm font-medium">
+              {galleryData.photos.length} {t('photos.photos', 'photos')}
+            </div>
+          </div>
+        )}
 
         {/* Photo Grid */}
         <div className={isMobile ? "space-y-2" : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"}>

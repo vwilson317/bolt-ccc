@@ -126,6 +126,12 @@
       "subscribed": "Suscrito",
       "preferences": "Preferencias"
     },
+    "pagination": {
+      "itemsPerPage": "Elementos por página",
+      "showing": "Mostrando {start}-{end} de {total} barracas",
+      "previous": "Anterior",
+      "next": "Siguiente"
+    },
     "stats": {
       "totalBarracas": "Total de Barracas",
       "currentlyOpen": "Actualmente Abiertas",

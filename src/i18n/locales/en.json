@@ -125,6 +125,12 @@
       "subscribed": "Subscribed",
       "preferences": "Preferences"
     },
+    "pagination": {
+      "itemsPerPage": "Items per page",
+      "showing": "Showing {start}-{end} of {total} barracas",
+      "previous": "Previous",
+      "next": "Next"
+    },
     "stats": {
       "totalBarracas": "Total Barracas",
       "currentlyOpen": "Currently Open",

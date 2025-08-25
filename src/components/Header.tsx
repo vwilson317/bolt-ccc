@@ -37,10 +37,12 @@ const Header: React.FC = () => {
   const isRegisterPage = location.pathname === '/register';
   const isPhotosPage = location.pathname === '/photos';
   const isPhotosDetailPage = location.pathname.startsWith('/photos/');
+  const isDiscoverPage = location.pathname === '/discover';
   
   // On home page and about page, only show solid header when header bottom border reaches end of hero
   const headerHeight = 64; // h-16 = 64px
   const useSolidHeader = isLoginPage || isBarracaDetailPage || isMenuOpen || isRegisterPage || isPhotosPage || isPhotosDetailPage  ||
+  isDiscoverPage || 
     ((isHomePage || isAboutPage) ? scrollY + headerHeight > heroHeight : isScrolled);
 
   const languages = [
