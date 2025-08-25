@@ -4,7 +4,8 @@
     "discover": "Encontrar Barracas",
     "about": "Acerca de",
     "admin": "Login",
-    "registerBarraca": "Registrar Barraca"
+    "registerBarraca": "Registrar Barraca",
+    "photos": "Fotos"
   },
   "hero": {
     "title": "Tu Barraca Favorita Te Espera",
@@ -125,6 +126,12 @@
       "subscribed": "Suscrito",
       "preferences": "Preferencias"
     },
+    "pagination": {
+      "itemsPerPage": "Elementos por página",
+      "showing": "Mostrando {start}-{end} de {total} barracas",
+      "previous": "Anterior",
+      "next": "Siguiente"
+    },
     "stats": {
       "totalBarracas": "Total de Barracas",
       "currentlyOpen": "Actualmente Abiertas",
@@ -140,6 +147,18 @@
       "uptime": "Tiempo Activo",
       "activeSubscribers": "Suscriptores Activos"
     }
+  },
+  "photos": {
+    "title": "Galería de Fotos",
+    "subtitle": "Revive los mejores momentos de nuestros encuentros en la playa y eventos especiales",
+    "googlePhotosArchive": "Archivo de Google Fotos",
+    "googlePhotosDescription": "Accede a nuestra colección completa de fotos en Google Fotos",
+    "viewArchive": "Ver Archivo",
+    "photos": "fotos",
+    "noPhotos": "No hay fotos disponibles aún",
+    "noPhotosDescription": "Vuelve pronto para nuevas galerías de fotos",
+    "backToPhotos": "Volver a Fotos",
+    "galleryNotFound": "Galería no encontrada"
   },
   "email": {
     "subscribe": "Unirse al Programa de Lealtad",
@@ -370,6 +389,7 @@
     "add": "Agregar",
     "remove": "Remover",
     "close": "Cerrar",
+    "back": "Atrás",
     "more": "Más",
     "less": "Menos",
     "showMore": "Mostrar Más",
@@ -599,5 +619,9 @@
     "success": "¡Registro enviado con éxito!",
     "error": "Error al enviar registro. Inténtalo de nuevo.",
     "loading": "Enviando registro..."
+  },
+  "emailSubscription": {
+    "title": "Mantente Conectado",
+    "description": "Recibe notificaciones sobre nuevos eventos y promociones"
   }
 }

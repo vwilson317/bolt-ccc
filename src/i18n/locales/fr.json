@@ -3,7 +3,8 @@
     "home": "Accueil",
     "discover": "Trouver des Barracas",
     "about": "À propos",
-    "admin": "Login"
+    "admin": "Login",
+    "photos": "Photos"
   },
   "hero": {
     "title": "Votre Barraca Préférée Vous Attend",
@@ -124,6 +125,12 @@
       "subscribed": "Abonné",
       "preferences": "Préférences"
     },
+    "pagination": {
+      "itemsPerPage": "Éléments par page",
+      "showing": "Affichage de {start}-{end} sur {total} barracas",
+      "previous": "Précédent",
+      "next": "Suivant"
+    },
     "stats": {
       "totalBarracas": "Total des Barracas",
       "currentlyOpen": "Actuellement Ouvertes",
@@ -139,6 +146,18 @@
       "uptime": "Temps de Fonctionnement",
       "activeSubscribers": "Abonnés Actifs"
     }
+  },
+  "photos": {
+    "title": "Galerie Photos",
+    "subtitle": "Revivez les meilleurs moments de nos rassemblements sur la plage et événements spéciaux",
+    "googlePhotosArchive": "Archive Google Photos",
+    "googlePhotosDescription": "Accédez à notre collection complète de photos sur Google Photos",
+    "viewArchive": "Voir l'Archive",
+    "photos": "photos",
+    "noPhotos": "Aucune photo disponible pour le moment",
+    "noPhotosDescription": "Revenez bientôt pour de nouvelles galeries photos",
+    "backToPhotos": "Retour aux Photos",
+    "galleryNotFound": "Galerie introuvable"
   },
   "email": {
     "subscribe": "Rejoindre le Programme de Fidélité",
@@ -369,6 +388,7 @@
     "add": "Ajouter",
     "remove": "Retirer",
     "close": "Fermer",
+    "back": "Retour",
     "more": "Plus",
     "less": "Moins",
     "showMore": "Afficher Plus",
@@ -500,5 +520,9 @@
     "portuguese": "Português",
     "spanish": "Español",
     "french": "Français"
+  },
+  "emailSubscription": {
+    "title": "Restez Connecté",
+    "description": "Recevez des notifications sur les nouveaux événements et promotions"
   }
 }

@@ -30,15 +30,19 @@ const Header: React.FC = () => {
   }, []);
 
   // Check if we're on pages that should always have a solid header
-  const isLoginPage = location.pathname === '/login';
+  const isLoginPage = location.pathname === '/admin';
   const isBarracaDetailPage = location.pathname.startsWith('/barraca/');
   const isAboutPage = location.pathname === '/about';
   const isHomePage = location.pathname === '/';
   const isRegisterPage = location.pathname === '/register';
+  const isPhotosPage = location.pathname === '/photos';
+  const isPhotosDetailPage = location.pathname.startsWith('/photos/');
+  const isDiscoverPage = location.pathname === '/discover';
   
   // On home page and about page, only show solid header when header bottom border reaches end of hero
   const headerHeight = 64; // h-16 = 64px
-  const useSolidHeader = isLoginPage || isBarracaDetailPage || isMenuOpen || isRegisterPage ||
+  const useSolidHeader = isLoginPage || isBarracaDetailPage || isMenuOpen || isRegisterPage || isPhotosPage || isPhotosDetailPage  ||
+  isDiscoverPage || 
     ((isHomePage || isAboutPage) ? scrollY + headerHeight > heroHeight : isScrolled);
 
   const languages = [
@@ -150,6 +154,20 @@ const Header: React.FC = () => {
               }`}
             >
               Register Barraca
+            </Link>
+            <Link
+              to="/photos"
+              className={`font-medium transition-colors duration-200 ${
+                isActive('/photos') 
+                  ? useSolidHeader
+                    ? 'text-beach-600 border-b-2 border-beach-600 pb-1' 
+                    : 'text-white border-b-2 border-white pb-1'
+                  : useSolidHeader
+                    ? 'text-gray-700 hover:text-beach-600'
+                    : 'text-white/90 hover:text-white'
+              }`}
+            >
+              {t('nav.photos', 'Photos')}
             </Link>
 
           </nav>
@@ -264,6 +282,17 @@ const Header: React.FC = () => {
                 }`}
               >
                 Register Barraca
+              </Link>
+              <Link
+                to="/photos"
+                onClick={() => setIsMenuOpen(false)}
+                className={`font-medium transition-colors duration-200 ${
+                  isActive('/photos') 
+                    ? useSolidHeader ? 'text-beach-600' : 'text-white'
+                    : useSolidHeader ? 'text-gray-700' : 'text-white/90'
+                }`}
+              >
+                {t('nav.photos', 'Photos')}
               </Link>
 
               

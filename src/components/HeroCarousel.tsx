@@ -80,9 +80,9 @@ const HeroCarousel: React.FC = () => {
       <div className="flex flex-col xs:flex-row items-center justify-center gap-2 px-4 py-3 bg-white/90 backdrop-blur-sm rounded-b-2xl shadow-sm sm:hidden">
         <div className="flex items-center text-sky-700 font-semibold text-xs">
           <MapPin className="h-4 w-4 mr-1" />
-          <span>{barraca.location}</span>
+          <span className="truncate max-w-[100px]">{barraca.location}</span>
         </div>
-        <div className="font-bold text-gray-900 text-sm">{barraca.name}</div>
+        <div className="font-bold text-gray-900 text-sm truncate max-w-[150px]">{barraca.name}</div>
         <div className="text-gray-600 text-xs text-center line-clamp-2 max-w-[120px]">{barraca.description}</div>
         <div className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium status-pulse ${
           effectiveIsOpen 
@@ -107,7 +107,7 @@ const HeroCarousel: React.FC = () => {
         <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/60 via-black/10 to-transparent pointer-events-none" />
         {/* Centered Name and Status */}
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <div className="flex items-center text-white text-2xl font-bold drop-shadow-md">
+          <div className="flex items-center text-white text-2xl font-bold drop-shadow-md truncate max-w-[280px] px-4">
             {barraca.name}
           </div>
           <div className="flex items-center text-gray-300 text-xs font-medium uppercase tracking-wider mt-1">
@@ -122,7 +122,7 @@ const HeroCarousel: React.FC = () => {
         {/* Location in lower right */}
         <div className="absolute bottom-4 right-4 flex items-center bg-black/40 rounded-full px-3 py-1 pointer-events-auto">
           <MapPin className="h-4 w-4 mr-1 text-gray-200" />
-          <span className="text-white text-xs font-medium drop-shadow-md">{barraca.location}</span>
+          <span className="text-white text-xs font-medium drop-shadow-md truncate max-w-[120px]">{barraca.location}</span>
         </div>
       </div>
     );
@@ -189,8 +189,8 @@ const HeroCarousel: React.FC = () => {
                 <MapPin className="h-4 w-4 md:h-5 md:w-5 mr-2 text-sky-300" />
                 <span className="text-base md:text-lg font-semibold">{partneredBarracas[currentSlide].location}</span>
               </div>
-              <h3 className="text-xl md:text-3xl font-bold mb-2">{partneredBarracas[currentSlide].name}</h3>
-              <p className="text-gray-200 mb-3 md:mb-4 max-w-xl mx-auto text-sm md:text-base">
+              <h3 className="text-xl md:text-3xl font-bold mb-2 truncate max-w-2xl mx-auto">{partneredBarracas[currentSlide].name}</h3>
+              <p className="text-gray-200 mb-3 md:mb-4 max-w-xl mx-auto text-sm md:text-base line-clamp-2">
                 {partneredBarracas[currentSlide].description}
               </p>
               {(() => {

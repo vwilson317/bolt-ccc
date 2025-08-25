@@ -1,5 +1,4 @@
 import { Barraca, WeatherData, CTAButtonConfig } from '../types';
-import { BarracaService } from '../services/barracaService';
 
 // Sample custom CTA button configurations
 const sampleCTAButtons: CTAButtonConfig[] = [
@@ -97,6 +96,8 @@ export const mockBarracas: Barraca[] = [
     partnered: true,
     weekendHoursEnabled: false,
     rating: 3,
+    specialAdminOverride: false,
+    specialAdminOverrideExpires: null,
     createdAt: new Date('2024-01-15'),
     updatedAt: new Date('2024-01-20'),
     ctaButtons: sampleCTAButtons
@@ -124,6 +125,8 @@ export const mockBarracas: Barraca[] = [
     partnered: true,
     weekendHoursEnabled: true,
     rating: 2,
+    specialAdminOverride: false,
+    specialAdminOverrideExpires: null,
     createdAt: new Date('2024-01-10'),
     updatedAt: new Date('2024-01-18'),
     ctaButtons: sampleCTAButtons
@@ -151,6 +154,8 @@ export const mockBarracas: Barraca[] = [
     partnered: true,
     weekendHoursEnabled: true,
     rating: 1,
+    specialAdminOverride: false,
+    specialAdminOverrideExpires: null,
     createdAt: new Date('2024-01-05'),
     updatedAt: new Date('2024-01-15'),
     ctaButtons: sampleCTAButtons
