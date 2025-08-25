@@ -26,25 +26,43 @@ class CloudflareService {
   constructor() {
     console.log('🔧 Initializing CloudflareService...');
     
-    // Initialize S3 client for Cloudflare R2 (R2 is S3-compatible)
-    this.s3Client = new S3Client({
-      region: 'auto', // Cloudflare R2 uses 'auto' region
-      endpoint: process.env.VITE_CLOUDFLARE_R2_ENDPOINT || '',
-      credentials: {
-        accessKeyId: process.env.VITE_CLOUDFLARE_ACCESS_KEY_ID || '',
-        secretAccessKey: process.env.VITE_CLOUDFLARE_SECRET_ACCESS_KEY || '',
-      },
-    });
-
+    // Check if all required environment variables are present
+    const endpoint = process.env.VITE_CLOUDFLARE_R2_ENDPOINT || '';
+    const accessKeyId = process.env.VITE_CLOUDFLARE_ACCESS_KEY_ID || '';
+    const secretAccessKey = process.env.VITE_CLOUDFLARE_SECRET_ACCESS_KEY || '';
     this.bucketName = process.env.VITE_CLOUDFLARE_R2_BUCKET_NAME || '';
     this.cloudflareDomain = process.env.VITE_CLOUDFLARE_DOMAIN || '';
     
     console.log('🔧 CloudflareService initialized with:', {
-      endpoint: process.env.VITE_CLOUDFLARE_R2_ENDPOINT ? '✅ Set' : '❌ Not set',
-      accessKeyId: process.env.VITE_CLOUDFLARE_ACCESS_KEY_ID ? '✅ Set' : '❌ Not set',
-      secretAccessKey: process.env.VITE_CLOUDFLARE_SECRET_ACCESS_KEY ? '✅ Set' : '❌ Not set',
+      endpoint: endpoint ? '✅ Set' : '❌ Not set',
+      accessKeyId: accessKeyId ? '✅ Set' : '❌ Not set',
+      secretAccessKey: secretAccessKey ? '✅ Set' : '❌ Not set',
       bucketName: this.bucketName || '❌ Not set',
       cloudflareDomain: this.cloudflareDomain || '❌ Not set'
+    });
+
+    // Check for placeholder values
+    const hasPlaceholders = [endpoint, accessKeyId, secretAccessKey, this.bucketName]
+      .some(val => val.includes('placeholder'));
+    
+    if (!endpoint || !accessKeyId || !secretAccessKey || !this.bucketName || hasPlaceholders) {
+      console.warn('⚠️ Cloudflare credentials are missing or contain placeholder values');
+      console.warn('⚠️ Photo gallery will fall back to mock data');
+      throw new Error('Cloudflare credentials not properly configured');
+    }
+    
+    // Initialize S3 client for Cloudflare R2 (R2 is S3-compatible)
+    this.s3Client = new S3Client({
+      region: 'auto', // Cloudflare R2 uses 'auto' region
+      endpoint,
+      credentials: {
+        accessKeyId,
+        secretAccessKey,
+      },
+      // Add timeout to prevent hanging
+      requestHandler: {
+        requestTimeout: 10000, // 10 second timeout
+      }
     });
   }
 
@@ -164,7 +182,7 @@ class CloudflareService {
 
       const folders: CloudflareFolder[] = [];
       
-      for (const [folderPath, images] of folderMap) {
+      for (const [folderPath, images] of Array.from(folderMap.entries())) {
         const folderName = folderPath.split('/').filter(Boolean).pop() || folderPath;
         
         // Sort images by last modified date (newest first)
@@ -290,7 +308,14 @@ class CloudflareService {
   }
 }
 
-const cloudflareService = new CloudflareService();
+let cloudflareService: CloudflareService | null = null;
+
+// Try to initialize CloudflareService, but don't fail if credentials are missing
+try {
+  cloudflareService = new CloudflareService();
+} catch (error) {
+  console.warn('⚠️ Failed to initialize CloudflareService:', error instanceof Error ? error.message : error);
+}
 
 export const handler: Handler = async (event) => {
   console.log('🚀 cloudflare-images function called');
@@ -336,6 +361,20 @@ export const handler: Handler = async (event) => {
     }
 
     console.log('🎯 Processing action:', action);
+
+    // Check if CloudflareService is initialized
+    if (!cloudflareService) {
+      console.log('❌ CloudflareService not initialized - credentials not configured');
+      return {
+        statusCode: 503,
+        headers,
+        body: JSON.stringify({ 
+          error: 'Cloudflare service not available',
+          message: 'Cloudflare R2 credentials are not properly configured. Please check environment variables.',
+          fallback: 'Using mock data instead'
+        }),
+      };
+    }
 
     switch (action) {
       case 'listFolders':

@@ -46,6 +46,12 @@ class PhotoService {
   constructor() {
     // Check if Cloudflare is configured
     this.useCloudflare = cloudflareService.isConfigured();
+    
+    if (this.useCloudflare) {
+      console.log('🌩️ PhotoService: Using Cloudflare R2 for photo galleries');
+    } else {
+      console.log('📁 PhotoService: Using mock data (Cloudflare not configured)');
+    }
   }
 
   async getPhotoDates(): Promise<PhotoDate[]> {
@@ -116,9 +122,11 @@ class PhotoService {
 
   private async getPhotoGalleryFromCloudflare(dateId: string): Promise<PhotoGalleryData | null> {
     try {
+      console.log('🌩️ Attempting to fetch gallery from Cloudflare for dateId:', dateId);
       const images = await cloudflareService.listImagesInFolder(dateId);
       
       if (images.length === 0) {
+        console.log('📁 No images found in Cloudflare, falling back to mock data');
         return null;
       }
 
@@ -168,6 +176,13 @@ class PhotoService {
       };
     } catch (error) {
       console.error('Error fetching photo gallery from Cloudflare:', error);
+      
+      if (error instanceof Error && error.message === 'CLOUDFLARE_NOT_CONFIGURED') {
+        console.warn('⚠️ Cloudflare not configured, falling back to mock data');
+        // Disable Cloudflare for future requests in this session
+        this.useCloudflare = false;
+      }
+      
       // Fallback to mock data
       return this.mockPhotoGalleries[dateId] || null;
     }

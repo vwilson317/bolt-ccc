@@ -53,6 +53,14 @@ class CloudflareService {
       });
 
       if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        console.warn('⚠️ Cloudflare service error:', errorData);
+        
+        if (response.status === 503) {
+          // Service unavailable - credentials not configured
+          throw new Error('CLOUDFLARE_NOT_CONFIGURED');
+        }
+        
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
@@ -66,6 +74,11 @@ class CloudflareService {
       }));
     } catch (error) {
       console.error('Error listing folders:', error);
+      
+      if (error instanceof Error && error.message === 'CLOUDFLARE_NOT_CONFIGURED') {
+        throw error; // Re-throw to let the caller handle it
+      }
+      
       throw new Error('Failed to list folders from Cloudflare');
     }
   }
@@ -87,6 +100,14 @@ class CloudflareService {
       });
 
       if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        console.warn('⚠️ Cloudflare service error:', errorData);
+        
+        if (response.status === 503) {
+          // Service unavailable - credentials not configured
+          throw new Error('CLOUDFLARE_NOT_CONFIGURED');
+        }
+        
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
@@ -100,6 +121,11 @@ class CloudflareService {
       }));
     } catch (error) {
       console.error('Error listing images in folder:', error);
+      
+      if (error instanceof Error && error.message === 'CLOUDFLARE_NOT_CONFIGURED') {
+        throw error; // Re-throw to let the caller handle it
+      }
+      
       throw new Error('Failed to list images from Cloudflare');
     }
   }
