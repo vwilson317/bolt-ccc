@@ -4,6 +4,7 @@
     "discover": "Trouver des Barracas",
     "about": "À propos",
     "admin": "Login",
+    "registerBarraca": "Enregistrer Barraca",
     "photos": "Photos"
   },
   "hero": {
@@ -58,7 +59,8 @@
     "share": "Partager",
     "notPartnered": "Non Partenaire",
     "notPartneredMessage": "Cette barraca n'est pas notre partenaire. Seules les informations de base sont disponibles.",
-    "limitedInfo": "Info limitée"
+    "limitedInfo": "Info limitée",
+    "undetermined": "Indéterminé"
   },
   "login": {
     "title": "Se Connecter",
@@ -78,8 +80,6 @@
     "stats": "Analyses",
     "emails": "Abonnés Email",
     "credentials": "Identifiants de démonstration : admin@cariocacoastal.com / admin123",
-    "enableWeatherOverride": "Activer le mode météo forcée",
-    "disableWeatherOverride": "Désactiver le mode météo forcée",
     "weatherOverrideActive": "Le mode météo forcée est actif. Toutes les barracas apparaîtront fermées jusqu'à minuit.",
     "form": {
       "name": "Nom",
@@ -406,28 +406,45 @@
   },
   "registration": {
     "title": "Enregistrer Votre Barraca",
-    "subtitle": "Rejoignez notre communauté de barracas partenaires et commencez à offrir des avantages exclusifs à vos clients fidèles",
+    "subtitle": "Enregistrez votre barraca pour que nous puissions travailler ensemble. Remplissez le formulaire ci-dessous pour commencer.",
     "form": {
       "basicInfo": "Informations de Base",
       "name": "Nom de la Barraca",
-      "namePlaceholder": "Ex: Barraca do João",
+      "namePlaceholder": "Entrez le nom de votre barraca",
+      "ownerName": "Nom du Propriétaire",
+      "ownerNamePlaceholder": "Entrez le nom complet du propriétaire",
       "barracaNumber": "Numéro de Barraca",
-      "barracaNumberPlaceholder": "Ex: 001, 002, etc.",
+      "barracaNumberPlaceholder": "ex. 1, 2",
+      "nearestPosto": "Posto le Plus Proche",
+      "selectPosto": "Sélectionner un posto",
       "location": "Emplacement",
-      "locationPlaceholder": "Sélectionnez votre quartier",
+      "locationPlaceholder": "Entrez votre emplacement ou quartier",
       "description": "Description",
-      "descriptionPlaceholder": "Décrivez ce qui rend votre barraca unique...",
+      "descriptionPlaceholder": "Parlez-nous de votre barraca, spécialités et ce qui la rend unique",
       "contactInfo": "Informations de Contact",
-      "phone": "Téléphone",
-      "phonePlaceholder": "Ex: (21) 98765-4321",
-      "email": "Email",
-      "emailPlaceholder": "Ex: joao@barraca.com",
-      "instagram": "Instagram",
-      "instagramPlaceholder": "Ex: @barracadojoao",
+      "phone": "Numéro de Téléphone",
+      "phonePlaceholder": "Entrez votre numéro de téléphone",
+      "email": "Adresse Email",
+      "emailPlaceholder": "Entrez votre adresse email",
+      "instagram": "Compte Instagram",
+      "instagramPlaceholder": "@votrebarraca",
+      "website": "Site Web",
+      "websitePlaceholder": "https://votresite.com",
       "hours": "Horaires d'Ouverture",
       "typicalHours": "Horaires Typiques",
-      "typicalHoursPlaceholder": "Ex: 9h00 - 18h00",
+      "typicalHoursPlaceholder": "ex. 9h00 - 18h00",
       "weekendHoursEnabled": "Horaires de Week-end Différents",
+      "weekendHours": "Horaires de Week-end",
+      "friday": "Vendredi",
+      "saturday": "Samedi",
+      "sunday": "Dimanche",
+      "open": "Ouvert",
+      "close": "Fermé",
+      "menu": "Menu et Spécialités",
+      "menuPreview": "Éléments du Menu",
+      "menuPreviewPlaceholder": "Ajoutez vos plats les plus populaires",
+      "addMenuItem": "Ajouter Élément de Menu",
+      "removeMenuItem": "Supprimer",
       "amenities": "Commodités",
       "amenitiesPlaceholder": "Quels services proposez-vous?",
       "addAmenity": "Ajouter Commodité",
@@ -452,12 +469,23 @@
       "contentCreationDescription": "Seriez-vous prêt à produire du contenu ensemble pour Instagram/TikTok?",
       "onlineOrders": "Commandes en Ligne",
       "onlineOrdersDescription": "Seriez-vous prêt à prendre des commandes via notre site (commandes envoyées à votre WhatsApp)?",
+      "selectAllPartnerships": "Sélectionner Tous les Partenariats",
+      "clearAllPartnerships": "Effacer Tous les Partenariats",
       "contactPreferences": "Préférences de Contact",
       "contactPreferencesDescription": "Optionnel: Faites-nous savoir si vous êtes prêt à être contacté pour des photos et mises à jour de statut",
       "contactForPhotos": "Contact pour Photos",
       "contactForPhotosDescription": "Pouvons-nous vous contacter via WhatsApp ou Instagram pour collecter des photos de votre barraca?",
       "contactForStatus": "Contact pour Mises à Jour de Statut",
       "contactForStatusDescription": "Pouvons-nous vous contacter pour les mises à jour de statut ouvert/fermé?",
+      "selectAllPreferences": "Sélectionner Toutes les Préférences",
+      "clearAllPreferences": "Effacer Toutes les Préférences",
+      "partnershipsSelected": "{{count}} sur 5 partenariats sélectionnés",
+      "preferencesSelected": "{{count}} sur 2 préférences sélectionnées",
+      "clickToChangePhoto": "Cliquez pour changer la photo",
+      "clickToUpload": "Cliquez pour télécharger",
+      "dragAndDrop": "ou glissez-déposez",
+      "fileTypes": "PNG, JPG, GIF jusqu'à 10MB",
+      "fileSizeError": "La taille du fichier doit être inférieure à 10MB",
       "preferredContactMethod": "Méthode de Contact Préférée",
       "selectContactMethod": "Sélectionnez votre méthode de contact préférée",
       "whatsapp": "WhatsApp",
@@ -514,6 +542,76 @@
       "beachGames": "Jeux de Plage",
       "fitness": "Fitness"
     }
+  },
+  "adminRegistrations": {
+    "title": "Enregistrements de Barracas",
+    "subtitle": "Examiner et gérer les soumissions d'enregistrement de barracas",
+    "stats": {
+      "total": "Total des Enregistrements",
+      "pending": "En Attente d'Examen",
+      "approved": "Approuvés",
+      "rejected": "Rejetés"
+    },
+    "filters": {
+      "all": "Tous",
+      "pending": "En Attente",
+      "approved": "Approuvés",
+      "rejected": "Rejetés"
+    },
+    "table": {
+      "name": "Nom",
+      "location": "Emplacement",
+      "contact": "Contact",
+      "submitted": "Soumis",
+      "status": "Statut",
+      "actions": "Actions"
+    },
+    "status": {
+      "pending": "En Attente",
+      "approved": "Approuvé",
+      "rejected": "Rejeté"
+    },
+    "actions": {
+      "view": "Voir les Détails",
+      "approve": "Approuver",
+      "reject": "Rejeter",
+      "delete": "Supprimer",
+      "convert": "Convertir en Barraca"
+    },
+    "modal": {
+      "title": "Détails de l'Enregistrement",
+      "basicInfo": "Informations de Base",
+      "contactInfo": "Informations de Contact",
+      "hours": "Horaires d'Ouverture",
+      "menu": "Menu et Commodités",
+      "additionalInfo": "Informations Supplémentaires",
+      "adminNotes": "Notes Admin",
+      "adminNotesPlaceholder": "Ajouter des notes sur cet enregistrement...",
+      "approve": "Approuver l'Enregistrement",
+      "reject": "Rejeter l'Enregistrement",
+      "approving": "Approbation...",
+      "rejecting": "Rejet...",
+      "deleting": "Suppression...",
+      "close": "Fermer"
+    },
+    "messages": {
+      "approved": "Enregistrement approuvé avec succès",
+      "rejected": "Enregistrement rejeté",
+      "deleted": "Enregistrement supprimé",
+      "converted": "Enregistrement converti en barraca avec succès",
+      "error": "Une erreur s'est produite. Veuillez réessayer."
+    },
+    "noRegistrations": "Aucun enregistrement trouvé",
+    "loading": "Chargement des enregistrements..."
+  },
+  "marquee": {
+    "title": "Merci de vous être enregistré",
+    "loading": "Chargement des barracas enregistrées..."
+  },
+  "toast": {
+    "success": "Enregistrement soumis avec succès!",
+    "error": "Erreur lors de la soumission de l'enregistrement. Veuillez réessayer.",
+    "loading": "Soumission de l'enregistrement..."
   },
   "languages": {
     "english": "English",
