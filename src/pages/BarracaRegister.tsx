@@ -1,12 +1,14 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import toast from 'react-hot-toast';
 import { Save, MapPin, Clock, Phone, Mail, Instagram, Camera, X, Handshake } from 'lucide-react';
 import { BarracaRegistration } from '../types';
 import RegistrationMarquee from '../components/RegistrationMarquee';
+import { useAnalytics } from '../hooks/useAnalytics';
 
 const BarracaRegister: React.FC = () => {
   const { t } = useTranslation();
+  const analytics = useAnalytics();
   
   const [formData, setFormData] = useState<Partial<BarracaRegistration>>({
     name: '',
@@ -51,6 +53,23 @@ const BarracaRegister: React.FC = () => {
     phone?: string;
     email?: string;
   }>({});
+  const [hasStartedForm, setHasStartedForm] = useState(false);
+  const [lastFieldInteracted, setLastFieldInteracted] = useState<string>();
+
+  // Track form view on component mount
+  useEffect(() => {
+    analytics.trackBarracaRegistrationView();
+    
+    // Track form abandonment on page unload
+    const handleBeforeUnload = () => {
+      if (hasStartedForm) {
+        analytics.trackBarracaRegistrationAbandonment(lastFieldInteracted);
+      }
+    };
+    
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [hasStartedForm, lastFieldInteracted, analytics]);
 
   // Complete list of South Zone neighborhoods
   const southZoneNeighborhoods = [
@@ -96,6 +115,16 @@ const BarracaRegister: React.FC = () => {
   ];
 
   const handleInputChange = (field: string, value: any) => {
+    // Track form start on first interaction
+    if (!hasStartedForm) {
+      setHasStartedForm(true);
+      analytics.trackBarracaRegistrationStart();
+    }
+    
+    // Track field interaction
+    setLastFieldInteracted(field);
+    analytics.trackBarracaRegistrationFieldInteraction(field, typeof value === 'string' ? value : undefined);
+    
     setFormData(prev => ({
       ...prev,
       [field]: value
@@ -103,6 +132,16 @@ const BarracaRegister: React.FC = () => {
   };
 
   const handleContactChange = (field: string, value: string) => {
+    // Track form start on first interaction
+    if (!hasStartedForm) {
+      setHasStartedForm(true);
+      analytics.trackBarracaRegistrationStart();
+    }
+    
+    // Track field interaction
+    setLastFieldInteracted(`contact.${field}`);
+    analytics.trackBarracaRegistrationFieldInteraction(`contact.${field}`, value);
+    
     setFormData(prev => ({
       ...prev,
       contact: {
@@ -120,17 +159,23 @@ const BarracaRegister: React.FC = () => {
     // Real-time validation
     if (field === 'phone' && value.trim()) {
       if (!validateBrazilianPhone(value)) {
+        const errorMessage = 'Please enter a valid Brazilian phone number';
         setValidationErrors(prev => ({
           ...prev,
-          phone: 'Please enter a valid Brazilian phone number'
+          phone: errorMessage
         }));
+        // Track validation error
+        analytics.trackBarracaRegistrationValidationError('phone', errorMessage);
       }
     } else if (field === 'email' && value.trim()) {
       if (!validateEmail(value)) {
+        const errorMessage = 'Please enter a valid email address';
         setValidationErrors(prev => ({
           ...prev,
-          email: 'Please enter a valid email address'
+          email: errorMessage
         }));
+        // Track validation error
+        analytics.trackBarracaRegistrationValidationError('email', errorMessage);
       }
     }
   };
@@ -290,6 +335,9 @@ const BarracaRegister: React.FC = () => {
       toast.success(t('toast.success'));
       setSubmitMessage({ type: 'success', text: t('registration.form.successMessage') });
       
+      // Track successful submission
+      analytics.trackBarracaRegistrationSubmit(true, cleanedData);
+      
       // Reset form after successful submission
       setTimeout(() => {
         setFormData({
@@ -343,6 +391,9 @@ const BarracaRegister: React.FC = () => {
       toast.dismiss(loadingToast);
       toast.error(t('toast.error'));
       setSubmitMessage({ type: 'error', text: t('registration.form.errorMessage') });
+      
+      // Track failed submission
+      analytics.trackBarracaRegistrationSubmit(false);
     } finally {
       setIsSubmitting(false);
     }
@@ -835,7 +886,10 @@ const BarracaRegister: React.FC = () => {
                   type="checkbox"
                   id="qrCodes"
                   checked={formData.qrCodes}
-                  onChange={(e) => handleInputChange('qrCodes', e.target.checked)}
+                  onChange={(e) => {
+                    handleInputChange('qrCodes', e.target.checked);
+                    analytics.trackBarracaRegistrationPartnershipSelection('QR Codes', e.target.checked);
+                  }}
                   className="w-4 h-4 text-beach-600 border-gray-300 rounded focus:ring-beach-500"
                 />
                 <label htmlFor="qrCodes" className="text-sm font-medium text-gray-700">
@@ -848,7 +902,10 @@ const BarracaRegister: React.FC = () => {
                   type="checkbox"
                   id="repeatDiscounts"
                   checked={formData.repeatDiscounts}
-                  onChange={(e) => handleInputChange('repeatDiscounts', e.target.checked)}
+                  onChange={(e) => {
+                    handleInputChange('repeatDiscounts', e.target.checked);
+                    analytics.trackBarracaRegistrationPartnershipSelection('Repeat Discounts', e.target.checked);
+                  }}
                   className="w-4 h-4 text-beach-600 border-gray-300 rounded focus:ring-beach-500"
                 />
                 <label htmlFor="repeatDiscounts" className="text-sm font-medium text-gray-700">
@@ -861,7 +918,10 @@ const BarracaRegister: React.FC = () => {
                   type="checkbox"
                   id="hotelPartnerships"
                   checked={formData.hotelPartnerships}
-                  onChange={(e) => handleInputChange('hotelPartnerships', e.target.checked)}
+                  onChange={(e) => {
+                    handleInputChange('hotelPartnerships', e.target.checked);
+                    analytics.trackBarracaRegistrationPartnershipSelection('Hotel Partnerships', e.target.checked);
+                  }}
                   className="w-4 h-4 text-beach-600 border-gray-300 rounded focus:ring-beach-500"
                 />
                 <label htmlFor="hotelPartnerships" className="text-sm font-medium text-gray-700">
@@ -874,7 +934,10 @@ const BarracaRegister: React.FC = () => {
                   type="checkbox"
                   id="contentCreation"
                   checked={formData.contentCreation}
-                  onChange={(e) => handleInputChange('contentCreation', e.target.checked)}
+                  onChange={(e) => {
+                    handleInputChange('contentCreation', e.target.checked);
+                    analytics.trackBarracaRegistrationPartnershipSelection('Content Creation', e.target.checked);
+                  }}
                   className="w-4 h-4 text-beach-600 border-gray-300 rounded focus:ring-beach-500"
                 />
                 <label htmlFor="contentCreation" className="text-sm font-medium text-gray-700">
@@ -887,7 +950,10 @@ const BarracaRegister: React.FC = () => {
                   type="checkbox"
                   id="onlineOrders"
                   checked={formData.onlineOrders}
-                  onChange={(e) => handleInputChange('onlineOrders', e.target.checked)}
+                  onChange={(e) => {
+                    handleInputChange('onlineOrders', e.target.checked);
+                    analytics.trackBarracaRegistrationPartnershipSelection('Online Orders', e.target.checked);
+                  }}
                   className="w-4 h-4 text-beach-600 border-gray-300 rounded focus:ring-beach-500"
                 />
                 <label htmlFor="onlineOrders" className="text-sm font-medium text-gray-700">
@@ -943,7 +1009,10 @@ const BarracaRegister: React.FC = () => {
                   type="checkbox"
                   id="contactForPhotos"
                   checked={formData.contactForPhotos}
-                  onChange={(e) => handleInputChange('contactForPhotos', e.target.checked)}
+                  onChange={(e) => {
+                    handleInputChange('contactForPhotos', e.target.checked);
+                    analytics.trackBarracaRegistrationContactPreference('Contact for Photos', e.target.checked);
+                  }}
                   className="w-4 h-4 text-beach-600 border-gray-300 rounded focus:ring-beach-500"
                 />
                 <label htmlFor="contactForPhotos" className="text-sm font-medium text-gray-700">
@@ -956,7 +1025,10 @@ const BarracaRegister: React.FC = () => {
                   type="checkbox"
                   id="contactForStatus"
                   checked={formData.contactForStatus}
-                  onChange={(e) => handleInputChange('contactForStatus', e.target.checked)}
+                  onChange={(e) => {
+                    handleInputChange('contactForStatus', e.target.checked);
+                    analytics.trackBarracaRegistrationContactPreference('Contact for Status', e.target.checked);
+                  }}
                   className="w-4 h-4 text-beach-600 border-gray-300 rounded focus:ring-beach-500"
                 />
                 <label htmlFor="contactForStatus" className="text-sm font-medium text-gray-700">
@@ -1044,17 +1116,22 @@ const BarracaRegister: React.FC = () => {
                      onChange={(e) => {
                        const file = e.target.files?.[0];
                        if (file) {
-                         // Validate file size (10MB limit)
-                         if (file.size > 10 * 1024 * 1024) {
-                           toast.error(t('registration.form.fileSizeError'));
-                           return;
-                         }
-                         
-                         const reader = new FileReader();
-                         reader.onload = (e) => {
-                           handleInputChange('defaultPhoto', e.target?.result as string);
-                         };
-                         reader.readAsDataURL(file);
+                                                 // Validate file size (10MB limit)
+                        if (file.size > 10 * 1024 * 1024) {
+                          toast.error(t('registration.form.fileSizeError'));
+                          analytics.trackBarracaRegistrationPhotoUpload(false, file.size);
+                          return;
+                        }
+                        
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                          handleInputChange('defaultPhoto', e.target?.result as string);
+                          analytics.trackBarracaRegistrationPhotoUpload(true, file.size);
+                        };
+                        reader.onerror = () => {
+                          analytics.trackBarracaRegistrationPhotoUpload(false, file.size);
+                        };
+                        reader.readAsDataURL(file);
                        }
                      }}
                    />
