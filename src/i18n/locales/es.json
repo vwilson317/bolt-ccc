@@ -158,7 +158,11 @@
     "noPhotos": "No hay fotos disponibles aún",
     "noPhotosDescription": "Vuelve pronto para nuevas galerías de fotos",
     "backToPhotos": "Volver a Fotos",
-    "galleryNotFound": "Galería no encontrada"
+    "galleryNotFound": "Galería no encontrada",
+    "downloadPhoto": "Descargar Foto",
+    "downloadAllPhotos": "Descargar Todas las Fotos",
+    "instagramTag": "Etiquétanos en Instagram",
+    "instagramTagDescription": "Si compartes estas fotos en Instagram, por favor etiquétanos @Carioca_Coastal_Club"
   },
   "email": {
     "subscribe": "Unirse al Programa de Lealtad",
