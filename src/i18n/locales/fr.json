@@ -3,7 +3,8 @@
     "home": "Accueil",
     "discover": "Trouver des Barracas",
     "about": "À propos",
-    "admin": "Login"
+    "admin": "Login",
+    "photos": "Photos"
   },
   "hero": {
     "title": "Votre Barraca Préférée Vous Attend",
@@ -139,6 +140,18 @@
       "uptime": "Temps de Fonctionnement",
       "activeSubscribers": "Abonnés Actifs"
     }
+  },
+  "photos": {
+    "title": "Galerie Photos",
+    "subtitle": "Revivez les meilleurs moments de nos rassemblements sur la plage et événements spéciaux",
+    "googlePhotosArchive": "Archive Google Photos",
+    "googlePhotosDescription": "Accédez à notre collection complète de photos sur Google Photos",
+    "viewArchive": "Voir l'Archive",
+    "photos": "photos",
+    "noPhotos": "Aucune photo disponible pour le moment",
+    "noPhotosDescription": "Revenez bientôt pour de nouvelles galeries photos",
+    "backToPhotos": "Retour aux Photos",
+    "galleryNotFound": "Galerie introuvable"
   },
   "email": {
     "subscribe": "Rejoindre le Programme de Fidélité",

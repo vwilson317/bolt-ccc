@@ -4,7 +4,8 @@
     "discover": "Encontrar Barracas",
     "about": "Sobre",
     "admin": "Login",
-    "registerBarraca": "Registrar Barraca"
+    "registerBarraca": "Registrar Barraca",
+    "photos": "Fotos"
   },
   "hero": {
     "title": "Sua Barraca Favorita Te Espera",
@@ -140,6 +141,18 @@
       "uptime": "Tempo Ativo",
       "activeSubscribers": "Assinantes Ativos"
     }
+  },
+  "photos": {
+    "title": "Galeria de Fotos",
+    "subtitle": "Reviva os melhores momentos dos nossos encontros na praia e eventos especiais",
+    "googlePhotosArchive": "Arquivo do Google Fotos",
+    "googlePhotosDescription": "Acesse nossa coleção completa de fotos no Google Fotos",
+    "viewArchive": "Ver Arquivo",
+    "photos": "fotos",
+    "noPhotos": "Nenhuma foto disponível ainda",
+    "noPhotosDescription": "Volte em breve para novas galerias de fotos",
+    "backToPhotos": "Voltar às Fotos",
+    "galleryNotFound": "Galeria não encontrada"
   },
   "email": {
     "subscribe": "Entrar no Programa de Fidelidade",

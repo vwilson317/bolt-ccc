@@ -4,7 +4,8 @@
     "discover": "Find Barracas",
     "about": "About",
     "admin": "Login",
-    "registerBarraca": "Register Barraca"
+    "registerBarraca": "Register Barraca",
+    "photos": "Photos"
   },
   "hero": {
     "title": "Your Favorite Barraca Awaits",
@@ -139,6 +140,18 @@
       "uptime": "Uptime",
       "activeSubscribers": "Active Subscribers"
     }
+  },
+  "photos": {
+    "title": "Photo Gallery",
+    "subtitle": "Relive the best moments from our beach gatherings and special events",
+    "googlePhotosArchive": "Google Photos Archive",
+    "googlePhotosDescription": "Access our complete photo collection on Google Photos",
+    "viewArchive": "View Archive",
+    "photos": "photos",
+    "noPhotos": "No photos available yet",
+    "noPhotosDescription": "Check back soon for new photo galleries",
+    "backToPhotos": "Back to Photos",
+    "galleryNotFound": "Gallery not found"
   },
   "email": {
     "subscribe": "Join Loyalty Program",
