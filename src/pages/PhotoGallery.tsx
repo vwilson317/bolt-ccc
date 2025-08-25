@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { ArrowLeft, X, ChevronLeft, ChevronRight, Download, Share2, Calendar, MapPin, ExternalLink, Image } from 'lucide-react';
-import { photoService, PhotoGalleryData } from '../services/photoService';
+import { X, ChevronLeft, ChevronRight, Download, Share2, Calendar, MapPin, ExternalLink, Image } from 'lucide-react';
+import { photoService, PhotoGalleryData, Location } from '../services/photoService';
+import BackNavigation from '../components/BackNavigation';
 
 // Hook to detect mobile device
 const useIsMobile = () => {
@@ -64,6 +65,46 @@ const PhotoGallery: React.FC = () => {
       hour: '2-digit',
       minute: '2-digit'
     });
+  };
+
+  const renderLocation = (location: string | Location[] | undefined) => {
+    if (!location) return null;
+    
+    if (typeof location === 'string') {
+      return (
+        <div className="flex items-center space-x-2">
+          <MapPin className="h-5 w-5 text-beach-500" />
+          <span className="font-medium">{location}</span>
+        </div>
+      );
+    }
+    
+    if (Array.isArray(location)) {
+      return (
+        <div className="flex items-center space-x-2 relative z-10">
+          <MapPin className="h-5 w-5 text-beach-500" />
+          <div className="flex flex-wrap gap-2">
+            {location.map((loc, index) => (
+              <span key={index}>
+                {loc.barracaId ? (
+                  <Link
+                    to={`/barraca/${loc.barracaId}`}
+                    className="font-medium text-beach-600 hover:text-beach-700 underline transition-colors duration-200 relative z-10"
+                  >
+                    {loc.name}
+                  </Link>
+                ) : (
+                  <span className="font-medium">{loc.name}</span>
+                )}
+                {index < location.length - 1 && <span className="text-gray-400">•</span>}
+              </span>
+            ))}
+          </div>
+        </div>
+      );
+    }
+    
+    return null;
   };
 
   const openLightbox = (index: number) => {
@@ -137,7 +178,6 @@ const PhotoGallery: React.FC = () => {
             to="/photos"
             className="inline-flex items-center space-x-2 bg-beach-500 hover:bg-beach-600 text-white px-4 py-2 rounded-lg transition-colors duration-200"
           >
-            <ArrowLeft className="h-4 w-4" />
             <span>{t('photos.backToPhotos', 'Back to Photos')}</span>
           </Link>
         </div>
@@ -150,45 +190,39 @@ const PhotoGallery: React.FC = () => {
       <div className="max-w-6xl mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-8">
-          <Link
+          <BackNavigation
             to="/photos"
-            className="inline-flex items-center space-x-2 text-beach-600 hover:text-beach-700 mb-4 transition-colors duration-200"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            <span>{t('photos.backToPhotos', 'Back to Photos')}</span>
-          </Link>
+            label={t('photos.backToPhotos', 'Back to Photos')}
+            variant="prominent"
+            className="mb-4"
+          />
           
-          <div className="bg-white rounded-xl shadow-lg p-6">
-            <div className="flex items-start justify-between mb-4">
-              <div>
-                <h1 className="text-3xl md:text-4xl font-bold text-beach-800 mb-2">
+          <div className="bg-gradient-to-br from-white via-beach-50 to-white rounded-2xl shadow-xl p-8 border border-beach-100">
+            <div className="flex items-start justify-between mb-6">
+              <div className="flex-1">
+                <h1 className="text-3xl md:text-5xl font-bold bg-gradient-to-r from-beach-800 to-beach-600 bg-clip-text text-transparent mb-3 tracking-tight">
                   {galleryData.title}
                 </h1>
-                <div className="flex items-center space-x-4 text-gray-600">
-                  <div className="flex items-center space-x-1">
-                    <Calendar className="h-4 w-4" />
-                    <span>{formatDate(galleryData.date)}</span>
+                <div className="flex items-center space-x-6 text-gray-600">
+                  <div className="flex items-center space-x-2">
+                    <Calendar className="h-5 w-5 text-beach-500" />
+                    <span className="font-medium">{formatDate(galleryData.date)}</span>
                   </div>
-                  {galleryData.location && (
-                    <div className="flex items-center space-x-1">
-                      <MapPin className="h-4 w-4" />
-                      <span>{galleryData.location}</span>
-                    </div>
-                  )}
+                  {renderLocation(galleryData.location)}
                 </div>
               </div>
-              <div className="text-right">
-                <div className="text-2xl font-bold text-beach-600">
+              <div className="text-right ml-6">
+                <div className="text-3xl font-bold text-beach-600">
                   {galleryData.photos.length}
                 </div>
-                <div className="text-sm text-gray-600">
+                <div className="text-sm text-gray-600 font-medium">
                   {t('photos.photos', 'photos')}
                 </div>
               </div>
             </div>
             
             {galleryData.description && (
-              <p className="text-gray-700 leading-relaxed mb-4">
+              <p className="text-gray-700 leading-relaxed mb-6 text-lg font-light">
                 {galleryData.description}
               </p>
             )}
@@ -241,13 +275,13 @@ const PhotoGallery: React.FC = () => {
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 loading="lazy"
               />
-              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-end">
-                <div className="w-full p-3 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all duration-300 flex items-end">
+                <div className="w-full p-4 text-white opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
                   {photo.title && (
-                    <h3 className="font-medium text-sm mb-1">{photo.title}</h3>
+                    <h3 className="font-semibold text-base mb-2 drop-shadow-lg">{photo.title}</h3>
                   )}
                   {photo.timestamp && (
-                    <p className="text-xs opacity-90">{formatTime(photo.timestamp)}</p>
+                    <p className="text-sm opacity-90 font-light">{formatTime(photo.timestamp)}</p>
                   )}
                 </div>
               </div>
@@ -300,26 +334,26 @@ const PhotoGallery: React.FC = () => {
               </div>
 
               {/* Photo info - simplified on mobile */}
-              <div className={`absolute text-white ${isMobile ? 'bottom-0 left-0 right-0' : 'bottom-4 left-4 right-4'}`}>
-                <div className={`${isMobile ? 'bg-black/70 p-3' : 'bg-black/50 rounded-lg p-4 backdrop-blur-sm'}`}>
-                  <div className={`flex items-center justify-between ${isMobile ? 'flex-col space-y-2' : ''}`}>
+              <div className={`absolute text-white ${isMobile ? 'bottom-0 left-0 right-0' : 'bottom-6 left-6 right-6'}`}>
+                <div className={`${isMobile ? 'bg-black/80 p-4' : 'bg-black/60 rounded-xl p-6 backdrop-blur-md border border-white/10'}`}>
+                  <div className={`flex items-center justify-between ${isMobile ? 'flex-col space-y-3' : ''}`}>
                     <div className={isMobile ? 'text-center' : ''}>
                       {galleryData.photos[selectedPhotoIndex].title && (
-                        <h3 className={`font-medium mb-1 ${isMobile ? 'text-base' : 'text-lg'}`}>
+                        <h3 className={`font-bold mb-2 drop-shadow-lg ${isMobile ? 'text-lg' : 'text-xl'}`}>
                           {galleryData.photos[selectedPhotoIndex].title}
                         </h3>
                       )}
                       {galleryData.photos[selectedPhotoIndex].description && (
-                        <p className={`opacity-90 mb-1 ${isMobile ? 'text-xs' : 'text-sm'}`}>
+                        <p className={`opacity-95 mb-3 leading-relaxed ${isMobile ? 'text-sm' : 'text-base'}`}>
                           {galleryData.photos[selectedPhotoIndex].description}
                         </p>
                       )}
-                      <div className={`flex items-center space-x-4 opacity-75 ${isMobile ? 'text-xs justify-center' : 'text-xs'}`}>
+                      <div className={`flex items-center space-x-6 opacity-80 ${isMobile ? 'text-sm justify-center' : 'text-sm'}`}>
                         {galleryData.photos[selectedPhotoIndex].location && (
-                          <span>{galleryData.photos[selectedPhotoIndex].location}</span>
+                          <span className="font-medium">{galleryData.photos[selectedPhotoIndex].location}</span>
                         )}
                         {galleryData.photos[selectedPhotoIndex].timestamp && (
-                          <span>{formatTime(galleryData.photos[selectedPhotoIndex].timestamp!)}</span>
+                          <span className="font-light">{formatTime(galleryData.photos[selectedPhotoIndex].timestamp!)}</span>
                         )}
                       </div>
                     </div>

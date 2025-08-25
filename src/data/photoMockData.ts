@@ -1,32 +1,40 @@
-import { PhotoDate, PhotoGalleryData } from '../services/photoService';
+import { PhotoDate, PhotoGalleryData, Location } from '../services/photoService';
 
 export const mockPhotoDates: PhotoDate[] = [
   {
     id: '2025-08-24',
     date: '2025-08-24',
     title: 'Ad Campaign Day 2',
-    photoCount: 45,
-    thumbnail: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop',
-    description: 'Advertising campaign for Aug 23rd, 2025. Employeed people on the beach to promote new instagram account.',
-    location: 'Ipanema Beach, Rio de Janeiro'
+    photoCount: 210,
+    thumbnail: 'https://pub-db19578f977b43e184c45b5084d7c029.r2.dev/2025-08-24/IMG_4133.jpg',
+    description: 'Second day of our ad campaign. The kids joined us in games most of the day because the weather wasn\'t great. They did really good work, and we all had fun, which is what matters most.',
+    location: [
+      { name: 'Barraca Da Ana #56', barracaId: 'mock-1' },
+      { name: 'Barraca Uruguay #80', barracaId: 'mock-2' }
+    ]
   },
   {
     id: '2025-08-23',
     date: '2025-08-23',
     title: 'Ad Campaign Day 1',
-    photoCount: 45,
-    thumbnail: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop',
-    description: 'Advertising campaign for Aug 23rd, 2025. Employeed people on the beach to promote new instagram account.',
-    location: 'Ipanema Beach, Rio de Janeiro'
+    photoCount: 1000,
+    thumbnail: 'https://pub-db19578f977b43e184c45b5084d7c029.r2.dev/2025-08-23/IMG_3035.jpg',
+    description: 'Advertising campaign for Aug 23rd, 2025. In addition to pushing advertising on IG, we decided to see if the kids selling things on the beach could help us. We gave them a QR code and asked people to go to our site, then follow us. It was a huge success!',
+    location: [
+      { name: 'Rainha Do Leblon #181', barracaId: 'mock-1' },
+      { name: 'Barraca do Nem 145', barracaId: 'mock-2' }
+    ],
   },
   {
-    id: '2025-08-24',
-    date: '2025-08-24',
+    id: '2025-07-27',
+    date: '2025-07-27',
     title: 'Launch Party',
-    photoCount: 45,
-    thumbnail: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop',
-    description: 'Advertising campaign for Aug 23rd, 2025. Employeed people on the beach to promote new instagram account.',
-    location: 'Ipanema Beach, Rio de Janeiro'
+    photoCount: 454,
+    thumbnail: 'https://pub-db19578f977b43e184c45b5084d7c029.r2.dev/launch-party/IMG_2350-2.jpg',
+    description: 'The official launch party. We had a really great turnout. We\'re grateful to have met so many unique, kind people.',
+    location: [
+      { name: 'Barraca Uruguay #80', barracaId: 'mock-1' }
+    ],
   }
 ];
 
@@ -34,14 +42,17 @@ export const mockPhotoGalleries: Record<string, PhotoGalleryData> = {
   '2025-08-23': {
     id: '2025-08-23',
     date: '2025-08-23',
-    title: 'Ad Campaign Aug 23rd, 2025',
+    title: 'Ad Campaign Day 1',
     description: 'Advertising campaign for Aug 23rd, 2025. Employeed people on the beach to promote new instagram account.',
-    location: 'Barraca Ana, Ipanema Beach & Barraca Uruguay, Ipanema Beach, Rio de Janeiro',
-    archiveUrl: 'https://photos.app.goo.gl/D6Ky1BJYpxLAfvHB9',
+    location: [
+      { name: 'Barraca Da Ana #56', barracaId: 'mock-1' },
+      { name: 'Barraca Uruguay #80', barracaId: 'mock-2' }
+    ],
+    archiveUrl: 'https://photos.app.goo.gl/Wx6ZJqL39iqYkWiQ8',
     photos: [
       {
         id: '1',
-        url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop',
+        url: 'https://pub-db19578f977b43e184c45b5084d7c029.r2.dev/2025-08-23/IMG_3035.jpg',
         urlMobile: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&h=1600&fit=crop',
         title: 'Sunset at the Beach',
         description: 'Beautiful sunset during our New Year celebration',
@@ -110,10 +121,13 @@ export const mockPhotoGalleries: Record<string, PhotoGalleryData> = {
   '2025-08-24': {
     id: '2025-08-24',
     date: '2025-08-24',
-    title: 'Launch Party',
+    title: 'Ad Campaign Day 2',
     description: 'Advertising campaign for Aug 23rd, 2025. Employeed people on the beach to promote new instagram account.',
-    location: 'Barraca 181, Leblon Beach, Rio de Janeiro & Barraca Nema, Ipanema Beach, Rio de Janeiro',
-    archiveUrl: 'https://photos.google.com/share/AF1QipM_2025_08_24',
+    location: [
+      { name: 'Rainha Do Leblon #181', barracaId: 'mock-1' },
+      { name: 'Barraca do Nem 145', barracaId: 'mock-2' }
+    ],
+    archiveUrl: 'https://photos.app.goo.gl/98qmCtiVyE5Hbqoz7',
     photos: [
       {
         id: '1',
@@ -129,7 +143,9 @@ export const mockPhotoGalleries: Record<string, PhotoGalleryData> = {
     date: '2025-08-25',
     title: 'Launch Party',
     description: 'The offical launch party for the new website.',
-    location: 'Barraca 80 Uruguay, Ipanema Beach, Rio de Janeiro',
+    location: [
+      { name: 'Barraca Uruguay #80', barracaId: 'mock-1' }
+    ],
     archiveUrl: 'https://photos.app.goo.gl/D6Ky1BJYpxLAfvHB9', //real
     photos: [
       {

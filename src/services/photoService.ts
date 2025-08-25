@@ -1,5 +1,10 @@
 import { mockPhotoDates, mockPhotoGalleries } from '../data/photoMockData';
 
+export interface Location {
+  name: string;
+  barracaId?: string; // ID to link to barraca detail page
+}
+
 export interface Photo {
   id: string;
   url: string;
@@ -19,7 +24,7 @@ export interface PhotoDate {
   photoCount: number;
   thumbnail?: string;
   description?: string;
-  location?: string;
+  location?: string | Location[]; // Can be string or array of locations
 }
 
 export interface PhotoGalleryData {
@@ -27,7 +32,7 @@ export interface PhotoGalleryData {
   date: string;
   title: string;
   description?: string;
-  location?: string;
+  location?: string | Location[]; // Can be string or array of locations
   photos: Photo[];
   archiveUrl?: string; // Google Photos archive URL for this specific gallery
 }
@@ -53,10 +58,21 @@ class PhotoService {
     await new Promise(resolve => setTimeout(resolve, 500));
     
     const lowercaseQuery = query.toLowerCase();
-    return this.mockPhotoDates.filter(date => 
-      date.title.toLowerCase().includes(lowercaseQuery) ||
-      date.location?.toLowerCase().includes(lowercaseQuery)
-    );
+    return this.mockPhotoDates.filter(date => {
+      const titleMatch = date.title.toLowerCase().includes(lowercaseQuery);
+      
+      // Handle location search for both string and Location[] types
+      let locationMatch = false;
+      if (typeof date.location === 'string') {
+        locationMatch = date.location.toLowerCase().includes(lowercaseQuery);
+      } else if (Array.isArray(date.location)) {
+        locationMatch = date.location.some(loc => 
+          loc.name.toLowerCase().includes(lowercaseQuery)
+        );
+      }
+      
+      return titleMatch || locationMatch;
+    });
   }
 
   // Method to add new photo gallery (for future admin functionality)

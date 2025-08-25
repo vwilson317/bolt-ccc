@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Calendar, ExternalLink, ChevronRight } from 'lucide-react';
-import { photoService, PhotoDate } from '../services/photoService';
+import { Calendar, ExternalLink, ChevronRight, MapPin } from 'lucide-react';
+import { photoService, PhotoDate, Location } from '../services/photoService';
+import EmailSubscriptionSection from '../components/EmailSubscriptionSection';
 
 const Photos: React.FC = () => {
   const { t } = useTranslation();
@@ -44,6 +45,47 @@ const Photos: React.FC = () => {
     });
   };
 
+  const renderLocation = (location: string | Location[] | undefined) => {
+    if (!location) return null;
+    
+    if (typeof location === 'string') {
+      return (
+        <div className="flex items-center text-xs text-gray-500 mb-2 relative z-10">
+          <MapPin className="h-3 w-3 mr-1 text-beach-500" />
+          <span className="truncate">{location}</span>
+        </div>
+      );
+    }
+    
+    if (Array.isArray(location)) {
+      return (
+        <div className="flex items-center text-xs text-gray-500 mb-2 relative z-10">
+          <MapPin className="h-3 w-3 mr-1 text-beach-500 flex-shrink-0" />
+          <div className="flex flex-wrap gap-1">
+            {location.map((loc, index) => (
+              <span key={index} className="flex items-center">
+                {loc.barracaId ? (
+                  <Link
+                    to={`/barraca/${loc.barracaId}`}
+                    className="text-beach-600 hover:text-beach-700 underline transition-colors duration-200 truncate relative z-10"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    {loc.name}
+                  </Link>
+                ) : (
+                  <span className="truncate">{loc.name}</span>
+                )}
+                {index < location.length - 1 && <span className="text-gray-400 mx-1">•</span>}
+              </span>
+            ))}
+          </div>
+        </div>
+      );
+    }
+    
+    return null;
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-beach-50 to-beach-100 pt-20">
@@ -70,20 +112,8 @@ const Photos: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-beach-50 to-beach-100 pt-20">
       <div className="max-w-4xl mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold text-beach-800 mb-4">
-            {t('photos.title', 'Photo Gallery')}
-          </h1>
-          <p className="text-lg text-beach-600 max-w-2xl mx-auto">
-            {t('photos.subtitle', 'Relive the best moments from our beach gatherings and special events')}
-          </p>
-        </div>
-
-        
-
         {/* Photo Dates Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
           {photoDates.map((photoDate) => (
             <Link
               key={photoDate.id}
@@ -106,15 +136,16 @@ const Photos: React.FC = () => {
                   {photoDate.photoCount} {t('photos.photos', 'photos')}
                 </div>
               </div>
-              <div className="p-4">
-                <h3 className="font-semibold text-gray-800 mb-1 group-hover:text-beach-600 transition-colors duration-200">
+              <div className="p-6">
+                <h3 className="font-bold text-lg text-gray-800 mb-2 group-hover:text-beach-600 transition-colors duration-200">
                   {photoDate.title}
                 </h3>
-                <p className="text-sm text-gray-600 mb-3">
+                <p className="text-sm text-gray-600 mb-2 font-medium">
                   {formatDate(photoDate.date)}
                 </p>
-                <div className="flex items-center justify-between">
-                  <span className="text-xs text-gray-500">
+                {renderLocation(photoDate.location)}
+                <div className="flex items-center justify-between mt-4">
+                  <span className="text-xs text-gray-500 font-light">
                     {formatShortDate(photoDate.date)}
                   </span>
                   <ChevronRight className="h-4 w-4 text-beach-500 group-hover:translate-x-1 transition-transform duration-200" />
@@ -137,6 +168,17 @@ const Photos: React.FC = () => {
           </div>
         )}
       </div>
+
+      {/* Email Subscription Section - Full Viewport */}
+      <EmailSubscriptionSection
+        title={t('emailSubscription.title', 'Stay Connected')}
+        description={t('emailSubscription.description', 'Get notified about new events and promotions')}
+        className="w-full"
+        backgroundImages={{
+          desktop: "https://pub-db19578f977b43e184c45b5084d7c029.r2.dev/editsV1/IMG_3792.jpg",
+          mobile: "https://pub-db19578f977b43e184c45b5084d7c029.r2.dev/editsV1/IMG_3792.jpg"
+        }}
+      />
     </div>
   );
 };

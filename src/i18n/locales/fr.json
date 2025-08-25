@@ -382,6 +382,7 @@
     "add": "Ajouter",
     "remove": "Retirer",
     "close": "Fermer",
+    "back": "Retour",
     "more": "Plus",
     "less": "Moins",
     "showMore": "Afficher Plus",
@@ -513,5 +514,9 @@
     "portuguese": "Português",
     "spanish": "Español",
     "french": "Français"
+  },
+  "emailSubscription": {
+    "title": "Restez Connecté",
+    "description": "Recevez des notifications sur les nouveaux événements et promotions"
   }
 }

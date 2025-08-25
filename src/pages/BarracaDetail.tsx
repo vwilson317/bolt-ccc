@@ -7,7 +7,6 @@ import {
   Phone, 
   Mail, 
   Globe, 
-  ArrowLeft,
   Star,
   Users,
   Calendar,
@@ -17,6 +16,7 @@ import { useApp } from '../contexts/AppContext';
 import { getEffectiveOpenStatus } from '../utils/environmentUtils';
 import BarracaPageDetail from '../components/BarracaPageDetail';
 import ShareButton from '../components/ShareButton';
+import BackNavigation from '../components/BackNavigation';
 
 const BarracaDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -107,31 +107,22 @@ const BarracaDetailPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header with back button and share */}
-      <div className="bg-white border-b border-gray-200 sticky top-16 z-40">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-12">
-            <button
-              onClick={() => navigate(-1)}
-              className="flex items-center text-gray-600 hover:text-gray-900 transition-colors text-sm"
-            >
-              <ArrowLeft className="h-4 w-4 mr-1" />
-              Back
-            </button>
-            
-            {barraca && (
-              <ShareButton 
-                barraca={barraca} 
-                variant="button" 
-                size="sm"
-                className="!bg-pink-500 !text-white hover:!bg-pink-600 !px-3 !py-1.5 !text-sm"
-              />
-            )}
-          </div>
-        </div>
-      </div>
+      <BackNavigation
+        sticky
+        rightContent={
+          barraca && (
+            <ShareButton 
+              barraca={barraca} 
+              variant="button" 
+              size="sm"
+              className="!bg-pink-500 !text-white hover:!bg-pink-600 !px-3 !py-1.5 !text-sm"
+            />
+          )
+        }
+      />
 
       {/* Main Content */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-8" style={{ marginTop: '56px' }}>
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-8">
         <BarracaPageDetail 
           barraca={barraca} 
           weatherOverride={weatherOverride}

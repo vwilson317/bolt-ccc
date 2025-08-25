@@ -30,7 +30,7 @@ const Header: React.FC = () => {
   }, []);
 
   // Check if we're on pages that should always have a solid header
-  const isLoginPage = location.pathname === '/login';
+  const isLoginPage = location.pathname === '/admin';
   const isBarracaDetailPage = location.pathname.startsWith('/barraca/');
   const isAboutPage = location.pathname === '/about';
   const isHomePage = location.pathname === '/';

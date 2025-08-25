@@ -378,6 +378,7 @@
     "add": "Add",
     "remove": "Remove",
     "close": "Close",
+    "back": "Back",
     "more": "More",
     "less": "Less",
     "showMore": "Show More",
@@ -607,5 +608,9 @@
     "success": "Registration submitted successfully!",
     "error": "Error submitting registration. Please try again.",
     "loading": "Submitting registration..."
+  },
+  "emailSubscription": {
+    "title": "Stay Connected",
+    "description": "Get notified about new events and promotions"
   }
 }

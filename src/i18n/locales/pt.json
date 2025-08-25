@@ -383,6 +383,7 @@
     "add": "Adicionar",
     "remove": "Remover",
     "close": "Fechar",
+    "back": "Voltar",
     "more": "Mais",
     "less": "Menos",
     "showMore": "Mostrar Mais",
@@ -612,5 +613,9 @@
     "success": "Registro enviado com sucesso!",
     "error": "Erro ao enviar registro. Tente novamente.",
     "loading": "Enviando registro..."
+  },
+  "emailSubscription": {
+    "title": "Mantenha-se Conectado",
+    "description": "Receba notificações sobre novos eventos e promoções"
   }
 }

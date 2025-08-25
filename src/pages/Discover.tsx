@@ -113,25 +113,6 @@ const Discover: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 relative">
-      {/* Header Section */}
-      <section className="relative pt-24 pb-32 min-h-[450px] z-0">
-        
-        <div className="absolute inset-0 w-full h-full bg-[url('https://pub-db19578f977b43e184c45b5084d7c029.r2.dev/editsV1/sunrise-2.jpg?auto=format&fit=crop&w=1200&q=80')] bg-cover bg-center" />
-        <div className="absolute inset-0 w-full h-full bg-black/40" />
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8">
-            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 drop-shadow-lg">
-              {t('discover.title')}
-            </h1>
-            <p className="text-xl text-white max-w-2xl mx-auto drop-shadow">
-              {t('discover.subtitle')}
-            </p>
-          </div>
-          
-
-        </div>
-            </section>
-
       {/* Sticky Search and Weather Group - overlaps hero with negative margin */}
       <div className="sticky top-16 z-50">
         {/* Weather Marquee */}
