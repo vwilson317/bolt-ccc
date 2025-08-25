@@ -1,4 +1,5 @@
 import { mockPhotoDates, mockPhotoGalleries } from '../data/photoMockData';
+import { cloudflareService, CloudflareImage, CloudflareFolder } from './cloudflareService';
 
 export interface Location {
   name: string;
@@ -40,21 +41,32 @@ export interface PhotoGalleryData {
 class PhotoService {
   private mockPhotoDates: PhotoDate[] = mockPhotoDates;
   private mockPhotoGalleries: Record<string, PhotoGalleryData> = mockPhotoGalleries;
+  private useCloudflare: boolean = false;
+
+  constructor() {
+    // Check if Cloudflare is configured
+    this.useCloudflare = cloudflareService.isConfigured();
+  }
 
   async getPhotoDates(): Promise<PhotoDate[]> {
-    // Simulate API delay
+    // Always use mock data for the Photos page (list of photo dates)
     await new Promise(resolve => setTimeout(resolve, 1000));
     return this.mockPhotoDates;
   }
 
   async getPhotoGallery(dateId: string): Promise<PhotoGalleryData | null> {
-    // Simulate API delay
+    // Use Cloudflare for individual photo galleries if configured
+    if (this.useCloudflare) {
+      return this.getPhotoGalleryFromCloudflare(dateId);
+    }
+    
+    // Fallback to mock data
     await new Promise(resolve => setTimeout(resolve, 1000));
     return this.mockPhotoGalleries[dateId] || null;
   }
 
   async searchPhotoDates(query: string): Promise<PhotoDate[]> {
-    // Simulate API delay
+    // Always use mock data for search (since Photos page uses mock data)
     await new Promise(resolve => setTimeout(resolve, 500));
     
     const lowercaseQuery = query.toLowerCase();
@@ -73,6 +85,155 @@ class PhotoService {
       
       return titleMatch || locationMatch;
     });
+  }
+
+  // Cloudflare implementation methods
+  private async getPhotoDatesFromCloudflare(): Promise<PhotoDate[]> {
+    try {
+      const folders = await cloudflareService.listFolders();
+      
+      return folders.map(folder => {
+        // Extract date from folder name (assuming format like "2025-01-15" or "2025/01/15")
+        const dateMatch = folder.name.match(/(\d{4})[-/](\d{1,2})[-/](\d{1,2})/);
+        const date = dateMatch ? `${dateMatch[1]}-${dateMatch[2].padStart(2, '0')}-${dateMatch[3].padStart(2, '0')}` : folder.name;
+        
+        return {
+          id: folder.name,
+          date,
+          title: this.formatFolderTitle(folder.name),
+          photoCount: folder.imageCount,
+          thumbnail: folder.thumbnail,
+          description: `Photos from ${this.formatFolderTitle(folder.name)}`,
+          location: 'Various locations', // You can enhance this by parsing folder structure
+        };
+      }).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    } catch (error) {
+      console.error('Error fetching photo dates from Cloudflare:', error);
+      // Fallback to mock data
+      return this.mockPhotoDates;
+    }
+  }
+
+  private async getPhotoGalleryFromCloudflare(dateId: string): Promise<PhotoGalleryData | null> {
+    try {
+      const images = await cloudflareService.listImagesInFolder(dateId);
+      
+      if (images.length === 0) {
+        return null;
+      }
+
+      const photos: Photo[] = await Promise.all(
+        images.map(async (image, index) => {
+          // Try to get image dimensions
+          let width = 800;
+          let height = 600;
+          
+          try {
+            const dimensions = await cloudflareService.getImageDimensions(image.url);
+            width = dimensions.width;
+            height = dimensions.height;
+          } catch (error) {
+            console.warn('Could not get dimensions for image:', image.key);
+          }
+
+          // Generate mobile-optimized URL
+          const urlMobile = cloudflareService.getMobileOptimizedUrl(image.url);
+
+          return {
+            id: image.key,
+            url: image.url,
+            urlMobile,
+            title: this.generatePhotoTitle(image.key, index),
+            description: `Photo taken on ${new Date(image.lastModified).toLocaleDateString()}`,
+            location: this.extractLocationFromKey(image.key),
+            timestamp: image.lastModified.toISOString(),
+            width,
+            height,
+          };
+        })
+      );
+
+      // Extract date from folder name
+      const dateMatch = dateId.match(/(\d{4})[-/](\d{1,2})[-/](\d{1,2})/);
+      const date = dateMatch ? `${dateMatch[1]}-${dateMatch[2].padStart(2, '0')}-${dateMatch[3].padStart(2, '0')}` : dateId;
+
+      return {
+        id: dateId,
+        date,
+        title: this.formatFolderTitle(dateId),
+        description: `Gallery containing ${photos.length} photos from ${this.formatFolderTitle(dateId)}`,
+        location: 'Various locations', // You can enhance this by parsing folder structure
+        photos,
+        archiveUrl: this.getGooglePhotosArchiveUrl(),
+      };
+    } catch (error) {
+      console.error('Error fetching photo gallery from Cloudflare:', error);
+      // Fallback to mock data
+      return this.mockPhotoGalleries[dateId] || null;
+    }
+  }
+
+  private async searchPhotoDatesFromCloudflare(query: string): Promise<PhotoDate[]> {
+    try {
+      const allDates = await this.getPhotoDatesFromCloudflare();
+      const lowercaseQuery = query.toLowerCase();
+      
+      return allDates.filter(date => {
+        const titleMatch = date.title.toLowerCase().includes(lowercaseQuery);
+        const locationMatch = typeof date.location === 'string' && 
+          date.location.toLowerCase().includes(lowercaseQuery);
+        
+        return titleMatch || locationMatch;
+      });
+    } catch (error) {
+      console.error('Error searching photo dates from Cloudflare:', error);
+      return [];
+    }
+  }
+
+  // Helper methods
+  private formatFolderTitle(folderName: string): string {
+    // Convert folder name to a readable title
+    // Example: "2025-01-15" -> "January 15, 2025"
+    const dateMatch = folderName.match(/(\d{4})[-/](\d{1,2})[-/](\d{1,2})/);
+    if (dateMatch) {
+      const [, year, month, day] = dateMatch;
+      const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+      return date.toLocaleDateString('en-US', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+    }
+    
+    // If not a date format, just capitalize and replace dashes/underscores
+    return folderName
+      .replace(/[-_]/g, ' ')
+      .replace(/\b\w/g, l => l.toUpperCase());
+  }
+
+  private generatePhotoTitle(key: string, index: number): string {
+    // Extract filename without extension
+    const filename = key.split('/').pop()?.split('.')[0] || `Photo ${index + 1}`;
+    
+    // Convert filename to title case
+    return filename
+      .replace(/[-_]/g, ' ')
+      .replace(/\b\w/g, l => l.toUpperCase());
+  }
+
+  private extractLocationFromKey(key: string): string {
+    // Extract location from folder structure
+    // Example: "2025-01-15/copacabana/IMG_001.jpg" -> "Copacabana"
+    const parts = key.split('/');
+    if (parts.length > 1) {
+      const locationPart = parts[1];
+      return locationPart
+        .replace(/[-_]/g, ' ')
+        .replace(/\b\w/g, l => l.toUpperCase());
+    }
+    return 'Unknown location';
   }
 
   // Method to add new photo gallery (for future admin functionality)
@@ -105,6 +266,11 @@ class PhotoService {
   getGooglePhotosArchiveUrl(): string {
     // Replace with your actual Google Photos album URL
     return 'https://photos.google.com/share/AF1QipM...'; // Example URL
+  }
+
+  // Method to check if Cloudflare is available
+  isCloudflareAvailable(): boolean {
+    return this.useCloudflare;
   }
 }
 

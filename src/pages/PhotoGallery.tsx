@@ -37,10 +37,17 @@ const PhotoGallery: React.FC = () => {
       if (!dateId) return;
       
       try {
+        console.log('🖼️ Loading gallery data for dateId:', dateId);
         const data = await photoService.getPhotoGallery(dateId);
+        console.log('🖼️ Gallery data loaded:', data);
+        if (data) {
+          console.log('🖼️ Number of photos:', data.photos.length);
+          console.log('🖼️ First photo URL:', data.photos[0]?.url);
+          console.log('🖼️ All photo URLs:', data.photos.map(p => p.url));
+        }
         setGalleryData(data);
       } catch (error) {
-        console.error('Error loading gallery data:', error);
+        console.error('❌ Error loading gallery data:', error);
       } finally {
         setIsLoading(false);
       }
@@ -296,6 +303,15 @@ const PhotoGallery: React.FC = () => {
                 alt={photo.title || `Photo ${index + 1}`}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 loading="lazy"
+                onError={(e) => {
+                  console.error('❌ Image failed to load:', photo.url);
+                  console.error('❌ Image element:', e.target);
+                  // You could set a fallback image here
+                  // e.target.src = '/fallback-image.jpg';
+                }}
+                onLoad={() => {
+                  console.log('✅ Image loaded successfully:', photo.url);
+                }}
               />
               <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all duration-300 flex items-end">
                 <div className="w-full p-4 text-white opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
