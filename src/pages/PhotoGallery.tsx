@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { X, ChevronLeft, ChevronRight, Download, Share2, Calendar, MapPin, ExternalLink, Image } from 'lucide-react';
 import { photoService, PhotoGalleryData, Location } from '../services/photoService';
 import BackNavigation from '../components/BackNavigation';
+import { useAnalytics } from '../hooks/useAnalytics';
 
 // Hook to detect mobile device
 const useIsMobile = () => {
@@ -26,6 +27,7 @@ const PhotoGallery: React.FC = () => {
   const { dateId } = useParams<{ dateId: string }>();
   const { t } = useTranslation();
   const isMobile = useIsMobile();
+  const analytics = useAnalytics();
   const [galleryData, setGalleryData] = useState<PhotoGalleryData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedPhotoIndex, setSelectedPhotoIndex] = useState<number | null>(null);
@@ -44,6 +46,9 @@ const PhotoGallery: React.FC = () => {
           console.log('🖼️ Number of photos:', data.photos.length);
           console.log('🖼️ First photo URL:', data.photos[0]?.url);
           console.log('🖼️ All photo URLs:', data.photos.map(p => p.url));
+          
+          // Track photo gallery view
+          analytics.trackPhotoGalleryView(dateId, data.title, data.photos.length);
         }
         setGalleryData(data);
       } catch (error) {
@@ -115,24 +120,38 @@ const PhotoGallery: React.FC = () => {
   };
 
   const openLightbox = (index: number) => {
+    if (galleryData && dateId) {
+      const photo = galleryData.photos[index];
+      analytics.trackPhotoLightboxOpen(photo.id, photo.title || '', dateId);
+    }
     setSelectedPhotoIndex(index);
     setIsLightboxOpen(true);
   };
 
   const closeLightbox = () => {
+    if (galleryData && selectedPhotoIndex !== null && dateId) {
+      const photo = galleryData.photos[selectedPhotoIndex];
+      analytics.trackPhotoLightboxClose(photo.id, photo.title || '', dateId);
+    }
     setIsLightboxOpen(false);
     setSelectedPhotoIndex(null);
   };
 
   const nextPhoto = () => {
-    if (galleryData && selectedPhotoIndex !== null) {
-      setSelectedPhotoIndex((selectedPhotoIndex + 1) % galleryData.photos.length);
+    if (galleryData && selectedPhotoIndex !== null && dateId) {
+      const newIndex = (selectedPhotoIndex + 1) % galleryData.photos.length;
+      const photo = galleryData.photos[newIndex];
+      analytics.trackPhotoNavigation('next', photo.id, dateId);
+      setSelectedPhotoIndex(newIndex);
     }
   };
 
   const previousPhoto = () => {
-    if (galleryData && selectedPhotoIndex !== null) {
-      setSelectedPhotoIndex(selectedPhotoIndex === 0 ? galleryData.photos.length - 1 : selectedPhotoIndex - 1);
+    if (galleryData && selectedPhotoIndex !== null && dateId) {
+      const newIndex = selectedPhotoIndex === 0 ? galleryData.photos.length - 1 : selectedPhotoIndex - 1;
+      const photo = galleryData.photos[newIndex];
+      analytics.trackPhotoNavigation('previous', photo.id, dateId);
+      setSelectedPhotoIndex(newIndex);
     }
   };
 
@@ -270,6 +289,13 @@ const PhotoGallery: React.FC = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center space-x-2 bg-beach-500 hover:bg-beach-600 text-white px-4 py-2 rounded-lg transition-colors duration-200 text-sm md:text-base w-full md:w-auto justify-center"
+                  onClick={() => {
+                    // Track archive click
+                    if (dateId) {
+                      const archiveUrl = galleryData.archiveUrl || photoService.getGooglePhotosArchiveUrl();
+                      analytics.trackPhotoArchiveClick(archiveUrl, dateId);
+                    }
+                  }}
                 >
                   <span>{t('photos.viewArchive', 'View Archive')}</span>
                   <ExternalLink className="h-4 w-4" />
@@ -296,7 +322,13 @@ const PhotoGallery: React.FC = () => {
               className={`group relative bg-gray-200 rounded-lg overflow-hidden cursor-pointer hover:shadow-lg transition-all duration-300 ${
                 isMobile ? 'aspect-[3/4]' : 'aspect-square'
               }`}
-              onClick={() => openLightbox(index)}
+              onClick={() => {
+                // Track photo view in grid mode
+                if (dateId) {
+                  analytics.trackPhotoView(photo.id, photo.title || '', dateId, 'grid');
+                }
+                openLightbox(index);
+              }}
             >
               <img
                 src={isMobile && photo.urlMobile ? photo.urlMobile : photo.url}
@@ -306,11 +338,19 @@ const PhotoGallery: React.FC = () => {
                 onError={(e) => {
                   console.error('❌ Image failed to load:', photo.url);
                   console.error('❌ Image element:', e.target);
+                  // Track photo load error
+                  if (dateId) {
+                    analytics.trackPhotoLoadError(photo.url, dateId);
+                  }
                   // You could set a fallback image here
                   // e.target.src = '/fallback-image.jpg';
                 }}
                 onLoad={() => {
                   console.log('✅ Image loaded successfully:', photo.url);
+                  // Track photo load success
+                  if (dateId) {
+                    analytics.trackPhotoLoadSuccess(photo.url, dateId);
+                  }
                 }}
               />
               <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all duration-300 flex items-end">
@@ -396,7 +436,14 @@ const PhotoGallery: React.FC = () => {
                     {!isMobile && (
                       <div className="flex items-center space-x-2 ml-4">
                         <button
-                          onClick={() => window.open(galleryData.photos[selectedPhotoIndex].url, '_blank')}
+                          onClick={() => {
+                            const photo = galleryData.photos[selectedPhotoIndex];
+                            window.open(photo.url, '_blank');
+                            // Track photo download
+                            if (dateId) {
+                              analytics.trackPhotoDownload(photo.id, photo.title || '', dateId);
+                            }
+                          }}
                           className="p-2 bg-white/20 rounded-lg hover:bg-white/30 transition-colors duration-200"
                           title="Download"
                         >
@@ -404,13 +451,22 @@ const PhotoGallery: React.FC = () => {
                         </button>
                         <button
                           onClick={() => {
+                            const photo = galleryData.photos[selectedPhotoIndex];
                             if (navigator.share) {
                               navigator.share({
-                                title: galleryData.photos[selectedPhotoIndex].title || 'Photo',
-                                url: galleryData.photos[selectedPhotoIndex].url
+                                title: photo.title || 'Photo',
+                                url: photo.url
                               });
+                              // Track photo share via native sharing
+                              if (dateId) {
+                                analytics.trackPhotoShare(photo.id, photo.title || '', dateId, 'native');
+                              }
                             } else {
-                              navigator.clipboard.writeText(galleryData.photos[selectedPhotoIndex].url);
+                              navigator.clipboard.writeText(photo.url);
+                              // Track photo share via clipboard
+                              if (dateId) {
+                                analytics.trackPhotoShare(photo.id, photo.title || '', dateId, 'clipboard');
+                              }
                             }
                           }}
                           className="p-2 bg-white/20 rounded-lg hover:bg-white/30 transition-colors duration-200"
