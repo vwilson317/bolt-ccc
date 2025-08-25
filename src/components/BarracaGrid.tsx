@@ -182,23 +182,6 @@ const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
             <div className="md:block flex-grow">
               {barraca.partnered ? (
                 <>
-                  {/* Always Visible: Top Menu Items */}
-                  {barraca.menuPreview.length > 0 && (
-                    <div className="mb-3">
-                      <div className="flex flex-wrap gap-1">
-                        {barraca.menuPreview.slice(0, 2).map((item, index) => (
-                          <span
-                            key={index}
-                            className="bg-beach-50 text-beach-700 px-2 py-1 rounded-md text-xs font-medium"
-                          >
-                            {item}
-                          </span>
-                        ))}
-
-                      </div>
-                    </div>
-                  )}
-
                   {/* Description - Always truncated for cleaner look */}
                   <div className="mb-3">
                     <p className="text-gray-600 text-sm leading-relaxed">

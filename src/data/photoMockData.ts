@@ -6,7 +6,7 @@ export const mockPhotoDates: PhotoDate[] = [
     date: '2025-08-24',
     title: 'Ad Campaign Day 2',
     photoCount: 210,
-    thumbnail: 'https://pub-db19578f977b43e184c45b5084d7c029.r2.dev/2025-08-24/IMG_4133.jpg',
+    thumbnail: 'https://pub-db19578f977b43e184c45b5084d7c029.r2.dev/gallery/2025-08-24/IMG_4133.jpg',
     description: 'Second day of our ad campaign. The kids joined us in games most of the day because the weather wasn\'t great. They did really good work, and we all had fun, which is what matters most.',
     location: [
       { name: 'Barraca Da Ana #56', barracaId: '7e150f39-daa0-4190-98b6-5e551b264240' },
@@ -18,7 +18,7 @@ export const mockPhotoDates: PhotoDate[] = [
     date: '2025-08-23',
     title: 'Ad Campaign Day 1',
     photoCount: 1000,
-    thumbnail: 'https://pub-db19578f977b43e184c45b5084d7c029.r2.dev/2025-08-23/IMG_3035.jpg',
+    thumbnail: 'https://pub-db19578f977b43e184c45b5084d7c029.r2.dev/gallery/2025-08-23/IMG_3035.jpg',
     description: 'Advertising campaign for Aug 23rd, 2025. In addition to pushing advertising on IG, we decided to see if the kids selling things on the beach could help us. We gave them a QR code and asked people to go to our site, then follow us. It was a huge success!',
     location: [
       { name: 'Rainha Do Leblon #181', barracaId: '4b415c52-0475-490d-90a7-b38dcefa7bc7' },
