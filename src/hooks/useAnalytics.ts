@@ -54,6 +54,40 @@ import {
   trackRealtimeSubscription,
   trackFeatureUsage,
   trackBusinessMetric,
+  // New photo gallery tracking functions
+  trackPhotoGalleryView,
+  trackPhotoView,
+  trackPhotoLightboxOpen,
+  trackPhotoLightboxClose,
+  trackPhotoNavigation,
+  trackPhotoDownload,
+  trackPhotoShare,
+  trackPhotoArchiveClick,
+  trackPhotoLoadError,
+  trackPhotoLoadSuccess,
+  // New barraca registration tracking functions
+  trackBarracaRegistrationView,
+  trackBarracaRegistrationStart,
+  trackBarracaRegistrationFieldInteraction,
+  trackBarracaRegistrationValidationError,
+  trackBarracaRegistrationPartnershipSelection,
+  trackBarracaRegistrationContactPreference,
+  trackBarracaRegistrationPhotoUpload,
+  trackBarracaRegistrationSubmit,
+  trackBarracaRegistrationAbandonment,
+  // New registration marquee tracking functions
+  trackRegistrationMarqueeView,
+  trackRegistrationMarqueeInstagramClick,
+  trackRegistrationMarqueeBarracaClick,
+  // New Cloudflare tracking functions
+  trackCloudflareImageLoad,
+  trackCloudflareImageError,
+  trackCloudflareServiceStatus,
+  // New language and feature tracking functions
+  trackLanguageSpecificInteraction,
+  trackTranslationUsage,
+  trackFeatureAdoption,
+  trackNewFeatureDiscovery,
   getAnalyticsStatus
 } from '../services/analyticsService';
 
@@ -281,6 +315,45 @@ export const useAnalytics = () => {
     // Feature and business tracking
     trackFeatureUsage: createSafeTrackingFunction(trackFeatureUsage),
     trackBusinessMetric: createSafeTrackingFunction(trackBusinessMetric),
+    
+    // Photo gallery tracking
+    trackPhotoGalleryView: createSafeTrackingFunction(trackPhotoGalleryView),
+    trackPhotoView: createSafeTrackingFunction(trackPhotoView),
+    trackPhotoLightboxOpen: createSafeTrackingFunction(trackPhotoLightboxOpen),
+    trackPhotoLightboxClose: createSafeTrackingFunction(trackPhotoLightboxClose),
+    trackPhotoNavigation: createSafeTrackingFunction(trackPhotoNavigation),
+    trackPhotoDownload: createSafeTrackingFunction(trackPhotoDownload),
+    trackPhotoShare: createSafeTrackingFunction(trackPhotoShare),
+    trackPhotoArchiveClick: createSafeTrackingFunction(trackPhotoArchiveClick),
+    trackPhotoLoadError: createSafeTrackingFunction(trackPhotoLoadError),
+    trackPhotoLoadSuccess: createSafeTrackingFunction(trackPhotoLoadSuccess),
+    
+    // Barraca registration tracking
+    trackBarracaRegistrationView: createSafeTrackingFunction(trackBarracaRegistrationView),
+    trackBarracaRegistrationStart: createSafeTrackingFunction(trackBarracaRegistrationStart),
+    trackBarracaRegistrationFieldInteraction: createSafeTrackingFunction(trackBarracaRegistrationFieldInteraction),
+    trackBarracaRegistrationValidationError: createSafeTrackingFunction(trackBarracaRegistrationValidationError),
+    trackBarracaRegistrationPartnershipSelection: createSafeTrackingFunction(trackBarracaRegistrationPartnershipSelection),
+    trackBarracaRegistrationContactPreference: createSafeTrackingFunction(trackBarracaRegistrationContactPreference),
+    trackBarracaRegistrationPhotoUpload: createSafeTrackingFunction(trackBarracaRegistrationPhotoUpload),
+    trackBarracaRegistrationSubmit: createSafeTrackingFunction(trackBarracaRegistrationSubmit),
+    trackBarracaRegistrationAbandonment: createSafeTrackingFunction(trackBarracaRegistrationAbandonment),
+    
+    // Registration marquee tracking
+    trackRegistrationMarqueeView: createSafeTrackingFunction(trackRegistrationMarqueeView),
+    trackRegistrationMarqueeInstagramClick: createSafeTrackingFunction(trackRegistrationMarqueeInstagramClick),
+    trackRegistrationMarqueeBarracaClick: createSafeTrackingFunction(trackRegistrationMarqueeBarracaClick),
+    
+    // Cloudflare tracking
+    trackCloudflareImageLoad: createSafeTrackingFunction(trackCloudflareImageLoad),
+    trackCloudflareImageError: createSafeTrackingFunction(trackCloudflareImageError),
+    trackCloudflareServiceStatus: createSafeTrackingFunction(trackCloudflareServiceStatus),
+    
+    // Language and feature tracking
+    trackLanguageSpecificInteraction: createSafeTrackingFunction(trackLanguageSpecificInteraction),
+    trackTranslationUsage: createSafeTrackingFunction(trackTranslationUsage),
+    trackFeatureAdoption: createSafeTrackingFunction(trackFeatureAdoption),
+    trackNewFeatureDiscovery: createSafeTrackingFunction(trackNewFeatureDiscovery),
     
     // Status
     getStatus: useCallback(() => {
