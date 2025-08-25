@@ -7,6 +7,7 @@ import BarracaGrid from '../components/BarracaGrid';
 import StoryCarousel from '../components/StoryCarousel';
 import LocationFilterCheckboxes from '../components/LocationFilterCheckboxes';
 import StarRating from '../components/StarRating';
+import SEOHead from '../components/SEOHead';
 
 import { useInfiniteScrollV2 } from '../hooks/useInfiniteScrollV2';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
@@ -98,21 +99,40 @@ const Discover: React.FC = () => {
     // Update both location (for backward compatibility) and locations array
     if (locations.length === 1) {
       updateSearchFilters({ location: locations[0], locations: locations });
-    } else if (locations.length > 1) {
-      updateSearchFilters({ location: '', locations: locations });
     } else {
-      updateSearchFilters({ location: '', locations: [] });
+      updateSearchFilters({ location: undefined, locations: locations });
     }
   }, [updateSearchFilters]);
 
   const clearFilters = () => {
-    updateSearchFilters({ query: '', openNow: false, location: '', locations: [], status: 'all', rating: undefined });
+    updateSearchFilters({
+      query: '',
+      status: 'all',
+      rating: undefined,
+      location: undefined,
+      locations: []
+    });
   };
 
-  const hasActiveFilters = searchFilters.query || searchFilters.location || searchFilters.locations.length > 0 || searchFilters.status !== 'all' || searchFilters.rating !== undefined;
+  const hasActiveFilters = searchFilters.query || 
+    searchFilters.status !== 'all' || 
+    searchFilters.rating !== undefined || 
+    searchFilters.locations.length > 0;
 
   return (
-    <div className="min-h-screen bg-gray-50 relative">
+    <div className="min-h-screen bg-gradient-to-br from-beach-50 to-beach-100">
+      {/* SEO Head for Discover page */}
+      <SEOHead
+        title="Find Barracas - Discover Rio's Best Beach Vendors"
+        description={`Browse ${totalBarracas}+ beach barracas in Rio de Janeiro. Filter by location, rating, and availability. Find your perfect beach spot with real-time status updates.`}
+        image="/logo_320x320.png"
+        type="website"
+        url={window.location.href}
+      />
+
+      {/* Story Carousel - Only show if feature is enabled */}
+      {featureFlags.enableStoryBanner && <StoryCarousel />}
+
       {/* Sticky Search and Weather Group - overlaps hero with negative margin */}
       <div className="sticky top-16 z-50">
         {/* Weather Marquee */}

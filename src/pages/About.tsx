@@ -2,6 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Heart, Users, MapPin, Smartphone, MessageCircle, Instagram, Calendar, Gift } from 'lucide-react';
 import EmailSubscriptionSection from '../components/EmailSubscriptionSection';
+import SEOHead from '../components/SEOHead';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 
 const About: React.FC = () => {
@@ -98,8 +99,6 @@ const About: React.FC = () => {
     //   name: 'Chris Finn',
     //   role: 'Quality Control Specialist',
     //   bio: 'Detail-oriented professional focused on maintaining high standards and ensuring exceptional service quality.',
-    //   image: 'https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg'
-    // },
     {
       name: t('about.team.ricardo.name'),
       role: t('about.team.ricardo.role'),
@@ -111,6 +110,15 @@ const About: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* SEO Head for About page */}
+      <SEOHead
+        title="About Us - Carioca Coastal Club"
+        description="Meet the team behind Carioca Coastal Club. We're passionate about connecting beach lovers with Rio's best barracas and creating an amazing beach experience for everyone."
+        image="/logo_320x320.png"
+        type="website"
+        url={window.location.href}
+      />
+
       {/* Hero Section */}
       <section ref={heroAnimation.ref} className={`relative pt-20 pb-12 ${heroAnimation.animationClasses}`}>
         <div className="absolute inset-0 w-full h-full bg-[url('https://pub-db19578f977b43e184c45b5084d7c029.r2.dev/editsV1/about%20edits/about-banner-sm.jpg?auto=format&fit=crop&w=1200&q=80')] bg-cover bg-center" />

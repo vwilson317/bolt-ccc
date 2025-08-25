@@ -10,6 +10,7 @@ import AnalyticsDashboard from '../components/AnalyticsDashboard';
 import SpecialAdminPanel from '../components/SpecialAdminPanel';
 import ManualStatusPanel from '../components/ManualStatusPanel';
 import AdminRegistrations from '../components/AdminRegistrations';
+import SEOHead from '../components/SEOHead';
 
 const Admin: React.FC = () => {
   const { t } = useTranslation();
@@ -189,6 +190,15 @@ const Admin: React.FC = () => {
   if (!isAdmin) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-beach-50 to-beach-100 flex items-center justify-center p-4">
+        {/* SEO Head for Admin Login page */}
+        <SEOHead
+          title="Admin Login - Carioca Coastal Club"
+          description="Administrative access to Carioca Coastal Club. Manage barracas, registrations, and system settings."
+          image="/logo_320x320.png"
+          type="website"
+          url={window.location.href}
+        />
+
         <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md">
           <div className="text-center mb-8">
             <div className="bg-gradient-to-r from-beach-500 to-beach-600 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4">

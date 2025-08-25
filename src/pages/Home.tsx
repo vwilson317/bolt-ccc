@@ -9,6 +9,7 @@ import BarracaGrid from '../components/BarracaGrid';
 import EmailSubscriptionSection from '../components/EmailSubscriptionSection';
 import StoryCarousel from '../components/StoryCarousel';
 import UniqueVisitorCounter from '../components/UniqueVisitorCounter';
+import SEOHead from '../components/SEOHead';
 import { useApp } from '../contexts/AppContext';
 import { useStory } from '../contexts/StoryContext';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
@@ -74,6 +75,15 @@ const Home: React.FC = () => {
 
     return (
     <div className="relative">
+      {/* SEO Head for Home page */}
+      <SEOHead
+        title="Carioca Coastal Club - Discover Rio's Best Beach Vendors"
+        description="Find your favorite beach barraca in Rio de Janeiro. Check real-time status, weather conditions, and get exclusive member benefits. Join thousands of beach lovers discovering the best spots."
+        image="/logo_320x320.png"
+        type="website"
+        url={window.location.href}
+      />
+
       {/* Story Carousel - Only show if feature is enabled */}
       {featureFlags.enableStoryBanner && <StoryCarousel />}
       

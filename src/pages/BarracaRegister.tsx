@@ -4,6 +4,7 @@ import toast from 'react-hot-toast';
 import { Save, MapPin, Clock, Phone, Mail, Instagram, Camera, X, Handshake } from 'lucide-react';
 import { BarracaRegistration } from '../types';
 import RegistrationMarquee from '../components/RegistrationMarquee';
+import SEOHead from '../components/SEOHead';
 import { useAnalytics } from '../hooks/useAnalytics';
 
 const BarracaRegister: React.FC = () => {
@@ -58,7 +59,7 @@ const BarracaRegister: React.FC = () => {
 
   // Track form view on component mount
   useEffect(() => {
-    analytics.trackBarracaRegistrationView();
+    analytics.trackPageView('/register', 'Barraca Registration Page');
     
     // Track form abandonment on page unload
     const handleBeforeUnload = () => {
@@ -401,7 +402,16 @@ const BarracaRegister: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-beach-50 to-beach-100">
-      {/* Registration Marquee at the top */}
+      {/* SEO Head for Barraca Registration page */}
+      <SEOHead
+        title="Register Your Barraca - Join Carioca Coastal Club"
+        description="Register your beach barraca with Carioca Coastal Club. Get discovered by thousands of beach lovers, access exclusive benefits, and grow your business. Join our community today!"
+        image="/logo_320x320.png"
+        type="website"
+        url={window.location.href}
+      />
+
+      {/* Registration Marquee */}
       <RegistrationMarquee />
       
       <div className="flex items-center justify-center p-4 pt-24">

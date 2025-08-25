@@ -17,6 +17,7 @@ import { getEffectiveOpenStatus } from '../utils/environmentUtils';
 import BarracaPageDetail from '../components/BarracaPageDetail';
 import ShareButton from '../components/ShareButton';
 import BackNavigation from '../components/BackNavigation';
+import SEOHead from '../components/SEOHead';
 
 const BarracaDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -100,12 +101,21 @@ const BarracaDetailPage: React.FC = () => {
     );
   }
 
-
-
   const effectiveIsOpen = barraca ? getEffectiveOpenStatus(barraca, weatherOverride) : null;
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* SEO Head for Barraca Detail page */}
+      {barraca && (
+        <SEOHead
+          title={`${barraca.name} - ${barraca.location} | Carioca Coastal Club`}
+          description={`${barraca.description || `Visit ${barraca.name} in ${barraca.location}. Check real-time status, hours, menu, and contact information.`} ${effectiveIsOpen ? 'Currently open!' : 'Check if open.'}`}
+          image={barraca.photos?.horizontal?.[0] || barraca.photos?.vertical?.[0] || '/logo_320x320.png'}
+          type="article"
+          url={window.location.href}
+        />
+      )}
+
       {/* Header with back button and share */}
       <BackNavigation
         sticky
