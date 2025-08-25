@@ -329,16 +329,22 @@ const PhotoGallery: React.FC = () => {
 
         {/* Lightbox */}
         {isLightboxOpen && selectedPhotoIndex !== null && galleryData && (
-          <div className="fixed inset-0 bg-black z-50 flex items-center justify-center">
-            <div className={`relative w-full h-full flex items-center justify-center ${isMobile ? 'p-0' : 'p-4'}`}>
+          <div 
+            className="fixed inset-0 bg-black z-50 flex items-center justify-center"
+            onClick={closeLightbox}
+          >
+            <div 
+              className={`relative w-full h-full flex items-center justify-center ${isMobile ? 'p-0' : 'p-4'}`}
+              onClick={(e) => e.stopPropagation()}
+            >
               {/* Close button */}
               <button
                 onClick={closeLightbox}
-                className={`absolute z-10 text-white hover:text-gray-300 transition-colors duration-200 ${
+                className={`absolute z-10 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 transition-all duration-200 ${
                   isMobile ? 'top-4 right-4' : 'top-4 right-4'
                 }`}
               >
-                <X className={isMobile ? "h-6 w-6" : "h-8 w-8"} />
+                <X className={isMobile ? "h-5 w-5" : "h-6 w-6"} />
               </button>
 
               {/* Navigation buttons - hidden on mobile for full screen experience */}
@@ -371,32 +377,24 @@ const PhotoGallery: React.FC = () => {
                 />
               </div>
 
-              {/* Photo info - simplified on mobile */}
+              {/* Photo info - minimal */}
               <div className={`absolute text-white ${isMobile ? 'bottom-0 left-0 right-0' : 'bottom-6 left-6 right-6'}`}>
-                <div className={`${isMobile ? 'bg-black/80 p-4' : 'bg-black/60 rounded-xl p-6 backdrop-blur-md border border-white/10'}`}>
-                  <div className={`flex items-center justify-between ${isMobile ? 'flex-col space-y-3' : ''}`}>
-                    <div className={isMobile ? 'text-center' : ''}>
+                <div className={`${isMobile ? 'bg-pink-500/70 p-3' : 'bg-pink-500/60 rounded-xl p-4 backdrop-blur-md border border-white/10'}`}>
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1">
                       {galleryData.photos[selectedPhotoIndex].title && (
-                        <h3 className={`font-bold mb-2 drop-shadow-lg ${isMobile ? 'text-lg' : 'text-xl'}`}>
+                        <h3 className={`font-semibold ${isMobile ? 'text-base' : 'text-lg'}`}>
                           {galleryData.photos[selectedPhotoIndex].title}
                         </h3>
                       )}
-                      {galleryData.photos[selectedPhotoIndex].description && (
-                        <p className={`opacity-95 mb-3 leading-relaxed ${isMobile ? 'text-sm' : 'text-base'}`}>
-                          {galleryData.photos[selectedPhotoIndex].description}
+                      {galleryData.photos[selectedPhotoIndex].timestamp && (
+                        <p className={`opacity-90 ${isMobile ? 'text-xs' : 'text-sm'}`}>
+                          {formatTime(galleryData.photos[selectedPhotoIndex].timestamp!)}
                         </p>
                       )}
-                      <div className={`flex items-center space-x-6 opacity-80 ${isMobile ? 'text-sm justify-center' : 'text-sm'}`}>
-                        {galleryData.photos[selectedPhotoIndex].location && (
-                          <span className="font-medium">{galleryData.photos[selectedPhotoIndex].location}</span>
-                        )}
-                        {galleryData.photos[selectedPhotoIndex].timestamp && (
-                          <span className="font-light">{formatTime(galleryData.photos[selectedPhotoIndex].timestamp!)}</span>
-                        )}
-                      </div>
                     </div>
                     {!isMobile && (
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center space-x-2 ml-4">
                         <button
                           onClick={() => window.open(galleryData.photos[selectedPhotoIndex].url, '_blank')}
                           className="p-2 bg-white/20 rounded-lg hover:bg-white/30 transition-colors duration-200"
