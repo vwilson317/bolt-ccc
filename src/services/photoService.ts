@@ -23,6 +23,7 @@ export interface PhotoDate {
   date: string;
   title: string;
   photoCount: number;
+  archiveCount?: number; // Total photos in archive (usually higher than photoCount)
   thumbnail?: string;
   description?: string;
   location?: string | Location[]; // Can be string or array of locations
@@ -90,7 +91,8 @@ class PhotoService {
   // Cloudflare implementation methods
   private async getPhotoDatesFromCloudflare(): Promise<PhotoDate[]> {
     try {
-      const folders = await cloudflareService.listFolders();
+      // List folders specifically in the gallery directory
+      const folders = await cloudflareService.listFolders('gallery/');
       
       return folders.map(folder => {
         // Extract date from folder name (assuming format like "2025-01-15" or "2025/01/15")
@@ -116,7 +118,9 @@ class PhotoService {
 
   private async getPhotoGalleryFromCloudflare(dateId: string): Promise<PhotoGalleryData | null> {
     try {
-      const images = await cloudflareService.listImagesInFolder(dateId);
+      // Add gallery/ prefix to the folder path
+      const folderPath = `gallery/${dateId}`;
+      const images = await cloudflareService.listImagesInFolder(folderPath);
       
       if (images.length === 0) {
         return null;
