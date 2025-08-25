@@ -23,6 +23,7 @@ export interface PhotoDate {
   date: string;
   title: string;
   photoCount: number;
+  archiveCount?: number; // Total photos in archive (usually higher than photoCount)
   thumbnail?: string;
   description?: string;
   location?: string | Location[]; // Can be string or array of locations

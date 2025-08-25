@@ -85,31 +85,32 @@ const PhotoGallery: React.FC = () => {
     
     if (typeof location === 'string') {
       return (
-        <div className="flex items-center space-x-2">
-          <MapPin className="h-5 w-5 text-beach-500" />
-          <span className="font-medium">{location}</span>
+        <div className="flex items-center text-xs text-gray-500 mb-2 relative z-10">
+          <MapPin className="h-3 w-3 mr-1 text-beach-500" />
+          <span className="truncate">{location}</span>
         </div>
       );
     }
     
     if (Array.isArray(location)) {
       return (
-        <div className="flex items-center space-x-2 relative z-10">
-          <MapPin className="h-5 w-5 text-beach-500" />
-          <div className="flex flex-wrap gap-2">
+        <div className="flex items-center text-xs text-gray-500 mb-2 relative z-10">
+          <MapPin className="h-3 w-3 mr-1 text-beach-500 flex-shrink-0" />
+          <div className="flex flex-wrap gap-1">
             {location.map((loc, index) => (
-              <span key={index}>
+              <span key={index} className="flex items-center">
                 {loc.barracaId ? (
                   <Link
                     to={`/barraca/${loc.barracaId}`}
-                    className="font-medium text-beach-600 hover:text-beach-700 underline transition-colors duration-200 relative z-10"
+                    className="text-beach-600 hover:text-beach-700 underline transition-colors duration-200 truncate relative z-10"
+                    onClick={(e) => e.stopPropagation()}
                   >
                     {loc.name}
                   </Link>
                 ) : (
-                  <span className="font-medium">{loc.name}</span>
+                  <span className="truncate">{loc.name}</span>
                 )}
-                {index < location.length - 1 && <span className="text-gray-400">•</span>}
+                {index < location.length - 1 && <span className="text-gray-400 mx-1">•</span>}
               </span>
             ))}
           </div>
@@ -288,11 +289,30 @@ const PhotoGallery: React.FC = () => {
               </div>
             </div>
             
+
+            
             {galleryData.description && (
               <p className="text-gray-700 leading-relaxed mb-6 text-lg font-light">
                 {galleryData.description}
               </p>
             )}
+            
+            {/* Gallery Info */}
+            <div className="mb-6 p-4 bg-gradient-to-r from-pink-50 to-pink-100 rounded-lg border border-pink-200">
+              <div className="flex items-start space-x-3">
+                <div className="flex-shrink-0">
+                  <Image className="h-5 w-5 text-pink-600 mt-0.5" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-semibold text-gray-800 mb-1">
+                    {t('photos.galleryInfo', 'Gallery Information')}
+                  </h3>
+                  <p className="text-sm text-gray-600 leading-relaxed">
+                    {t('photos.galleryInfoDescription', 'This gallery showcases our best shots from the event. Every photo displayed here is also available in our complete archive, where you can find all photos taken during this time.')}
+                  </p>
+                </div>
+              </div>
+            </div>
 
             {/* Download All Photos Button */}
             <div className="bg-gradient-to-r from-pink-50 to-pink-100 rounded-lg p-4 md:p-6 border border-pink-200 mb-4">

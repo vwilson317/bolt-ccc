@@ -149,7 +149,8 @@
     }
   },
   "photos": {
-    "title": "Galeria de Fotos",
+    "title": "Galerias de Fotos",
+    "description": "Navegue pelas nossas galerias de fotos curadas com as melhores imagens dos nossos eventos. Cada foto nas nossas galerias também está disponível no nosso arquivo completo.",
     "subtitle": "Reviva os melhores momentos dos nossos encontros na praia e eventos especiais",
     "googlePhotosArchive": "Arquivo do Google Fotos",
     "googlePhotosDescription": "Acesse nossa coleção completa de fotos no Google Fotos",
@@ -162,7 +163,13 @@
     "downloadPhoto": "Baixar Foto",
     "downloadAllPhotos": "Baixar Todas as Fotos",
     "instagramTag": "Marque-nos no Instagram",
-    "instagramTagDescription": "Se você compartilhar essas fotos no Instagram, por favor marque-nos @Carioca_Coastal_Club"
+    "instagramTagDescription": "Se você compartilhar essas fotos no Instagram, por favor marque-nos @Carioca_Coastal_Club",
+    "gallery": "Galeria",
+    "archive": "Arquivo",
+    "galleryDescription": "A galeria mostra nossas melhores fotos. Todas as fotos disponíveis no arquivo.",
+    "allLocations": "Todos os Locais",
+    "galleryInfo": "Informações da Galeria",
+    "galleryInfoDescription": "Esta galeria apresenta nossas melhores fotos do evento. Cada foto exibida aqui também está disponível no nosso arquivo completo, onde você pode encontrar todas as fotos tiradas durante este período."
   },
   "email": {
     "subscribe": "Entrar no Programa de Fidelidade",
