@@ -1,6 +1,7 @@
 import { supabase } from '../lib/supabase';
 import { BarracaRegistration } from '../types';
 import { v4 as uuidv4 } from 'uuid';
+import { WhatsAppNotificationService } from './whatsappNotificationService';
 
 // Transform registration data to database format
 const transformRegistrationToDB = (registration: Omit<BarracaRegistration, 'id' | 'submittedAt'>): any => ({
@@ -102,7 +103,28 @@ export class BarracaRegistrationService {
         throw new Error(`Failed to submit registration: ${error.message}`);
       }
 
-      return transformRegistrationFromDB(data);
+      const result = transformRegistrationFromDB(data);
+
+      // Send WhatsApp notification via Twilio
+      try {
+        console.log('Sending WhatsApp notification for new registration:', result.id);
+        
+        await fetch('/.netlify/functions/twilio-whatsapp-notification', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            registration: result,
+            adminPhoneNumber: import.meta.env.VITE_ADMIN_PHONE_NUMBER || '+5511999999999'
+          })
+        });
+
+        console.log('WhatsApp notification sent successfully');
+      } catch (notificationError) {
+        console.error('Failed to send WhatsApp notification:', notificationError);
+        // Don't fail the registration if notification fails
+      }
+
+      return result;
     } catch (error) {
       console.error('Error in submit registration:', error);
       throw error;
