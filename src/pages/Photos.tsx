@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Calendar, ExternalLink, ChevronRight, MapPin } from 'lucide-react';
 import { photoService, PhotoDate, Location } from '../services/photoService';
 import EmailSubscriptionSection from '../components/EmailSubscriptionSection';
+import SEOHead from '../components/SEOHead';
 
 const Photos: React.FC = () => {
   const { t } = useTranslation();
@@ -89,6 +90,12 @@ const Photos: React.FC = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-beach-50 to-beach-100 pt-20">
+        {/* SEO Head for loading state */}
+        <SEOHead
+          title="Loading Photos - Carioca Coastal Club"
+          description="Loading photo galleries from Carioca Coastal Club"
+        />
+        
         <div className="max-w-4xl mx-auto px-4 py-8">
           <div className="animate-pulse">
             <div className="h-8 bg-gray-200 rounded w-1/3 mb-8"></div>
@@ -111,7 +118,15 @@ const Photos: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-beach-50 to-beach-100 pt-20">
-      <div className="max-w-4xl mx-auto px-4 py-8">
+      {/* SEO Head for Photos page */}
+      <SEOHead
+        title="Photo Gallery - Carioca Coastal Club"
+        description="Browse our collection of beautiful photos from Rio de Janeiro's beaches and beach vendors (barracas). Discover the vibrant beach culture of Carioca."
+        image="/logo_320x320.png"
+        type="website"
+      />
+      
+      <div className="max-w-4xl mx-auto px-4 py-8">        
         {/* Photo Dates Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
           {photoDates.map((photoDate) => (
@@ -132,9 +147,6 @@ const Photos: React.FC = () => {
                     <Calendar className="h-12 w-12 text-beach-600" />
                   </div>
                 )}
-                <div className="absolute top-3 right-3 bg-black/50 text-white px-2 py-1 rounded-full text-xs font-medium">
-                  {photoDate.photoCount} {t('photos.photos', 'photos')}
-                </div>
               </div>
               <div className="p-6">
                 <h3 className="font-bold text-lg text-gray-800 mb-2 group-hover:text-beach-600 transition-colors duration-200">
@@ -149,6 +161,27 @@ const Photos: React.FC = () => {
                     {formatShortDate(photoDate.date)}
                   </span>
                   <ChevronRight className="h-4 w-4 text-beach-500 group-hover:translate-x-1 transition-transform duration-200" />
+                </div>
+                
+                {/* Photo counts section */}
+                <div className="mt-4 pt-4 border-t border-gray-100">
+                  <div className="flex items-center justify-between text-xs">
+                    <div className="flex items-center space-x-2">
+                      <span className="text-gray-600 font-medium">{t('photos.gallery', 'Gallery')}:</span>
+                      <span className="bg-pink-100 text-pink-700 px-2 py-1 rounded-full font-semibold">
+                        {photoDate.photoCount} {t('photos.photos', 'photos')}
+                      </span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <span className="text-gray-600 font-medium">{t('photos.archive', 'Archive')}:</span>
+                      <span className="bg-gray-100 text-gray-700 px-2 py-1 rounded-full font-semibold">
+                        {photoDate.archiveCount || photoDate.photoCount} {t('photos.photos', 'photos')}
+                      </span>
+                    </div>
+                  </div>
+                  <p className="text-xs text-gray-500 mt-2 italic">
+                    {t('photos.galleryDescription', 'Gallery shows our best shots. All photos available in archive.')}
+                  </p>
                 </div>
               </div>
             </Link>

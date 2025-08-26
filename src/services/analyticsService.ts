@@ -307,6 +307,137 @@ class AnalyticsService {
     this.trackEvent('Business', metric, unit, Math.round(value));
   }
 
+  // Track photo gallery interactions
+  trackPhotoGalleryView(galleryId: string, galleryTitle: string, photoCount: number) {
+    this.trackEvent('Photo Gallery', 'View', `${galleryTitle} (${galleryId})`, photoCount);
+  }
+
+  trackPhotoView(photoId: string, photoTitle: string, galleryId: string, viewMode: 'grid' | 'lightbox' = 'grid') {
+    this.trackEvent('Photo', 'View', `${photoTitle || photoId} in ${galleryId} (${viewMode})`);
+  }
+
+  trackPhotoLightboxOpen(photoId: string, photoTitle: string, galleryId: string) {
+    this.trackEvent('Photo', 'Lightbox Open', `${photoTitle || photoId} in ${galleryId}`);
+  }
+
+  trackPhotoLightboxClose(photoId: string, photoTitle: string, galleryId: string) {
+    this.trackEvent('Photo', 'Lightbox Close', `${photoTitle || photoId} in ${galleryId}`);
+  }
+
+  trackPhotoNavigation(direction: 'next' | 'previous', photoId: string, galleryId: string) {
+    this.trackEvent('Photo', 'Navigation', `${direction} - ${photoId} in ${galleryId}`);
+  }
+
+  trackPhotoDownload(photoId: string, photoTitle: string, galleryId: string) {
+    this.trackEvent('Photo', 'Download', `${photoTitle || photoId} in ${galleryId}`);
+  }
+
+  trackPhotoShare(photoId: string, photoTitle: string, galleryId: string, method: 'native' | 'clipboard') {
+    this.trackEvent('Photo', 'Share', `${photoTitle || photoId} in ${galleryId} via ${method}`);
+  }
+
+  trackPhotoArchiveClick(archiveUrl: string, galleryId: string) {
+    this.trackEvent('Photo Gallery', 'Archive Click', `${galleryId} - ${archiveUrl}`);
+  }
+
+  trackPhotoLoadError(photoUrl: string, galleryId: string) {
+    this.trackEvent('Photo', 'Load Error', `${photoUrl} in ${galleryId}`);
+  }
+
+  trackPhotoLoadSuccess(photoUrl: string, galleryId: string) {
+    this.trackEvent('Photo', 'Load Success', `${photoUrl} in ${galleryId}`);
+  }
+
+  // Track barraca registration interactions
+  trackBarracaRegistrationView() {
+    this.trackEvent('Barraca Registration', 'Form View', 'Registration form opened');
+  }
+
+  trackBarracaRegistrationStart() {
+    this.trackEvent('Barraca Registration', 'Form Start', 'User started filling form');
+  }
+
+  trackBarracaRegistrationFieldInteraction(fieldName: string, value?: string) {
+    this.trackEvent('Barraca Registration', 'Field Interaction', `${fieldName}${value ? ` - ${value}` : ''}`);
+  }
+
+  trackBarracaRegistrationValidationError(fieldName: string, errorMessage: string) {
+    this.trackEvent('Barraca Registration', 'Validation Error', `${fieldName} - ${errorMessage}`);
+  }
+
+  trackBarracaRegistrationPartnershipSelection(partnershipType: string, selected: boolean) {
+    this.trackEvent('Barraca Registration', 'Partnership Selection', `${partnershipType} - ${selected ? 'Selected' : 'Deselected'}`);
+  }
+
+  trackBarracaRegistrationContactPreference(preferenceType: string, selected: boolean) {
+    this.trackEvent('Barraca Registration', 'Contact Preference', `${preferenceType} - ${selected ? 'Selected' : 'Deselected'}`);
+  }
+
+  trackBarracaRegistrationPhotoUpload(success: boolean, fileSize?: number) {
+    this.trackEvent('Barraca Registration', 'Photo Upload', `${success ? 'Success' : 'Failed'}${fileSize ? ` - ${Math.round(fileSize / 1024)}KB` : ''}`);
+  }
+
+  trackBarracaRegistrationSubmit(success: boolean, formData?: any) {
+    const amenitiesCount = formData?.amenities?.length || 0;
+    const partnershipsCount = [
+      formData?.qrCodes,
+      formData?.repeatDiscounts,
+      formData?.hotelPartnerships,
+      formData?.contentCreation,
+      formData?.onlineOrders
+    ].filter(Boolean).length;
+    
+    this.trackEvent('Barraca Registration', 'Submit', `${success ? 'Success' : 'Failed'} - ${amenitiesCount} amenities, ${partnershipsCount} partnerships`);
+  }
+
+  trackBarracaRegistrationAbandonment(lastFieldInteracted?: string) {
+    this.trackEvent('Barraca Registration', 'Form Abandonment', lastFieldInteracted || 'Unknown field');
+  }
+
+  // Track registration marquee interactions
+  trackRegistrationMarqueeView(approvedCount: number) {
+    this.trackEvent('Registration Marquee', 'View', `${approvedCount} approved barracas displayed`);
+  }
+
+  trackRegistrationMarqueeInstagramClick(barracaName: string, instagramHandle: string) {
+    this.trackEvent('Registration Marquee', 'Instagram Click', `${barracaName} - ${instagramHandle}`);
+  }
+
+  trackRegistrationMarqueeBarracaClick(barracaName: string, location: string) {
+    this.trackEvent('Registration Marquee', 'Barraca Click', `${barracaName} in ${location}`);
+  }
+
+  // Track Cloudflare service interactions
+  trackCloudflareImageLoad(imageUrl: string, success: boolean, loadTime?: number) {
+    this.trackEvent('Cloudflare', 'Image Load', `${success ? 'Success' : 'Failed'} - ${imageUrl}`, loadTime);
+  }
+
+  trackCloudflareImageError(imageUrl: string, errorType: string) {
+    this.trackEvent('Cloudflare', 'Image Error', `${errorType} - ${imageUrl}`);
+  }
+
+  trackCloudflareServiceStatus(available: boolean) {
+    this.trackEvent('Cloudflare', 'Service Status', available ? 'Available' : 'Unavailable');
+  }
+
+  // Track language-specific interactions
+  trackLanguageSpecificInteraction(action: string, language: string, details?: string) {
+    this.trackEvent('Language', `${language.toUpperCase()} ${action}`, details);
+  }
+
+  trackTranslationUsage(translationKey: string, language: string) {
+    this.trackEvent('Translation', 'Usage', `${translationKey} in ${language}`);
+  }
+
+  // Track new feature adoption
+  trackFeatureAdoption(featureName: string, adopted: boolean, userType?: string) {
+    this.trackEvent('Feature Adoption', featureName, `${adopted ? 'Adopted' : 'Skipped'}${userType ? ` - ${userType}` : ''}`);
+  }
+
+  trackNewFeatureDiscovery(featureName: string, discoveryMethod: string) {
+    this.trackEvent('Feature Discovery', featureName, discoveryMethod);
+  }
+
   // Get analytics status
   getStatus() {
     return {
@@ -752,6 +883,243 @@ export const trackBusinessMetric = (metric: string, value: number, unit?: string
     return analytics?.trackBusinessMetric?.(metric, value, unit);
   } catch (error) {
     console.warn('⚠️ Business metric tracking failed:', error);
+  }
+};
+
+// Export photo gallery tracking functions
+export const trackPhotoGalleryView = (galleryId: string, galleryTitle: string, photoCount: number) => {
+  try {
+    return analytics?.trackPhotoGalleryView?.(galleryId, galleryTitle, photoCount);
+  } catch (error) {
+    console.warn('⚠️ Photo gallery view tracking failed:', error);
+  }
+};
+
+export const trackPhotoView = (photoId: string, photoTitle: string, galleryId: string, viewMode?: 'grid' | 'lightbox') => {
+  try {
+    return analytics?.trackPhotoView?.(photoId, photoTitle, galleryId, viewMode);
+  } catch (error) {
+    console.warn('⚠️ Photo view tracking failed:', error);
+  }
+};
+
+export const trackPhotoLightboxOpen = (photoId: string, photoTitle: string, galleryId: string) => {
+  try {
+    return analytics?.trackPhotoLightboxOpen?.(photoId, photoTitle, galleryId);
+  } catch (error) {
+    console.warn('⚠️ Photo lightbox open tracking failed:', error);
+  }
+};
+
+export const trackPhotoLightboxClose = (photoId: string, photoTitle: string, galleryId: string) => {
+  try {
+    return analytics?.trackPhotoLightboxClose?.(photoId, photoTitle, galleryId);
+  } catch (error) {
+    console.warn('⚠️ Photo lightbox close tracking failed:', error);
+  }
+};
+
+export const trackPhotoNavigation = (direction: 'next' | 'previous', photoId: string, galleryId: string) => {
+  try {
+    return analytics?.trackPhotoNavigation?.(direction, photoId, galleryId);
+  } catch (error) {
+    console.warn('⚠️ Photo navigation tracking failed:', error);
+  }
+};
+
+export const trackPhotoDownload = (photoId: string, photoTitle: string, galleryId: string) => {
+  try {
+    return analytics?.trackPhotoDownload?.(photoId, photoTitle, galleryId);
+  } catch (error) {
+    console.warn('⚠️ Photo download tracking failed:', error);
+  }
+};
+
+export const trackPhotoShare = (photoId: string, photoTitle: string, galleryId: string, method: 'native' | 'clipboard') => {
+  try {
+    return analytics?.trackPhotoShare?.(photoId, photoTitle, galleryId, method);
+  } catch (error) {
+    console.warn('⚠️ Photo share tracking failed:', error);
+  }
+};
+
+export const trackPhotoArchiveClick = (archiveUrl: string, galleryId: string) => {
+  try {
+    return analytics?.trackPhotoArchiveClick?.(archiveUrl, galleryId);
+  } catch (error) {
+    console.warn('⚠️ Photo archive click tracking failed:', error);
+  }
+};
+
+export const trackPhotoLoadError = (photoUrl: string, galleryId: string) => {
+  try {
+    return analytics?.trackPhotoLoadError?.(photoUrl, galleryId);
+  } catch (error) {
+    console.warn('⚠️ Photo load error tracking failed:', error);
+  }
+};
+
+export const trackPhotoLoadSuccess = (photoUrl: string, galleryId: string) => {
+  try {
+    return analytics?.trackPhotoLoadSuccess?.(photoUrl, galleryId);
+  } catch (error) {
+    console.warn('⚠️ Photo load success tracking failed:', error);
+  }
+};
+
+// Export barraca registration tracking functions
+export const trackBarracaRegistrationView = () => {
+  try {
+    return analytics?.trackBarracaRegistrationView?.();
+  } catch (error) {
+    console.warn('⚠️ Barraca registration view tracking failed:', error);
+  }
+};
+
+export const trackBarracaRegistrationStart = () => {
+  try {
+    return analytics?.trackBarracaRegistrationStart?.();
+  } catch (error) {
+    console.warn('⚠️ Barraca registration start tracking failed:', error);
+  }
+};
+
+export const trackBarracaRegistrationFieldInteraction = (fieldName: string, value?: string) => {
+  try {
+    return analytics?.trackBarracaRegistrationFieldInteraction?.(fieldName, value);
+  } catch (error) {
+    console.warn('⚠️ Barraca registration field interaction tracking failed:', error);
+  }
+};
+
+export const trackBarracaRegistrationValidationError = (fieldName: string, errorMessage: string) => {
+  try {
+    return analytics?.trackBarracaRegistrationValidationError?.(fieldName, errorMessage);
+  } catch (error) {
+    console.warn('⚠️ Barraca registration validation error tracking failed:', error);
+  }
+};
+
+export const trackBarracaRegistrationPartnershipSelection = (partnershipType: string, selected: boolean) => {
+  try {
+    return analytics?.trackBarracaRegistrationPartnershipSelection?.(partnershipType, selected);
+  } catch (error) {
+    console.warn('⚠️ Barraca registration partnership selection tracking failed:', error);
+  }
+};
+
+export const trackBarracaRegistrationContactPreference = (preferenceType: string, selected: boolean) => {
+  try {
+    return analytics?.trackBarracaRegistrationContactPreference?.(preferenceType, selected);
+  } catch (error) {
+    console.warn('⚠️ Barraca registration contact preference tracking failed:', error);
+  }
+};
+
+export const trackBarracaRegistrationPhotoUpload = (success: boolean, fileSize?: number) => {
+  try {
+    return analytics?.trackBarracaRegistrationPhotoUpload?.(success, fileSize);
+  } catch (error) {
+    console.warn('⚠️ Barraca registration photo upload tracking failed:', error);
+  }
+};
+
+export const trackBarracaRegistrationSubmit = (success: boolean, formData?: any) => {
+  try {
+    return analytics?.trackBarracaRegistrationSubmit?.(success, formData);
+  } catch (error) {
+    console.warn('⚠️ Barraca registration submit tracking failed:', error);
+  }
+};
+
+export const trackBarracaRegistrationAbandonment = (lastFieldInteracted?: string) => {
+  try {
+    return analytics?.trackBarracaRegistrationAbandonment?.(lastFieldInteracted);
+  } catch (error) {
+    console.warn('⚠️ Barraca registration abandonment tracking failed:', error);
+  }
+};
+
+// Export registration marquee tracking functions
+export const trackRegistrationMarqueeView = (approvedCount: number) => {
+  try {
+    return analytics?.trackRegistrationMarqueeView?.(approvedCount);
+  } catch (error) {
+    console.warn('⚠️ Registration marquee view tracking failed:', error);
+  }
+};
+
+export const trackRegistrationMarqueeInstagramClick = (barracaName: string, instagramHandle: string) => {
+  try {
+    return analytics?.trackRegistrationMarqueeInstagramClick?.(barracaName, instagramHandle);
+  } catch (error) {
+    console.warn('⚠️ Registration marquee Instagram click tracking failed:', error);
+  }
+};
+
+export const trackRegistrationMarqueeBarracaClick = (barracaName: string, location: string) => {
+  try {
+    return analytics?.trackRegistrationMarqueeBarracaClick?.(barracaName, location);
+  } catch (error) {
+    console.warn('⚠️ Registration marquee barraca click tracking failed:', error);
+  }
+};
+
+// Export Cloudflare tracking functions
+export const trackCloudflareImageLoad = (imageUrl: string, success: boolean, loadTime?: number) => {
+  try {
+    return analytics?.trackCloudflareImageLoad?.(imageUrl, success, loadTime);
+  } catch (error) {
+    console.warn('⚠️ Cloudflare image load tracking failed:', error);
+  }
+};
+
+export const trackCloudflareImageError = (imageUrl: string, errorType: string) => {
+  try {
+    return analytics?.trackCloudflareImageError?.(imageUrl, errorType);
+  } catch (error) {
+    console.warn('⚠️ Cloudflare image error tracking failed:', error);
+  }
+};
+
+export const trackCloudflareServiceStatus = (available: boolean) => {
+  try {
+    return analytics?.trackCloudflareServiceStatus?.(available);
+  } catch (error) {
+    console.warn('⚠️ Cloudflare service status tracking failed:', error);
+  }
+};
+
+// Export language and feature tracking functions
+export const trackLanguageSpecificInteraction = (action: string, language: string, details?: string) => {
+  try {
+    return analytics?.trackLanguageSpecificInteraction?.(action, language, details);
+  } catch (error) {
+    console.warn('⚠️ Language specific interaction tracking failed:', error);
+  }
+};
+
+export const trackTranslationUsage = (translationKey: string, language: string) => {
+  try {
+    return analytics?.trackTranslationUsage?.(translationKey, language);
+  } catch (error) {
+    console.warn('⚠️ Translation usage tracking failed:', error);
+  }
+};
+
+export const trackFeatureAdoption = (featureName: string, adopted: boolean, userType?: string) => {
+  try {
+    return analytics?.trackFeatureAdoption?.(featureName, adopted, userType);
+  } catch (error) {
+    console.warn('⚠️ Feature adoption tracking failed:', error);
+  }
+};
+
+export const trackNewFeatureDiscovery = (featureName: string, discoveryMethod: string) => {
+  try {
+    return analytics?.trackNewFeatureDiscovery?.(featureName, discoveryMethod);
+  } catch (error) {
+    console.warn('⚠️ New feature discovery tracking failed:', error);
   }
 };
 

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { BarracaRegistration } from '../types';
+import { useAnalytics } from '../hooks/useAnalytics';
 
 interface RegistrationMarqueeProps {
   className?: string;
@@ -174,6 +175,7 @@ const mockApprovedRegistrations: BarracaRegistration[] = [
 
 const RegistrationMarquee: React.FC<RegistrationMarqueeProps> = ({ className = '' }) => {
   const { t } = useTranslation();
+  const analytics = useAnalytics();
   const [approvedRegistrations, setApprovedRegistrations] = useState<BarracaRegistration[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -207,6 +209,13 @@ const RegistrationMarquee: React.FC<RegistrationMarqueeProps> = ({ className = '
 
     fetchApprovedRegistrations();
   }, []);
+
+  // Track marquee view when data is loaded
+  useEffect(() => {
+    if (!loading && approvedRegistrations.length > 0) {
+      analytics.trackRegistrationMarqueeView(approvedRegistrations.length);
+    }
+  }, [loading, approvedRegistrations.length, analytics]);
 
   if (loading) {
     return (
@@ -253,7 +262,14 @@ const RegistrationMarquee: React.FC<RegistrationMarqueeProps> = ({ className = '
                   <div
                     key={`${registration.id}-${index}`}
                     className="flex items-center gap-3 mr-6 text-sm font-semibold text-gray-700 hover:text-gray-900 transition-colors duration-200 cursor-pointer"
-                    onClick={() => registration.contact?.instagram && openInstagramLink(registration.contact.instagram)}
+                    onClick={() => {
+                      if (registration.contact?.instagram) {
+                        analytics.trackRegistrationMarqueeInstagramClick(registration.name, registration.contact.instagram);
+                        openInstagramLink(registration.contact.instagram);
+                      } else {
+                        analytics.trackRegistrationMarqueeBarracaClick(registration.name, registration.location);
+                      }
+                    }}
                   >
                     <span className="text-pink-500">🤙🏽</span>
                     <span className="truncate">{registration.name}</span>
@@ -270,7 +286,14 @@ const RegistrationMarquee: React.FC<RegistrationMarqueeProps> = ({ className = '
                   <div
                     key={`${registration.id}-${index}-duplicate`}
                     className="flex items-center gap-3 mr-6 text-sm font-semibold text-gray-700 hover:text-gray-900 transition-colors duration-200 cursor-pointer"
-                    onClick={() => registration.contact?.instagram && openInstagramLink(registration.contact.instagram)}
+                    onClick={() => {
+                      if (registration.contact?.instagram) {
+                        analytics.trackRegistrationMarqueeInstagramClick(registration.name, registration.contact.instagram);
+                        openInstagramLink(registration.contact.instagram);
+                      } else {
+                        analytics.trackRegistrationMarqueeBarracaClick(registration.name, registration.location);
+                      }
+                    }}
                   >
                     <span className="text-pink-500">🤙🏽</span>
                     <span className="truncate">{registration.name}</span>

@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
+import { HelmetProvider } from 'react-helmet-async';
 import { AppProvider, useApp } from './contexts/AppContext';
 import { StoryProvider } from './contexts/StoryContext';
 import { WeatherProvider } from './contexts/WeatherContext';
@@ -114,15 +115,17 @@ function AppContent() {
 
 function App() {
   return (
-    <AppProvider>
-      <StoryProvider>
-        <WeatherProvider>
-          <Router>
-            <AppContent />
-          </Router>
-        </WeatherProvider>
-      </StoryProvider>
-    </AppProvider>
+    <HelmetProvider>
+      <AppProvider>
+        <StoryProvider>
+          <WeatherProvider>
+            <Router>
+              <AppContent />
+            </Router>
+          </WeatherProvider>
+        </StoryProvider>
+      </AppProvider>
+    </HelmetProvider>
   );
 }
 

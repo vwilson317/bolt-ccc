@@ -52,6 +52,7 @@ class CloudflareService {
     console.log('📁 listFolders called with prefix:', prefix);
     
     try {
+      // First, try to list with delimiter to get folder structure
       const command = new ListObjectsV2Command({
         Bucket: this.bucketName,
         Prefix: prefix,
@@ -74,6 +75,7 @@ class CloudflareService {
 
       const folders: CloudflareFolder[] = [];
 
+      // Process common prefixes (folders)
       if (response.CommonPrefixes) {
         console.log('📁 Processing common prefixes...');
         for (const commonPrefix of response.CommonPrefixes) {
@@ -103,11 +105,88 @@ class CloudflareService {
         }
       }
 
+      // If no common prefixes found, try alternative approach for nested structures
+      if (folders.length === 0 && prefix === '') {
+        console.log('📁 No folders found with delimiter, trying alternative approach...');
+        const alternativeFolders = await this.listFoldersAlternative();
+        folders.push(...alternativeFolders);
+      }
+
       console.log('📁 Returning folders:', folders.length);
       return folders;
     } catch (error) {
       console.error('❌ Error listing folders:', error);
       throw new Error('Failed to list folders from Cloudflare R2');
+    }
+  }
+
+  async listFoldersAlternative(): Promise<CloudflareFolder[]> {
+    console.log('📁 Using alternative folder listing approach...');
+    
+    try {
+      // List all objects and group them by folder
+      const command = new ListObjectsV2Command({
+        Bucket: this.bucketName,
+        MaxKeys: 1000, // Limit to avoid timeout
+      });
+
+      const response = await this.s3Client.send(command);
+      console.log('📁 Alternative approach - total objects found:', response.Contents?.length || 0);
+
+      const folderMap = new Map<string, CloudflareImage[]>();
+
+      if (response.Contents) {
+        for (const object of response.Contents) {
+          if (object.Key && this.isImageFile(object.Key)) {
+            // Extract folder path from object key
+            const lastSlashIndex = object.Key.lastIndexOf('/');
+            if (lastSlashIndex > 0) {
+              const folderPath = object.Key.substring(0, lastSlashIndex + 1);
+              const imageUrl = this.getCloudflareUrl(object.Key);
+              
+              const image: CloudflareImage = {
+                key: object.Key,
+                url: imageUrl,
+                size: object.Size || 0,
+                lastModified: object.LastModified || new Date(),
+                contentType: this.getContentType(object.Key),
+                etag: object.ETag || '',
+              };
+
+              if (!folderMap.has(folderPath)) {
+                folderMap.set(folderPath, []);
+              }
+              folderMap.get(folderPath)!.push(image);
+            }
+          }
+        }
+      }
+
+      const folders: CloudflareFolder[] = [];
+      
+      for (const [folderPath, images] of folderMap) {
+        const folderName = folderPath.split('/').filter(Boolean).pop() || folderPath;
+        
+        // Sort images by last modified date (newest first)
+        const sortedImages = images.sort((a, b) => b.lastModified.getTime() - a.lastModified.getTime());
+        
+        folders.push({
+          name: folderName,
+          path: folderPath,
+          imageCount: sortedImages.length,
+          thumbnail: sortedImages[0]?.url,
+          lastModified: sortedImages[0]?.lastModified || new Date(),
+        });
+      }
+
+      // Sort folders by last modified date (newest first)
+      const sortedFolders = folders.sort((a, b) => b.lastModified.getTime() - a.lastModified.getTime());
+      
+      console.log('📁 Alternative approach - folders found:', sortedFolders.length);
+      return sortedFolders;
+    } catch (error) {
+      console.error('❌ Error in alternative folder listing:', error);
+      return [];
     }
   }
 
@@ -267,6 +346,16 @@ export const handler: Handler = async (event) => {
           statusCode: 200,
           headers,
           body: JSON.stringify({ folders }),
+        };
+
+      case 'listGalleryFolders':
+        console.log('📁 Action: listGalleryFolders');
+        const galleryFolders = await cloudflareService.listFolders('gallery/');
+        console.log('📁 Returning gallery folders:', galleryFolders.length);
+        return {
+          statusCode: 200,
+          headers,
+          body: JSON.stringify({ folders: galleryFolders }),
         };
 
       case 'listImages':

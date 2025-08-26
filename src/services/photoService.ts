@@ -22,7 +22,8 @@ export interface PhotoDate {
   id: string;
   date: string;
   title: string;
-  photoCount: number;
+  photoCount?: number; // Optional since it will be dynamically calculated from Cloudflare
+  archiveCount?: number; // Total photos in archive (usually higher than photoCount)
   thumbnail?: string;
   description?: string;
   location?: string | Location[]; // Can be string or array of locations
@@ -49,7 +50,12 @@ class PhotoService {
   }
 
   async getPhotoDates(): Promise<PhotoDate[]> {
-    // Always use mock data for the Photos page (list of photo dates)
+    // Use Cloudflare if configured, otherwise fallback to mock data
+    if (this.useCloudflare) {
+      return this.getPhotoDatesFromCloudflare();
+    }
+    
+    // Fallback to mock data
     await new Promise(resolve => setTimeout(resolve, 1000));
     return this.mockPhotoDates;
   }
@@ -66,7 +72,12 @@ class PhotoService {
   }
 
   async searchPhotoDates(query: string): Promise<PhotoDate[]> {
-    // Always use mock data for search (since Photos page uses mock data)
+    // Use Cloudflare if configured, otherwise fallback to mock data
+    if (this.useCloudflare) {
+      return this.searchPhotoDatesFromCloudflare(query);
+    }
+    
+    // Fallback to mock data
     await new Promise(resolve => setTimeout(resolve, 500));
     
     const lowercaseQuery = query.toLowerCase();
@@ -90,18 +101,22 @@ class PhotoService {
   // Cloudflare implementation methods
   private async getPhotoDatesFromCloudflare(): Promise<PhotoDate[]> {
     try {
-      const folders = await cloudflareService.listFolders();
+      // List folders specifically in the gallery directory
+      const folders = await cloudflareService.listFolders('gallery/');
       
       return folders.map(folder => {
         // Extract date from folder name (assuming format like "2025-01-15" or "2025/01/15")
         const dateMatch = folder.name.match(/(\d{4})[-/](\d{1,2})[-/](\d{1,2})/);
         const date = dateMatch ? `${dateMatch[1]}-${dateMatch[2].padStart(2, '0')}-${dateMatch[3].padStart(2, '0')}` : folder.name;
+        // Try to find matching mock entry to source archiveCount from mock data
+        const matchingMock = this.mockPhotoDates.find(mock => mock.id === folder.name || mock.date === date);
         
         return {
           id: folder.name,
           date,
           title: this.formatFolderTitle(folder.name),
           photoCount: folder.imageCount,
+          archiveCount: matchingMock?.archiveCount,
           thumbnail: folder.thumbnail,
           description: `Photos from ${this.formatFolderTitle(folder.name)}`,
           location: 'Various locations', // You can enhance this by parsing folder structure
@@ -116,7 +131,9 @@ class PhotoService {
 
   private async getPhotoGalleryFromCloudflare(dateId: string): Promise<PhotoGalleryData | null> {
     try {
-      const images = await cloudflareService.listImagesInFolder(dateId);
+      // Add gallery/ prefix to the folder path
+      const folderPath = `gallery/${dateId}`;
+      const images = await cloudflareService.listImagesInFolder(folderPath);
       
       if (images.length === 0) {
         return null;
@@ -164,7 +181,7 @@ class PhotoService {
         description: `Gallery containing ${photos.length} photos from ${this.formatFolderTitle(dateId)}`,
         location: 'Various locations', // You can enhance this by parsing folder structure
         photos,
-        archiveUrl: this.getGooglePhotosArchiveUrl(),
+        archiveUrl: this.mockPhotoGalleries[dateId]?.archiveUrl || this.getGooglePhotosArchiveUrl(),
       };
     } catch (error) {
       console.error('Error fetching photo gallery from Cloudflare:', error);
@@ -264,8 +281,8 @@ class PhotoService {
 
   // Method to get Google Photos archive URL
   getGooglePhotosArchiveUrl(): string {
-    // Replace with your actual Google Photos album URL
-    return 'https://photos.google.com/share/AF1QipM...'; // Example URL
+    // Default Google Photos archive URL - replace with your actual album URL
+    return 'https://photos.app.goo.gl/Wx6ZJqL39iqYkWiQ8'; // Using one of the working URLs from mock data
   }
 
   // Method to check if Cloudflare is available
