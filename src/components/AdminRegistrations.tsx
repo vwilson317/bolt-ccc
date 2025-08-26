@@ -175,60 +175,60 @@ const AdminRegistrations: React.FC<AdminRegistrationsProps> = ({ onRegistrationC
   return (
     <div className="space-y-6">
       {/* Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white p-4 rounded-lg shadow-sm border">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4">
+        <div className="bg-white p-3 sm:p-4 rounded-lg shadow-sm border">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Total</p>
-              <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
+              <p className="text-xs sm:text-sm font-medium text-gray-600">Total</p>
+              <p className="text-lg sm:text-2xl font-bold text-gray-900">{stats.total}</p>
             </div>
-            <div className="bg-blue-100 p-2 rounded-lg">
-              <MessageSquare className="w-6 h-6 text-blue-600" />
+            <div className="bg-blue-100 p-1.5 sm:p-2 rounded-lg">
+              <MessageSquare className="w-4 h-4 sm:w-6 sm:h-6 text-blue-600" />
             </div>
           </div>
         </div>
-        <div className="bg-white p-4 rounded-lg shadow-sm border">
+        <div className="bg-white p-3 sm:p-4 rounded-lg shadow-sm border">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Pending</p>
-              <p className="text-2xl font-bold text-yellow-600">{stats.pending}</p>
+              <p className="text-xs sm:text-sm font-medium text-gray-600">Pending</p>
+              <p className="text-lg sm:text-2xl font-bold text-yellow-600">{stats.pending}</p>
             </div>
-            <div className="bg-yellow-100 p-2 rounded-lg">
-              <Clock className="w-6 h-6 text-yellow-600" />
+            <div className="bg-yellow-100 p-1.5 sm:p-2 rounded-lg">
+              <Clock className="w-4 h-4 sm:w-6 sm:h-6 text-yellow-600" />
             </div>
           </div>
         </div>
-        <div className="bg-white p-4 rounded-lg shadow-sm border">
+        <div className="bg-white p-3 sm:p-4 rounded-lg shadow-sm border">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Approved</p>
-              <p className="text-2xl font-bold text-green-600">{stats.approved}</p>
+              <p className="text-xs sm:text-sm font-medium text-gray-600">Approved</p>
+              <p className="text-lg sm:text-2xl font-bold text-green-600">{stats.approved}</p>
             </div>
-            <div className="bg-green-100 p-2 rounded-lg">
-              <Check className="w-6 h-6 text-green-600" />
+            <div className="bg-green-100 p-1.5 sm:p-2 rounded-lg">
+              <Check className="w-4 h-4 sm:w-6 sm:h-6 text-green-600" />
             </div>
           </div>
         </div>
-        <div className="bg-white p-4 rounded-lg shadow-sm border">
+        <div className="bg-white p-3 sm:p-4 rounded-lg shadow-sm border">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Rejected</p>
-              <p className="text-2xl font-bold text-red-600">{stats.rejected}</p>
+              <p className="text-xs sm:text-sm font-medium text-gray-600">Rejected</p>
+              <p className="text-lg sm:text-2xl font-bold text-red-600">{stats.rejected}</p>
             </div>
-            <div className="bg-red-100 p-2 rounded-lg">
-              <X className="w-6 h-6 text-red-600" />
+            <div className="bg-red-100 p-1.5 sm:p-2 rounded-lg">
+              <X className="w-4 h-4 sm:w-6 sm:h-6 text-red-600" />
             </div>
           </div>
         </div>
       </div>
 
       {/* Filters */}
-      <div className="flex flex-wrap gap-2 sm:gap-4">
+      <div className="flex overflow-x-auto scrollbar-hide gap-2 sm:gap-4 pb-2">
         {(['all', 'pending', 'approved', 'rejected'] as const).map(status => (
           <button
             key={status}
             onClick={() => setSelectedStatus(status)}
-            className={`px-3 py-2 sm:px-4 rounded-lg font-medium transition-colors text-sm sm:text-base ${
+            className={`flex-shrink-0 px-3 py-2 sm:px-4 rounded-lg font-medium transition-colors text-sm sm:text-base whitespace-nowrap ${
               selectedStatus === status
                 ? 'bg-beach-600 text-white'
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -268,21 +268,21 @@ const AdminRegistrations: React.FC<AdminRegistrationsProps> = ({ onRegistrationC
                       </div>
                     </div>
                     
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4 text-sm text-gray-600 mb-2">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-1 sm:gap-2 lg:gap-4 text-xs sm:text-sm text-gray-600 mb-2">
                       <div className="flex items-center space-x-1">
-                        <MapPin className="w-4 h-4 flex-shrink-0" />
+                        <MapPin className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
                         <span className="truncate">{registration.location}</span>
                       </div>
                       <div className="flex items-center space-x-1">
-                        <span className="font-medium flex-shrink-0">Owner:</span>
+                        <span className="font-medium flex-shrink-0 text-xs sm:text-sm">Owner:</span>
                         <span className="truncate">{registration.ownerName}</span>
                       </div>
                       <div className="flex items-center space-x-1">
-                        <Phone className="w-4 h-4 flex-shrink-0" />
+                        <Phone className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
                         <span className="truncate">{registration.contact.phone}</span>
                       </div>
                       <div className="flex items-center space-x-1">
-                        <Mail className="w-4 h-4 flex-shrink-0" />
+                        <Mail className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
                         <span className="truncate">{registration.contact.email}</span>
                       </div>
                     </div>
@@ -299,29 +299,29 @@ const AdminRegistrations: React.FC<AdminRegistrationsProps> = ({ onRegistrationC
                     </div>
                   </div>
                   
-                  <div className="flex items-center justify-end space-x-2 sm:ml-4">
+                  <div className="flex items-center justify-end space-x-1 sm:space-x-2 sm:ml-4">
                     <button
                       onClick={() => handleViewRegistration(registration)}
-                      className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
+                      className="p-1.5 sm:p-2 text-gray-400 hover:text-gray-600 transition-colors"
                       title="View details"
                     >
-                      <Eye className="w-5 h-5" />
+                      <Eye className="w-4 h-4 sm:w-5 sm:h-5" />
                     </button>
                     {registration.status === 'pending' && (
                       <>
                         <button
                           onClick={() => handleViewRegistration(registration)}
-                          className="p-2 text-green-400 hover:text-green-600 transition-colors"
+                          className="p-1.5 sm:p-2 text-green-400 hover:text-green-600 transition-colors"
                           title="Approve"
                         >
-                          <Check className="w-5 h-5" />
+                          <Check className="w-4 h-4 sm:w-5 sm:h-5" />
                         </button>
                         <button
                           onClick={() => handleViewRegistration(registration)}
-                          className="p-2 text-red-400 hover:text-red-600 transition-colors"
+                          className="p-1.5 sm:p-2 text-red-400 hover:text-red-600 transition-colors"
                           title="Reject"
                         >
-                          <X className="w-5 h-5" />
+                          <X className="w-4 h-4 sm:w-5 sm:h-5" />
                         </button>
                       </>
                     )}
@@ -354,14 +354,14 @@ const AdminRegistrations: React.FC<AdminRegistrationsProps> = ({ onRegistrationC
                 {/* Basic Info */}
                 <div>
                   <h3 className="text-lg font-medium text-gray-900 mb-3">Basic Information</h3>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700">Name</label>
-                      <p className="mt-1 text-sm text-gray-900">{selectedRegistration.name}</p>
+                      <p className="mt-1 text-sm text-gray-900 break-words">{selectedRegistration.name}</p>
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700">Owner Name</label>
-                      <p className="mt-1 text-sm text-gray-900">{selectedRegistration.ownerName}</p>
+                      <p className="mt-1 text-sm text-gray-900 break-words">{selectedRegistration.ownerName}</p>
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700">Barraca Number</label>
@@ -369,15 +369,15 @@ const AdminRegistrations: React.FC<AdminRegistrationsProps> = ({ onRegistrationC
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700">Location</label>
-                      <p className="mt-1 text-sm text-gray-900">{selectedRegistration.location}</p>
+                      <p className="mt-1 text-sm text-gray-900 break-words">{selectedRegistration.location}</p>
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700">Hours</label>
-                      <p className="mt-1 text-sm text-gray-900">{selectedRegistration.typicalHours}</p>
+                      <p className="mt-1 text-sm text-gray-900 break-words">{selectedRegistration.typicalHours}</p>
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700">Nearest Posto</label>
-                      <p className="mt-1 text-sm text-gray-900">{selectedRegistration.nearestPosto}</p>
+                      <p className="mt-1 text-sm text-gray-900 break-words">{selectedRegistration.nearestPosto}</p>
                     </div>
                   </div>
                 </div>
@@ -385,25 +385,25 @@ const AdminRegistrations: React.FC<AdminRegistrationsProps> = ({ onRegistrationC
                 {/* Contact Info */}
                 <div>
                   <h3 className="text-lg font-medium text-gray-900 mb-3">Contact Information</h3>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700">Phone</label>
-                      <p className="mt-1 text-sm text-gray-900">{selectedRegistration.contact.phone}</p>
+                      <p className="mt-1 text-sm text-gray-900 break-all">{selectedRegistration.contact.phone}</p>
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700">Email</label>
-                      <p className="mt-1 text-sm text-gray-900">{selectedRegistration.contact.email}</p>
+                      <p className="mt-1 text-sm text-gray-900 break-all">{selectedRegistration.contact.email}</p>
                     </div>
                     {selectedRegistration.contact.instagram && (
                       <div>
                         <label className="block text-sm font-medium text-gray-700">Instagram</label>
-                        <p className="mt-1 text-sm text-gray-900">{selectedRegistration.contact.instagram}</p>
+                        <p className="mt-1 text-sm text-gray-900 break-all">{selectedRegistration.contact.instagram}</p>
                       </div>
                     )}
                     {selectedRegistration.contact.website && (
                       <div>
                         <label className="block text-sm font-medium text-gray-700">Website</label>
-                        <p className="mt-1 text-sm text-gray-900">{selectedRegistration.contact.website}</p>
+                        <p className="mt-1 text-sm text-gray-900 break-all">{selectedRegistration.contact.website}</p>
                       </div>
                     )}
                   </div>
@@ -423,7 +423,7 @@ const AdminRegistrations: React.FC<AdminRegistrationsProps> = ({ onRegistrationC
                       <img 
                         src={selectedRegistration.defaultPhoto} 
                         alt="Barraca photo" 
-                        className="w-full max-w-md h-48 object-cover rounded-lg border border-gray-200"
+                        className="w-full max-w-md h-32 sm:h-48 object-cover rounded-lg border border-gray-200"
                       />
                     </div>
                   </div>
@@ -551,7 +551,7 @@ const AdminRegistrations: React.FC<AdminRegistrationsProps> = ({ onRegistrationC
                     <button
                       onClick={handleApprove}
                       disabled={processing}
-                      className="flex-1 bg-green-600 hover:bg-green-700 disabled:bg-green-400 text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center justify-center space-x-2"
+                      className="flex-1 bg-green-600 hover:bg-green-700 disabled:bg-green-400 text-white font-medium py-2.5 sm:py-2 px-3 sm:px-4 rounded-lg transition-colors flex items-center justify-center space-x-2 text-sm sm:text-base"
                     >
                       <Check className="w-4 h-4" />
                       <span className="hidden sm:inline">Approve & Convert to Barraca</span>
@@ -560,7 +560,7 @@ const AdminRegistrations: React.FC<AdminRegistrationsProps> = ({ onRegistrationC
                     <button
                       onClick={handleReject}
                       disabled={processing}
-                      className="flex-1 bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center justify-center space-x-2"
+                      className="flex-1 bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white font-medium py-2.5 sm:py-2 px-3 sm:px-4 rounded-lg transition-colors flex items-center justify-center space-x-2 text-sm sm:text-base"
                     >
                       <X className="w-4 h-4" />
                       <span>Reject</span>
