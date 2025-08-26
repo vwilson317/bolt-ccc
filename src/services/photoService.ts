@@ -178,7 +178,7 @@ class PhotoService {
         description: `Gallery containing ${photos.length} photos from ${this.formatFolderTitle(dateId)}`,
         location: 'Various locations', // You can enhance this by parsing folder structure
         photos,
-        archiveUrl: this.getGooglePhotosArchiveUrl(),
+        archiveUrl: this.mockPhotoGalleries[dateId]?.archiveUrl || this.getGooglePhotosArchiveUrl(),
       };
     } catch (error) {
       console.error('Error fetching photo gallery from Cloudflare:', error);

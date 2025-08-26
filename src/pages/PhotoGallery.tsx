@@ -411,23 +411,20 @@ const PhotoGallery: React.FC = () => {
                       // Prevent default behavior and handle manually to ensure it works
                       e.preventDefault();
                       
-                      // Try to open the link
+                      // Try to open the link in a new tab
                       const newWindow = window.open(archiveUrl, '_blank', 'noopener,noreferrer');
                       
-                      // If popup was blocked, show a message
+                      // If popup was blocked, show a message but don't navigate in same tab
                       if (!newWindow) {
-                        console.warn('⚠️ Popup blocked, trying alternative method');
+                        console.warn('⚠️ Popup blocked');
                         setShowPopupBlockedMessage(true);
                         // Hide message after 5 seconds
                         setTimeout(() => setShowPopupBlockedMessage(false), 5000);
-                        // Fallback: try to navigate in the same window
-                        window.location.href = archiveUrl;
+                        // Don't fallback to same window navigation - let user handle it manually
                       }
                     } catch (error) {
                       console.error('❌ Error handling archive link click:', error);
-                      // Fallback: try direct navigation
-                      const archiveUrl = galleryData.archiveUrl || photoService.getGooglePhotosArchiveUrl();
-                      window.location.href = archiveUrl;
+                      // Don't fallback to same window navigation - let user handle it manually
                     }
                   }}
                 >
@@ -443,7 +440,7 @@ const PhotoGallery: React.FC = () => {
         {showPopupBlockedMessage && (
           <div className="fixed top-4 right-4 bg-yellow-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 max-w-sm">
             <div className="flex items-center space-x-2">
-              <span className="text-sm">⚠️ Popup blocked. Please allow popups for this site to open the archive link.</span>
+              <span className="text-sm">⚠️ Popup blocked. Right-click the "View Archive" button and select "Open in new tab" to access the archive.</span>
             </div>
           </div>
         )}
