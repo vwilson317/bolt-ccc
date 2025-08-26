@@ -147,9 +147,6 @@ const Photos: React.FC = () => {
                     <Calendar className="h-12 w-12 text-beach-600" />
                   </div>
                 )}
-                <div className="absolute top-3 right-3 bg-pink-500/20 backdrop-blur-sm text-white px-2 py-1 rounded-full text-xs font-medium border border-pink-300/30">
-                  {photoDate.photoCount} {t('photos.photos', 'photos')}
-                </div>
               </div>
               <div className="p-6">
                 <h3 className="font-bold text-lg text-gray-800 mb-2 group-hover:text-beach-600 transition-colors duration-200">

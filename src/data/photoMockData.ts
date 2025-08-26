@@ -5,8 +5,8 @@ export const mockPhotoDates: PhotoDate[] = [
     id: '2025-08-24',
     date: '2025-08-24',
     title: 'Dia de Mídia Social com as Crianças das Favelas',
-    photoCount: 1,
-    archiveCount: 1973,
+    photoCount: 1, // Fallback count when Cloudflare is not available
+    archiveCount: 210,
     thumbnail: 'https://pub-db19578f977b43e184c45b5084d7c029.r2.dev/gallery/2025-08-24/IMG_4133.jpg',
     description: 'Segundo dia da nossa campanha publicitária. As crianças se juntaram a nós em jogos durante a maior parte do dia porque o tempo não estava muito bom. Elas fizeram um trabalho realmente bom, e todos nos divertimos, que é o que mais importa.',
     location: [
@@ -18,7 +18,7 @@ export const mockPhotoDates: PhotoDate[] = [
     id: '2025-08-23',
     date: '2025-08-23',
     title: 'Dia da Praia dos Gringos',
-    photoCount: 15,
+    photoCount: 15, // Fallback count when Cloudflare is not available
     archiveCount: 2500,
     thumbnail: 'https://pub-db19578f977b43e184c45b5084d7c029.r2.dev/gallery/2025-08-23/IMG_3035.jpg',
     description: 'Campanha publicitária para 23 de agosto de 2025. Além de fazer publicidade no IG, decidimos ver se as crianças vendendo coisas na praia poderiam nos ajudar. Demos a elas um código QR e pedimos às pessoas para irem ao nosso site, depois nos seguirem. Foi um sucesso enorme!',
@@ -31,7 +31,7 @@ export const mockPhotoDates: PhotoDate[] = [
     id: '2025-07-27',
     date: '2025-07-27',
     title: 'Festa de Lançamento',
-    photoCount: 0,
+    photoCount: 0, // Fallback count when Cloudflare is not available
     archiveCount: 454,
     thumbnail: 'https://pub-db19578f977b43e184c45b5084d7c029.r2.dev/launch-party/IMG_2350-2.jpg',
     description: 'A festa de lançamento oficial. Tivemos uma participação realmente ótima. Somos gratos por ter conhecido tantas pessoas únicas e gentis.',
