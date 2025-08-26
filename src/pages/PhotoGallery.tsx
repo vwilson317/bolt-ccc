@@ -33,6 +33,7 @@ const PhotoGallery: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedPhotoIndex, setSelectedPhotoIndex] = useState<number | null>(null);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+  const [showPopupBlockedMessage, setShowPopupBlockedMessage] = useState(false);
 
   // Load gallery data from service
   useEffect(() => {
@@ -394,11 +395,39 @@ const PhotoGallery: React.FC = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center space-x-2 bg-beach-500 hover:bg-beach-600 text-white px-4 py-2 rounded-lg transition-colors duration-200 text-sm md:text-base w-full md:w-auto justify-center"
-                  onClick={() => {
-                    // Track archive click
-                    if (dateId) {
+                  onClick={(e) => {
+                    try {
+                      // Track archive click
+                      if (dateId) {
+                        const archiveUrl = galleryData.archiveUrl || photoService.getGooglePhotosArchiveUrl();
+                        analytics.trackPhotoArchiveClick(archiveUrl, dateId);
+                      }
+                      
+                      // Add debugging
                       const archiveUrl = galleryData.archiveUrl || photoService.getGooglePhotosArchiveUrl();
-                      analytics.trackPhotoArchiveClick(archiveUrl, dateId);
+                      console.log('🔗 Archive link clicked:', archiveUrl);
+                      console.log('📊 Gallery data:', galleryData);
+                      
+                      // Prevent default behavior and handle manually to ensure it works
+                      e.preventDefault();
+                      
+                      // Try to open the link
+                      const newWindow = window.open(archiveUrl, '_blank', 'noopener,noreferrer');
+                      
+                      // If popup was blocked, show a message
+                      if (!newWindow) {
+                        console.warn('⚠️ Popup blocked, trying alternative method');
+                        setShowPopupBlockedMessage(true);
+                        // Hide message after 5 seconds
+                        setTimeout(() => setShowPopupBlockedMessage(false), 5000);
+                        // Fallback: try to navigate in the same window
+                        window.location.href = archiveUrl;
+                      }
+                    } catch (error) {
+                      console.error('❌ Error handling archive link click:', error);
+                      // Fallback: try direct navigation
+                      const archiveUrl = galleryData.archiveUrl || photoService.getGooglePhotosArchiveUrl();
+                      window.location.href = archiveUrl;
                     }
                   }}
                 >
@@ -409,6 +438,15 @@ const PhotoGallery: React.FC = () => {
             </div>
           </div>
         </div>
+
+        {/* Popup Blocked Message */}
+        {showPopupBlockedMessage && (
+          <div className="fixed top-4 right-4 bg-yellow-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 max-w-sm">
+            <div className="flex items-center space-x-2">
+              <span className="text-sm">⚠️ Popup blocked. Please allow popups for this site to open the archive link.</span>
+            </div>
+          </div>
+        )}
 
         {/* Photo Count Badge - Mobile Only */}
         {isMobile && (
