@@ -235,7 +235,7 @@ const StoryViewer: React.FC = () => {
   }
 
   return (
-    <div className="fixed inset-0 z-50 bg-black">
+    <div className="fixed inset-0 z-[9999999] bg-black">
       {/* Progress Bars */}
       <div className="absolute top-0 left-0 right-0 z-20 flex space-x-1 p-2">
         {currentStory.media.map((_, index) => (

@@ -533,7 +533,7 @@ const PhotoGallery: React.FC = () => {
         {/* Lightbox */}
         {isLightboxOpen && selectedPhotoIndex !== null && galleryData && (
           <div 
-            className="fixed inset-0 bg-black z-50 flex items-center justify-center"
+            className="fixed inset-0 bg-black z-[9999999] flex items-center justify-center"
             onClick={closeLightbox}
           >
             <div 
