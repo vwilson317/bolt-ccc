@@ -108,12 +108,15 @@ class PhotoService {
         // Extract date from folder name (assuming format like "2025-01-15" or "2025/01/15")
         const dateMatch = folder.name.match(/(\d{4})[-/](\d{1,2})[-/](\d{1,2})/);
         const date = dateMatch ? `${dateMatch[1]}-${dateMatch[2].padStart(2, '0')}-${dateMatch[3].padStart(2, '0')}` : folder.name;
+        // Try to find matching mock entry to source archiveCount from mock data
+        const matchingMock = this.mockPhotoDates.find(mock => mock.id === folder.name || mock.date === date);
         
         return {
           id: folder.name,
           date,
           title: this.formatFolderTitle(folder.name),
           photoCount: folder.imageCount,
+          archiveCount: matchingMock?.archiveCount,
           thumbnail: folder.thumbnail,
           description: `Photos from ${this.formatFolderTitle(folder.name)}`,
           location: 'Various locations', // You can enhance this by parsing folder structure
