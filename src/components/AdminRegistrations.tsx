@@ -175,7 +175,7 @@ const AdminRegistrations: React.FC<AdminRegistrationsProps> = ({ onRegistrationC
   return (
     <div className="space-y-6">
       {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="bg-white p-4 rounded-lg shadow-sm border">
           <div className="flex items-center justify-between">
             <div>
@@ -223,12 +223,12 @@ const AdminRegistrations: React.FC<AdminRegistrationsProps> = ({ onRegistrationC
       </div>
 
       {/* Filters */}
-      <div className="flex space-x-2">
+      <div className="flex flex-wrap gap-2 sm:gap-4">
         {(['all', 'pending', 'approved', 'rejected'] as const).map(status => (
           <button
             key={status}
             onClick={() => setSelectedStatus(status)}
-            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+            className={`px-3 py-2 sm:px-4 rounded-lg font-medium transition-colors text-sm sm:text-base ${
               selectedStatus === status
                 ? 'bg-beach-600 text-white'
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -248,56 +248,58 @@ const AdminRegistrations: React.FC<AdminRegistrationsProps> = ({ onRegistrationC
         ) : (
           <div className="divide-y divide-gray-200">
             {registrations.map(registration => (
-              <div key={registration.id} className="p-6 hover:bg-gray-50 transition-colors">
-                <div className="flex items-center justify-between">
+              <div key={registration.id} className="p-4 sm:p-6 hover:bg-gray-50 transition-colors">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between space-y-4 sm:space-y-0">
                   <div className="flex-1">
-                    <div className="flex items-center space-x-3 mb-2">
+                    <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-3 mb-2">
                       <h3 className="text-lg font-semibold text-gray-900">
                         {registration.name}
                       </h3>
-                      {registration.barracaNumber && (
-                        <span className="text-sm text-gray-500">
-                          #{registration.barracaNumber}
+                      <div className="flex items-center space-x-2">
+                        {registration.barracaNumber && (
+                          <span className="text-sm text-gray-500">
+                            #{registration.barracaNumber}
+                          </span>
+                        )}
+                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(registration.status)}`}>
+                          {getStatusIcon(registration.status)}
+                          <span className="ml-1">{registration.status}</span>
                         </span>
-                      )}
-                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(registration.status)}`}>
-                        {getStatusIcon(registration.status)}
-                        <span className="ml-1">{registration.status}</span>
-                      </span>
-                    </div>
-                    
-                    <div className="flex items-center space-x-4 text-sm text-gray-600 mb-2">
-                      <div className="flex items-center space-x-1">
-                        <MapPin className="w-4 h-4" />
-                        <span>{registration.location}</span>
-                      </div>
-                      <div className="flex items-center space-x-1">
-                        <span className="font-medium">Owner:</span>
-                        <span>{registration.ownerName}</span>
-                      </div>
-                      <div className="flex items-center space-x-1">
-                        <Phone className="w-4 h-4" />
-                        <span>{registration.contact.phone}</span>
-                      </div>
-                      <div className="flex items-center space-x-1">
-                        <Mail className="w-4 h-4" />
-                        <span>{registration.contact.email}</span>
                       </div>
                     </div>
                     
-                    <p className="text-gray-700 text-sm line-clamp-2">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4 text-sm text-gray-600 mb-2">
+                      <div className="flex items-center space-x-1">
+                        <MapPin className="w-4 h-4 flex-shrink-0" />
+                        <span className="truncate">{registration.location}</span>
+                      </div>
+                      <div className="flex items-center space-x-1">
+                        <span className="font-medium flex-shrink-0">Owner:</span>
+                        <span className="truncate">{registration.ownerName}</span>
+                      </div>
+                      <div className="flex items-center space-x-1">
+                        <Phone className="w-4 h-4 flex-shrink-0" />
+                        <span className="truncate">{registration.contact.phone}</span>
+                      </div>
+                      <div className="flex items-center space-x-1">
+                        <Mail className="w-4 h-4 flex-shrink-0" />
+                        <span className="truncate">{registration.contact.email}</span>
+                      </div>
+                    </div>
+                    
+                    <p className="text-gray-700 text-sm line-clamp-2 mb-2">
                       {registration.description}
                     </p>
                     
-                    <div className="flex items-center space-x-1 mt-2">
-                      <Calendar className="w-4 h-4 text-gray-400" />
+                    <div className="flex items-center space-x-1">
+                      <Calendar className="w-4 h-4 text-gray-400 flex-shrink-0" />
                       <span className="text-xs text-gray-500">
                         Submitted {formatDate(registration.submittedAt)}
                       </span>
                     </div>
                   </div>
                   
-                  <div className="flex items-center space-x-2 ml-4">
+                  <div className="flex items-center justify-end space-x-2 sm:ml-4">
                     <button
                       onClick={() => handleViewRegistration(registration)}
                       className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
@@ -335,7 +337,7 @@ const AdminRegistrations: React.FC<AdminRegistrationsProps> = ({ onRegistrationC
       {showModal && selectedRegistration && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="p-6">
+            <div className="p-4 sm:p-6">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-xl font-semibold text-gray-900">
                   Registration Details
@@ -352,7 +354,7 @@ const AdminRegistrations: React.FC<AdminRegistrationsProps> = ({ onRegistrationC
                 {/* Basic Info */}
                 <div>
                   <h3 className="text-lg font-medium text-gray-900 mb-3">Basic Information</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700">Name</label>
                       <p className="mt-1 text-sm text-gray-900">{selectedRegistration.name}</p>
@@ -383,7 +385,7 @@ const AdminRegistrations: React.FC<AdminRegistrationsProps> = ({ onRegistrationC
                 {/* Contact Info */}
                 <div>
                   <h3 className="text-lg font-medium text-gray-900 mb-3">Contact Information</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700">Phone</label>
                       <p className="mt-1 text-sm text-gray-900">{selectedRegistration.contact.phone}</p>
@@ -545,14 +547,15 @@ const AdminRegistrations: React.FC<AdminRegistrationsProps> = ({ onRegistrationC
 
                 {/* Action Buttons */}
                 {selectedRegistration.status === 'pending' && (
-                  <div className="flex space-x-3 pt-4 border-t">
+                  <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3 pt-4 border-t">
                     <button
                       onClick={handleApprove}
                       disabled={processing}
                       className="flex-1 bg-green-600 hover:bg-green-700 disabled:bg-green-400 text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center justify-center space-x-2"
                     >
                       <Check className="w-4 h-4" />
-                      <span>Approve & Convert to Barraca</span>
+                      <span className="hidden sm:inline">Approve & Convert to Barraca</span>
+                      <span className="sm:hidden">Approve</span>
                     </button>
                     <button
                       onClick={handleReject}
