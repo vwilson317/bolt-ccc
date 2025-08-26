@@ -7,6 +7,7 @@ import BarracaGrid from '../components/BarracaGrid';
 import StoryCarousel from '../components/StoryCarousel';
 import LocationFilterCheckboxes from '../components/LocationFilterCheckboxes';
 import StarRating from '../components/StarRating';
+import SEOHead from '../components/SEOHead';
 
 import { useInfiniteScrollV2 } from '../hooks/useInfiniteScrollV2';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
@@ -113,6 +114,16 @@ const Discover: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 relative">
+      <SEOHead 
+        title="Discover Beach Vendors - Carioca Coastal Club"
+        description="Find and explore the best beach vendors (barracas) in Rio de Janeiro. Search by location, rating, and availability."
+        image="https://carioca-coastal-club.netlify.app/group-v-1.jpg"
+        url="https://carioca-coastal-club.netlify.app/discover"
+        type="website"
+        siteName="Carioca Coastal Club"
+        locale="en_US"
+        twitterCard="summary_large_image"
+      />
       {/* Sticky Search and Weather Group - overlaps hero with negative margin */}
       <div className="sticky top-16 z-50">
         {/* Weather Marquee */}
