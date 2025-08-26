@@ -24,6 +24,7 @@ export interface Barraca {
   contact: {
     phone?: string;
     email?: string;
+    website?: string;
   };
   amenities: string[];
   weatherDependent: boolean;

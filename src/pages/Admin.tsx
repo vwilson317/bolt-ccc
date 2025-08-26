@@ -33,7 +33,7 @@ const Admin: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLogging, setIsLogging] = useState(false);
   const [loginError, setLoginError] = useState('');
-  const [activeTab, setActiveTab] = useState<'barracas' | 'registrations' | 'stats' | 'emails' | 'analytics' | 'special' | 'manual'>('barracas');
+  const [activeTab, setActiveTab] = useState<'registrations' | 'barracas' | 'stats' | 'emails' | 'analytics' | 'special' | 'manual'>('registrations');
   const [editingBarraca, setEditingBarraca] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -353,21 +353,10 @@ const Admin: React.FC = () => {
         {/* Tabs */}
         <div className="mb-8">
           <div className="border-b border-gray-200">
-            <nav className="-mb-px flex flex-wrap sm:flex-nowrap space-y-2 sm:space-y-0 sm:space-x-8">
-              <button
-                onClick={() => setActiveTab('barracas')}
-                className={`w-full sm:w-auto py-2 px-1 border-b-2 font-medium text-sm transition-colors ${
-                  activeTab === 'barracas'
-                    ? 'border-beach-500 text-beach-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                }`}
-              >
-                <Edit2 className="h-4 w-4 inline mr-2" />
-                {t('admin.manageBarracas')}
-              </button>
+            <nav className="-mb-px flex overflow-x-auto scrollbar-hide space-x-6 sm:space-x-8 pb-2">
               <button
                 onClick={() => setActiveTab('registrations')}
-                className={`w-full sm:w-auto py-2 px-1 border-b-2 font-medium text-sm transition-colors ${
+                className={`flex-shrink-0 py-2 px-1 border-b-2 font-medium text-sm transition-colors whitespace-nowrap ${
                   activeTab === 'registrations'
                     ? 'border-beach-500 text-beach-600'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
@@ -377,8 +366,19 @@ const Admin: React.FC = () => {
                 Registrations
               </button>
               <button
+                onClick={() => setActiveTab('barracas')}
+                className={`flex-shrink-0 py-2 px-1 border-b-2 font-medium text-sm transition-colors whitespace-nowrap ${
+                  activeTab === 'barracas'
+                    ? 'border-beach-500 text-beach-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                }`}
+              >
+                <Edit2 className="h-4 w-4 inline mr-2" />
+                {t('admin.manageBarracas')}
+              </button>
+              <button
                 onClick={() => setActiveTab('stats')}
-                className={`w-full sm:w-auto py-2 px-1 border-b-2 font-medium text-sm transition-colors ${
+                className={`flex-shrink-0 py-2 px-1 border-b-2 font-medium text-sm transition-colors whitespace-nowrap ${
                   activeTab === 'stats'
                     ? 'border-beach-500 text-beach-600'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
@@ -389,7 +389,7 @@ const Admin: React.FC = () => {
               </button>
               <button
                 onClick={() => setActiveTab('emails')}
-                className={`w-full sm:w-auto py-2 px-1 border-b-2 font-medium text-sm transition-colors ${
+                className={`flex-shrink-0 py-2 px-1 border-b-2 font-medium text-sm transition-colors whitespace-nowrap ${
                   activeTab === 'emails'
                     ? 'border-beach-500 text-beach-600'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
@@ -400,7 +400,7 @@ const Admin: React.FC = () => {
               </button>
               <button
                 onClick={() => setActiveTab('analytics')}
-                className={`w-full sm:w-auto py-2 px-1 border-b-2 font-medium text-sm transition-colors ${
+                className={`flex-shrink-0 py-2 px-1 border-b-2 font-medium text-sm transition-colors whitespace-nowrap ${
                   activeTab === 'analytics'
                     ? 'border-beach-500 text-beach-600'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
@@ -411,7 +411,7 @@ const Admin: React.FC = () => {
               </button>
               <button
                 onClick={() => setActiveTab('special')}
-                className={`w-full sm:w-auto py-2 px-1 border-b-2 font-medium text-sm transition-colors ${
+                className={`flex-shrink-0 py-2 px-1 border-b-2 font-medium text-sm transition-colors whitespace-nowrap ${
                   activeTab === 'special'
                     ? 'border-beach-500 text-beach-600'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
@@ -422,7 +422,7 @@ const Admin: React.FC = () => {
               </button>
               <button
                 onClick={() => setActiveTab('manual')}
-                className={`w-full sm:w-auto py-2 px-1 border-b-2 font-medium text-sm transition-colors ${
+                className={`flex-shrink-0 py-2 px-1 border-b-2 font-medium text-sm transition-colors whitespace-nowrap ${
                   activeTab === 'manual'
                     ? 'border-beach-500 text-beach-600'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
