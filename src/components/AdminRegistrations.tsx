@@ -164,6 +164,11 @@ const AdminRegistrations: React.FC<AdminRegistrationsProps> = ({ onRegistrationC
     }
   };
 
+  const getWhatsAppLink = (phone: string) => {
+    const digits = (phone || '').replace(/\D/g, '');
+    return `https://wa.me/${digits}`;
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -279,7 +284,15 @@ const AdminRegistrations: React.FC<AdminRegistrationsProps> = ({ onRegistrationC
                       </div>
                       <div className="flex items-center space-x-1">
                         <Phone className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
-                        <span className="truncate">{registration.contact.phone}</span>
+                        <a
+                          href={getWhatsAppLink(registration.contact.phone)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="truncate text-beach-600 hover:text-beach-700 underline-offset-2 hover:underline"
+                          title="Abrir no WhatsApp"
+                        >
+                          {registration.contact.phone}
+                        </a>
                       </div>
                       <div className="flex items-center space-x-1">
                         <Mail className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
@@ -388,7 +401,16 @@ const AdminRegistrations: React.FC<AdminRegistrationsProps> = ({ onRegistrationC
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700">Phone</label>
-                      <p className="mt-1 text-sm text-gray-900 break-all">{selectedRegistration.contact.phone}</p>
+                      <p className="mt-1 text-sm text-gray-900 break-all">
+                        <a
+                          href={getWhatsAppLink(selectedRegistration.contact.phone)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-beach-600 hover:text-beach-700 underline-offset-2 hover:underline"
+                        >
+                          {selectedRegistration.contact.phone}
+                        </a>
+                      </p>
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700">Email</label>
