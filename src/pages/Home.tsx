@@ -9,6 +9,7 @@ import BarracaGrid from '../components/BarracaGrid';
 import EmailSubscriptionSection from '../components/EmailSubscriptionSection';
 import StoryCarousel from '../components/StoryCarousel';
 import UniqueVisitorCounter from '../components/UniqueVisitorCounter';
+import SEOHead from '../components/SEOHead';
 import { useApp } from '../contexts/AppContext';
 import { useStory } from '../contexts/StoryContext';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
@@ -74,6 +75,16 @@ const Home: React.FC = () => {
 
     return (
     <div className="relative">
+      <SEOHead 
+        title="Carioca Coastal Club - Beach Vendor Discovery"
+        description="Discover the best beach vendors (barracas) in Rio de Janeiro. Real-time weather, status updates, and more."
+        image="https://carioca-coastal-club.netlify.app/group-v-1.jpg"
+        url="https://carioca-coastal-club.netlify.app"
+        type="website"
+        siteName="Carioca Coastal Club"
+        locale="en_US"
+        twitterCard="summary_large_image"
+      />
       {/* Story Carousel - Only show if feature is enabled */}
       {featureFlags.enableStoryBanner && <StoryCarousel />}
       
