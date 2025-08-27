@@ -31,6 +31,11 @@ const transformRegistrationToDB = (registration: Omit<BarracaRegistration, 'id' 
   contact_for_photos: registration.contactForPhotos || false,
   contact_for_status: registration.contactForStatus || false,
   preferred_contact_method: registration.preferredContactMethod || null,
+  // English fluency information
+  english_fluency: registration.englishFluency || 'no',
+  english_speaker_names: registration.englishSpeakerNames || null,
+  // Tab system for tracking orders
+  tab_system: registration.tabSystem || 'name_only',
   status: 'pending',
   submitted_at: new Date().toISOString(),
   reviewed_at: null,
@@ -73,6 +78,11 @@ const transformRegistrationFromDB = (row: any): BarracaRegistration => {
   contactForPhotos: row.contact_for_photos || false,
   contactForStatus: row.contact_for_status || false,
   preferredContactMethod: row.preferred_contact_method,
+  // English fluency information
+  englishFluency: row.english_fluency || 'no',
+  englishSpeakerNames: row.english_speaker_names,
+  // Tab system for tracking orders
+  tabSystem: row.tab_system || 'name_only',
   status: row.status,
   submittedAt: new Date(row.submitted_at),
   reviewedAt: row.reviewed_at ? new Date(row.reviewed_at) : undefined,

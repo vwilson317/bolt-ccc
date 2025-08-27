@@ -341,6 +341,11 @@ export interface BarracaRegistration {
   contactForPhotos?: boolean;
   contactForStatus?: boolean;
   preferredContactMethod?: 'whatsapp' | 'instagram' | 'email';
+  // English fluency information
+  englishFluency?: 'no' | 'not_fluent' | 'fluent';
+  englishSpeakerNames?: string;
+  // Tab system for tracking orders
+  tabSystem?: 'name_only' | 'individual_paper' | 'number_on_chair' | 'digital';
   status: 'pending' | 'approved' | 'rejected';
   submittedAt: Date;
   reviewedAt?: Date;

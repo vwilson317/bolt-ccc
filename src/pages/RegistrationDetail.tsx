@@ -383,6 +383,43 @@ const RegistrationDetail: React.FC = () => {
               </div>
             </div>
 
+            {/* English Fluency & Tab System */}
+            <div className="bg-white rounded-lg shadow-sm border p-6">
+              <h2 className="text-xl font-semibold mb-4">English Fluency & Tab System</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <h3 className="text-lg font-medium mb-2">English Fluency</h3>
+                  <div className="flex items-center space-x-2">
+                    <Users className="h-4 w-4 text-gray-400" />
+                    <span className="text-gray-700 capitalize">
+                      {registration.englishFluency === 'no' && 'No English speakers'}
+                      {registration.englishFluency === 'not_fluent' && 'Not fluent'}
+                      {registration.englishFluency === 'fluent' && 'Fluent English speakers'}
+                    </span>
+                  </div>
+                  {registration.englishFluency === 'fluent' && registration.englishSpeakerNames && (
+                    <div className="mt-2 pl-6">
+                      <span className="text-sm text-gray-600">Names: </span>
+                      <span className="text-gray-700">{registration.englishSpeakerNames}</span>
+                    </div>
+                  )}
+                </div>
+                
+                <div>
+                  <h3 className="text-lg font-medium mb-2">Tab System</h3>
+                  <div className="flex items-center space-x-2">
+                    <FileText className="h-4 w-4 text-gray-400" />
+                    <span className="text-gray-700">
+                      {registration.tabSystem === 'name_only' && 'Name only'}
+                      {registration.tabSystem === 'individual_paper' && 'Individual paper tab'}
+                      {registration.tabSystem === 'number_on_chair' && 'Number on chair'}
+                      {registration.tabSystem === 'digital' && 'Digital (app or system-based)'}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             {/* Additional Information */}
             {registration.additionalInfo && (
               <div className="bg-white rounded-lg shadow-sm border p-6">
