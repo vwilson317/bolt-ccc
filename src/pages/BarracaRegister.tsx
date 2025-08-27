@@ -535,6 +535,70 @@ const BarracaRegister: React.FC = () => {
 
           </div>
 
+          {/* English Fluency & Tab System */}
+          <div className="space-y-6">
+            <h2 className="text-2xl font-semibold text-gray-900 border-b border-gray-200 pb-2">
+              {t('registration.form.englishFluency')} & {t('registration.form.tabSystem')}
+            </h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* English Fluency */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  {t('registration.form.englishFluency')} *
+                </label>
+                <p className="text-sm text-gray-600 mb-3">
+                  {t('registration.form.englishFluencyDescription')}
+                </p>
+                <select
+                  value={formData.englishFluency || 'no'}
+                  onChange={(e) => handleInputChange('englishFluency', e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
+                >
+                  <option value="no">{t('registration.form.englishFluencyNo')}</option>
+                  <option value="not_fluent">{t('registration.form.englishFluencyNotFluent')}</option>
+                  <option value="fluent">{t('registration.form.englishFluencyFluent')}</option>
+                </select>
+              </div>
+
+              {/* Tab System */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  {t('registration.form.tabSystem')} *
+                </label>
+                <p className="text-sm text-gray-600 mb-3">
+                  {t('registration.form.tabSystemDescription')}
+                </p>
+                <select
+                  value={formData.tabSystem || 'name_only'}
+                  onChange={(e) => handleInputChange('tabSystem', e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
+                >
+                  <option value="name_only">{t('registration.form.tabSystemNameOnly')}</option>
+                  <option value="individual_paper">{t('registration.form.tabSystemIndividualPaper')}</option>
+                  <option value="number_on_chair">{t('registration.form.tabSystemNumberOnChair')}</option>
+                  <option value="digital">{t('registration.form.tabSystemDigital')}</option>
+                </select>
+              </div>
+            </div>
+
+            {/* English Speaker Names - Only show if fluent is selected */}
+            {formData.englishFluency === 'fluent' && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  {t('registration.form.englishSpeakerNames')} *
+                </label>
+                <input
+                  type="text"
+                  value={formData.englishSpeakerNames || ''}
+                  onChange={(e) => handleInputChange('englishSpeakerNames', e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
+                  placeholder={t('registration.form.englishSpeakerNamesPlaceholder')}
+                />
+              </div>
+            )}
+          </div>
+
           {/* Contact Information */}
           <div className="space-y-6">
             <h2 className="text-2xl font-semibold text-gray-900 border-b border-gray-200 pb-2">
@@ -1064,70 +1128,6 @@ const BarracaRegister: React.FC = () => {
                 </div>
               )}
             </div>
-          </div>
-
-          {/* English Fluency & Tab System */}
-          <div className="space-y-6">
-            <h2 className="text-2xl font-semibold text-gray-900 border-b border-gray-200 pb-2">
-              {t('registration.form.englishFluency')} & {t('registration.form.tabSystem')}
-            </h2>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* English Fluency */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  {t('registration.form.englishFluency')}
-                </label>
-                <p className="text-sm text-gray-600 mb-3">
-                  {t('registration.form.englishFluencyDescription')}
-                </p>
-                <select
-                  value={formData.englishFluency || 'no'}
-                  onChange={(e) => handleInputChange('englishFluency', e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
-                >
-                  <option value="no">{t('registration.form.englishFluencyNo')}</option>
-                  <option value="not_fluent">{t('registration.form.englishFluencyNotFluent')}</option>
-                  <option value="fluent">{t('registration.form.englishFluencyFluent')}</option>
-                </select>
-              </div>
-
-              {/* Tab System */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  {t('registration.form.tabSystem')}
-                </label>
-                <p className="text-sm text-gray-600 mb-3">
-                  {t('registration.form.tabSystemDescription')}
-                </p>
-                <select
-                  value={formData.tabSystem || 'name_only'}
-                  onChange={(e) => handleInputChange('tabSystem', e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
-                >
-                  <option value="name_only">{t('registration.form.tabSystemNameOnly')}</option>
-                  <option value="individual_paper">{t('registration.form.tabSystemIndividualPaper')}</option>
-                  <option value="number_on_chair">{t('registration.form.tabSystemNumberOnChair')}</option>
-                  <option value="digital">{t('registration.form.tabSystemDigital')}</option>
-                </select>
-              </div>
-            </div>
-
-            {/* English Speaker Names - Only show if fluent is selected */}
-            {formData.englishFluency === 'fluent' && (
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  {t('registration.form.englishSpeakerNames')}
-                </label>
-                <input
-                  type="text"
-                  value={formData.englishSpeakerNames || ''}
-                  onChange={(e) => handleInputChange('englishSpeakerNames', e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
-                  placeholder={t('registration.form.englishSpeakerNamesPlaceholder')}
-                />
-              </div>
-            )}
           </div>
 
                      {/* Default Photo */}
