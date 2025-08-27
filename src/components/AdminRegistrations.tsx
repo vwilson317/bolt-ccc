@@ -47,9 +47,8 @@ const AdminRegistrations: React.FC<AdminRegistrationsProps> = ({ onRegistrationC
   };
 
   const handleViewRegistration = (registration: BarracaRegistration) => {
-    setSelectedRegistration(registration);
-    setAdminNotes(registration.adminNotes || '');
-    setShowModal(true);
+    // Navigate to the registration detail page instead of opening modal
+    window.open(`/registration/${registration.id}`, '_blank');
   };
 
   const handleApprove = async () => {

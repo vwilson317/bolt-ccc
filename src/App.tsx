@@ -20,6 +20,7 @@ import About from './pages/About';
 import Admin from './pages/Admin';
 import BarracaDetailPage from './pages/BarracaDetail';
 import BarracaRegister from './pages/BarracaRegister';
+import RegistrationDetail from './pages/RegistrationDetail';
 import Photos from './pages/Photos';
 import PhotoGallery from './pages/PhotoGallery';
 
@@ -56,6 +57,7 @@ function AppContent() {
           <Route path="/about" element={<About />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/register" element={<BarracaRegister />} />
+          <Route path="/registration/:id" element={<RegistrationDetail />} />
           <Route path="/photos" element={<Photos />} />
           <Route path="/photos/:dateId" element={<PhotoGallery />} />
           <Route path="/barraca/:id" element={<BarracaDetailPage />} />

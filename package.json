@@ -24,6 +24,7 @@
     "query:all": "npx dotenv -e .env -- npx tsx src/scripts/queryAll.ts",
     "query:quick": "npx dotenv -e .env -- npx tsx src/scripts/quickQuery.ts",
     "test:cloudflare": "npx dotenv -e .env -- npx tsx src/scripts/testCloudflare.ts",
+    "test:twilio": "npx dotenv -e .env -- npx tsx src/scripts/testTwilioWhatsApp.ts",
     "netlify:dev": "netlify dev",
     "netlify:build": "netlify build",
     "netlify:functions:build": "netlify functions:build",

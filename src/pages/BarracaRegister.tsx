@@ -44,7 +44,12 @@ const BarracaRegister: React.FC = () => {
     // Contact preferences for photos and status updates
     contactForPhotos: false,
     contactForStatus: false,
-    preferredContactMethod: 'whatsapp'
+    preferredContactMethod: 'whatsapp',
+    // English fluency information
+    englishFluency: 'no',
+    englishSpeakerNames: '',
+    // Tab system for tracking orders
+    tabSystem: 'name_only'
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -263,6 +268,56 @@ const BarracaRegister: React.FC = () => {
     return emailRegex.test(email);
   };
 
+  // Quick helper to fill the form with test data for verification
+  const fillWithTestData = () => {
+    setFormData({
+      name: 'Barraca Teste do Carioca',
+      ownerName: 'João Silva',
+      barracaNumber: '42',
+      location: 'Ipanema',
+      coordinates: { lat: -22.985, lng: -43.2048 },
+      typicalHours: '09:00 - 18:00',
+      description: 'Barraca confortável com ótimos petiscos, cadeiras e guarda-sóis. Ideal para família.',
+      nearestPosto: 'Posto 9',
+      contact: {
+        phone: '(21) 98765-4321',
+        email: 'contato@barracateste.com',
+        instagram: '@barracateste'
+      },
+      countryCode: '+55',
+      amenities: [
+        t('registration.amenities.WiFi'),
+        t('registration.amenities.Food'),
+        t('registration.amenities.Shower')
+      ],
+      environment: [
+        t('registration.vibes.familyFriendly'),
+        t('registration.vibes.relaxed'),
+        t('registration.vibes.beachGames')
+      ],
+      defaultPhoto: '/group-v-1.jpg',
+      weekendHoursEnabled: true,
+      weekendHours: {
+        friday: { open: '10:00', close: '22:00' },
+        saturday: { open: '09:00', close: '22:00' },
+        sunday: { open: '09:00', close: '20:00' }
+      },
+      additionalInfo: 'Aceitamos cartão e PIX. Promoções especiais nos fins de semana.',
+      qrCodes: true,
+      repeatDiscounts: true,
+      hotelPartnerships: false,
+      contentCreation: true,
+      onlineOrders: false,
+      contactForPhotos: true,
+      contactForStatus: true,
+      preferredContactMethod: 'whatsapp',
+      englishFluency: 'fluent',
+      englishSpeakerNames: 'Ana, João',
+      tabSystem: 'number_on_chair'
+    });
+    setValidationErrors({});
+  };
+
   // Helper function to strip country code from phone number for display
   const getDisplayPhoneNumber = (phone: string, countryCode: string) => {
     if (!phone) return '';
@@ -316,7 +371,7 @@ const BarracaRegister: React.FC = () => {
       };
 
       // Submit to registration service
-      const response = await fetch('/api/barraca-registrations', {
+      const response = await fetch('/.netlify/functions/barraca-registrations', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -374,7 +429,12 @@ const BarracaRegister: React.FC = () => {
           // Contact preferences for photos and status updates
           contactForPhotos: false,
           contactForStatus: false,
-          preferredContactMethod: 'whatsapp'
+          preferredContactMethod: 'whatsapp',
+          // English fluency information
+          englishFluency: 'no',
+          englishSpeakerNames: '',
+          // Tab system for tracking orders
+          tabSystem: 'name_only'
         });
         // Clear validation errors
         setValidationErrors({});
@@ -413,9 +473,18 @@ const BarracaRegister: React.FC = () => {
             <h1 className="text-2xl font-bold text-gray-900 mb-2">
               {t('registration.title')}
             </h1>
-            <p className="text-gray-600">
+            <p className="text-gray-600 mb-4">
               {t('registration.subtitle')}
             </p>
+            {/* <div className="flex justify-center">
+              <button
+                type="button"
+                onClick={fillWithTestData}
+                className="px-4 py-2 text-sm font-medium text-white bg-beach-600 hover:bg-beach-700 rounded-lg shadow"
+              >
+                Fill with test data
+              </button>
+            </div> */}
           </div>
         
         <form onSubmit={handleSubmit} className="space-y-8">
@@ -523,6 +592,70 @@ const BarracaRegister: React.FC = () => {
             </div>
 
 
+          </div>
+
+          {/* English Fluency & Tab System */}
+          <div className="space-y-6">
+            <h2 className="text-2xl font-semibold text-gray-900 border-b border-gray-200 pb-2">
+              {t('registration.form.englishFluency')} & {t('registration.form.tabSystem')}
+            </h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* English Fluency */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  {t('registration.form.englishFluency')} *
+                </label>
+                <p className="text-sm text-gray-600 mb-3">
+                  {t('registration.form.englishFluencyDescription')}
+                </p>
+                <select
+                  value={formData.englishFluency || 'no'}
+                  onChange={(e) => handleInputChange('englishFluency', e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
+                >
+                  <option value="no">{t('registration.form.englishFluencyNo')}</option>
+                  <option value="not_fluent">{t('registration.form.englishFluencyNotFluent')}</option>
+                  <option value="fluent">{t('registration.form.englishFluencyFluent')}</option>
+                </select>
+              </div>
+
+              {/* Tab System */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  {t('registration.form.tabSystem')} *
+                </label>
+                <p className="text-sm text-gray-600 mb-3">
+                  {t('registration.form.tabSystemDescription')}
+                </p>
+                <select
+                  value={formData.tabSystem || 'name_only'}
+                  onChange={(e) => handleInputChange('tabSystem', e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
+                >
+                  <option value="name_only">{t('registration.form.tabSystemNameOnly')}</option>
+                  <option value="individual_paper">{t('registration.form.tabSystemIndividualPaper')}</option>
+                  <option value="number_on_chair">{t('registration.form.tabSystemNumberOnChair')}</option>
+                  <option value="digital">{t('registration.form.tabSystemDigital')}</option>
+                </select>
+              </div>
+            </div>
+
+            {/* English Speaker Names - Only show if fluent is selected */}
+            {formData.englishFluency === 'fluent' && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  {t('registration.form.englishSpeakerNames')} *
+                </label>
+                <input
+                  type="text"
+                  value={formData.englishSpeakerNames || ''}
+                  onChange={(e) => handleInputChange('englishSpeakerNames', e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
+                  placeholder={t('registration.form.englishSpeakerNamesPlaceholder')}
+                />
+              </div>
+            )}
           </div>
 
           {/* Contact Information */}
