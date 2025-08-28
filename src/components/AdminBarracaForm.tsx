@@ -60,6 +60,56 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
     }
   };
 
+  // Helper function to validate and format Instagram URL
+  const validateInstagramUrl = (url: string): { isValid: boolean; formattedUrl: string; error?: string } => {
+    if (!url.trim()) {
+      return { isValid: false, formattedUrl: '', error: 'Instagram URL is required' };
+    }
+
+    let formattedUrl = url.trim();
+    
+    // Handle different Instagram URL formats
+    if (formattedUrl.includes('instagram.com')) {
+      // Full URL provided
+      if (!formattedUrl.startsWith('http')) {
+        formattedUrl = 'https://' + formattedUrl;
+      }
+    } else if (formattedUrl.startsWith('@')) {
+      // Username with @ symbol
+      const username = formattedUrl.substring(1);
+      formattedUrl = `https://instagram.com/${username}`;
+    } else if (formattedUrl.match(/^[a-zA-Z0-9._]+$/)) {
+      // Just username without @
+      formattedUrl = `https://instagram.com/${formattedUrl}`;
+    } else {
+      return { isValid: false, formattedUrl: '', error: 'Invalid Instagram URL format' };
+    }
+
+    // Validate the final URL
+    try {
+      const urlObj = new URL(formattedUrl);
+      if (!urlObj.hostname.includes('instagram.com')) {
+        return { isValid: false, formattedUrl: '', error: 'URL must be from Instagram' };
+      }
+      return { isValid: true, formattedUrl };
+    } catch {
+      return { isValid: false, formattedUrl: '', error: 'Invalid URL format' };
+    }
+  };
+
+  // Helper function to extract Instagram username from URL
+  const extractInstagramUsername = (url: string): string => {
+    if (!url) return '';
+    
+    try {
+      const urlObj = new URL(url.startsWith('http') ? url : `https://${url}`);
+      const pathParts = urlObj.pathname.split('/').filter(part => part);
+      return pathParts[0] || '';
+    } catch {
+      return '';
+    }
+  };
+
   // Helper function to handle image load errors
   const handleImageError = (imageKey: string) => {
     setImageErrors(prev => ({ ...prev, [imageKey]: true }));
@@ -106,26 +156,53 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
   const ctaButtonTypes = ['url', 'phone', 'email', 'whatsapp', 'ig', 'reservation', 'custom'];
   const iconOptions = ['Calendar', 'Eye', 'MessageCircle', 'Menu', 'Phone', 'Mail', 'ExternalLink', 'Star', 'Instagram'];
 
+  // Common environment types for easy selection
+  const commonEnvironmentTypes = [
+    'Beachfront',
+    'Ocean View',
+    'Shaded',
+    'Open Air',
+    'Indoor',
+    'Rooftop',
+    'Garden',
+    'Poolside',
+    'Street Side',
+    'Quiet',
+    'Family Friendly',
+    'Romantic',
+    'Party Atmosphere',
+    'Sports Bar',
+    'Live Music',
+    'DJ',
+    'Pet Friendly',
+    'Wheelchair Accessible'
+  ];
+
   useEffect(() => {
     if (barracaId) {
       const barraca = barracas.find(b => b.id === barracaId);
       if (barraca) {
         setFormData({
           name: barraca.name,
+          ownerName: (barraca as any).ownerName || '',
           barracaNumber: barraca.barracaNumber || '',
           location: barraca.location,
           coordinates: barraca.coordinates,
           isOpen: barraca.isOpen,
           typicalHours: barraca.typicalHours,
           description: barraca.description,
+          nearestPosto: (barraca as any).nearestPosto || '',
           photos: barraca.photos,
           menuPreview: barraca.menuPreview,
           contact: {
             phone: barraca.contact.phone || '',
             email: barraca.contact.email || '',
-            website: barraca.contact.website || ''
+            website: barraca.contact.website || '',
+            instagram: (barraca.contact as any).instagram || ''
           },
           amenities: barraca.amenities,
+          environment: (barraca as any).environment || [],
+          additionalInfo: (barraca as any).additionalInfo || '',
           weatherDependent: barraca.weatherDependent,
           partnered: barraca.partnered,
           weekendHoursEnabled: barraca.weekendHoursEnabled,
@@ -137,7 +214,22 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
           specialAdminOverride: barraca.specialAdminOverride,
           specialAdminOverrideExpires: barraca.specialAdminOverrideExpires,
           rating: barraca.rating,
-          ctaButtons: barraca.ctaButtons || []
+          ctaButtons: barraca.ctaButtons || [],
+          // Partnership opportunities
+          qrCodes: (barraca as any).qrCodes || false,
+          repeatDiscounts: (barraca as any).repeatDiscounts || false,
+          hotelPartnerships: (barraca as any).hotelPartnerships || false,
+          contentCreation: (barraca as any).contentCreation || false,
+          onlineOrders: (barraca as any).onlineOrders || false,
+          // Contact preferences
+          contactForPhotos: (barraca as any).contactForPhotos || false,
+          contactForStatus: (barraca as any).contactForStatus || false,
+          preferredContactMethod: (barraca as any).preferredContactMethod || 'whatsapp',
+          // English fluency
+          englishFluency: (barraca as any).englishFluency || 'no',
+          englishSpeakerNames: (barraca as any).englishSpeakerNames || '',
+          // Tab system
+          tabSystem: (barraca as any).tabSystem || 'name_only'
         });
       }
     }
@@ -156,11 +248,30 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
       // Add placeholder image if no horizontal images provided
       const finalHorizontalImages = filteredHorizontalImages.length > 0 
         ? filteredHorizontalImages 
-        : ['/api/placeholder/600/400'];
+        : ['https://images.cariocacoastalclub.com/under-construction-sm.png'];
 
       // Generate barraca number if not provided
       const finalBarracaNumber = formData.barracaNumber.trim() || 
         (barracas.length + 1).toString().padStart(3, '0');
+
+      // Format Instagram URLs in CTA buttons
+      const formattedCtaButtons = formData.ctaButtons
+        .filter(button => button.text.trim() !== '' && button.action.value.trim() !== '')
+        .map(button => {
+          if (button.action.type === 'ig') {
+            const validation = validateInstagramUrl(button.action.value);
+            if (validation.isValid) {
+              return {
+                ...button,
+                action: {
+                  ...button.action,
+                  value: validation.formattedUrl
+                }
+              };
+            }
+          }
+          return button;
+        });
 
       const barracaData = {
         ...formData,
@@ -171,7 +282,8 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
         },
         menuPreview: formData.menuPreview.filter(item => item.trim() !== ''),
         amenities: formData.amenities.filter(amenity => amenity.trim() !== ''),
-        ctaButtons: formData.ctaButtons.filter(button => button.text.trim() !== '' && button.action.value.trim() !== '')
+        environment: formData.environment.filter(env => env.trim() !== ''),
+        ctaButtons: formattedCtaButtons
       };
 
       if (barracaId) {
@@ -198,7 +310,7 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
     }
   };
 
-  const addArrayItem = (field: 'menuPreview' | 'amenities' | 'horizontal' | 'vertical') => {
+  const addArrayItem = (field: 'menuPreview' | 'amenities' | 'environment' | 'horizontal' | 'vertical') => {
     if (field === 'horizontal' || field === 'vertical') {
       setFormData(prev => ({
         ...prev,
@@ -215,7 +327,7 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
     }
   };
 
-  const updateArrayItem = (field: 'menuPreview' | 'amenities' | 'horizontal' | 'vertical', index: number, value: string) => {
+  const updateArrayItem = (field: 'menuPreview' | 'amenities' | 'environment' | 'horizontal' | 'vertical', index: number, value: string) => {
     if (field === 'horizontal' || field === 'vertical') {
       setFormData(prev => ({
         ...prev,
@@ -238,7 +350,7 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
     }
   };
 
-  const removeArrayItem = (field: 'menuPreview' | 'amenities' | 'horizontal' | 'vertical', index: number) => {
+  const removeArrayItem = (field: 'menuPreview' | 'amenities' | 'environment' | 'horizontal' | 'vertical', index: number) => {
     if (field === 'horizontal' || field === 'vertical') {
       setFormData(prev => ({
         ...prev,
@@ -253,6 +365,15 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
         [field]: prev[field].filter((_, i) => i !== index)
       }));
     }
+  };
+
+  const handleEnvironmentToggle = (environmentType: string) => {
+    setFormData(prev => ({
+      ...prev,
+      environment: prev.environment.includes(environmentType)
+        ? prev.environment.filter(e => e !== environmentType)
+        : [...prev.environment, environmentType]
+    }));
   };
 
   // Reorder images
@@ -426,6 +547,257 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
             required
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
           />
+        </div>
+
+        {/* Owner Information */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Owner Name
+            </label>
+            <input
+              type="text"
+              value={formData.ownerName}
+              onChange={(e) => setFormData(prev => ({ ...prev, ownerName: e.target.value }))}
+              placeholder="Owner's full name"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Nearest Posto
+            </label>
+            <input
+              type="text"
+              value={formData.nearestPosto}
+              onChange={(e) => setFormData(prev => ({ ...prev, nearestPosto: e.target.value }))}
+              placeholder="e.g. Posto 9"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
+            />
+          </div>
+        </div>
+
+        {/* Additional Information */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Additional Information
+          </label>
+          <textarea
+            value={formData.additionalInfo}
+            onChange={(e) => setFormData(prev => ({ ...prev, additionalInfo: e.target.value }))}
+            rows={3}
+            placeholder="Any additional information about the barraca..."
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
+          />
+        </div>
+
+        {/* Environment Types */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Environment Types
+          </label>
+          <p className="text-sm text-gray-600 mb-3">
+            Select the types of environment this barraca offers
+          </p>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+            {commonEnvironmentTypes.map((envType) => (
+              <label key={envType} className="flex items-center">
+                <input
+                  type="checkbox"
+                  checked={formData.environment.includes(envType)}
+                  onChange={() => handleEnvironmentToggle(envType)}
+                  className="h-4 w-4 text-beach-600 focus:ring-beach-500 border-gray-300 rounded"
+                />
+                <span className="ml-2 text-sm text-gray-700">{envType}</span>
+              </label>
+            ))}
+          </div>
+          
+          {/* Custom Environment Types */}
+          <div className="mt-4">
+            <div className="flex justify-between items-center mb-2">
+              <label className="block text-sm font-medium text-gray-700">
+                Custom Environment Types
+              </label>
+              <button
+                type="button"
+                onClick={() => addArrayItem('environment')}
+                className="text-beach-600 hover:text-beach-800 flex items-center text-sm"
+              >
+                <Plus className="h-4 w-4 mr-1" />
+                Add Custom Type
+              </button>
+            </div>
+            {formData.environment.filter(env => !commonEnvironmentTypes.includes(env)).map((env, index) => (
+              <div key={index} className="flex gap-2 mb-2">
+                <input
+                  type="text"
+                  value={env}
+                  onChange={(e) => updateArrayItem('environment', index, e.target.value)}
+                  placeholder="Custom environment type"
+                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
+                />
+                <button
+                  type="button"
+                  onClick={() => removeArrayItem('environment', index)}
+                  className="p-2 text-red-600 hover:text-red-800"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* English Fluency and Tab System */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              English Fluency
+            </label>
+            <select
+              value={formData.englishFluency}
+              onChange={(e) => setFormData(prev => ({ 
+                ...prev, 
+                englishFluency: e.target.value as 'no' | 'not_fluent' | 'fluent' 
+              }))}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
+            >
+              <option value="no">No English</option>
+              <option value="not_fluent">Not Fluent</option>
+              <option value="fluent">Fluent</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Tab System
+            </label>
+            <select
+              value={formData.tabSystem}
+              onChange={(e) => setFormData(prev => ({ 
+                ...prev, 
+                tabSystem: e.target.value as 'name_only' | 'individual_paper' | 'number_on_chair' | 'digital' 
+              }))}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
+            >
+              <option value="name_only">Name Only</option>
+              <option value="individual_paper">Individual Paper</option>
+              <option value="number_on_chair">Number on Chair</option>
+              <option value="digital">Digital</option>
+            </select>
+          </div>
+        </div>
+
+        {/* English Speaker Names - Only show if fluent is selected */}
+        {formData.englishFluency === 'fluent' && (
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              English Speaker Names
+            </label>
+            <input
+              type="text"
+              value={formData.englishSpeakerNames}
+              onChange={(e) => setFormData(prev => ({ ...prev, englishSpeakerNames: e.target.value }))}
+              placeholder="Names of English-speaking staff members"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
+            />
+          </div>
+        )}
+
+        {/* Partnership Opportunities */}
+        <div>
+          <h4 className="text-lg font-medium text-gray-900 mb-3">Partnership Opportunities</h4>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <label className="flex items-center">
+              <input
+                type="checkbox"
+                checked={formData.qrCodes}
+                onChange={(e) => setFormData(prev => ({ ...prev, qrCodes: e.target.checked }))}
+                className="h-4 w-4 text-beach-600 focus:ring-beach-500 border-gray-300 rounded"
+              />
+              <span className="ml-2 text-sm text-gray-700">QR Codes</span>
+            </label>
+            <label className="flex items-center">
+              <input
+                type="checkbox"
+                checked={formData.repeatDiscounts}
+                onChange={(e) => setFormData(prev => ({ ...prev, repeatDiscounts: e.target.checked }))}
+                className="h-4 w-4 text-beach-600 focus:ring-beach-500 border-gray-300 rounded"
+              />
+              <span className="ml-2 text-sm text-gray-700">Repeat Discounts</span>
+            </label>
+            <label className="flex items-center">
+              <input
+                type="checkbox"
+                checked={formData.hotelPartnerships}
+                onChange={(e) => setFormData(prev => ({ ...prev, hotelPartnerships: e.target.checked }))}
+                className="h-4 w-4 text-beach-600 focus:ring-beach-500 border-gray-300 rounded"
+              />
+              <span className="ml-2 text-sm text-gray-700">Hotel Partnerships</span>
+            </label>
+            <label className="flex items-center">
+              <input
+                type="checkbox"
+                checked={formData.contentCreation}
+                onChange={(e) => setFormData(prev => ({ ...prev, contentCreation: e.target.checked }))}
+                className="h-4 w-4 text-beach-600 focus:ring-beach-500 border-gray-300 rounded"
+              />
+              <span className="ml-2 text-sm text-gray-700">Content Creation</span>
+            </label>
+            <label className="flex items-center">
+              <input
+                type="checkbox"
+                checked={formData.onlineOrders}
+                onChange={(e) => setFormData(prev => ({ ...prev, onlineOrders: e.target.checked }))}
+                className="h-4 w-4 text-beach-600 focus:ring-beach-500 border-gray-300 rounded"
+              />
+              <span className="ml-2 text-sm text-gray-700">Online Orders</span>
+            </label>
+          </div>
+        </div>
+
+        {/* Contact Preferences */}
+        <div>
+          <h4 className="text-lg font-medium text-gray-900 mb-3">Contact Preferences</h4>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Preferred Contact Method
+              </label>
+              <select
+                value={formData.preferredContactMethod}
+                onChange={(e) => setFormData(prev => ({ 
+                  ...prev, 
+                  preferredContactMethod: e.target.value as 'whatsapp' | 'instagram' | 'email' 
+                }))}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
+              >
+                <option value="whatsapp">WhatsApp</option>
+                <option value="instagram">Instagram</option>
+                <option value="email">Email</option>
+              </select>
+            </div>
+            <div className="flex items-center space-x-4">
+              <label className="flex items-center">
+                <input
+                  type="checkbox"
+                  checked={formData.contactForPhotos}
+                  onChange={(e) => setFormData(prev => ({ ...prev, contactForPhotos: e.target.checked }))}
+                  className="h-4 w-4 text-beach-600 focus:ring-beach-500 border-gray-300 rounded"
+                />
+                <span className="ml-2 text-sm text-gray-700">Contact for Photos</span>
+              </label>
+              <label className="flex items-center">
+                <input
+                  type="checkbox"
+                  checked={formData.contactForStatus}
+                  onChange={(e) => setFormData(prev => ({ ...prev, contactForStatus: e.target.checked }))}
+                  className="h-4 w-4 text-beach-600 focus:ring-beach-500 border-gray-300 rounded"
+                />
+                <span className="ml-2 text-sm text-gray-700">Contact for Status</span>
+              </label>
+            </div>
+          </div>
         </div>
 
 
@@ -788,6 +1160,36 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
               />
             </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Instagram
+              </label>
+              <input
+                type="text"
+                value={formData.contact.instagram}
+                onChange={(e) => setFormData(prev => ({
+                  ...prev,
+                  contact: { ...prev.contact, instagram: e.target.value }
+                }))}
+                placeholder="@barraca_username"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Website
+              </label>
+              <input
+                type="url"
+                value={formData.contact.website}
+                onChange={(e) => setFormData(prev => ({
+                  ...prev,
+                  contact: { ...prev.contact, website: e.target.value }
+                }))}
+                placeholder="https://www.barraca.com"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
+              />
+            </div>
           </div>
         </div>
 
@@ -1024,69 +1426,126 @@ const AdminBarracaForm: React.FC<AdminBarracaFormProps> = ({ barracaId, onCancel
             <div>
               <div className="flex justify-between items-center mb-4">
                 <h4 className="text-lg font-medium text-gray-900">{t('admin.form.ctaButtons')}</h4>
-                <button
-                  type="button"
-                  onClick={() => setShowCTAConfig(!showCTAConfig)}
-                  className="flex items-center text-beach-600 hover:text-beach-800 text-sm"
-                >
-                  <Settings className="h-4 w-4 mr-1" />
-                  {showCTAConfig ? t('common.less') : t('common.more')}
-                </button>
+                <div className="flex gap-2">
+                  {/* Auto-create Instagram button if Instagram contact is provided */}
+                  {formData.contact.instagram && !formData.ctaButtons.some(btn => btn.action.type === 'ig') && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const instagramValidation = validateInstagramUrl(formData.contact.instagram);
+                        if (instagramValidation.isValid) {
+                          const newButton: CTAButtonConfig = {
+                            id: `instagram-${Date.now()}`,
+                            text: 'Follow on Instagram',
+                            action: {
+                              type: 'ig',
+                              value: instagramValidation.formattedUrl,
+                              target: '_blank',
+                              trackingEvent: 'instagram_follow_clicked'
+                            },
+                            style: 'outline',
+                            position: formData.ctaButtons.length + 1,
+                            visibilityConditions: {},
+                            icon: 'Instagram',
+                            enabled: true
+                          };
+                          setFormData(prev => ({
+                            ...prev,
+                            ctaButtons: [...prev.ctaButtons, newButton]
+                          }));
+                        }
+                      }}
+                      className="text-xs bg-pink-100 hover:bg-pink-200 text-pink-700 px-3 py-1 rounded-lg transition-colors"
+                    >
+                      + Instagram Button
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => setShowCTAConfig(!showCTAConfig)}
+                    className="flex items-center text-beach-600 hover:text-beach-800 text-sm"
+                  >
+                    <Settings className="h-4 w-4 mr-1" />
+                    {showCTAConfig ? t('common.less') : t('common.more')}
+                  </button>
+                </div>
               </div>
 
               {showCTAConfig && (
                 <div className="space-y-4 p-4 bg-gray-50 rounded-lg">
-                  {formData.ctaButtons.map((button, index) => (
-                    <div key={index} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-                      <input
-                        type="text"
-                        value={button.text}
-                        onChange={(e) => updateCTAButton(index, { text: e.target.value })}
-                        placeholder="Button text"
-                        className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
-                      />
-                      <select
-                        value={button.action.type}
-                        onChange={(e) => updateCTAButton(index, { action: { ...button.action, type: e.target.value as any } })}
-                        className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
-                      >
-                        {ctaButtonTypes.map(type => (
-                          <option key={type} value={type}>{type}</option>
-                        ))}
-                      </select>
-                      <input
-                        type="text"
-                        value={button.action.value}
-                        onChange={(e) => updateCTAButton(index, { action: { ...button.action, value: e.target.value } })}
-                        placeholder={
-                          button.action.type === 'ig' ? 'Instagram URL (e.g., https://instagram.com/username)' :
-                          button.action.type === 'whatsapp' ? 'Phone number (e.g., +55 21 99999-0000)' :
-                          button.action.type === 'email' ? 'Email address' :
-                          button.action.type === 'phone' ? 'Phone number' :
-                          'URL, phone, email, etc.'
-                        }
-                        className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
-                      />
-                      <div className="flex gap-2">
+                  {formData.ctaButtons.map((button, index) => {
+                    const isInstagramButton = button.action.type === 'ig';
+                    const instagramValidation = isInstagramButton ? validateInstagramUrl(button.action.value) : null;
+                    
+                    return (
+                      <div key={index} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+                        <input
+                          type="text"
+                          value={button.text}
+                          onChange={(e) => updateCTAButton(index, { text: e.target.value })}
+                          placeholder={isInstagramButton ? "Follow on Instagram" : "Button text"}
+                          className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
+                        />
                         <select
-                          value={button.style}
-                          onChange={(e) => updateCTAButton(index, { style: e.target.value as any })}
-                          className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
+                          value={button.action.type}
+                          onChange={(e) => updateCTAButton(index, { action: { ...button.action, type: e.target.value as any } })}
+                          className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
                         >
-                          {ctaButtonStyles.map(style => (
-                            <option key={style} value={style}>{style}</option>
+                          {ctaButtonTypes.map(type => (
+                            <option key={type} value={type}>{type}</option>
                           ))}
                         </select>
-                        <button
-                          type="button"
-                          onClick={() => removeCTAButton(index)}
-                          className="p-2 text-red-600 hover:text-red-800"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </button>
+                        <div className="space-y-1">
+                          <input
+                            type="text"
+                            value={button.action.value}
+                            onChange={(e) => updateCTAButton(index, { action: { ...button.action, value: e.target.value } })}
+                            placeholder={
+                              button.action.type === 'ig' ? 'Instagram username or URL (e.g., @username or https://instagram.com/username)' :
+                              button.action.type === 'whatsapp' ? 'Phone number (e.g., +55 21 99999-0000)' :
+                              button.action.type === 'email' ? 'Email address' :
+                              button.action.type === 'phone' ? 'Phone number' :
+                              'URL, phone, email, etc.'
+                            }
+                            className={`px-3 py-2 border rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent ${
+                              isInstagramButton && instagramValidation && !instagramValidation.isValid 
+                                ? 'border-red-300 bg-red-50' 
+                                : 'border-gray-300'
+                            }`}
+                          />
+                          {isInstagramButton && instagramValidation && (
+                            <div className="text-xs">
+                              {!instagramValidation.isValid ? (
+                                <span className="text-red-600">{instagramValidation.error}</span>
+                              ) : (
+                                <span className="text-green-600">
+                                  ✓ {instagramValidation.formattedUrl}
+                                </span>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                        <div className="flex gap-2">
+                          <select
+                            value={button.style}
+                            onChange={(e) => updateCTAButton(index, { style: e.target.value as any })}
+                            className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
+                          >
+                            {ctaButtonStyles.map(style => (
+                              <option key={style} value={style}>{style}</option>
+                            ))}
+                          </select>
+                          <button
+                            type="button"
+                            onClick={() => removeCTAButton(index)}
+                            className="p-2 text-red-600 hover:text-red-800"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                   <button
                     type="button"
                     onClick={addCTAButton}

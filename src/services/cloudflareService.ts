@@ -163,13 +163,8 @@ class CloudflareService {
    * Generate Cloudflare URL for an object
    */
   private getCloudflareUrl(key: string): string {
-    if (!this.cloudflareDomain) {
-      // Fallback to R2 URL if Cloudflare domain is not configured
-      throw new Error('Cloudflare domain not configured');
-    }
-    
-    // Remove trailing slash from domain if present
-    const domain = this.cloudflareDomain.replace(/\/$/, '');
+    // Use the Carioca Coastal Club images domain
+    const domain = 'images.cariocacoastalclub.com';
     return `https://${domain}/${key}`;
   }
 
@@ -204,6 +199,66 @@ class CloudflareService {
    */
   isConfigured(): boolean {
     return !!this.cloudflareDomain;
+  }
+
+  /**
+   * Upload an image to Cloudflare R2
+   */
+  async uploadImage(file: File, folder?: string): Promise<{ success: boolean; url?: string; key?: string; error?: string }> {
+    try {
+      console.log('📤 Starting image upload to Cloudflare:', {
+        fileName: file.name,
+        fileSize: file.size,
+        folder: folder || 'uploads'
+      });
+
+      // Convert file to base64
+      const base64 = await this.fileToBase64(file);
+
+      const response = await fetch(`${this.baseUrl}/.netlify/functions/cloudflare-upload`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          file: base64,
+          fileName: file.name,
+          folder: folder || 'uploads',
+          contentType: file.type,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      console.log('📤 Upload result:', result);
+      return result;
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Upload failed'
+      };
+    }
+  }
+
+  /**
+   * Convert a file to base64 string
+   */
+  private fileToBase64(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        const result = reader.result as string;
+        // Remove the data URL prefix (e.g., "data:image/jpeg;base64,")
+        const base64 = result.split(',')[1];
+        resolve(base64);
+      };
+      reader.onerror = error => reject(error);
+    });
   }
 }
 

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { Eye, Check, X, Clock, MapPin, Phone, Mail, Calendar, MessageSquare } from 'lucide-react';
 import { BarracaRegistration } from '../types';
 import { BarracaRegistrationService } from '../services/barracaRegistrationService';
@@ -10,6 +11,7 @@ interface AdminRegistrationsProps {
 
 const AdminRegistrations: React.FC<AdminRegistrationsProps> = ({ onRegistrationConverted }) => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [registrations, setRegistrations] = useState<BarracaRegistration[]>([]);
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({ total: 0, pending: 0, approved: 0, rejected: 0 });
@@ -47,8 +49,8 @@ const AdminRegistrations: React.FC<AdminRegistrationsProps> = ({ onRegistrationC
   };
 
   const handleViewRegistration = (registration: BarracaRegistration) => {
-    // Navigate to the registration detail page instead of opening modal
-    window.open(`/registration/${registration.id}`, '_blank');
+    // Navigate to the registration detail page in the same tab
+    navigate(`/registration/${registration.id}`);
   };
 
   const handleApprove = async () => {
@@ -322,14 +324,20 @@ const AdminRegistrations: React.FC<AdminRegistrationsProps> = ({ onRegistrationC
                     {registration.status === 'pending' && (
                       <>
                         <button
-                          onClick={() => handleViewRegistration(registration)}
+                          onClick={() => {
+                            setSelectedRegistration(registration);
+                            setShowModal(true);
+                          }}
                           className="p-1.5 sm:p-2 text-green-400 hover:text-green-600 transition-colors"
                           title="Approve"
                         >
                           <Check className="w-4 h-4 sm:w-5 sm:h-5" />
                         </button>
                         <button
-                          onClick={() => handleViewRegistration(registration)}
+                          onClick={() => {
+                            setSelectedRegistration(registration);
+                            setShowModal(true);
+                          }}
                           className="p-1.5 sm:p-2 text-red-400 hover:text-red-600 transition-colors"
                           title="Reject"
                         >
