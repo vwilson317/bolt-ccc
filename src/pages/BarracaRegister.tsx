@@ -4,11 +4,9 @@ import toast from 'react-hot-toast';
 import { Save, MapPin, Clock, Phone, Mail, Instagram, Camera, X, Handshake } from 'lucide-react';
 import { BarracaRegistration } from '../types';
 import RegistrationMarquee from '../components/RegistrationMarquee';
-import { useAnalytics } from '../hooks/useAnalytics';
 
 const BarracaRegister: React.FC = () => {
   const { t } = useTranslation();
-  const analytics = useAnalytics();
   
   const [formData, setFormData] = useState<Partial<BarracaRegistration>>({
     name: 'Barraca do João - Teste',
@@ -63,18 +61,16 @@ const BarracaRegister: React.FC = () => {
 
   // Track form view on component mount
   useEffect(() => {
-    analytics.trackBarracaRegistrationView();
-    
     // Track form abandonment on page unload
     const handleBeforeUnload = () => {
       if (hasStartedForm) {
-        analytics.trackBarracaRegistrationAbandonment(lastFieldInteracted);
+        // Form abandonment tracking removed
       }
     };
     
     window.addEventListener('beforeunload', handleBeforeUnload);
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
-  }, [hasStartedForm, lastFieldInteracted, analytics]);
+  }, [hasStartedForm, lastFieldInteracted]);
 
   // Complete list of South Zone neighborhoods
   const southZoneNeighborhoods = [
@@ -123,12 +119,10 @@ const BarracaRegister: React.FC = () => {
     // Track form start on first interaction
     if (!hasStartedForm) {
       setHasStartedForm(true);
-      analytics.trackBarracaRegistrationStart();
     }
     
     // Track field interaction
     setLastFieldInteracted(field);
-    analytics.trackBarracaRegistrationFieldInteraction(field, typeof value === 'string' ? value : undefined);
     
     setFormData(prev => ({
       ...prev,
@@ -140,12 +134,10 @@ const BarracaRegister: React.FC = () => {
     // Track form start on first interaction
     if (!hasStartedForm) {
       setHasStartedForm(true);
-      analytics.trackBarracaRegistrationStart();
     }
     
     // Track field interaction
     setLastFieldInteracted(`contact.${field}`);
-    analytics.trackBarracaRegistrationFieldInteraction(`contact.${field}`, value);
     
     setFormData(prev => ({
       ...prev,
@@ -170,7 +162,6 @@ const BarracaRegister: React.FC = () => {
           phone: errorMessage
         }));
         // Track validation error
-        analytics.trackBarracaRegistrationValidationError('phone', errorMessage);
       }
     } else if (field === 'email' && value.trim()) {
       if (!validateEmail(value)) {
@@ -180,7 +171,6 @@ const BarracaRegister: React.FC = () => {
           email: errorMessage
         }));
         // Track validation error
-        analytics.trackBarracaRegistrationValidationError('email', errorMessage);
       }
     }
   };
@@ -391,7 +381,6 @@ const BarracaRegister: React.FC = () => {
       setSubmitMessage({ type: 'success', text: t('registration.form.successMessage') });
       
       // Track successful submission
-      analytics.trackBarracaRegistrationSubmit(true, cleanedData);
       
       // Reset form after successful submission
       setTimeout(() => {
@@ -453,7 +442,6 @@ const BarracaRegister: React.FC = () => {
       setSubmitMessage({ type: 'error', text: t('registration.form.errorMessage') });
       
       // Track failed submission
-      analytics.trackBarracaRegistrationSubmit(false);
     } finally {
       setIsSubmitting(false);
     }
@@ -1021,7 +1009,6 @@ const BarracaRegister: React.FC = () => {
                   checked={formData.qrCodes}
                   onChange={(e) => {
                     handleInputChange('qrCodes', e.target.checked);
-                    analytics.trackBarracaRegistrationPartnershipSelection('QR Codes', e.target.checked);
                   }}
                   className="w-4 h-4 text-beach-600 border-gray-300 rounded focus:ring-beach-500"
                 />
@@ -1037,7 +1024,6 @@ const BarracaRegister: React.FC = () => {
                   checked={formData.repeatDiscounts}
                   onChange={(e) => {
                     handleInputChange('repeatDiscounts', e.target.checked);
-                    analytics.trackBarracaRegistrationPartnershipSelection('Repeat Discounts', e.target.checked);
                   }}
                   className="w-4 h-4 text-beach-600 border-gray-300 rounded focus:ring-beach-500"
                 />
@@ -1053,7 +1039,6 @@ const BarracaRegister: React.FC = () => {
                   checked={formData.hotelPartnerships}
                   onChange={(e) => {
                     handleInputChange('hotelPartnerships', e.target.checked);
-                    analytics.trackBarracaRegistrationPartnershipSelection('Hotel Partnerships', e.target.checked);
                   }}
                   className="w-4 h-4 text-beach-600 border-gray-300 rounded focus:ring-beach-500"
                 />
@@ -1069,7 +1054,6 @@ const BarracaRegister: React.FC = () => {
                   checked={formData.contentCreation}
                   onChange={(e) => {
                     handleInputChange('contentCreation', e.target.checked);
-                    analytics.trackBarracaRegistrationPartnershipSelection('Content Creation', e.target.checked);
                   }}
                   className="w-4 h-4 text-beach-600 border-gray-300 rounded focus:ring-beach-500"
                 />
@@ -1085,7 +1069,6 @@ const BarracaRegister: React.FC = () => {
                   checked={formData.onlineOrders}
                   onChange={(e) => {
                     handleInputChange('onlineOrders', e.target.checked);
-                    analytics.trackBarracaRegistrationPartnershipSelection('Online Orders', e.target.checked);
                   }}
                   className="w-4 h-4 text-beach-600 border-gray-300 rounded focus:ring-beach-500"
                 />
@@ -1144,7 +1127,6 @@ const BarracaRegister: React.FC = () => {
                   checked={formData.contactForPhotos}
                   onChange={(e) => {
                     handleInputChange('contactForPhotos', e.target.checked);
-                    analytics.trackBarracaRegistrationContactPreference('Contact for Photos', e.target.checked);
                   }}
                   className="w-4 h-4 text-beach-600 border-gray-300 rounded focus:ring-beach-500"
                 />
@@ -1160,7 +1142,6 @@ const BarracaRegister: React.FC = () => {
                   checked={formData.contactForStatus}
                   onChange={(e) => {
                     handleInputChange('contactForStatus', e.target.checked);
-                    analytics.trackBarracaRegistrationContactPreference('Contact for Status', e.target.checked);
                   }}
                   className="w-4 h-4 text-beach-600 border-gray-300 rounded focus:ring-beach-500"
                 />
@@ -1252,17 +1233,15 @@ const BarracaRegister: React.FC = () => {
                                                  // Validate file size (10MB limit)
                         if (file.size > 10 * 1024 * 1024) {
                           toast.error(t('registration.form.fileSizeError'));
-                          analytics.trackBarracaRegistrationPhotoUpload(false, file.size);
                           return;
                         }
                         
                         const reader = new FileReader();
                         reader.onload = (e) => {
                           handleInputChange('defaultPhoto', e.target?.result as string);
-                          analytics.trackBarracaRegistrationPhotoUpload(true, file.size);
                         };
                         reader.onerror = () => {
-                          analytics.trackBarracaRegistrationPhotoUpload(false, file.size);
+                          // Photo upload error handling removed
                         };
                         reader.readAsDataURL(file);
                        }
