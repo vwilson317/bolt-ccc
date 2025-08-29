@@ -105,22 +105,22 @@ export class BarracaRegistrationService {
 
       const result = transformRegistrationFromDB(data);
 
-      // Send WhatsApp notification via Twilio
+      // Send email notification (keeping Twilio setup for later)
       try {
-        console.log('Sending WhatsApp notification for new registration:', result.id);
+        console.log('Sending email notification for new registration:', result.id);
         
-        await fetch('/.netlify/functions/twilio-whatsapp-notification', {
+        await fetch('/.netlify/functions/email-whatsapp-notification', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             registration: result,
-            adminPhoneNumber: import.meta.env.VITE_ADMIN_PHONE_NUMBER || '+5511999999999'
+            adminEmail: import.meta.env.VITE_ADMIN_EMAIL || 'admin@yourdomain.com'
           })
         });
 
-        console.log('WhatsApp notification sent successfully');
+        console.log('Email notification sent successfully');
       } catch (notificationError) {
-        console.error('Failed to send WhatsApp notification:', notificationError);
+        console.error('Failed to send email notification:', notificationError);
         // Don't fail the registration if notification fails
       }
 

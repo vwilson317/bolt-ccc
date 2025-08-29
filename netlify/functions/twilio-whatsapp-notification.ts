@@ -32,11 +32,19 @@ export const handler: Handler = async (event) => {
       };
     }
 
-    // Format the WhatsApp message
-    const message = formatRegistrationMessage(registration);
+    // Check if we should use template or regular message
+    const useTemplate = process.env.TWILIO_USE_TEMPLATE === 'true';
     
-    // Send WhatsApp message via Twilio
-    const result = await sendTwilioWhatsAppMessage(adminPhoneNumber, message);
+    let result;
+    if (useTemplate) {
+      // Use WhatsApp template
+      const templateData = formatRegistrationTemplateData(registration);
+      result = await sendTwilioWhatsAppMessage(adminPhoneNumber, '', true, templateData);
+    } else {
+      // Use regular message
+      const message = formatRegistrationMessage(registration);
+      result = await sendTwilioWhatsAppMessage(adminPhoneNumber, message);
+    }
 
     return {
       statusCode: 200,
@@ -96,7 +104,35 @@ function formatRegistrationMessage(registration: any): string {
 Para aprovar/rejeitar, clique no link acima ou acesse o painel admin.`;
 }
 
-async function sendTwilioWhatsAppMessage(phoneNumber: string, message: string): Promise<any> {
+function formatRegistrationTemplateData(registration: any): any {
+  const timestamp = new Date().toLocaleString('pt-BR', {
+    timeZone: 'America/Sao_Paulo',
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+
+  // Get the site URL from environment or use a default
+  const siteUrl = process.env.URL || process.env.DEPLOY_URL || 'https://your-site.netlify.app';
+  const registrationUrl = `${siteUrl}/registration/${registration.id}`;
+
+  return {
+    "1": registration.name,
+    "2": registration.ownerName,
+    "3": registration.location,
+    "4": registration.contact?.phone || 'Não informado',
+    "5": registration.contact?.email || 'Não informado',
+    "6": registration.typicalHours,
+    "7": registration.nearestPosto || 'Não informado',
+    "8": registration.description,
+    "9": timestamp,
+    "10": registrationUrl
+  };
+}
+
+async function sendTwilioWhatsAppMessage(phoneNumber: string, message: string, useTemplate: boolean = false, templateData?: any): Promise<any> {
   const accountSid = process.env.TWILIO_ACCOUNT_SID;
   const authToken = process.env.TWILIO_AUTH_TOKEN;
   const fromNumber = process.env.TWILIO_WHATSAPP_FROM;
@@ -117,7 +153,15 @@ async function sendTwilioWhatsAppMessage(phoneNumber: string, message: string): 
   const formData = new URLSearchParams();
   formData.append('From', `whatsapp:${fromNumber}`);
   formData.append('To', `whatsapp:+${formattedPhone}`);
-  formData.append('Body', message);
+  
+  if (useTemplate && templateData) {
+    // Use Twilio Content Template
+    formData.append('ContentSid', process.env.TWILIO_CONTENT_TEMPLATE_SID || '');
+    formData.append('ContentVariables', JSON.stringify(templateData));
+  } else {
+    // Use regular message
+    formData.append('Body', message);
+  }
 
   const response = await fetch(url, {
     method: 'POST',
