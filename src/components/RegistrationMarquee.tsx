@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { BarracaRegistration } from '../types';
-import { useAnalytics } from '../hooks/useAnalytics';
 
 interface RegistrationMarqueeProps {
   className?: string;
@@ -26,156 +25,10 @@ const openInstagramLink = (instagramHandle: string) => {
 };
 
 // Mock data for testing the marquee display
-const mockApprovedRegistrations: BarracaRegistration[] = [
-  {
-    id: 'mock-1',
-    name: 'Barraca do João',
-    location: 'Copacabana Beach',
-    coordinates: { lat: -22.9707, lng: -43.1824 },
-    typicalHours: '8:00 - 18:00',
-    description: 'Traditional beach barraca with fresh coconut water',
-    contact: { 
-      phone: '+55 21 99999-9999', 
-      email: 'joao@example.com',
-      instagram: '@barracadojoao'
-    },
-    amenities: ['chairs', 'umbrellas'],
-    environment: ['family-friendly', 'relaxed'],
-    weekendHoursEnabled: true,
-    status: 'approved',
-    submittedAt: new Date('2024-01-15'),
-  },
-  {
-    id: 'mock-2',
-    name: 'Barraca da Maria',
-    location: 'Ipanema Beach',
-    coordinates: { lat: -22.9871, lng: -43.2034 },
-    typicalHours: '7:00 - 19:00',
-    description: 'Famous for caipirinhas and beach volleyball',
-    contact: { 
-      phone: '+55 21 98888-8888', 
-      email: 'maria@example.com',
-      instagram: '@barracadamaria'
-    },
-    amenities: ['chairs', 'umbrellas', 'volleyball'],
-    environment: ['sports', 'party'],
-    weekendHoursEnabled: true,
-    status: 'approved',
-    submittedAt: new Date('2024-01-20'),
-  },
-  {
-    id: 'mock-3',
-    name: 'Barraca do Pedro',
-    location: 'Leblon Beach',
-    coordinates: { lat: -22.9871, lng: -43.2034 },
-    typicalHours: '8:30 - 17:30',
-    description: 'Premium beach experience with gourmet snacks',
-    contact: { 
-      phone: '+55 21 97777-7777', 
-      email: 'pedro@example.com',
-      instagram: '@barracadopedro'
-    },
-    amenities: ['chairs', 'umbrellas', 'food'],
-    environment: ['relaxed', 'family-friendly'],
-    weekendHoursEnabled: true,
-    status: 'approved',
-    submittedAt: new Date('2024-01-25'),
-  },
-  {
-    id: 'mock-4',
-    name: 'Barraca da Ana',
-    location: 'Arpoador Beach',
-    coordinates: { lat: -22.9871, lng: -43.2034 },
-    typicalHours: '6:00 - 18:00',
-    description: 'Surfer-friendly barraca with healthy options',
-    contact: { 
-      phone: '+55 21 96666-6666', 
-      email: 'ana@example.com',
-      instagram: '@barracadaana'
-    },
-    amenities: ['chairs', 'umbrellas', 'surf-rental'],
-    environment: ['sports', 'relaxed'],
-    weekendHoursEnabled: true,
-    status: 'approved',
-    submittedAt: new Date('2024-01-30'),
-  },
-  {
-    id: 'mock-5',
-    name: 'Barraca do Carlos',
-    location: 'Barra da Tijuca Beach',
-    coordinates: { lat: -23.0067, lng: -43.3656 },
-    typicalHours: '7:30 - 19:30',
-    description: 'Family-oriented barraca with kids activities',
-    contact: { 
-      phone: '+55 21 95555-5555', 
-      email: 'carlos@example.com',
-      instagram: '@barracadocarlos'
-    },
-    amenities: ['chairs', 'umbrellas', 'kids-zone'],
-    environment: ['family-friendly', 'relaxed'],
-    weekendHoursEnabled: true,
-    status: 'approved',
-    submittedAt: new Date('2024-02-05'),
-  },
-  {
-    id: 'mock-6',
-    name: 'Barraca da Sofia',
-    location: 'Recreio Beach',
-    coordinates: { lat: -23.0067, lng: -43.3656 },
-    typicalHours: '8:00 - 18:00',
-    description: 'LGBTQ+ friendly barraca with inclusive atmosphere',
-    contact: { 
-      phone: '+55 21 94444-4444', 
-      email: 'sofia@example.com',
-      instagram: '@barracadasofia'
-    },
-    amenities: ['chairs', 'umbrellas', 'music'],
-    environment: ['lgbtq+', 'party'],
-    weekendHoursEnabled: true,
-    status: 'approved',
-    submittedAt: new Date('2024-02-10'),
-  },
-  {
-    id: 'mock-7',
-    name: 'Barraca do Roberto',
-    location: 'Prainha Beach',
-    coordinates: { lat: -23.0067, lng: -43.3656 },
-    typicalHours: '6:30 - 17:00',
-    description: 'Natural paradise barraca with organic food',
-    contact: { 
-      phone: '+55 21 93333-3333', 
-      email: 'roberto@example.com',
-      instagram: '@barracadoroberto'
-    },
-    amenities: ['chairs', 'umbrellas', 'organic-food'],
-    environment: ['relaxed', 'family-friendly'],
-    weekendHoursEnabled: true,
-    status: 'approved',
-    submittedAt: new Date('2024-02-15'),
-  },
-  {
-    id: 'mock-8',
-    name: 'Barraca da Fernanda',
-    location: 'Grumari Beach',
-    coordinates: { lat: -23.0067, lng: -43.3656 },
-    typicalHours: '7:00 - 18:00',
-    description: 'Eco-friendly barraca with sustainable practices',
-    contact: { 
-      phone: '+55 21 92222-2222', 
-      email: 'fernanda@example.com',
-      instagram: '@barracadafernanda'
-    },
-    amenities: ['chairs', 'umbrellas', 'eco-friendly'],
-    environment: ['relaxed', 'family-friendly'],
-    weekendHoursEnabled: true,
-    status: 'approved',
-    submittedAt: new Date('2024-02-20'),
-  }
-];
+const mockApprovedRegistrations: BarracaRegistration[] = [];
 
 const RegistrationMarquee: React.FC<RegistrationMarqueeProps> = ({ className = '' }) => {
   const { t } = useTranslation();
-  const analytics = useAnalytics();
   const [approvedRegistrations, setApprovedRegistrations] = useState<BarracaRegistration[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -213,9 +66,8 @@ const RegistrationMarquee: React.FC<RegistrationMarqueeProps> = ({ className = '
   // Track marquee view when data is loaded
   useEffect(() => {
     if (!loading && approvedRegistrations.length > 0) {
-      analytics.trackRegistrationMarqueeView(approvedRegistrations.length);
     }
-  }, [loading, approvedRegistrations.length, analytics]);
+  }, [loading, approvedRegistrations.length]);
 
   if (loading) {
     return (
@@ -264,10 +116,8 @@ const RegistrationMarquee: React.FC<RegistrationMarqueeProps> = ({ className = '
                     className="flex items-center gap-3 mr-6 text-sm font-semibold text-gray-700 hover:text-gray-900 transition-colors duration-200 cursor-pointer"
                     onClick={() => {
                       if (registration.contact?.instagram) {
-                        analytics.trackRegistrationMarqueeInstagramClick(registration.name, registration.contact.instagram);
                         openInstagramLink(registration.contact.instagram);
                       } else {
-                        analytics.trackRegistrationMarqueeBarracaClick(registration.name, registration.location);
                       }
                     }}
                   >
@@ -288,10 +138,8 @@ const RegistrationMarquee: React.FC<RegistrationMarqueeProps> = ({ className = '
                     className="flex items-center gap-3 mr-6 text-sm font-semibold text-gray-700 hover:text-gray-900 transition-colors duration-200 cursor-pointer"
                     onClick={() => {
                       if (registration.contact?.instagram) {
-                        analytics.trackRegistrationMarqueeInstagramClick(registration.name, registration.contact.instagram);
                         openInstagramLink(registration.contact.instagram);
                       } else {
-                        analytics.trackRegistrationMarqueeBarracaClick(registration.name, registration.location);
                       }
                     }}
                   >

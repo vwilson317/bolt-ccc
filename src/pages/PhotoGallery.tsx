@@ -5,7 +5,17 @@ import { X, ChevronLeft, ChevronRight, Download, Share2, Calendar, MapPin, Exter
 import { photoService, PhotoGalleryData, Location } from '../services/photoService';
 import BackNavigation from '../components/BackNavigation';
 import SEOHead from '../components/SEOHead';
-import { useAnalytics } from '../hooks/useAnalytics';
+import { 
+  trackPhotoLightboxOpen,
+  trackPhotoLightboxClose,
+  trackPhotoNavigation,
+  trackPhotoDownload,
+  trackPhotoArchiveClick,
+  trackPhotoView,
+  trackPhotoLoadError,
+  trackPhotoLoadSuccess,
+  trackPhotoShare
+} from '../services/posthogAnalyticsService';
 
 // Hook to detect mobile device
 const useIsMobile = () => {
@@ -28,7 +38,6 @@ const PhotoGallery: React.FC = () => {
   const { dateId } = useParams<{ dateId: string }>();
   const { t } = useTranslation();
   const isMobile = useIsMobile();
-  const analytics = useAnalytics();
   const [galleryData, setGalleryData] = useState<PhotoGalleryData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedPhotoIndex, setSelectedPhotoIndex] = useState<number | null>(null);
@@ -48,9 +57,6 @@ const PhotoGallery: React.FC = () => {
           console.log('🖼️ Number of photos:', data.photos.length);
           console.log('🖼️ First photo URL:', data.photos[0]?.url);
           console.log('🖼️ All photo URLs:', data.photos.map(p => p.url));
-          
-          // Track photo gallery view
-          analytics.trackPhotoGalleryView(dateId, data.title, data.photos.length);
         }
         setGalleryData(data);
       } catch (error) {
@@ -125,7 +131,7 @@ const PhotoGallery: React.FC = () => {
   const openLightbox = (index: number) => {
     if (galleryData && dateId) {
       const photo = galleryData.photos[index];
-      analytics.trackPhotoLightboxOpen(photo.id, photo.title || '', dateId);
+              trackPhotoLightboxOpen(photo.id, photo.title || '', dateId);
     }
     setSelectedPhotoIndex(index);
     setIsLightboxOpen(true);
@@ -134,7 +140,7 @@ const PhotoGallery: React.FC = () => {
   const closeLightbox = () => {
     if (galleryData && selectedPhotoIndex !== null && dateId) {
       const photo = galleryData.photos[selectedPhotoIndex];
-      analytics.trackPhotoLightboxClose(photo.id, photo.title || '', dateId);
+              trackPhotoLightboxClose(photo.id, photo.title || '', dateId);
     }
     setIsLightboxOpen(false);
     setSelectedPhotoIndex(null);
@@ -144,7 +150,7 @@ const PhotoGallery: React.FC = () => {
     if (galleryData && selectedPhotoIndex !== null && dateId) {
       const newIndex = (selectedPhotoIndex + 1) % galleryData.photos.length;
       const photo = galleryData.photos[newIndex];
-      analytics.trackPhotoNavigation('next', photo.id, dateId);
+              trackPhotoNavigation('next', photo.id, dateId);
       setSelectedPhotoIndex(newIndex);
     }
   };
@@ -153,7 +159,7 @@ const PhotoGallery: React.FC = () => {
     if (galleryData && selectedPhotoIndex !== null && dateId) {
       const newIndex = selectedPhotoIndex === 0 ? galleryData.photos.length - 1 : selectedPhotoIndex - 1;
       const photo = galleryData.photos[newIndex];
-      analytics.trackPhotoNavigation('previous', photo.id, dateId);
+              trackPhotoNavigation('previous', photo.id, dateId);
       setSelectedPhotoIndex(newIndex);
     }
   };
@@ -342,7 +348,7 @@ const PhotoGallery: React.FC = () => {
                     });
                     // Track download all photos
                     if (dateId) {
-                      analytics.trackPhotoDownload('all_photos', galleryData.title, dateId);
+                      trackPhotoDownload('all_photos', galleryData.title, dateId);
                     }
                   }}
                   className="flex items-center space-x-2 bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded-lg transition-colors duration-200 text-sm md:text-base w-full md:w-auto justify-center"
@@ -400,7 +406,7 @@ const PhotoGallery: React.FC = () => {
                       // Track archive click
                       if (dateId) {
                         const archiveUrl = galleryData.archiveUrl || photoService.getGooglePhotosArchiveUrl();
-                        analytics.trackPhotoArchiveClick(archiveUrl, dateId);
+                        trackPhotoArchiveClick(archiveUrl, dateId);
                       }
                       
                       // Add debugging
@@ -465,7 +471,7 @@ const PhotoGallery: React.FC = () => {
               onClick={() => {
                 // Track photo view in grid mode
                 if (dateId) {
-                  analytics.trackPhotoView(photo.id, photo.title || '', dateId, 'grid');
+                  trackPhotoView(photo.id, photo.title || '', dateId, 'grid');
                 }
                 openLightbox(index);
               }}
@@ -480,7 +486,7 @@ const PhotoGallery: React.FC = () => {
                   console.error('❌ Image element:', e.target);
                   // Track photo load error
                   if (dateId) {
-                    analytics.trackPhotoLoadError(photo.url, dateId);
+                    trackPhotoLoadError(photo.url, dateId);
                   }
                   // You could set a fallback image here
                   // e.target.src = '/fallback-image.jpg';
@@ -489,7 +495,7 @@ const PhotoGallery: React.FC = () => {
                   console.log('✅ Image loaded successfully:', photo.url);
                   // Track photo load success
                   if (dateId) {
-                    analytics.trackPhotoLoadSuccess(photo.url, dateId);
+                    trackPhotoLoadSuccess(photo.url, dateId);
                   }
                 }}
               />
@@ -515,7 +521,7 @@ const PhotoGallery: React.FC = () => {
                         document.body.removeChild(link);
                         // Track photo download
                         if (dateId) {
-                          analytics.trackPhotoDownload(photo.id, photo.title || '', dateId);
+                          trackPhotoDownload(photo.id, photo.title || '', dateId);
                         }
                       }}
                       className="p-2 bg-white/20 rounded-lg hover:bg-white/30 transition-colors duration-200 relative z-10"
@@ -609,7 +615,7 @@ const PhotoGallery: React.FC = () => {
                           document.body.removeChild(link);
                           // Track photo download
                           if (dateId) {
-                            analytics.trackPhotoDownload(photo.id, photo.title || '', dateId);
+                            trackPhotoDownload(photo.id, photo.title || '', dateId);
                           }
                         }}
                         className="p-2 bg-white/20 rounded-lg hover:bg-white/30 transition-colors duration-200 ml-2 relative z-10"
@@ -631,7 +637,7 @@ const PhotoGallery: React.FC = () => {
                             document.body.removeChild(link);
                             // Track photo download
                             if (dateId) {
-                              analytics.trackPhotoDownload(photo.id, photo.title || '', dateId);
+                              trackPhotoDownload(photo.id, photo.title || '', dateId);
                             }
                           }}
                           className="p-2 bg-white/20 rounded-lg hover:bg-white/30 transition-colors duration-200 relative z-10"
@@ -649,13 +655,13 @@ const PhotoGallery: React.FC = () => {
                               });
                               // Track photo share via native sharing
                               if (dateId) {
-                                analytics.trackPhotoShare(photo.id, photo.title || '', dateId, 'native');
+                                trackPhotoShare(photo.id, photo.title || '', dateId, 'native');
                               }
                             } else {
                               navigator.clipboard.writeText(photo.url);
                               // Track photo share via clipboard
                               if (dateId) {
-                                analytics.trackPhotoShare(photo.id, photo.title || '', dateId, 'clipboard');
+                                trackPhotoShare(photo.id, photo.title || '', dateId, 'clipboard');
                               }
                             }
                           }}

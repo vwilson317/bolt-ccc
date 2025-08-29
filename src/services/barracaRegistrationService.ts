@@ -115,22 +115,22 @@ export class BarracaRegistrationService {
 
       const result = transformRegistrationFromDB(data);
 
-      // Send WhatsApp notification via Twilio
+      // Send email notification (keeping Twilio setup for later)
       try {
-        console.log('Sending WhatsApp notification for new registration:', result.id);
+        console.log('Sending email notification for new registration:', result.id);
         
-        await fetch('/.netlify/functions/twilio-whatsapp-notification', {
+        await fetch('/.netlify/functions/email-whatsapp-notification', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             registration: result,
-            adminPhoneNumber: import.meta.env.VITE_ADMIN_PHONE_NUMBER || '+5511999999999'
+            adminEmail: import.meta.env.VITE_ADMIN_EMAIL || 'admin@yourdomain.com'
           })
         });
 
-        console.log('WhatsApp notification sent successfully');
+        console.log('Email notification sent successfully');
       } catch (notificationError) {
-        console.error('Failed to send WhatsApp notification:', notificationError);
+        console.error('Failed to send email notification:', notificationError);
         // Don't fail the registration if notification fails
       }
 
@@ -254,6 +254,62 @@ export class BarracaRegistrationService {
       // Import the barraca service to create the barraca
       const { BarracaService } = await import('./barracaService');
       
+      // Helper function to validate and format Instagram URL
+      const validateInstagramUrl = (url: string): { isValid: boolean; formattedUrl: string } => {
+        if (!url || !url.trim()) {
+          return { isValid: false, formattedUrl: '' };
+        }
+
+        let formattedUrl = url.trim();
+        
+        // Handle different Instagram URL formats
+        if (formattedUrl.includes('instagram.com')) {
+          if (!formattedUrl.startsWith('http')) {
+            formattedUrl = 'https://' + formattedUrl;
+          }
+        } else if (formattedUrl.startsWith('@')) {
+          const username = formattedUrl.substring(1);
+          formattedUrl = `https://instagram.com/${username}`;
+        } else if (formattedUrl.match(/^[a-zA-Z0-9._]+$/)) {
+          formattedUrl = `https://instagram.com/${formattedUrl}`;
+        } else {
+          return { isValid: false, formattedUrl: '' };
+        }
+
+        try {
+          const urlObj = new URL(formattedUrl);
+          if (!urlObj.hostname.includes('instagram.com')) {
+            return { isValid: false, formattedUrl: '' };
+          }
+          return { isValid: true, formattedUrl };
+        } catch {
+          return { isValid: false, formattedUrl: '' };
+        }
+      };
+
+      // Create Instagram CTA button if Instagram contact is available
+      const ctaButtons = [];
+      if (registration.contact?.instagram) {
+        const instagramValidation = validateInstagramUrl(registration.contact.instagram);
+        if (instagramValidation.isValid) {
+          ctaButtons.push({
+            id: `instagram-${Date.now()}`,
+            text: 'Follow on Instagram',
+            action: {
+              type: 'ig',
+              value: instagramValidation.formattedUrl,
+              target: '_blank',
+              trackingEvent: 'instagram_follow_clicked'
+            },
+            style: 'outline',
+            position: 1,
+            visibilityConditions: {},
+            icon: 'Instagram',
+            enabled: true
+          });
+        }
+      }
+
       // Convert registration data to barraca format
       const barracaData = {
         name: registration.name,
@@ -268,6 +324,7 @@ export class BarracaRegistrationService {
         contact: {
           phone: registration.contact?.phone || '',
           email: registration.contact?.email || '',
+          instagram: registration.contact?.instagram || undefined,
           website: registration.contact?.website || undefined
         },
         amenities: registration.amenities || [],
@@ -279,7 +336,7 @@ export class BarracaRegistrationService {
         specialAdminOverride: false,
         specialAdminOverrideExpires: null,
         rating: undefined,
-        ctaButtons: []
+        ctaButtons: ctaButtons
       };
 
       console.log('Creating barraca with data:', barracaData);

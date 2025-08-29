@@ -22,8 +22,6 @@ interface AppContextType {
   searchFilters: SearchFilters;
   isLoading: boolean;
   isInitialLoading: boolean;
-  isAdmin: boolean;
-  isSpecialAdmin: boolean;
   emailSubscriptions: EmailSubscription[];
   currentLanguage?: string;
   weatherOverride: boolean;
@@ -38,8 +36,6 @@ interface AppContextType {
   deleteBarraca: (id: string) => Promise<void>;
   subscribeEmail: (email: string) => Promise<boolean>;
   checkEmailSubscription: (email: string) => Promise<boolean>;
-  adminLogin: (email: string, password: string) => Promise<boolean>;
-  adminLogout: () => void;
   refreshWeather: () => Promise<void>;
   refreshBarracas: () => Promise<void>;
   firestoreConnected: boolean;
@@ -86,38 +82,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const [hasMore, setHasMore] = useState(true);
 
   
-  // Initialize admin state from localStorage
-  const [isAdmin, setIsAdmin] = useState(() => {
-    const savedAdminState = localStorage.getItem('admin_session');
-    if (savedAdminState) {
-      try {
-        const parsed = JSON.parse(savedAdminState);
-        // Check if session is still valid (24 hours)
-        if (parsed.timestamp && (Date.now() - parsed.timestamp) < 24 * 60 * 60 * 1000) {
-          return parsed.isAdmin || false;
-        }
-      } catch (error) {
-        console.warn('Error parsing admin session:', error);
-      }
-    }
-    return false;
-  });
-  
-  const [isSpecialAdmin, setIsSpecialAdmin] = useState(() => {
-    const savedAdminState = localStorage.getItem('admin_session');
-    if (savedAdminState) {
-      try {
-        const parsed = JSON.parse(savedAdminState);
-        // Check if session is still valid (24 hours)
-        if (parsed.timestamp && (Date.now() - parsed.timestamp) < 24 * 60 * 60 * 1000) {
-          return parsed.isSpecialAdmin || false;
-        }
-      } catch (error) {
-        console.warn('Error parsing admin session:', error);
-      }
-    }
-    return false;
-  });
+
   
   const [emailSubscriptions, setEmailSubscriptions] = useState<EmailSubscription[]>([]);
   const [currentLanguage, setCurrentLanguage] = useState<string>('en');
@@ -201,56 +166,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     }
   }, []);
 
-  // Utility function to check and clear expired admin sessions
-  const checkAndClearExpiredSession = useCallback(() => {
-    const savedAdminState = localStorage.getItem('admin_session');
-    if (savedAdminState) {
-      try {
-        const parsed = JSON.parse(savedAdminState);
-        // Check if session is expired (24 hours)
-        if (parsed.timestamp && (Date.now() - parsed.timestamp) >= 24 * 60 * 60 * 1000) {
-          localStorage.removeItem('admin_session');
-          setIsAdmin(false);
-          setIsSpecialAdmin(false);
-          console.log('Admin session expired and cleared');
-        }
-      } catch (error) {
-        console.warn('Error checking admin session:', error);
-        localStorage.removeItem('admin_session');
-      }
-    }
-  }, []);
 
-  // Utility function to extend admin session
-  const extendAdminSession = useCallback(() => {
-    const savedAdminState = localStorage.getItem('admin_session');
-    if (savedAdminState) {
-      try {
-        const parsed = JSON.parse(savedAdminState);
-        const updatedSessionData = {
-          ...parsed,
-          timestamp: Date.now()
-        };
-        localStorage.setItem('admin_session', JSON.stringify(updatedSessionData));
-      } catch (error) {
-        console.warn('Error extending admin session:', error);
-      }
-    }
-  }, []);
-
-  // Check for expired sessions on mount
-  useEffect(() => {
-    checkAndClearExpiredSession();
-  }, [checkAndClearExpiredSession]);
-
-  // Set up periodic session check (every hour)
-  useEffect(() => {
-    const interval = setInterval(() => {
-      checkAndClearExpiredSession();
-    }, 60 * 60 * 1000); // Check every hour
-
-    return () => clearInterval(interval);
-  }, [checkAndClearExpiredSession]);
 
   // Comprehensive initial loading effect
   useEffect(() => {
@@ -479,11 +395,6 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
 
   const addBarraca = useCallback(async (barracaData: Omit<Barraca, 'id' | 'createdAt' | 'updatedAt'>) => {
     try {
-      // Extend admin session if user is admin
-      if (isAdmin || isSpecialAdmin) {
-        extendAdminSession();
-      }
-      
       const newBarraca = await BarracaService.create(barracaData);
       setBarracas(prev => [...prev, newBarraca]);
       
@@ -492,15 +403,10 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
       console.error('Failed to add barraca:', error);
       throw error;
     }
-  }, [isAdmin, isSpecialAdmin, extendAdminSession]);
+  }, []);
 
   const updateBarraca = useCallback(async (id: string, updates: Partial<Barraca>) => {
     try {
-      // Extend admin session if user is admin
-      if (isAdmin || isSpecialAdmin) {
-        extendAdminSession();
-      }
-      
       const updatedBarraca = await BarracaService.update(id, updates);
       setBarracas(prev => prev.map(barraca => 
         barraca.id === id ? updatedBarraca : barraca
@@ -511,7 +417,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
       console.error('Failed to update barraca:', error);
       throw error;
     }
-  }, [isAdmin, isSpecialAdmin, extendAdminSession]);
+  }, []);
 
   const deleteBarraca = useCallback(async (id: string) => {
     try {
@@ -575,47 +481,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     }
   }, []);
 
-  const adminLogin = useCallback(async (email: string, password: string): Promise<boolean> => {
-    // Mock admin authentication
-    if (email === 'admin@cariocacoastal.com' && password === 'admin123') {
-      setIsAdmin(true);
-      setIsSpecialAdmin(false); // Ensure special admin is false
-      
-      // Save admin session to localStorage
-      const sessionData = {
-        isAdmin: true,
-        isSpecialAdmin: false,
-        timestamp: Date.now()
-      };
-      localStorage.setItem('admin_session', JSON.stringify(sessionData));
-      
-      return true;
-    }
-    // Special admin authentication
-    if (email === 'special@cariocacoastal.com' && password === 'special123') {
-      setIsAdmin(true);
-      setIsSpecialAdmin(true); // Set special admin flag
-      
-      // Save admin session to localStorage
-      const sessionData = {
-        isAdmin: true,
-        isSpecialAdmin: true,
-        timestamp: Date.now()
-      };
-      localStorage.setItem('admin_session', JSON.stringify(sessionData));
-      
-      return true;
-    }
-    return false;
-  }, []);
 
-  const adminLogout = useCallback(() => {
-    setIsAdmin(false);
-    setIsSpecialAdmin(false);
-    
-    // Clear admin session from localStorage
-    localStorage.removeItem('admin_session');
-  }, []);
 
   const refreshWeather = useCallback(async () => {
     setIsLoading(true);
@@ -695,11 +561,6 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   // Update the existing refreshBarracas function
   const refreshBarracas = useCallback(async () => {
     try {
-      // Extend admin session if user is admin
-      if (isAdmin || isSpecialAdmin) {
-        extendAdminSession();
-      }
-      
       console.log('🔄 Refreshing barracas from Supabase...');
       const result = await fetchBarracasWithStatus(1);
       
@@ -712,7 +573,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
       console.error('Failed to refresh barracas:', error);
       throw error;
     }
-  }, [isAdmin, isSpecialAdmin, extendAdminSession, fetchBarracasWithStatus]);
+  }, [fetchBarracasWithStatus]);
 
   useEffect(() => {
     // Register service worker and get FCM token
@@ -749,8 +610,6 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     searchFilters,
     isLoading,
     isInitialLoading,
-    isAdmin,
-    isSpecialAdmin,
     emailSubscriptions,
     currentLanguage,
     weatherOverride,
@@ -765,8 +624,6 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     deleteBarraca,
     subscribeEmail,
     checkEmailSubscription,
-    adminLogin,
-    adminLogout,
     refreshWeather,
     refreshBarracas,
     firestoreConnected,

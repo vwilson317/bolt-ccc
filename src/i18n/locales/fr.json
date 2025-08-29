@@ -3,9 +3,8 @@
     "home": "Accueil",
     "discover": "Trouver des Barracas",
     "about": "À propos",
-    "admin": "Login",
-    "registerBarraca": "Enregistrer Barraca",
-    "photos": "Photos"
+    "photos": "Photos",
+    "registerBarraca": "Enregistrer Barraca"
   },
   "hero": {
     "title": "Votre Barraca Préférée Vous Attend",
@@ -68,85 +67,7 @@
     "password": "Mot de passe",
     "signIn": "Se Connecter"
   },
-  "admin": {
-    "dashboard": "Tableau de Bord Admin",
-    "logout": "Se Déconnecter",
-    "addBarraca": "Ajouter Nouvelle Barraca",
-    "editBarraca": "Modifier Barraca",
-    "deleteBarraca": "Supprimer Barraca",
-    "manageBarracas": "Gérer les Barracas",
-    "enableWeatherOverride": "Surcharge Météo: Afficher Toutes Fermées",
-    "disableWeatherOverride": "Désactiver la Surcharge Météo",
-    "stats": "Analyses",
-    "emails": "Abonnés Email",
-    "credentials": "Identifiants de démonstration : admin@cariocacoastal.com / admin123",
-    "weatherOverrideActive": "Le mode météo forcée est actif. Toutes les barracas apparaîtront fermées jusqu'à minuit.",
-    "form": {
-      "name": "Nom",
-      "barracaNumber": "Numéro de Barraca",
-      "location": "Emplacement",
-      "description": "Description",
-      "availability": "Disponibilité",
-      "typicalHours": "Horaires Typiques",
-      "weatherDependent": "Dépendant de la Météo",
-      "partnered": "Barraca Partenaire",
-      "partneredRequired": "Statut de Partenaire Requis",
-      "partneredRequiredMessage": "Les fonctionnalités supplémentaires comme les images, le menu, les informations de contact et les équipements ne sont disponibles que pour les barracas partenaires. Cochez la case partenaire pour activer ces options.",
-      "images": "Images (URLs)",
-      "menuPreview": "Éléments du Menu",
-      "contact": "Informations de Contact",
-      "whatsapp": "WhatsApp",
-      "email": "Email",
-      "instagram": "Instagram",
-      "amenities": "Commodités",
-      "ctaButtons": "Boutons CTA Personnalisés",
-      "addImage": "Ajouter Image",
-      "addItem": "Ajouter Élément",
-      "addAmenity": "Ajouter Commodité",
-      "save": "Sauvegarder Barraca",
-      "saving": "Sauvegarde...",
-      "cancel": "Annuler",
-      "selectNeighborhood": "Sélectionner quartier",
-      "required": "*"
-    },
-    "table": {
-      "barraca": "Barraca",
-      "location": "Emplacement",
-      "availability": "Disponibilité",
-      "partnered": "Partenaire",
-      "notPartnered": "Non Partenaire",
-      "notPartneredMessage": "Cette barraca n'est pas notre partenaire. Seules les informations de base sont disponibles.",
-      "open": "Ouverte",
-      "closed": "Fermée",
-      "undetermined": "Indéterminé",
-      "updated": "Mis à jour",
-      "actions": "Actions",
-      "email": "Email",
-      "subscribed": "Abonné",
-      "preferences": "Préférences"
-    },
-    "pagination": {
-      "itemsPerPage": "Éléments par page",
-      "showing": "Affichage de {start}-{end} sur {total} barracas",
-      "previous": "Précédent",
-      "next": "Suivant"
-    },
-    "stats": {
-      "totalBarracas": "Total des Barracas",
-      "currentlyOpen": "Actuellement Ouvertes",
-      "emailSubscribers": "Abonnés Email",
-      "uniqueLocations": "Emplacements Uniques",
-      "openRate": "taux d'ouverture",
-      "thisMonth": "+2 ce mois",
-      "thisWeek": "+15 cette semaine",
-      "acrossRio": "À travers Rio",
-      "barracasByLocation": "Barracas par Emplacement",
-      "recentActivity": "Activité Récente",
-      "systemHealth": "Santé du Système",
-      "uptime": "Temps de Fonctionnement",
-      "activeSubscribers": "Abonnés Actifs"
-    }
-  },
+
   "photos": {
     "title": "Galeries Photos",
     "description": "Parcourez nos galeries photos sélectionnées avec les meilleures images de nos événements. Chaque photo dans nos galeries est également disponible dans notre archive complète.",
@@ -567,67 +488,7 @@
       "fitness": "Fitness"
     }
   },
-  "adminRegistrations": {
-    "title": "Enregistrements de Barracas",
-    "subtitle": "Examiner et gérer les soumissions d'enregistrement de barracas",
-    "stats": {
-      "total": "Total des Enregistrements",
-      "pending": "En Attente d'Examen",
-      "approved": "Approuvés",
-      "rejected": "Rejetés"
-    },
-    "filters": {
-      "all": "Tous",
-      "pending": "En Attente",
-      "approved": "Approuvés",
-      "rejected": "Rejetés"
-    },
-    "table": {
-      "name": "Nom",
-      "location": "Emplacement",
-      "contact": "Contact",
-      "submitted": "Soumis",
-      "status": "Statut",
-      "actions": "Actions"
-    },
-    "status": {
-      "pending": "En Attente",
-      "approved": "Approuvé",
-      "rejected": "Rejeté"
-    },
-    "actions": {
-      "view": "Voir les Détails",
-      "approve": "Approuver",
-      "reject": "Rejeter",
-      "delete": "Supprimer",
-      "convert": "Convertir en Barraca"
-    },
-    "modal": {
-      "title": "Détails de l'Enregistrement",
-      "basicInfo": "Informations de Base",
-      "contactInfo": "Informations de Contact",
-      "hours": "Horaires d'Ouverture",
-      "menu": "Menu et Commodités",
-      "additionalInfo": "Informations Supplémentaires",
-      "adminNotes": "Notes Admin",
-      "adminNotesPlaceholder": "Ajouter des notes sur cet enregistrement...",
-      "approve": "Approuver l'Enregistrement",
-      "reject": "Rejeter l'Enregistrement",
-      "approving": "Approbation...",
-      "rejecting": "Rejet...",
-      "deleting": "Suppression...",
-      "close": "Fermer"
-    },
-    "messages": {
-      "approved": "Enregistrement approuvé avec succès",
-      "rejected": "Enregistrement rejeté",
-      "deleted": "Enregistrement supprimé",
-      "converted": "Enregistrement converti en barraca avec succès",
-      "error": "Une erreur s'est produite. Veuillez réessayer."
-    },
-    "noRegistrations": "Aucun enregistrement trouvé",
-    "loading": "Chargement des enregistrements..."
-  },
+
   "marquee": {
     "title": "Merci de vous être enregistré",
     "loading": "Chargement des barracas enregistrées..."
