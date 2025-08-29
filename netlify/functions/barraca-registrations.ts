@@ -133,6 +133,11 @@ export const handler: Handler = async (event) => {
       contactForPhotos: Boolean(body.contactForPhotos),
       contactForStatus: Boolean(body.contactForStatus),
       preferredContactMethod: body.preferredContactMethod || undefined,
+      // English fluency information
+      englishFluency: body.englishFluency || 'no',
+      englishSpeakerNames: body.englishSpeakerNames?.trim() || undefined,
+      // Tab system for tracking orders
+      tabSystem: body.tabSystem || 'name_only',
     };
 
     console.log('Cleaned registration data:', JSON.stringify(registrationData, null, 2));

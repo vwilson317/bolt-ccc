@@ -31,6 +31,11 @@ const transformRegistrationToDB = (registration: Omit<BarracaRegistration, 'id' 
   contact_for_photos: registration.contactForPhotos || false,
   contact_for_status: registration.contactForStatus || false,
   preferred_contact_method: registration.preferredContactMethod || null,
+  // English fluency information
+  english_fluency: registration.englishFluency || 'no',
+  english_speaker_names: registration.englishSpeakerNames || null,
+  // Tab system for tracking orders
+  tab_system: registration.tabSystem || 'name_only',
   status: 'pending',
   submitted_at: new Date().toISOString(),
   reviewed_at: null,
@@ -73,6 +78,11 @@ const transformRegistrationFromDB = (row: any): BarracaRegistration => {
   contactForPhotos: row.contact_for_photos || false,
   contactForStatus: row.contact_for_status || false,
   preferredContactMethod: row.preferred_contact_method,
+  // English fluency information
+  englishFluency: row.english_fluency || 'no',
+  englishSpeakerNames: row.english_speaker_names,
+  // Tab system for tracking orders
+  tabSystem: row.tab_system || 'name_only',
   status: row.status,
   submittedAt: new Date(row.submitted_at),
   reviewedAt: row.reviewed_at ? new Date(row.reviewed_at) : undefined,
@@ -244,6 +254,62 @@ export class BarracaRegistrationService {
       // Import the barraca service to create the barraca
       const { BarracaService } = await import('./barracaService');
       
+      // Helper function to validate and format Instagram URL
+      const validateInstagramUrl = (url: string): { isValid: boolean; formattedUrl: string } => {
+        if (!url || !url.trim()) {
+          return { isValid: false, formattedUrl: '' };
+        }
+
+        let formattedUrl = url.trim();
+        
+        // Handle different Instagram URL formats
+        if (formattedUrl.includes('instagram.com')) {
+          if (!formattedUrl.startsWith('http')) {
+            formattedUrl = 'https://' + formattedUrl;
+          }
+        } else if (formattedUrl.startsWith('@')) {
+          const username = formattedUrl.substring(1);
+          formattedUrl = `https://instagram.com/${username}`;
+        } else if (formattedUrl.match(/^[a-zA-Z0-9._]+$/)) {
+          formattedUrl = `https://instagram.com/${formattedUrl}`;
+        } else {
+          return { isValid: false, formattedUrl: '' };
+        }
+
+        try {
+          const urlObj = new URL(formattedUrl);
+          if (!urlObj.hostname.includes('instagram.com')) {
+            return { isValid: false, formattedUrl: '' };
+          }
+          return { isValid: true, formattedUrl };
+        } catch {
+          return { isValid: false, formattedUrl: '' };
+        }
+      };
+
+      // Create Instagram CTA button if Instagram contact is available
+      const ctaButtons = [];
+      if (registration.contact?.instagram) {
+        const instagramValidation = validateInstagramUrl(registration.contact.instagram);
+        if (instagramValidation.isValid) {
+          ctaButtons.push({
+            id: `instagram-${Date.now()}`,
+            text: 'Follow on Instagram',
+            action: {
+              type: 'ig',
+              value: instagramValidation.formattedUrl,
+              target: '_blank',
+              trackingEvent: 'instagram_follow_clicked'
+            },
+            style: 'outline',
+            position: 1,
+            visibilityConditions: {},
+            icon: 'Instagram',
+            enabled: true
+          });
+        }
+      }
+
       // Convert registration data to barraca format
       const barracaData = {
         name: registration.name,
@@ -258,6 +324,7 @@ export class BarracaRegistrationService {
         contact: {
           phone: registration.contact?.phone || '',
           email: registration.contact?.email || '',
+          instagram: registration.contact?.instagram || undefined,
           website: registration.contact?.website || undefined
         },
         amenities: registration.amenities || [],
@@ -269,7 +336,7 @@ export class BarracaRegistrationService {
         specialAdminOverride: false,
         specialAdminOverrideExpires: null,
         rating: undefined,
-        ctaButtons: []
+        ctaButtons: ctaButtons
       };
 
       console.log('Creating barraca with data:', barracaData);

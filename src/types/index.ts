@@ -10,6 +10,7 @@ export type BarracaPhotos = {
 export interface Barraca {
   id: string;
   name: string;
+  ownerName?: string; // Owner's name
   barracaNumber?: string; // Added barraca number
   location: string;
   coordinates: {
@@ -19,14 +20,18 @@ export interface Barraca {
   isOpen: boolean;
   typicalHours: string;
   description: string;
+  nearestPosto?: string; // Nearest posto (lifeguard station)
   photos: BarracaPhotos;
   menuPreview: string[];
   contact: {
     phone?: string;
     email?: string;
     website?: string;
+    instagram?: string; // Instagram handle
   };
   amenities: string[];
+  environment?: string[]; // Environment types like Family Friendly, LGBTQ+, etc.
+  additionalInfo?: string; // Additional information about the barraca
   weatherDependent: boolean;
   partnered: boolean; // Partnered barracas get special treatment
   weekendHoursEnabled: boolean; // New weekend hours feature
@@ -42,6 +47,21 @@ export interface Barraca {
   createdAt: Date;
   updatedAt: Date;
   ctaButtons?: CTAButtonConfig[]; // New configurable CTA buttons
+  // Partnership opportunities
+  qrCodes?: boolean;
+  repeatDiscounts?: boolean;
+  hotelPartnerships?: boolean;
+  contentCreation?: boolean;
+  onlineOrders?: boolean;
+  // Contact preferences for photos and status updates
+  contactForPhotos?: boolean;
+  contactForStatus?: boolean;
+  preferredContactMethod?: 'whatsapp' | 'instagram' | 'email';
+  // English fluency information
+  englishFluency?: 'no' | 'not_fluent' | 'fluent';
+  englishSpeakerNames?: string;
+  // Tab system for tracking orders
+  tabSystem?: 'name_only' | 'individual_paper' | 'number_on_chair' | 'digital';
   // Translation support
   translations?: Record<SupportedLanguage, Partial<TranslatableBarracaFields>>;
 }
@@ -52,6 +72,8 @@ export interface TranslatableBarracaFields {
   description: string;
   menuPreview: string[];
   amenities: string[];
+  environment?: string[];
+  additionalInfo?: string;
 }
 
 export interface WeatherData {
@@ -341,6 +363,11 @@ export interface BarracaRegistration {
   contactForPhotos?: boolean;
   contactForStatus?: boolean;
   preferredContactMethod?: 'whatsapp' | 'instagram' | 'email';
+  // English fluency information
+  englishFluency?: 'no' | 'not_fluent' | 'fluent';
+  englishSpeakerNames?: string;
+  // Tab system for tracking orders
+  tabSystem?: 'name_only' | 'individual_paper' | 'number_on_chair' | 'digital';
   status: 'pending' | 'approved' | 'rejected';
   submittedAt: Date;
   reviewedAt?: Date;

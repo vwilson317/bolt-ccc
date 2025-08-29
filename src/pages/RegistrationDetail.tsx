@@ -99,6 +99,11 @@ const RegistrationDetail: React.FC = () => {
     }
   };
 
+  const handleBackClick = () => {
+    console.log('Back button clicked');
+    navigate('/admin');
+  };
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'approved': return 'text-green-600 bg-green-100';
@@ -162,32 +167,29 @@ const RegistrationDetail: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white shadow-sm border-b">
-        <div className="max-w-4xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <button
-                onClick={() => navigate('/admin')}
-                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-              >
-                <ArrowLeft className="h-5 w-5" />
-              </button>
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900">{registration.name}</h1>
-                <p className="text-gray-600">Registration #{registration.id}</p>
-              </div>
-            </div>
+    <div className="min-h-screen bg-gray-50 pt-16">
+      <div className="max-w-4xl mx-auto px-4 py-8">
+        {/* Page Header */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-4">
+            <button
+              onClick={handleBackClick}
+              className="flex items-center space-x-2 px-4 py-2 bg-blue-500 text-white hover:bg-blue-600 rounded-lg transition-colors shadow-sm"
+            >
+              <ArrowLeft className="h-5 w-5" />
+              <span className="font-medium text-sm">Back to Admin</span>
+            </button>
             <div className={`flex items-center space-x-2 px-3 py-1 rounded-full ${getStatusColor(registration.status)}`}>
               {getStatusIcon(registration.status)}
               <span className="font-medium capitalize">{registration.status}</span>
             </div>
           </div>
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">{registration.name}</h1>
+            <p className="text-gray-600 mt-1">Registration #{registration.id}</p>
+          </div>
         </div>
-      </div>
-
-      <div className="max-w-4xl mx-auto px-4 py-8">
+        
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
@@ -379,6 +381,43 @@ const RegistrationDetail: React.FC = () => {
                   <span className="text-gray-700">
                     Preferred Contact: {registration.preferredContactMethod || 'Not specified'}
                   </span>
+                </div>
+              </div>
+            </div>
+
+            {/* English Fluency & Tab System */}
+            <div className="bg-white rounded-lg shadow-sm border p-6">
+              <h2 className="text-xl font-semibold mb-4">English Fluency & Tab System</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <h3 className="text-lg font-medium mb-2">English Fluency</h3>
+                  <div className="flex items-center space-x-2">
+                    <Users className="h-4 w-4 text-gray-400" />
+                    <span className="text-gray-700 capitalize">
+                      {registration.englishFluency === 'no' && 'No English speakers'}
+                      {registration.englishFluency === 'not_fluent' && 'Not fluent'}
+                      {registration.englishFluency === 'fluent' && 'Fluent English speakers'}
+                    </span>
+                  </div>
+                  {registration.englishFluency === 'fluent' && registration.englishSpeakerNames && (
+                    <div className="mt-2 pl-6">
+                      <span className="text-sm text-gray-600">Names: </span>
+                      <span className="text-gray-700">{registration.englishSpeakerNames}</span>
+                    </div>
+                  )}
+                </div>
+                
+                <div>
+                  <h3 className="text-lg font-medium mb-2">Tab System</h3>
+                  <div className="flex items-center space-x-2">
+                    <FileText className="h-4 w-4 text-gray-400" />
+                    <span className="text-gray-700">
+                      {registration.tabSystem === 'name_only' && 'Name only'}
+                      {registration.tabSystem === 'individual_paper' && 'Individual paper tab'}
+                      {registration.tabSystem === 'number_on_chair' && 'Number on chair'}
+                      {registration.tabSystem === 'digital' && 'Digital (app or system-based)'}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>

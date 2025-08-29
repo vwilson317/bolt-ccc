@@ -103,6 +103,27 @@ export const validateCTAButton = (button: CTAButtonConfig): { isValid: boolean; 
     errors.push('Invalid phone number format');
   }
 
+  if (button.action && button.action.type === 'ig') {
+    // Validate Instagram URL
+    const url = button.action.value.trim();
+    if (!url) {
+      errors.push('Instagram URL is required');
+    } else {
+      // Check if it's a valid Instagram URL
+      try {
+        const urlObj = new URL(url.startsWith('http') ? url : `https://${url}`);
+        if (!urlObj.hostname.includes('instagram.com')) {
+          errors.push('Instagram URL must be from instagram.com');
+        }
+      } catch {
+        // Try to validate as username
+        if (!url.match(/^@?[a-zA-Z0-9._]+$/) && !url.includes('instagram.com')) {
+          errors.push('Invalid Instagram URL or username format');
+        }
+      }
+    }
+  }
+
   return {
     isValid: errors.length === 0,
     errors
@@ -261,7 +282,18 @@ export const handleCTAButtonClick = (action: CTAButtonAction, barraca: Barraca) 
 
     case 'ig':
       // Handle Instagram links - open in new tab
-      window.open(action.value, '_blank', 'noopener,noreferrer');
+      let instagramUrl = action.value;
+      
+      // Format the URL if it's just a username
+      if (instagramUrl.startsWith('@')) {
+        instagramUrl = `https://instagram.com/${instagramUrl.substring(1)}`;
+      } else if (instagramUrl.match(/^[a-zA-Z0-9._]+$/)) {
+        instagramUrl = `https://instagram.com/${instagramUrl}`;
+      } else if (!instagramUrl.startsWith('http')) {
+        instagramUrl = `https://${instagramUrl}`;
+      }
+      
+      window.open(instagramUrl, '_blank', 'noopener,noreferrer');
       break;
 
     case 'reservation':
