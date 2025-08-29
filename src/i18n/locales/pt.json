@@ -3,9 +3,8 @@
     "home": "Início",
     "discover": "Encontrar Barracas",
     "about": "Sobre",
-    "admin": "Login",
-    "registerBarraca": "Registrar Barraca",
-    "photos": "Fotos"
+    "photos": "Fotos",
+    "registerBarraca": "Registrar Barraca"
   },
   "hero": {
     "title": "Sua Barraca Favorita Te Espera",
@@ -67,87 +66,7 @@
     "password": "Senha",
     "signIn": "Entrar"
   },
-  "admin": {
-    "dashboard": "Painel Admin",
-    "logout": "Sair",
-    "addBarraca": "Adicionar Nova Barraca",
-    "editBarraca": "Editar Barraca",
-    "deleteBarraca": "Excluir Barraca",
-    "manageBarracas": "Gerenciar Barracas",
-    "enableWeatherOverride": "Sobrescrever Clima: Mostrar Todas Fechadas",
-    "disableWeatherOverride": "Desabilitar Sobrescrita de Clima",
-    "stats": "Análises",
-    "emails": "Assinantes de Email",
-    "credentials": "Credenciais de demonstração: admin@cariocacoastal.com / admin123",
-    "enableWeatherOverride": "Ativar substituição do clima",
-    "disableWeatherOverride": "Desativar substituição do clima",
-    "weatherOverrideActive": "A substituição do clima está ativa. Todas as barracas aparecerão fechadas até a meia-noite.",
-    "form": {
-      "name": "Nome",
-      "barracaNumber": "Número da Barraca",
-      "location": "Localização",
-      "description": "Descrição",
-      "availability": "Disponibilidade",
-      "typicalHours": "Horário Típico",
-      "weatherDependent": "Dependente do Clima",
-      "partnered": "Barraca Parceira",
-      "partneredRequired": "Status de Parceira Obrigatório",
-      "partneredRequiredMessage": "Recursos adicionais como imagens, menu, informações de contato e comodidades estão disponíveis apenas para barracas parceiras. Marque a caixa de parceira para habilitar essas opções.",
-      "images": "Imagens (URLs)",
-      "menuPreview": "Itens do Menu",
-      "contact": "Informações de Contato",
-      "whatsapp": "WhatsApp",
-      "email": "Email",
-      "instagram": "Instagram",
-      "amenities": "Comodidades",
-      "ctaButtons": "Botões CTA Personalizados",
-      "addImage": "Adicionar Imagem",
-      "addItem": "Adicionar Item",
-      "addAmenity": "Adicionar Comodidade",
-      "save": "Salvar Barraca",
-      "saving": "Salvando...",
-      "cancel": "Cancelar",
-      "selectNeighborhood": "Selecionar bairro",
-      "required": "*"
-    },
-    "table": {
-      "barraca": "Barraca",
-      "location": "Localização",
-      "availability": "Disponibilidade",
-      "partnered": "Parceira",
-      "notPartnered": "Não Parceira",
-      "notPartneredMessage": "Esta barraca não é parceira nossa. Apenas informações básicas estão disponíveis.",
-      "open": "Aberta",
-      "closed": "Fechada",
-      "undetermined": "Indeterminado",
-      "updated": "Atualizado",
-      "actions": "Ações",
-      "email": "Email",
-      "subscribed": "Inscrito",
-      "preferences": "Preferências"
-    },
-    "pagination": {
-      "itemsPerPage": "Itens por página",
-      "showing": "Mostrando {start}-{end} de {total} barracas",
-      "previous": "Anterior",
-      "next": "Próximo"
-    },
-    "stats": {
-      "totalBarracas": "Total de Barracas",
-      "currentlyOpen": "Atualmente Abertas",
-      "emailSubscribers": "Assinantes de Email",
-      "uniqueLocations": "Localizações Únicas",
-      "openRate": "taxa de abertura",
-      "thisMonth": "+2 este mês",
-      "thisWeek": "+15 esta semana",
-      "acrossRio": "Por todo o Rio",
-      "barracasByLocation": "Barracas por Localização",
-      "recentActivity": "Atividade Recente",
-      "systemHealth": "Saúde do Sistema",
-      "uptime": "Tempo Ativo",
-      "activeSubscribers": "Assinantes Ativos"
-    }
-  },
+
   "photos": {
     "title": "Galerias de Fotos",
     "description": "Navegue pelas nossas galerias de fotos curadas com as melhores imagens dos nossos eventos. Cada foto nas nossas galerias também está disponível no nosso arquivo completo.",
@@ -574,95 +493,7 @@
       "fitness": "Fitness"
     }
   },
-  "adminRegistrations": {
-    "title": "Registros de Barracas",
-    "subtitle": "Revisar e gerenciar submissões de registro de barracas",
-    "stats": {
-      "total": "Total de Registros",
-      "pending": "Aguardando Revisão",
-      "approved": "Aprovados",
-      "rejected": "Rejeitados"
-    },
-    "filters": {
-      "all": "Todos",
-      "pending": "Pendentes",
-      "approved": "Aprovados",
-      "rejected": "Rejeitados"
-    },
-    "table": {
-      "name": "Nome",
-      "location": "Localização",
-      "contact": "Contato",
-      "submitted": "Enviado",
-      "status": "Status",
-      "actions": "Ações"
-    },
-    "status": {
-      "pending": "Pendente",
-      "approved": "Aprovado",
-      "rejected": "Rejeitado"
-    },
-    "actions": {
-      "view": "Ver Detalhes",
-      "approve": "Aprovar",
-      "approveConvert": "Aprovar e Converter para Barraca",
-      "reject": "Rejeitar",
-      "delete": "Excluir",
-      "convert": "Converter para Barraca"
-    },
-    "modal": {
-      "title": "Detalhes do Registro",
-      "basicInfo": "Informações Básicas",
-      "contactInfo": "Informações de Contato",
-      "ownerName": "Nome do Proprietário",
-      "barracaNumber": "Número da Barraca",
-      "location": "Localização",
-      "hours": "Horários de Funcionamento",
-      "nearestPosto": "Posto Mais Próximo",
-      "menu": "Menu e Comodidades",
-      "description": "Descrição",
-      "defaultPhoto": "Foto Padrão",
-      "amenities": "Comodidades",
-      "environment": "Ambiente",
-      "partnershipOpportunities": "Oportunidades de Parceria",
-      "qrCodes": "Códigos QR nos Móveis",
-      "repeatDiscounts": "Descontos para Clientes Recorrentes",
-      "hotelPartnerships": "Parcerias com Hotéis",
-      "contentCreation": "Criação de Conteúdo",
-      "onlineOrders": "Pedidos Online",
-      "contactPreferences": "Preferências de Contato",
-      "contactForPhotos": "Contato para Fotos",
-      "contactForStatus": "Contato para Atualizações de Status",
-      "preferredMethod": "Método Preferido",
-      "phone": "Telefone",
-      "email": "Email",
-      "instagram": "Instagram",
-      "website": "Website",
-      "additionalInfo": "Informações Adicionais",
-      "adminNotes": "Notas do Admin",
-      "adminNotesPlaceholder": "Adicione notas sobre este registro...",
-      "approve": "Aprovar Registro",
-      "reject": "Rejeitar Registro",
-      "approving": "Aprovando...",
-      "rejecting": "Rejeitando...",
-      "deleting": "Excluindo...",
-      "close": "Fechar"
-    },
-    "messages": {
-      "approved": "Registro aprovado com sucesso",
-      "approvedConverted": "Registro aprovado e convertido para barraca com sucesso!",
-      "rejected": "Registro rejeitado",
-      "deleted": "Registro excluído",
-      "converted": "Registro convertido para barraca com sucesso",
-      "error": "Ocorreu um erro. Por favor, tente novamente.",
-      "approveError": "Falha ao aprovar registro",
-      "rejectError": "Falha ao rejeitar registro",
-      "deleteConfirm": "Tem certeza de que deseja excluir este registro?",
-      "deleteError": "Falha ao excluir registro"
-    },
-    "noRegistrations": "Nenhum registro encontrado",
-    "loading": "Carregando registros..."
-  },
+
   "marquee": {
     "title": "Obrigado por se registrar",
     "loading": "Carregando barracas registrados..."

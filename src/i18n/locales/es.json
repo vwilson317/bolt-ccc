@@ -3,9 +3,8 @@
     "home": "Inicio",
     "discover": "Encontrar Barracas",
     "about": "Acerca de",
-    "admin": "Login",
-    "registerBarraca": "Registrar Barraca",
-    "photos": "Fotos"
+    "photos": "Fotos",
+    "registerBarraca": "Registrar Barraca"
   },
   "hero": {
     "title": "Tu Barraca Favorita Te Espera",
@@ -67,87 +66,7 @@
     "password": "Contraseña",
     "signIn": "Iniciar Sesión"
   },
-  "admin": {
-    "dashboard": "Panel de Admin",
-    "logout": "Cerrar Sesión",
-    "addBarraca": "Agregar Nueva Barraca",
-    "editBarraca": "Editar Barraca",
-    "deleteBarraca": "Eliminar Barraca",
-    "manageBarracas": "Gestionar Barracas",
-    "enableWeatherOverride": "Sobrescribir Clima: Mostrar Todas Cerradas",
-    "disableWeatherOverride": "Deshabilitar Sobrescrita de Clima",
-    "stats": "Análisis",
-    "emails": "Suscriptores de Email",
-    "credentials": "Credenciales de demostración: admin@cariocacoastal.com / admin123",
-    "enableWeatherOverride": "Activar anulación meteorológica",
-    "disableWeatherOverride": "Desactivar anulación meteorológica",
-    "weatherOverrideActive": "La anulación meteorológica está activa. Todas las barracas aparecerán cerradas hasta la medianoche.",
-    "form": {
-      "name": "Nombre",
-      "barracaNumber": "Número de Barraca",
-      "location": "Ubicación",
-      "description": "Descripción",
-      "availability": "Disponibilidad",
-      "typicalHours": "Horario Típico",
-      "weatherDependent": "Dependiente del Clima",
-      "partnered": "Barraca Socia",
-      "partneredRequired": "Estado de Socia Requerido",
-      "partneredRequiredMessage": "Características adicionales como imágenes, menú, información de contacto y comodidades solo están disponibles para barracas socias. Marque la casilla de socia para habilitar estas opciones.",
-      "images": "Imágenes (URLs)",
-      "menuPreview": "Elementos del Menú",
-      "contact": "Información de Contacto",
-      "whatsapp": "WhatsApp",
-      "email": "Email",
-      "instagram": "Instagram",
-      "amenities": "Comodidades",
-      "ctaButtons": "Botones CTA Personalizados",
-      "addImage": "Agregar Imagen",
-      "addItem": "Agregar Elemento",
-      "addAmenity": "Agregar Comodidad",
-      "save": "Guardar Barraca",
-      "saving": "Guardando...",
-      "cancel": "Cancelar",
-      "selectNeighborhood": "Seleccionar barrio",
-      "required": "*"
-    },
-    "table": {
-      "barraca": "Barraca",
-      "location": "Ubicación",
-      "availability": "Disponibilidad",
-      "partnered": "Socia",
-      "notPartnered": "No Socia",
-      "notPartneredMessage": "Esta barraca no es socia nuestra. Solo hay información básica disponible.",
-      "open": "Abierta",
-      "closed": "Cerrada",
-      "undetermined": "Indeterminado",
-      "updated": "Actualizado",
-      "actions": "Acciones",
-      "email": "Email",
-      "subscribed": "Suscrito",
-      "preferences": "Preferencias"
-    },
-    "pagination": {
-      "itemsPerPage": "Elementos por página",
-      "showing": "Mostrando {start}-{end} de {total} barracas",
-      "previous": "Anterior",
-      "next": "Siguiente"
-    },
-    "stats": {
-      "totalBarracas": "Total de Barracas",
-      "currentlyOpen": "Actualmente Abiertas",
-      "emailSubscribers": "Suscriptores de Email",
-      "uniqueLocations": "Ubicaciones Únicas",
-      "openRate": "tasa de apertura",
-      "thisMonth": "+2 este mes",
-      "thisWeek": "+15 esta semana",
-      "acrossRio": "Por todo Río",
-      "barracasByLocation": "Barracas por Ubicación",
-      "recentActivity": "Actividad Reciente",
-      "systemHealth": "Salud del Sistema",
-      "uptime": "Tiempo Activo",
-      "activeSubscribers": "Suscriptores Activos"
-    }
-  },
+
   "photos": {
     "title": "Galerías de Fotos",
     "description": "Navega por nuestras galerías de fotos curadas con las mejores imágenes de nuestros eventos. Cada foto en nuestras galerías también está disponible en nuestro archivo completo.",
@@ -574,67 +493,7 @@
       "fitness": "Fitness"
     }
   },
-  "adminRegistrations": {
-    "title": "Registros de Barracas",
-    "subtitle": "Revisar y gestionar envíos de registro de barracas",
-    "stats": {
-      "total": "Total de Registros",
-      "pending": "Pendiente de Revisión",
-      "approved": "Aprobados",
-      "rejected": "Rechazados"
-    },
-    "filters": {
-      "all": "Todos",
-      "pending": "Pendientes",
-      "approved": "Aprobados",
-      "rejected": "Rechazados"
-    },
-    "table": {
-      "name": "Nombre",
-      "location": "Ubicación",
-      "contact": "Contacto",
-      "submitted": "Enviado",
-      "status": "Estado",
-      "actions": "Acciones"
-    },
-    "status": {
-      "pending": "Pendiente",
-      "approved": "Aprobado",
-      "rejected": "Rechazado"
-    },
-    "actions": {
-      "view": "Ver Detalles",
-      "approve": "Aprobar",
-      "reject": "Rechazar",
-      "delete": "Eliminar",
-      "convert": "Convertir a Barraca"
-    },
-    "modal": {
-      "title": "Detalles del Registro",
-      "basicInfo": "Información Básica",
-      "contactInfo": "Información de Contacto",
-      "hours": "Horarios de Operación",
-      "menu": "Menú y Comodidades",
-      "additionalInfo": "Información Adicional",
-      "adminNotes": "Notas del Admin",
-      "adminNotesPlaceholder": "Agrega notas sobre este registro...",
-      "approve": "Aprobar Registro",
-      "reject": "Rechazar Registro",
-      "approving": "Aprobando...",
-      "rejecting": "Rechazando...",
-      "deleting": "Eliminando...",
-      "close": "Cerrar"
-    },
-    "messages": {
-      "approved": "Registro aprobado exitosamente",
-      "rejected": "Registro rechazado",
-      "deleted": "Registro eliminado",
-      "converted": "Registro convertido a barraca exitosamente",
-      "error": "Ocurrió un error. Por favor, intenta de nuevo."
-    },
-    "noRegistrations": "No se encontraron registros",
-    "loading": "Cargando registros..."
-  },
+
   "marquee": {
     "title": "Gracias por registrarse",
     "loading": "Cargando barracas registrados..."

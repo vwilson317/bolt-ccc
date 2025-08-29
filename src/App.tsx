@@ -5,7 +5,6 @@ import { HelmetProvider } from 'react-helmet-async';
 import { AppProvider, useApp } from './contexts/AppContext';
 import { StoryProvider } from './contexts/StoryContext';
 import { WeatherProvider } from './contexts/WeatherContext';
-import { useAnalytics } from './hooks/useAnalytics';
 import Header from './components/Header';
 import WeatherBar from './components/WeatherBar';
 import StoryViewer from './components/StoryViewer';
@@ -17,12 +16,10 @@ import LoadingPage from './components/LoadingPage';
 import Home from './pages/Home';
 import Discover from './pages/Discover';
 import About from './pages/About';
-import Admin from './pages/Admin';
 import BarracaDetailPage from './pages/BarracaDetail';
-import BarracaRegister from './pages/BarracaRegister';
-import RegistrationDetail from './pages/RegistrationDetail';
 import Photos from './pages/Photos';
 import PhotoGallery from './pages/PhotoGallery';
+import BarracaRegister from './pages/BarracaRegister';
 
 import { logEnvironmentInfo, checkSupabaseConnection } from './lib/supabase';
 import './i18n';
@@ -38,8 +35,6 @@ checkSupabaseConnection().then(connected => {
 });
 
 function AppContent() {
-  // Initialize analytics
-  useAnalytics();
   const { selectedBarraca, closeBarracaModal, weatherOverride, isInitialLoading } = useApp();
 
   // Show loading page during initial load
@@ -55,12 +50,10 @@ function AppContent() {
           <Route path="/" element={<Home />} />
           <Route path="/discover" element={<Discover />} />
           <Route path="/about" element={<About />} />
-          <Route path="/admin" element={<Admin />} />
-          <Route path="/register" element={<BarracaRegister />} />
-          <Route path="/registration/:id" element={<RegistrationDetail />} />
           <Route path="/photos" element={<Photos />} />
           <Route path="/photos/:dateId" element={<PhotoGallery />} />
           <Route path="/barraca/:id" element={<BarracaDetailPage />} />
+          <Route path="/register" element={<BarracaRegister />} />
           {/* <Route path="/translation-demo" element={<TranslationDemo />} /> */}
         </Routes>
       </main>

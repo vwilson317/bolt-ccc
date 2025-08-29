@@ -5,7 +5,6 @@ import { X, ChevronLeft, ChevronRight, Download, Share2, Calendar, MapPin, Exter
 import { photoService, PhotoGalleryData, Location } from '../services/photoService';
 import BackNavigation from '../components/BackNavigation';
 import SEOHead from '../components/SEOHead';
-import { useAnalytics } from '../hooks/useAnalytics';
 
 // Hook to detect mobile device
 const useIsMobile = () => {
@@ -28,7 +27,6 @@ const PhotoGallery: React.FC = () => {
   const { dateId } = useParams<{ dateId: string }>();
   const { t } = useTranslation();
   const isMobile = useIsMobile();
-  const analytics = useAnalytics();
   const [galleryData, setGalleryData] = useState<PhotoGalleryData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedPhotoIndex, setSelectedPhotoIndex] = useState<number | null>(null);
@@ -48,9 +46,6 @@ const PhotoGallery: React.FC = () => {
           console.log('🖼️ Number of photos:', data.photos.length);
           console.log('🖼️ First photo URL:', data.photos[0]?.url);
           console.log('🖼️ All photo URLs:', data.photos.map(p => p.url));
-          
-          // Track photo gallery view
-          analytics.trackPhotoGalleryView(dateId, data.title, data.photos.length);
         }
         setGalleryData(data);
       } catch (error) {

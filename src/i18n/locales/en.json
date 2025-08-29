@@ -3,9 +3,8 @@
     "home": "Home",
     "discover": "Find Barracas",
     "about": "About",
-    "admin": "Login",
-    "registerBarraca": "Register Barraca",
-    "photos": "Photos"
+    "photos": "Photos",
+    "registerBarraca": "Register Barraca"
   },
   "hero": {
     "title": "Your Favorite Barraca Awaits",
@@ -70,83 +69,7 @@
     "password": "Password",
     "signIn": "Sign In"
   },
-  "admin": {
-    "dashboard": "Admin Dashboard",
-    "logout": "Logout",
-    "addBarraca": "Add New Barraca",
-    "editBarraca": "Edit Barraca",
-    "deleteBarraca": "Delete Barraca",
-    "manageBarracas": "Manage Barracas",
-    "enableWeatherOverride": "Weather Override: Show All Closed",
-    "disableWeatherOverride": "Disable Weather Override",
-    "stats": "Analytics",
-    "emails": "Email Subscribers",
-    "credentials": "Demo credentials: admin@cariocacoastal.com / admin123",
-    "enableWeatherOverride": "Enable Weather Override",
-    "disableWeatherOverride": "Disable Weather Override",
-    "weatherOverrideActive": "Weather override is active. All barracas will appear closed until midnight.",
-    "form": {
-      "name": "Name",
-      "barracaNumber": "Barraca Number",
-      "location": "Location",
-      "description": "Description",
-      "availability": "Availability",
-      "typicalHours": "Typical Hours",
-      "weatherDependent": "Weather Dependent",
-      "partnered": "Partnered Barraca",
-      "partneredRequired": "Partnered Status Required",
-      "partneredRequiredMessage": "Additional features like images, menu, contact information, and amenities are only available for partnered barracas. Check the partnered checkbox to enable these options.",
-      "images": "Images (URLs)",
-      "menuPreview": "Menu Preview Items",
-      "contact": "Contact Information",
-      "whatsapp": "WhatsApp",
-      "email": "Email",
-      "instagram": "Instagram",
-      "amenities": "Amenities",
-      "ctaButtons": "Custom CTA Buttons",
-      "addImage": "Add Image",
-      "addItem": "Add Item",
-      "addAmenity": "Add Amenity",
-      "save": "Save Barraca",
-      "saving": "Saving...",
-      "cancel": "Cancel",
-      "selectNeighborhood": "Select neighborhood",
-      "required": "*"
-    },
-    "table": {
-      "barraca": "Barraca",
-      "location": "Location",
-      "availability": "Availability",
-      "partnered": "Partnered",
-      "notPartnered": "Not Partnered",
-      "updated": "Updated",
-      "actions": "Actions",
-      "email": "Email",
-      "subscribed": "Subscribed",
-      "preferences": "Preferences"
-    },
-    "pagination": {
-      "itemsPerPage": "Items per page",
-      "showing": "Showing {start}-{end} of {total} barracas",
-      "previous": "Previous",
-      "next": "Next"
-    },
-    "stats": {
-      "totalBarracas": "Total Barracas",
-      "currentlyOpen": "Currently Open",
-      "emailSubscribers": "Email Subscribers",
-      "uniqueLocations": "Unique Locations",
-      "openRate": "open rate",
-      "thisMonth": "+2 this month",
-      "thisWeek": "+15 this week",
-      "acrossRio": "Across Rio",
-      "barracasByLocation": "Barracas by Location",
-      "recentActivity": "Recent Activity",
-      "systemHealth": "System Health",
-      "uptime": "Uptime",
-      "activeSubscribers": "Active Subscribers"
-    }
-  },
+
   "photos": {
     "title": "Photo Galleries",
     "description": "Browse our curated photo galleries featuring the best shots from our events. Every photo in our galleries is also available in our complete archive.",
@@ -569,67 +492,7 @@
       "fitness": "Fitness"
     }
   },
-  "adminRegistrations": {
-    "title": "Barraca Registrations",
-    "subtitle": "Review and manage barraca registration submissions",
-    "stats": {
-      "total": "Total Registrations",
-      "pending": "Pending Review",
-      "approved": "Approved",
-      "rejected": "Rejected"
-    },
-    "filters": {
-      "all": "All",
-      "pending": "Pending",
-      "approved": "Approved",
-      "rejected": "Rejected"
-    },
-    "table": {
-      "name": "Name",
-      "location": "Location",
-      "contact": "Contact",
-      "submitted": "Submitted",
-      "status": "Status",
-      "actions": "Actions"
-    },
-    "status": {
-      "pending": "Pending",
-      "approved": "Approved",
-      "rejected": "Rejected"
-    },
-    "actions": {
-      "view": "View Details",
-      "approve": "Approve",
-      "reject": "Reject",
-      "delete": "Delete",
-      "convert": "Convert to Barraca"
-    },
-    "modal": {
-      "title": "Registration Details",
-      "basicInfo": "Basic Information",
-      "contactInfo": "Contact Information",
-      "hours": "Operating Hours",
-      "menu": "Menu & Amenities",
-      "additionalInfo": "Additional Information",
-      "adminNotes": "Admin Notes",
-      "adminNotesPlaceholder": "Add notes about this registration...",
-      "approve": "Approve Registration",
-      "reject": "Reject Registration",
-      "approving": "Approving...",
-      "rejecting": "Rejecting...",
-      "deleting": "Deleting...",
-      "close": "Close"
-    },
-    "messages": {
-      "approved": "Registration approved successfully",
-      "rejected": "Registration rejected",
-      "deleted": "Registration deleted",
-      "converted": "Registration converted to barraca successfully",
-      "error": "An error occurred. Please try again."
-    },
-    "noRegistrations": "No registrations found",
-    "loading": "Loading registrations..."
-  },
+
   "marquee": {
     "title": "Thank you for registering",
     "loading": "Loading registered barracas..."
