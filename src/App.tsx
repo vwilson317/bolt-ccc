@@ -5,6 +5,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import { AppProvider, useApp } from './contexts/AppContext';
 import { StoryProvider } from './contexts/StoryContext';
 import { WeatherProvider } from './contexts/WeatherContext';
+import { usePostHogAnalytics } from './hooks/usePostHogAnalytics';
 import Header from './components/Header';
 import WeatherBar from './components/WeatherBar';
 import StoryViewer from './components/StoryViewer';
@@ -36,6 +37,9 @@ checkSupabaseConnection().then(connected => {
 
 function AppContent() {
   const { selectedBarraca, closeBarracaModal, weatherOverride, isInitialLoading } = useApp();
+  
+  // Initialize PostHog analytics
+  usePostHogAnalytics();
 
   // Show loading page during initial load
   if (isInitialLoading) {

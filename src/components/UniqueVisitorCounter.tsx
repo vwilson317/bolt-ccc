@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Users } from 'lucide-react';
 import { getActiveUsers, getTotalUsers, initGA4Api, getGA4ApiStatus } from '../services/googleAnalyticsApiService';
-import { trackUniqueVisitor } from '../services/analyticsService';
+import { trackEvent } from '../services/posthogAnalyticsService';
 
 interface VisitorData {
   uniqueVisitors: number;
@@ -114,8 +114,12 @@ const UniqueVisitorCounter: React.FC = () => {
           }
         }
 
-        // Track in Google Analytics
-        trackUniqueVisitor(visitorId, visitorData.uniqueVisitors);
+        // Track in PostHog Analytics
+        trackEvent('unique_visitor', {
+          visitor_id: visitorId,
+          total_count: visitorData.uniqueVisitors,
+          category: 'User'
+        });
 
         // Simulate real-time update for other tabs/windows
         window.dispatchEvent(new CustomEvent('uniqueVisitorUpdate', {
