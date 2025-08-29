@@ -9,36 +9,36 @@ const BarracaRegister: React.FC = () => {
   const { t } = useTranslation();
   
   const [formData, setFormData] = useState<Partial<BarracaRegistration>>({
-    name: 'Barraca do João - Teste',
-    ownerName: 'João Silva Santos',
-    barracaNumber: 'TEST-001',
-    location: 'Copacabana',
+    name: '',
+    ownerName: '',
+    barracaNumber: '',
+    location: '',
     coordinates: { lat: -22.9711, lng: -43.1822 },
-    typicalHours: '08:00-18:00',
-    description: 'Barraca tradicional com os melhores petiscos da praia. Especializada em frutos do mar frescos e caipirinhas artesanais. Ambiente familiar e acolhedor.',
-    nearestPosto: 'Posto 6',
+    typicalHours: '',
+    description: '',
+    nearestPosto: '',
     contact: {
-      phone: '(21) 99999-9999',
-      email: 'joao.silva@example.com',
-      instagram: '@barracadojoao'
+      phone: '',
+      email: '',
+      instagram: ''
     },
     countryCode: '+55',
-    amenities: ['Wi-Fi', 'Estacionamento', 'Música ao vivo'],
-    environment: ['Familiar', 'Seguro'],
+    amenities: [],
+    environment: [],
     defaultPhoto: '',
-    weekendHoursEnabled: true,
+    weekendHoursEnabled: false,
     weekendHours: {
-      friday: { open: '08:00', close: '20:00' },
-      saturday: { open: '08:00', close: '20:00' },
-      sunday: { open: '08:00', close: '18:00' }
+      friday: { open: '', close: '' },
+      saturday: { open: '', close: '' },
+      sunday: { open: '', close: '' }
     },
-    additionalInfo: 'Barraca com mais de 10 anos de experiência. Oferecemos delivery para hotéis próximos e aceitamos reservas para grupos.',
+    additionalInfo: '',
     // Partnership opportunities
-    qrCodes: true,
-    repeatDiscounts: true,
-    hotelPartnerships: true,
+    qrCodes: false,
+    repeatDiscounts: false,
+    hotelPartnerships: false,
     contentCreation: false,
-    onlineOrders: true,
+    onlineOrders: false,
     // Contact preferences for photos and status updates
     contactForPhotos: false,
     contactForStatus: false,
@@ -258,55 +258,7 @@ const BarracaRegister: React.FC = () => {
     return emailRegex.test(email);
   };
 
-  // Quick helper to fill the form with test data for verification
-  const fillWithTestData = () => {
-    setFormData({
-      name: 'Barraca Teste do Carioca',
-      ownerName: 'João Silva',
-      barracaNumber: '42',
-      location: 'Ipanema',
-      coordinates: { lat: -22.985, lng: -43.2048 },
-      typicalHours: '09:00 - 18:00',
-      description: 'Barraca confortável com ótimos petiscos, cadeiras e guarda-sóis. Ideal para família.',
-      nearestPosto: 'Posto 9',
-      contact: {
-        phone: '(21) 98765-4321',
-        email: 'contato@barracateste.com',
-        instagram: '@barracateste'
-      },
-      countryCode: '+55',
-      amenities: [
-        t('registration.amenities.WiFi'),
-        t('registration.amenities.Food'),
-        t('registration.amenities.Shower')
-      ],
-      environment: [
-        t('registration.vibes.familyFriendly'),
-        t('registration.vibes.relaxed'),
-        t('registration.vibes.beachGames')
-      ],
-      defaultPhoto: '/group-v-1.jpg',
-      weekendHoursEnabled: true,
-      weekendHours: {
-        friday: { open: '10:00', close: '22:00' },
-        saturday: { open: '09:00', close: '22:00' },
-        sunday: { open: '09:00', close: '20:00' }
-      },
-      additionalInfo: 'Aceitamos cartão e PIX. Promoções especiais nos fins de semana.',
-      qrCodes: true,
-      repeatDiscounts: true,
-      hotelPartnerships: false,
-      contentCreation: true,
-      onlineOrders: false,
-      contactForPhotos: true,
-      contactForStatus: true,
-      preferredContactMethod: 'whatsapp',
-      englishFluency: 'fluent',
-      englishSpeakerNames: 'Ana, João',
-      tabSystem: 'number_on_chair'
-    });
-    setValidationErrors({});
-  };
+
 
   // Helper function to strip country code from phone number for display
   const getDisplayPhoneNumber = (phone: string, countryCode: string) => {
@@ -464,15 +416,6 @@ const BarracaRegister: React.FC = () => {
             <p className="text-gray-600 mb-4">
               {t('registration.subtitle')}
             </p>
-            {/* <div className="flex justify-center">
-              <button
-                type="button"
-                onClick={fillWithTestData}
-                className="px-4 py-2 text-sm font-medium text-white bg-beach-600 hover:bg-beach-700 rounded-lg shadow"
-              >
-                Fill with test data
-              </button>
-            </div> */}
           </div>
         
         <form onSubmit={handleSubmit} className="space-y-8">
