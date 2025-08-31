@@ -12,7 +12,7 @@ import {
   setFormContext,
   withPerformanceMonitoring 
 } from '../utils/sentry';
-import * as Sentry from '@sentry/react';
+
 import ErrorBoundary from '../components/ErrorBoundary';
 
 
@@ -26,7 +26,7 @@ const BarracaRegister: React.FC = () => {
     barracaNumber: '',
     location: '',
     coordinates: { lat: -22.9711, lng: -43.1822 },
-    typicalHours: '9:00 - 18:00',
+    typicalHours: '',
     description: '',
     nearestPosto: '',
     contact: {
@@ -40,9 +40,9 @@ const BarracaRegister: React.FC = () => {
     defaultPhoto: '',
     weekendHoursEnabled: false,
     weekendHours: {
-      friday: { open: '10:00', close: '22:00' },
-      saturday: { open: '10:00', close: '22:00' },
-      sunday: { open: '10:00', close: '20:00' }
+      friday: { open: '', close: '' },
+      saturday: { open: '', close: '' },
+      sunday: { open: '', close: '' }
     },
     additionalInfo: '',
     // Partnership opportunities
@@ -439,55 +439,7 @@ const BarracaRegister: React.FC = () => {
     return { isValid: true };
   };
 
-  // Quick helper to fill the form with test data for verification
-  const fillWithTestData = () => {
-    setFormData({
-      name: 'Barraca Teste do Carioca',
-      ownerName: 'João Silva',
-      barracaNumber: '42',
-      location: 'Ipanema',
-      coordinates: { lat: -22.985, lng: -43.2048 },
-      typicalHours: '09:00 - 18:00',
-      description: 'Barraca confortável com ótimos petiscos, cadeiras e guarda-sóis. Ideal para família.',
-      nearestPosto: 'Posto 9',
-      contact: {
-        phone: '(21) 98765-4321',
-        email: 'contato@barracateste.com',
-        instagram: '@barracateste'
-      },
-      countryCode: '+55',
-      amenities: [
-        t('registration.amenities.WiFi'),
-        t('registration.amenities.Food'),
-        t('registration.amenities.Shower')
-      ],
-      environment: [
-        t('registration.vibes.familyFriendly'),
-        t('registration.vibes.relaxed'),
-        t('registration.vibes.beachGames')
-      ],
-      defaultPhoto: '/group-v-1.jpg',
-      weekendHoursEnabled: true,
-      weekendHours: {
-        friday: { open: '10:00', close: '22:00' },
-        saturday: { open: '09:00', close: '22:00' },
-        sunday: { open: '09:00', close: '20:00' }
-      },
-      additionalInfo: 'Aceitamos cartão e PIX. Promoções especiais nos fins de semana.',
-      qrCodes: true,
-      repeatDiscounts: true,
-      hotelPartnerships: false,
-      contentCreation: true,
-      onlineOrders: false,
-      contactForPhotos: true,
-      contactForStatus: true,
-      preferredContactMethod: 'whatsapp',
-      englishFluency: 'fluent',
-      englishSpeakerNames: 'Ana, João',
-      tabSystem: 'number_on_chair'
-    });
-    setValidationErrors({});
-  };
+
 
   // Helper function to strip country code from phone number for display
   const getDisplayPhoneNumber = (phone: string, countryCode: string) => {
@@ -758,15 +710,6 @@ const BarracaRegister: React.FC = () => {
             <p className="text-gray-600 mb-4">
               {t('registration.subtitle')}
             </p>
-            {/* <div className="flex justify-center">
-              <button
-                type="button"
-                onClick={fillWithTestData}
-                className="px-4 py-2 text-sm font-medium text-white bg-beach-600 hover:bg-beach-700 rounded-lg shadow"
-              >
-                Fill with test data
-              </button>
-            </div> */}
           </div>
         
         <form onSubmit={handleSubmit} className="space-y-8">
