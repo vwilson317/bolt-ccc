@@ -1,9 +1,21 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import toast from 'react-hot-toast';
-import { Save, MapPin, Clock, Phone, Mail, Instagram, Camera, X, Handshake } from 'lucide-react';
+import { Save, Clock, Phone, Mail, Instagram, Camera, X, Handshake } from 'lucide-react';
 import { BarracaRegistration } from '../types';
 import RegistrationMarquee from '../components/RegistrationMarquee';
+import { 
+  logError, 
+  logWarning, 
+  logInfo, 
+  addBreadcrumb, 
+  setFormContext,
+  withPerformanceMonitoring 
+} from '../utils/sentry';
+
+import ErrorBoundary from '../components/ErrorBoundary';
+
+
 
 const BarracaRegister: React.FC = () => {
   const { t } = useTranslation();
@@ -55,22 +67,54 @@ const BarracaRegister: React.FC = () => {
   const [validationErrors, setValidationErrors] = useState<{
     phone?: string;
     email?: string;
+    ownerName?: string;
   }>({});
   const [hasStartedForm, setHasStartedForm] = useState(false);
   const [lastFieldInteracted, setLastFieldInteracted] = useState<string>();
 
   // Track form view on component mount
   useEffect(() => {
-    // Track form abandonment on page unload
-    const handleBeforeUnload = () => {
-      if (hasStartedForm) {
-        // Form abandonment tracking removed
-      }
-    };
-    
-    window.addEventListener('beforeunload', handleBeforeUnload);
-    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
-  }, [hasStartedForm, lastFieldInteracted]);
+    try {
+      // Log form initialization
+      logInfo('BarracaRegister form initialized', 'form-init', {
+        userAgent: navigator.userAgent,
+        timestamp: new Date().toISOString(),
+        language: navigator.language
+      });
+      
+      addBreadcrumb('Form initialized', 'navigation', {
+        route: '/register',
+        component: 'BarracaRegister'
+      });
+
+      // Track form abandonment on page unload
+      const handleBeforeUnload = () => {
+        if (hasStartedForm) {
+          logWarning('Form abandoned before submission', 'form-abandonment', {
+            lastFieldInteracted,
+            formProgress: {
+              hasName: !!formData.name,
+              hasOwnerName: !!formData.ownerName,
+              hasPhone: !!formData.contact?.phone,
+              hasLocation: !!formData.location,
+              hasDescription: !!formData.description
+            }
+          });
+        }
+      };
+      
+      window.addEventListener('beforeunload', handleBeforeUnload);
+      return () => {
+        window.removeEventListener('beforeunload', handleBeforeUnload);
+        addBreadcrumb('Form component unmounted', 'lifecycle');
+      };
+    } catch (error) {
+      logError(error as Error, 'form-init-error', {
+        component: 'BarracaRegister',
+        phase: 'useEffect'
+      });
+    }
+  }, [hasStartedForm, lastFieldInteracted, formData]);
 
   // Complete list of South Zone neighborhoods
   const southZoneNeighborhoods = [
@@ -116,62 +160,145 @@ const BarracaRegister: React.FC = () => {
   ];
 
   const handleInputChange = (field: string, value: any) => {
-    // Track form start on first interaction
-    if (!hasStartedForm) {
-      setHasStartedForm(true);
+    try {
+      // Track form start on first interaction
+      if (!hasStartedForm) {
+        setHasStartedForm(true);
+        logInfo('User started form interaction', 'form-start', {
+          firstField: field,
+          timestamp: new Date().toISOString()
+        });
+        addBreadcrumb('Form interaction started', 'user', { field });
+      }
+      
+      // Track field interaction
+      setLastFieldInteracted(field);
+      addBreadcrumb(`Field updated: ${field}`, 'user', { 
+        field, 
+        valueType: typeof value,
+        hasValue: !!value 
+      });
+      
+      setFormData(prev => {
+        const newData = {
+          ...prev,
+          [field]: value
+        };
+        
+        // Update Sentry context with form data
+        setFormContext(newData);
+        
+        return newData;
+      });
+
+      // Real-time validation for owner name
+      if (field === 'ownerName' && typeof value === 'string') {
+        // Clear validation error when user starts typing
+        setValidationErrors(prev => ({
+          ...prev,
+          ownerName: undefined
+        }));
+
+        // Validate after user has typed something
+        if (value.trim()) {
+          const validation = validateOwnerName(value);
+          if (!validation.isValid) {
+            setValidationErrors(prev => ({
+              ...prev,
+              ownerName: validation.error
+            }));
+            
+            logWarning('Owner name validation failed', 'validation-error', {
+              field: 'ownerName',
+              error: validation.error,
+              value: value.length // Don't log actual value for privacy
+            });
+          }
+        }
+      }
+    } catch (error) {
+      logError(error as Error, 'input-change-error', {
+        field,
+        valueType: typeof value,
+        component: 'BarracaRegister'
+      });
     }
-    
-    // Track field interaction
-    setLastFieldInteracted(field);
-    
-    setFormData(prev => ({
-      ...prev,
-      [field]: value
-    }));
   };
 
   const handleContactChange = (field: string, value: string) => {
-    // Track form start on first interaction
-    if (!hasStartedForm) {
-      setHasStartedForm(true);
-    }
-    
-    // Track field interaction
-    setLastFieldInteracted(`contact.${field}`);
-    
-    setFormData(prev => ({
-      ...prev,
-      contact: {
-        ...prev.contact!,
-        [field]: value
+    try {
+      // Track form start on first interaction
+      if (!hasStartedForm) {
+        setHasStartedForm(true);
+        logInfo('User started form interaction via contact field', 'form-start', {
+          firstField: `contact.${field}`,
+          timestamp: new Date().toISOString()
+        });
       }
-    }));
-
-    // Clear validation error when user starts typing
-    setValidationErrors(prev => ({
-      ...prev,
-      [field]: undefined
-    }));
-
-    // Real-time validation
-    if (field === 'phone' && value.trim()) {
-      if (!validateBrazilianPhone(value)) {
-        const errorMessage = 'Please enter a valid Brazilian phone number';
-        setValidationErrors(prev => ({
+      
+      // Track field interaction
+      setLastFieldInteracted(`contact.${field}`);
+      addBreadcrumb(`Contact field updated: ${field}`, 'user', { 
+        field: `contact.${field}`,
+        hasValue: !!value 
+      });
+      
+      setFormData(prev => {
+        const newData = {
           ...prev,
-          phone: errorMessage
-        }));
-        // Track validation error
+          contact: {
+            ...prev.contact!,
+            [field]: value
+          }
+        };
+        
+        // Update Sentry context with form data
+        setFormContext(newData);
+        
+        return newData;
+      });
+
+      // Clear validation error when user starts typing
+      setValidationErrors(prev => ({
+        ...prev,
+        [field]: undefined
+      }));
+
+      // Real-time validation
+      if (field === 'phone' && value.trim()) {
+        const validation = validateBrazilianPhone(value);
+        if (!validation.isValid) {
+          setValidationErrors(prev => ({
+            ...prev,
+            phone: validation.error
+          }));
+          
+          logWarning('Phone validation failed', 'validation-error', {
+            field: 'phone',
+            error: validation.error,
+            phoneLength: value.length
+          });
+        }
+      } else if (field === 'email' && value.trim()) {
+        const validation = validateEmail(value);
+        if (!validation.isValid) {
+          setValidationErrors(prev => ({
+            ...prev,
+            email: validation.error
+          }));
+          
+          logWarning('Email validation failed', 'validation-error', {
+            field: 'email',
+            error: validation.error,
+            emailLength: value.length
+          });
+        }
       }
-    } else if (field === 'email' && value.trim()) {
-      if (!validateEmail(value)) {
-        const errorMessage = 'Please enter a valid email address';
-        setValidationErrors(prev => ({
-          ...prev,
-          email: errorMessage
-        }));
-        // Track validation error
-      }
+    } catch (error) {
+      logError(error as Error, 'contact-change-error', {
+        field,
+        component: 'BarracaRegister'
+      });
     }
   };
 
@@ -232,30 +359,84 @@ const BarracaRegister: React.FC = () => {
   };
 
   // Validation functions
-  const validateBrazilianPhone = (phone: string): boolean => {
+  const validateOwnerName = (name: string): { isValid: boolean; error?: string } => {
+    const trimmedName = name.trim();
+    
+    if (!trimmedName) {
+      return { isValid: false, error: 'Owner name is required' };
+    }
+    
+    if (trimmedName.length < 2) {
+      return { isValid: false, error: 'Owner name must be at least 2 characters long' };
+    }
+    
+    // Check if name contains at least one letter
+    if (!/[a-zA-ZÀ-ÿ]/.test(trimmedName)) {
+      return { isValid: false, error: 'Owner name must contain at least one letter' };
+    }
+    
+    return { isValid: true };
+  };
+
+  const validateBrazilianPhone = (phone: string): { isValid: boolean; error?: string } => {
+    if (!phone.trim()) {
+      return { isValid: false, error: 'Phone number is required' };
+    }
+
     // Remove all non-digit characters
     const cleanPhone = phone.replace(/\D/g, '');
     
     // Brazilian phone numbers should be 10-11 digits
-    // Mobile: 11 digits (e.g., 11987654321)
-    // Landline: 10 digits (e.g., 1187654321)
     if (cleanPhone.length < 10 || cleanPhone.length > 11) {
-      return false;
+      return { 
+        isValid: false, 
+        error: 'Brazilian phone must be 10-11 digits (e.g., 11987654321 or 1134567890)' 
+      };
     }
     
     // Check if it starts with a valid area code (11-99)
     const areaCode = parseInt(cleanPhone.substring(0, 2));
     if (areaCode < 11 || areaCode > 99) {
-      return false;
+      return { 
+        isValid: false, 
+        error: 'Invalid Brazilian area code (must be between 11-99)' 
+      };
     }
     
-    return true;
+    // For mobile numbers (11 digits), check if the third digit is 9
+    if (cleanPhone.length === 11) {
+      const thirdDigit = parseInt(cleanPhone.charAt(2));
+      if (thirdDigit !== 9) {
+        return { 
+          isValid: false, 
+          error: 'Mobile numbers must start with 9 after area code (e.g., 11987654321)' 
+        };
+      }
+    }
+    
+    // For landline numbers (10 digits), check if the third digit is between 2-5
+    if (cleanPhone.length === 10) {
+      const thirdDigit = parseInt(cleanPhone.charAt(2));
+      if (thirdDigit < 2 || thirdDigit > 5) {
+        return { 
+          isValid: false, 
+          error: 'Landline numbers must have 3rd digit between 2-5 (e.g., 1134567890)' 
+        };
+      }
+    }
+    
+    return { isValid: true };
   };
 
-  const validateEmail = (email: string): boolean => {
-    if (!email.trim()) return true; // Email is optional
+  const validateEmail = (email: string): { isValid: boolean; error?: string } => {
+    if (!email.trim()) return { isValid: true }; // Email is optional
+    
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
+    if (!emailRegex.test(email)) {
+      return { isValid: false, error: 'Please enter a valid email address' };
+    }
+    
+    return { isValid: true };
   };
 
 
@@ -281,126 +462,239 @@ const BarracaRegister: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Validate phone number
-    if (!validateBrazilianPhone(formData.contact?.phone || '')) {
-      toast.error('Please enter a valid Brazilian phone number (e.g., (11) 98765-4321 or 11987654321)');
-      return;
-    }
-    
-    // Validate email if provided
-    if (formData.contact?.email && !validateEmail(formData.contact.email)) {
-      toast.error('Please enter a valid email address');
-      return;
-    }
-    
-    // Show loading toast
-    console.log('Showing loading toast...');
-    const loadingToast = toast.loading(t('toast.loading'));
-    setIsSubmitting(true);
-    setSubmitMessage(null);
-
     try {
-      // Clean up the data
-      const cleanedData = {
-        ...formData,
-        amenities: formData.amenities?.filter(amenity => amenity.trim() !== '') || [],
-        environment: formData.environment?.filter(env => env.trim() !== '') || [],
-        contact: {
-          phone: getFullPhoneNumber(formData.contact?.phone?.trim() || '', formData.countryCode || '+55'),
-          email: formData.contact?.email?.trim() || '',
-          instagram: formData.contact?.instagram?.trim() || ''
+      logInfo('Form submission started', 'form-submit-start', {
+        timestamp: new Date().toISOString(),
+        formCompleteness: {
+          hasName: !!formData.name,
+          hasOwnerName: !!formData.ownerName,
+          hasPhone: !!formData.contact?.phone,
+          hasLocation: !!formData.location,
+          hasDescription: !!formData.description
         }
-      };
-
-      // Submit to registration service
-      const response = await fetch('/.netlify/functions/barraca-registrations', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(cleanedData),
       });
-
-      if (!response.ok) {
-        const responseText = await response.text();
-        throw new Error(`Failed to submit registration: ${response.status} ${responseText}`);
+      
+      addBreadcrumb('Form submission initiated', 'user');
+      
+      // Comprehensive form validation
+      const errors: { [key: string]: string } = {};
+      
+      // Validate owner name
+      const ownerNameValidation = validateOwnerName(formData.ownerName || '');
+      if (!ownerNameValidation.isValid) {
+        errors.ownerName = ownerNameValidation.error!;
       }
-
-      // Dismiss loading toast and show success toast
-      console.log('Showing success toast...');
-      toast.dismiss(loadingToast);
-      toast.success(t('toast.success'));
-      setSubmitMessage({ type: 'success', text: t('registration.form.successMessage') });
       
-      // Track successful submission
+      // Validate phone number
+      const phoneValidation = validateBrazilianPhone(formData.contact?.phone || '');
+      if (!phoneValidation.isValid) {
+        errors.phone = phoneValidation.error!;
+      }
       
-      // Reset form after successful submission
-      setTimeout(() => {
-        setFormData({
-          name: '',
-          ownerName: '',
-          barracaNumber: '',
-          location: '',
-          coordinates: { lat: -22.9711, lng: -43.1822 },
-          typicalHours: '9:00 - 18:00',
-          description: '',
-          nearestPosto: '',
-          contact: {
-            phone: '',
-            email: '',
-            instagram: ''
-          },
-          countryCode: '+55',
-          amenities: [''],
-          environment: [],
-          defaultPhoto: '',
-          weekendHoursEnabled: false,
-          weekendHours: {
-            friday: { open: '10:00', close: '22:00' },
-            saturday: { open: '10:00', close: '22:00' },
-            sunday: { open: '10:00', close: '20:00' }
-          },
-          additionalInfo: '',
-          // Partnership opportunities
-          qrCodes: false,
-          repeatDiscounts: false,
-          hotelPartnerships: false,
-          contentCreation: false,
-          onlineOrders: false,
-          // Contact preferences for photos and status updates
-          contactForPhotos: false,
-          contactForStatus: false,
-          preferredContactMethod: 'whatsapp',
-          // English fluency information
-          englishFluency: 'no',
-          englishSpeakerNames: '',
-          // Tab system for tracking orders
-          tabSystem: 'name_only'
+      // Validate email if provided
+      if (formData.contact?.email) {
+        const emailValidation = validateEmail(formData.contact.email);
+        if (!emailValidation.isValid) {
+          errors.email = emailValidation.error!;
+        }
+      }
+      
+      // If there are validation errors, show them and stop submission
+      if (Object.keys(errors).length > 0) {
+        setValidationErrors(errors);
+        
+        logWarning('Form validation failed', 'validation-failed', {
+          errors: Object.keys(errors),
+          errorCount: Object.keys(errors).length,
+          firstError: Object.values(errors)[0]
         });
-        // Clear validation errors
-        setValidationErrors({});
-        // Reset submit message
-        setSubmitMessage(null);
-        // Reset submitting state
-        setIsSubmitting(false);
-      }, 3000);
+        
+        // Show toast with first error
+        const firstError = Object.values(errors)[0];
+        toast.error(firstError);
+        
+        // Scroll to first error field
+        const firstErrorField = Object.keys(errors)[0];
+        const errorElement = document.querySelector(`[name="${firstErrorField}"], #${firstErrorField}`);
+        if (errorElement) {
+          errorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        
+        return;
+      }
+      
+      // Show loading toast
+      console.log('Showing loading toast...');
+      const loadingToast = toast.loading(t('toast.loading'));
+      setIsSubmitting(true);
+      setSubmitMessage(null);
+
+      // Use performance monitoring for the submission
+      await withPerformanceMonitoring(
+        async () => {
+          try {
+            // Clean up the data
+            const cleanedData = {
+              ...formData,
+              amenities: formData.amenities?.filter(amenity => amenity.trim() !== '') || [],
+              environment: formData.environment?.filter(env => env.trim() !== '') || [],
+              contact: {
+                phone: getFullPhoneNumber(formData.contact?.phone?.trim() || '', formData.countryCode || '+55'),
+                email: formData.contact?.email?.trim() || '',
+                instagram: formData.contact?.instagram?.trim() || ''
+              }
+            };
+
+            logInfo('Sending registration data to API', 'api-request', {
+              dataSize: JSON.stringify(cleanedData).length,
+              hasPhoto: !!cleanedData.defaultPhoto,
+              amenitiesCount: cleanedData.amenities?.length || 0,
+              environmentCount: cleanedData.environment?.length || 0
+            });
+
+            addBreadcrumb('API request initiated', 'http', {
+              url: '/.netlify/functions/barraca-registrations',
+              method: 'POST'
+            });
+
+            // Submit to registration service
+            const response = await fetch('/.netlify/functions/barraca-registrations', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(cleanedData),
+            });
+
+            addBreadcrumb('API response received', 'http', {
+              status: response.status,
+              ok: response.ok
+            });
+
+            if (!response.ok) {
+              const responseText = await response.text();
+              const error = new Error(`Failed to submit registration: ${response.status} ${responseText}`);
+              
+              logError(error, 'api-response-error', {
+                status: response.status,
+                statusText: response.statusText,
+                responseText: responseText.substring(0, 500), // Limit response text length
+                url: response.url
+              });
+              
+              throw error;
+            }
+
+            // Dismiss loading toast and show success toast
+            console.log('Showing success toast...');
+            toast.dismiss(loadingToast);
+            toast.success(t('toast.success'));
+            setSubmitMessage({ type: 'success', text: t('registration.form.successMessage') });
+            
+            logInfo('Form submission successful', 'form-submit-success', {
+              timestamp: new Date().toISOString(),
+              location: cleanedData.location,
+              nearestPosto: cleanedData.nearestPosto
+            });
+            
+            addBreadcrumb('Form submission successful', 'user');
+            
+            // Reset form after successful submission
+            setTimeout(() => {
+              setFormData({
+                name: '',
+                ownerName: '',
+                barracaNumber: '',
+                location: '',
+                coordinates: { lat: -22.9711, lng: -43.1822 },
+                typicalHours: '9:00 - 18:00',
+                description: '',
+                nearestPosto: '',
+                contact: {
+                  phone: '',
+                  email: '',
+                  instagram: ''
+                },
+                countryCode: '+55',
+                amenities: [''],
+                environment: [],
+                defaultPhoto: '',
+                weekendHoursEnabled: false,
+                weekendHours: {
+                  friday: { open: '10:00', close: '22:00' },
+                  saturday: { open: '10:00', close: '22:00' },
+                  sunday: { open: '10:00', close: '20:00' }
+                },
+                additionalInfo: '',
+                // Partnership opportunities
+                qrCodes: false,
+                repeatDiscounts: false,
+                hotelPartnerships: false,
+                contentCreation: false,
+                onlineOrders: false,
+                // Contact preferences for photos and status updates
+                contactForPhotos: false,
+                contactForStatus: false,
+                preferredContactMethod: 'whatsapp',
+                // English fluency information
+                englishFluency: 'no',
+                englishSpeakerNames: '',
+                // Tab system for tracking orders
+                tabSystem: 'name_only'
+              });
+              // Clear validation errors
+              setValidationErrors({});
+              // Reset submit message
+              setSubmitMessage(null);
+              // Reset submitting state
+              setIsSubmitting(false);
+              
+              addBreadcrumb('Form reset after success', 'user');
+            }, 3000);
+
+          } catch (submitError) {
+            // Dismiss loading toast and show error toast
+            console.log('Showing error toast...');
+            toast.dismiss(loadingToast);
+            toast.error(t('toast.error'));
+            setSubmitMessage({ type: 'error', text: t('registration.form.errorMessage') });
+            
+            logError(submitError as Error, 'form-submit-error', {
+              timestamp: new Date().toISOString(),
+              formData: {
+                hasName: !!formData.name,
+                hasOwnerName: !!formData.ownerName,
+                hasPhone: !!formData.contact?.phone,
+                location: formData.location,
+                nearestPosto: formData.nearestPosto
+              }
+            });
+            
+            throw submitError;
+          }
+        },
+        'barraca-registration-submit',
+        {
+          component: 'BarracaRegister',
+          location: formData.location || 'unknown',
+          hasPhoto: String(!!formData.defaultPhoto)
+        }
+      );
 
     } catch (error) {
       console.error('Registration error:', error);
-      // Dismiss loading toast and show error toast
-      console.log('Showing error toast...');
-      toast.dismiss(loadingToast);
-      toast.error(t('toast.error'));
-      setSubmitMessage({ type: 'error', text: t('registration.form.errorMessage') });
-      
-      // Track failed submission
+      logError(error as Error, 'form-submit-fatal-error', {
+        component: 'BarracaRegister',
+        timestamp: new Date().toISOString()
+      });
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-beach-50 to-beach-100">
+    <ErrorBoundary context="barraca-register-form">
+      <div className="min-h-screen bg-gradient-to-br from-beach-50 to-beach-100">
       {/* Registration Marquee at the top */}
       <RegistrationMarquee />
       
@@ -447,11 +741,22 @@ const BarracaRegister: React.FC = () => {
                 <input
                   type="text"
                   required
+                  name="ownerName"
                   value={formData.ownerName}
                   onChange={(e) => handleInputChange('ownerName', e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent"
+                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:border-transparent ${
+                    validationErrors.ownerName 
+                      ? 'border-red-300 focus:ring-red-500' 
+                      : 'border-gray-300 focus:ring-beach-500'
+                  }`}
                   placeholder={t('registration.form.ownerNamePlaceholder')}
                 />
+                {validationErrors.ownerName && (
+                  <p className="mt-1 text-sm text-red-600">{validationErrors.ownerName}</p>
+                )}
+                <p className="mt-1 text-xs text-gray-500">
+                  Full name of the barraca owner (minimum 2 characters)
+                </p>
               </div>
             </div>
 
@@ -635,6 +940,7 @@ const BarracaRegister: React.FC = () => {
                     <input
                       type="tel"
                       required
+                      name="phone"
                       value={getDisplayPhoneNumber(formData.contact?.phone || '', formData.countryCode || '+55')}
                       onChange={(e) => handleContactChange('phone', e.target.value)}
                       className={`w-full pl-10 pr-4 py-3 border border-l-0 rounded-r-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent ${
@@ -662,6 +968,7 @@ const BarracaRegister: React.FC = () => {
                   <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                   <input
                     type="email"
+                    name="email"
                     value={formData.contact?.email}
                     onChange={(e) => handleContactChange('email', e.target.value)}
                     className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-beach-500 focus:border-transparent ${
@@ -1265,6 +1572,7 @@ const BarracaRegister: React.FC = () => {
       </div>
     </div>
   </div>
+    </ErrorBoundary>
   );
 };
 
