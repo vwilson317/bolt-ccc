@@ -78,7 +78,7 @@ const Home: React.FC = () => {
       <SEOHead
         title="Carioca Coastal Club - Loyalty Program & Beach Barraca Directory"
         description="Carioca Coastal Club is a loyalty program and beach barraca directory in Rio de Janeiro. Real-time weather, status updates, and more."
-        image="https://cariocacoastalclub.com/group-v-1.jpg"
+        image="https://cariocacoastalclub.com/group-v-1-logo.jpg"
         url="https://cariocacoastalclub.com"
         type="website"
         siteName="Carioca Coastal Club"
