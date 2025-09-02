@@ -17,6 +17,7 @@ import { getEffectiveOpenStatus } from '../utils/environmentUtils';
 import BarracaPageDetail from '../components/BarracaPageDetail';
 import ShareButton from '../components/ShareButton';
 import BackNavigation from '../components/BackNavigation';
+import SEOHead from '../components/SEOHead';
 
 const BarracaDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -106,6 +107,16 @@ const BarracaDetailPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* SEO Head for sharing */}
+      {barraca && (
+        <SEOHead
+          title={`${barraca.name} - Carioca Coastal Club`}
+          description={barraca.description || `Discover ${barraca.name} at ${barraca.location}. ${barraca.menuPreview?.join(', ') || ''}`}
+          image={barraca.photos?.horizontal?.[0] || 'https://cariocacoastalclub.com/group-v-1.jpg'}
+          type="article"
+          url={`https://cariocacoastalclub.com/barraca/${barraca.id}`}
+        />
+      )}
       {/* Header with back button and share */}
       <BackNavigation
         sticky

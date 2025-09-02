@@ -75,11 +75,11 @@ const Home: React.FC = () => {
 
     return (
     <div className="relative">
-      <SEOHead 
-        title="Carioca Coastal Club - Beach Vendor Discovery"
-        description="Discover the best beach vendors (barracas) in Rio de Janeiro. Real-time weather, status updates, and more."
-        image="https://carioca-coastal-club.netlify.app/group-v-1.jpg"
-        url="https://carioca-coastal-club.netlify.app"
+      <SEOHead
+        title="Carioca Coastal Club - Loyalty Program & Beach Barraca Directory"
+        description="Carioca Coastal Club is a loyalty program and beach barraca directory in Rio de Janeiro. Real-time weather, status updates, and more."
+        image="https://cariocacoastalclub.com/group-v-1.jpg"
+        url="https://cariocacoastalclub.com"
         type="website"
         siteName="Carioca Coastal Club"
         locale="en_US"
