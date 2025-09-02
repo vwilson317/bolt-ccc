@@ -94,7 +94,9 @@ const ShareButton: React.FC<ShareButtonProps> = ({
   };
 
   const getShareUrl = (): string => {
-    return `${window.location.origin}/barraca/${barraca.id}`;
+    // Use the production URL for sharing to ensure consistency
+    const baseUrl = 'https://cariocacoastalclub.com';
+    return `${baseUrl}/barraca/${barraca.id}`;
   };
 
   const shareToWhatsApp = async (): Promise<void> => {
