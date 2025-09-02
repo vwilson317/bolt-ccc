@@ -48,33 +48,35 @@ const HeroCarousel: React.FC = () => {
     setTouchStartY(null);
   };
 
-  // Filter to only partnered barracas for hero display
-  const partneredBarracas = barracas.filter(barraca => barraca.partnered);
+  // Filter to only 3-star rated barracas for hero display, limited to 6
+  const threeStarBarracas = barracas
+    .filter(barraca => barraca.rating === 3)
+    .slice(0, 6);
 
   // Auto-advance slides
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % partneredBarracas.length);
+      setCurrentSlide((prev) => (prev + 1) % threeStarBarracas.length);
     }, 5000);
     return () => clearInterval(timer);
-  }, [partneredBarracas.length]);
+  }, [threeStarBarracas.length]);
 
   const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % partneredBarracas.length);
+    setCurrentSlide((prev) => (prev + 1) % threeStarBarracas.length);
   };
 
   const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + partneredBarracas.length) % partneredBarracas.length);
+    setCurrentSlide((prev) => (prev - 1 + threeStarBarracas.length) % threeStarBarracas.length);
   };
 
   const goToSlide = (index: number) => {
     setCurrentSlide(index);
   };
 
-  if (partneredBarracas.length === 0) return null;
+  if (threeStarBarracas.length === 0) return null;
 
   // Helper: Barraca Details Row (for mobile)
-  const BarracaDetailsRow = ({ barraca }: { barraca: typeof partneredBarracas[0] }) => {
+  const BarracaDetailsRow = ({ barraca }: { barraca: typeof threeStarBarracas[0] }) => {
     const effectiveIsOpen = getEffectiveOpenStatus(barraca, weatherOverride);
     return (
       <div className="flex flex-col xs:flex-row items-center justify-center gap-2 px-4 py-3 bg-white/90 backdrop-blur-sm rounded-b-2xl shadow-sm sm:hidden">
@@ -99,7 +101,7 @@ const HeroCarousel: React.FC = () => {
   };
 
   // Minimal Mobile Hero Overlay
-  const MinimalMobileHero = ({ barraca }: { barraca: typeof partneredBarracas[0] }) => {
+  const MinimalMobileHero = ({ barraca }: { barraca: typeof threeStarBarracas[0] }) => {
     const effectiveIsOpen = getEffectiveOpenStatus(barraca, weatherOverride);
     return (
       <div className="absolute inset-0 z-20 sm:hidden pointer-events-none">
@@ -138,7 +140,7 @@ const HeroCarousel: React.FC = () => {
     >
       {/* Background Images with Parallax Effect */}
       <div className="absolute inset-0">
-        {partneredBarracas.map((barraca, index) => (
+        {threeStarBarracas.map((barraca, index) => (
           <div
             key={barraca.id}
             className={`absolute inset-0 transition-opacity duration-1000 ${
@@ -162,7 +164,7 @@ const HeroCarousel: React.FC = () => {
       </div>
 
       {/* Minimal Mobile Hero Overlay */}
-      <MinimalMobileHero barraca={partneredBarracas[currentSlide]} />
+      <MinimalMobileHero barraca={threeStarBarracas[currentSlide]} />
 
       {/* Content Overlay (Desktop Only) with Parallax */}
       <div 
@@ -187,14 +189,14 @@ const HeroCarousel: React.FC = () => {
             <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 md:p-6 border border-white/20 inline-block pointer-events-auto">
               <div className="flex items-center justify-center mb-3 md:mb-4">
                 <MapPin className="h-4 w-4 md:h-5 md:w-5 mr-2 text-sky-300" />
-                <span className="text-base md:text-lg font-semibold">{partneredBarracas[currentSlide].location}</span>
+                <span className="text-base md:text-lg font-semibold">{threeStarBarracas[currentSlide].location}</span>
               </div>
-              <h3 className="text-xl md:text-3xl font-bold mb-2 truncate max-w-2xl mx-auto">{partneredBarracas[currentSlide].name}</h3>
+              <h3 className="text-xl md:text-3xl font-bold mb-2 truncate max-w-2xl mx-auto">{threeStarBarracas[currentSlide].name}</h3>
               <p className="text-gray-200 mb-3 md:mb-4 max-w-xl mx-auto text-sm md:text-base line-clamp-2">
-                {partneredBarracas[currentSlide].description}
+                {threeStarBarracas[currentSlide].description}
               </p>
               {(() => {
-                const effectiveIsOpen = getEffectiveOpenStatus(partneredBarracas[currentSlide], weatherOverride);
+                const effectiveIsOpen = getEffectiveOpenStatus(threeStarBarracas[currentSlide], weatherOverride);
                 return (
                   <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium status-pulse ${
                     effectiveIsOpen 
@@ -229,7 +231,7 @@ const HeroCarousel: React.FC = () => {
 
       {/* Slide Indicators */}
       <div className="absolute bottom-4 sm:bottom-6 md:bottom-8 left-1/2 transform -translate-x-1/2 z-20 flex space-x-2 pointer-events-auto">
-        {partneredBarracas.map((_, index) => (
+        {threeStarBarracas.map((_, index) => (
           <button
             key={index}
             onClick={() => goToSlide(index)}
