@@ -112,7 +112,7 @@ const BarracaDetailPage: React.FC = () => {
         <SEOHead
           title={`${barraca.name} - Carioca Coastal Club`}
           description={barraca.description || `Discover ${barraca.name} at ${barraca.location}. ${barraca.menuPreview?.join(', ') || ''}`}
-          image={barraca.photos?.horizontal?.[0] || 'https://cariocacoastalclub.com/group-v-1.jpg'}
+          image={barraca.photos?.horizontal?.[0] || 'https://cariocacoastalclub.com/group-v-1-logo.jpg'}
           type="article"
           url={`https://cariocacoastalclub.com/barraca/${barraca.id}`}
         />

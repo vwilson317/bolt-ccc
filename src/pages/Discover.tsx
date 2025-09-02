@@ -117,7 +117,7 @@ const Discover: React.FC = () => {
       <SEOHead
         title="Discover Beach Barracas - Carioca Coastal Club"
         description="Discover the best beach vendors (barracas) in Rio de Janeiro. Real-time weather, status updates, and more."
-        image="https://cariocacoastalclub.com/group-v-1.jpg"
+        image="https://cariocacoastalclub.com/group-v-1-logo.jpg"
         url="https://cariocacoastalclub.com/discover"
       />
       {/* Sticky Search and Weather Group - overlaps hero with negative margin */}
