@@ -38,6 +38,18 @@ export const mockPhotoDates: PhotoDate[] = [
     location: [
       { name: 'Barraca Uruguay #80', barracaId: 'af17c0e3-fe61-4ecd-9e35-dfdde641819e' }
     ],
+  },
+  {
+    id: '2025-09-05',
+    date: '2025-09-05',
+    title: 'Beer pong na Barraca 82',
+    photoCount: 0, // Fallback count when Cloudflare is not available
+    archiveCount: 346,
+    thumbnail: 'https://pub-db19578f977b43e184c45b5084d7c029.r2.dev/gallery/2025-09-05/PHOTO-2025-09-06-08-23-44.jpg',
+    description: 'Beer pong na praia na barraca 82. Foi muito divertido e o atendimento foi excepcional',
+    location: [
+      { name: 'Barraca da Thai', barracaId: 'f86c49e6-6c44-4ce8-a455-a981042f4512' }
+    ],
   }
 ];
 
@@ -188,6 +200,18 @@ export const mockPhotoGalleries: Record<string, PhotoGalleryData> = {
         width: 800,
         height: 600
       }
+    ]
+  },
+  '2025-09-05': {
+    id: '2025-09-05',
+    date: '2025-09-05',
+    title: 'Beer pong na Barraca 82',
+    description: 'Beer pong na praia na barraca 82. Foi muito divertido e o atendimento foi excepcional',
+    location: [
+      { name: 'Barraca da Thai', barracaId: 'f86c49e6-6c44-4ce8-a455-a981042f4512' }
+    ],
+    archiveUrl: 'https://photos.app.goo.gl/oTdSa9X3pBYzHYyG8',
+    photos: [
     ]
   }
 };
