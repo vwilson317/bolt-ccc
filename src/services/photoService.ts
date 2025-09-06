@@ -119,7 +119,7 @@ class PhotoService {
           archiveCount: matchingMock?.archiveCount,
           thumbnail: folder.thumbnail,
           description: `Photos from ${this.formatFolderTitle(folder.name)}`,
-          location: 'Various locations', // You can enhance this by parsing folder structure
+          location: matchingMock?.location || 'Various locations', // Use mock data location if available
         };
       }).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
     } catch (error) {
@@ -179,7 +179,7 @@ class PhotoService {
         date,
         title: this.formatFolderTitle(dateId),
         description: `Gallery containing ${photos.length} photos from ${this.formatFolderTitle(dateId)}`,
-        location: 'Various locations', // You can enhance this by parsing folder structure
+        location: this.mockPhotoGalleries[dateId]?.location || 'Various locations', // Use mock data location if available
         photos,
         archiveUrl: this.mockPhotoGalleries[dateId]?.archiveUrl || this.getGooglePhotosArchiveUrl(),
       };
