@@ -93,7 +93,7 @@ const BarracaDetail: React.FC<BarracaDetailProps> = ({ barraca, onClose, weather
             {/* Close Button - Upper Right */}
             <button
               onClick={onClose}
-              className="absolute top-4 right-4 bg-white/20 backdrop-blur-sm p-2 rounded-full hover:bg-white/30 transition-colors"
+              className="absolute top-4 right-4 bg-white/20 backdrop-blur-sm p-2 rounded-full hover:bg-white/30 transition-colors z-30"
             >
               <X className="h-5 w-5 text-white" />
             </button>
@@ -130,12 +130,12 @@ const BarracaDetail: React.FC<BarracaDetailProps> = ({ barraca, onClose, weather
               
               {/* Status Badge with Pulse Animation - Only show if status is determined */}
               {effectiveIsOpen !== null && (
-                <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium ${
+                <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium status-pulse ${
                   effectiveIsOpen 
-                    ? 'bg-green-500 text-white animate-pulse' 
+                    ? 'bg-green-500 text-white' 
                     : 'bg-red-500 text-white'
                 }`}>
-                  <div className={`w-2 h-2 rounded-full mr-2 ${
+                  <div className={`w-2 h-2 rounded-full mr-2 dot-pulse ${
                     effectiveIsOpen ? 'bg-green-200' : 'bg-red-200'
                   }`} />
                   {effectiveIsOpen ? t('barraca.open') : t('barraca.closed')}
