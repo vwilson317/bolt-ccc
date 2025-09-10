@@ -4,6 +4,7 @@ import { X, MapPin, Clock, Mail, ExternalLink, MessageCircle, Star } from 'lucid
 import { Barraca } from '../types';
 import { getEffectiveOpenStatus } from '../utils/environmentUtils';
 import ShareButton from './ShareButton';
+import { TranslatedBarraca } from './TranslatedContent';
 
 // Helper function to format phone number for WhatsApp
 const formatPhoneForWhatsApp = (phone: string) => {
@@ -125,7 +126,12 @@ const BarracaDetail: React.FC<BarracaDetailProps> = ({ barraca, onClose, weather
           <div className="mb-6">
             <div className="flex items-center justify-between mb-2">
               <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
-                {barraca.barracaNumber && `#${barraca.barracaNumber} `}{barraca.name}
+                {barraca.barracaNumber && `#${barraca.barracaNumber} `}
+                <TranslatedBarraca
+                  barracaId={barraca.id}
+                  fieldName="name"
+                  fallback={barraca.name}
+                />
               </h1>
               
               {/* Status Badge with Pulse Animation - Only show if status is determined */}
@@ -158,7 +164,11 @@ const BarracaDetail: React.FC<BarracaDetailProps> = ({ barraca, onClose, weather
               {t('barraca.about')}
             </h2>
             <p className="text-gray-700 leading-relaxed">
-              {barraca.description}
+              <TranslatedBarraca
+                barracaId={barraca.id}
+                fieldName="description"
+                fallback={barraca.description}
+              />
             </p>
           </div>
 
@@ -174,7 +184,11 @@ const BarracaDetail: React.FC<BarracaDetailProps> = ({ barraca, onClose, weather
                     key={index}
                     className="bg-beach-50 text-beach-700 px-3 py-2 rounded-lg text-sm font-medium"
                   >
-                    {item}
+                    <TranslatedBarraca
+                      barracaId={barraca.id}
+                      fieldName={`menu_preview_${index}`}
+                      fallback={item}
+                    />
                   </span>
                 ))}
               </div>
@@ -194,7 +208,11 @@ const BarracaDetail: React.FC<BarracaDetailProps> = ({ barraca, onClose, weather
                     className="flex items-center bg-gray-100 text-gray-700 px-3 py-2 rounded-lg text-sm"
                   >
                     <Star className="h-4 w-4 mr-2 text-yellow-500" />
-                    {amenity}
+                    <TranslatedBarraca
+                      barracaId={barraca.id}
+                      fieldName={`amenities_${index}`}
+                      fallback={amenity}
+                    />
                   </div>
                 ))}
               </div>

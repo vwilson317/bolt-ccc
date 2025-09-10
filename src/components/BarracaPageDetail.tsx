@@ -1,9 +1,9 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { MapPin, Clock, Phone, Mail, ExternalLink, MessageCircle, Star } from 'lucide-react';
+import { MapPin, Clock, Mail, ExternalLink, MessageCircle, Star } from 'lucide-react';
 import { Barraca } from '../types';
 import { getEffectiveOpenStatus } from '../utils/environmentUtils';
-import ShareButton from './ShareButton';
+import { TranslatedBarraca } from './TranslatedContent';
 
 // Helper function to format phone number for WhatsApp
 const formatPhoneForWhatsApp = (phone: string) => {
@@ -118,7 +118,11 @@ const BarracaPageDetail: React.FC<BarracaPageDetailProps> = ({
         {/* Title and Location */}
         <div className="mb-6">
           <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
-            {barraca.name}
+            <TranslatedBarraca
+              barracaId={barraca.id}
+              fieldName="name"
+              fallback={barraca.name}
+            />
           </h1>
           <div className="flex items-center text-gray-600 mb-2">
             <MapPin className="h-4 w-4 mr-2 text-pink-500" />
@@ -136,7 +140,11 @@ const BarracaPageDetail: React.FC<BarracaPageDetailProps> = ({
             {t('barraca.about')}
           </h2>
           <p className="text-gray-700 leading-relaxed">
-            {barraca.description}
+            <TranslatedBarraca
+              barracaId={barraca.id}
+              fieldName="description"
+              fallback={barraca.description}
+            />
           </p>
         </div>
 
@@ -152,7 +160,11 @@ const BarracaPageDetail: React.FC<BarracaPageDetailProps> = ({
                   key={index}
                   className="bg-beach-50 text-beach-700 px-3 py-2 rounded-lg text-sm font-medium"
                 >
-                  {item}
+                  <TranslatedBarraca
+                    barracaId={barraca.id}
+                    fieldName={`menu_preview_${index}`}
+                    fallback={item}
+                  />
                 </span>
               ))}
             </div>
@@ -172,7 +184,11 @@ const BarracaPageDetail: React.FC<BarracaPageDetailProps> = ({
                   className="flex items-center bg-gray-100 text-gray-700 px-3 py-2 rounded-lg text-sm"
                 >
                   <Star className="h-4 w-4 mr-2 text-yellow-500" />
-                  {amenity}
+                  <TranslatedBarraca
+                    barracaId={barraca.id}
+                    fieldName={`amenities_${index}`}
+                    fallback={amenity}
+                  />
                 </div>
               ))}
             </div>

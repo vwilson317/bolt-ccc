@@ -1,5 +1,6 @@
 import { supabase } from '../lib/supabase';
-import { TranslationKey, TranslationValue, ContentTranslation } from '../types/translation';
+// Note: local Supabase types for translation tables are not required here
+import { getLingoEngine, getDefaultContentLocale } from './lingoClient';
 
 export interface TranslationSource {
   source: 'lingo' | 'database' | 'fallback';
@@ -43,8 +44,8 @@ class HybridTranslationService {
       }
     }
 
-    // 1. Try Lingo translation first (static content)
-    const lingoTranslation = await this.getLingoTranslation(key, locale);
+    // 1. Try Lingo translation first (static or runtime via SDK using fallback)
+    const lingoTranslation = await this.getLingoTranslation(key, locale, fallback);
     if (lingoTranslation) {
       const result: TranslationSource = {
         source: 'lingo',
@@ -109,7 +110,7 @@ class HybridTranslationService {
   /**
    * Get translation from Lingo's static translation system
    */
-  private async getLingoTranslation(key: string, locale: string): Promise<string | null> {
+  private async getLingoTranslation(key: string, locale: string, fallback?: string): Promise<string | null> {
     try {
       // Check if this looks like a Lingo-generated key (contains path-like structure)
       if (key.includes('/') || key.includes('declaration') || key.includes('argument')) {
@@ -117,9 +118,30 @@ class HybridTranslationService {
         return null;
       }
 
-      // For now, since Lingo hasn't generated translations yet, we'll return null
-      // to fall back to database translations or fallback values
-      return null;
+      // If no API key is configured, skip
+      const engine = getLingoEngine();
+      if (!engine) {
+        return null;
+      }
+
+      // If we don't have any text to translate, skip
+      if (!fallback || typeof fallback !== 'string' || fallback.trim().length === 0) {
+        return null;
+      }
+
+      // Avoid translating to the same language
+      const defaultContentLocale = getDefaultContentLocale();
+      if (locale === defaultContentLocale) {
+        return null;
+      }
+
+      // Use Lingo SDK to translate the provided fallback content
+      const translated = await engine.localizeText(fallback, {
+        sourceLocale: defaultContentLocale || null,
+        targetLocale: locale
+      });
+
+      return translated || null;
     } catch (error) {
       console.warn('[HybridTranslation] Error getting Lingo translation:', error);
       return null;
@@ -281,7 +303,7 @@ class HybridTranslationService {
       }
 
       const translations: Record<string, string> = {};
-      data?.forEach(item => {
+      (data as Array<{ translation_key: string; translation_values: Array<{ value: string }> }> | null | undefined)?.forEach((item) => {
         if (item.translation_values && item.translation_values.length > 0) {
           translations[item.translation_key] = item.translation_values[0].value;
         }
@@ -321,8 +343,8 @@ class HybridTranslationService {
       const coverageByLocale: Record<string, number> = {};
       const locales = ['en', 'es', 'pt'];
       
-      locales.forEach(locale => {
-        const count = localeData?.filter(item => item.locale === locale).length || 0;
+      locales.forEach((locale) => {
+        const count = (localeData as Array<{ locale: string }> | null | undefined)?.filter((item) => item.locale === locale).length || 0;
         coverageByLocale[locale] = totalKeys ? Math.round((count / totalKeys) * 100) : 0;
       });
 
