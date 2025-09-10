@@ -257,7 +257,7 @@ const BarracaDetailPage: React.FC = () => {
       {/* Full-Width Hero Section */}
       <div className="relative h-96 md:h-[500px] lg:h-[600px] overflow-hidden">
         <img
-          src={barraca?.photos?.horizontal?.[0] || '/api/placeholder/1200/600'}
+          src={barraca?.photos?.horizontal?.[0] || '/under-construction.png'}
           alt={barraca?.name}
           className="w-full h-full object-cover"
         />
