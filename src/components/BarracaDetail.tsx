@@ -73,7 +73,7 @@ const BarracaDetail: React.FC<BarracaDetailProps> = ({ barraca, onClose, weather
           {/* Hero Image */}
           <div className="relative h-64 md:h-80 rounded-t-2xl overflow-hidden">
             <img
-              src={barraca.photos.horizontal[0] || '/under-construction.svg'}
+              src={barraca.photos.horizontal[0] || '/under-construction.png'}
               alt={barraca.name}
               className="w-full h-full object-cover"
             />
