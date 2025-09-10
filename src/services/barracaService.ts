@@ -244,7 +244,7 @@ export class BarracaService {
       // Apply status filter after getting open status
       let filteredBarracas = barracasWithOpenStatus;
       if (filters?.status && filters.status !== 'all') {
-        filteredBarracas = barracasWithOpenStatus.filter(barraca => {
+        filteredBarracas = barracasWithOpenStatus.filter((barraca: Barraca) => {
           if (filters.status === 'open') {
             return barraca.isOpen === true;
           } else if (filters.status === 'closed') {
@@ -953,15 +953,7 @@ export class BarracaService {
         handleSupabaseError(error, 'set manual barraca status');
       }
 
-      // Also update Firestore to ensure UI gets the update immediately
-      try {
-        // Import FirestoreService dynamically to avoid circular dependencies
-        const { FirestoreService } = await import('./firestoreService');
-        await FirestoreService.setManualStatus(barracaId, status, 'manual');
-      } catch (firestoreError) {
-        console.warn('Failed to update Firestore for manual status:', firestoreError);
-        // Don't fail the operation if Firestore update fails
-      }
+      // Firestore removed; no secondary update
 
       return data || false;
     } catch (error) {

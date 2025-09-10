@@ -16,14 +16,7 @@ export default async function handler(req: any, res: any) {
     try {
       const { barracaId, isOpen, manualStatus, specialAdminOverride, specialAdminOverrideExpires, apiKey } = req.body;
 
-      const result = await ExternalApiService.updateBarracaStatus({
-        barracaId,
-        isOpen,
-        manualStatus,
-        specialAdminOverride,
-        specialAdminOverrideExpires,
-        apiKey
-      });
+      const result = await ExternalApiService.updateBarracaStatus({ barracaId, isOpen, manualStatus, specialAdminOverride, specialAdminOverrideExpires, apiKey });
 
       if (result.success) {
         res.status(200).json(result);
