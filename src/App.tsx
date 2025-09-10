@@ -12,7 +12,6 @@ import StoryViewer from './components/StoryViewer';
 import EnvironmentBadge from './components/EnvironmentBadge';
 import EnvironmentInfo from './components/EnvironmentInfo';
 import BarracaDetail from './components/BarracaDetail';
-import FirestoreStatusIndicator from './components/FirestoreStatusIndicator';
 import LoadingPage from './components/LoadingPage';
 import Home from './pages/Home';
 import Discover from './pages/Discover';
