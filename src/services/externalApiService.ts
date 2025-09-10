@@ -1,4 +1,4 @@
-import { FirestoreService } from './firestoreService';
+// Firestore removed; external status API is deprecated and now a no-op or can be wired to Supabase if needed
 
 export interface ExternalStatusUpdate {
   barracaId: string;
@@ -10,7 +10,7 @@ export interface ExternalStatusUpdate {
 }
 
 export class ExternalApiService {
-  private static readonly API_KEY = import.meta.env.VITE_EXTERNAL_API_KEY || 'default-key';
+  private static readonly API_KEY = (import.meta as any).env?.VITE_EXTERNAL_API_KEY || 'default-key';
 
   /**
    * Validate API key
@@ -34,36 +34,11 @@ export class ExternalApiService {
         return { success: false, message: 'Barraca ID is required' };
       }
 
-      // Prepare status update
-      const statusUpdate: Partial<{
-        isOpen: boolean;
-        manualStatus: 'open' | 'closed' | 'undefined';
-        specialAdminOverride: boolean;
-        specialAdminOverrideExpires: Date;
-      }> = {};
-
-      if (update.isOpen !== undefined) {
-        statusUpdate.isOpen = update.isOpen;
-      }
-
-      if (update.manualStatus !== undefined) {
-        statusUpdate.manualStatus = update.manualStatus;
-      }
-
-      if (update.specialAdminOverride !== undefined) {
-        statusUpdate.specialAdminOverride = update.specialAdminOverride;
-      }
-
-      if (update.specialAdminOverrideExpires !== undefined) {
-        statusUpdate.specialAdminOverrideExpires = update.specialAdminOverrideExpires;
-      }
-
-      // Update in Firestore
-      await FirestoreService.updateBarracaStatus(update.barracaId, statusUpdate, 'external');
+      // Deprecated: No Firestore updates. Consider wiring to Supabase RPC if needed.
 
       return { 
         success: true, 
-        message: `Successfully updated status for barraca ${update.barracaId}` 
+        message: `No-op: Firestore disabled. Skipped updating status for barraca ${update.barracaId}` 
       };
 
     } catch (error) {
@@ -85,13 +60,8 @@ export class ExternalApiService {
         return { success: false, message: 'Invalid API key' };
       }
 
-      const status = await FirestoreService.getBarracaStatus(barracaId);
-      
-      if (status) {
-        return { success: true, data: status, message: 'Status retrieved successfully' };
-      } else {
-        return { success: false, message: 'Barraca status not found' };
-      }
+      // Deprecated: No Firestore. Always return not available.
+      return { success: false, message: 'Status API disabled (Firestore removed)' };
 
     } catch (error) {
       console.error('Error getting barraca status:', error);

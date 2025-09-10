@@ -39,8 +39,6 @@
     "@supabase/supabase-js": "^2.39.0",
     "@types/uuid": "^10.0.0",
     "fa": "^1.0.1",
-    "firebase": "^11.10.0",
-    "firebase-admin": "^13.4.0",
     "i18next": "^23.7.16",
     "i18next-browser-languagedetector": "^7.2.0",
     "lingo.dev": "^0.102.3",
