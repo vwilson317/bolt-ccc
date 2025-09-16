@@ -4,15 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { 
   MapPin, 
   Clock, 
-  Phone, 
-  Mail, 
-  Globe, 
   Star,
-  Users,
-  Calendar,
-  Gift,
   MessageCircle,
-  ExternalLink,
   Heart,
   ArrowLeft
 } from 'lucide-react';
@@ -22,7 +15,10 @@ import ShareButton from '../components/ShareButton';
 import BackNavigation from '../components/BackNavigation';
 import SEOHead from '../components/SEOHead';
 import StarRating from '../components/StarRating';
-import BarracaPageDetail from '../components/BarracaPageDetail';
+// import BarracaPageDetail from '../components/BarracaPageDetail';
+import BarracaMenu from '../components/BarracaMenu';
+import { MenuService } from '../services/menuService';
+import type { BarracaMenu as BarracaMenuType } from '../types/menu';
 
 // Helper function to format phone number for WhatsApp
 const formatPhoneForWhatsApp = (phone: string) => {
@@ -32,11 +28,13 @@ const formatPhoneForWhatsApp = (phone: string) => {
 const BarracaDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { barracas, weatherOverride, isLoading } = useApp();
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
   const [selectedFavorite, setSelectedFavorite] = useState<string | null>(null);
+  const [menu, setMenu] = useState<BarracaMenuType | null>(null);
+  const [commonMenuPreview, setCommonMenuPreview] = useState<string[]>([]);
 
   const barraca = barracas.find(b => b.id === id);
 
@@ -70,6 +68,19 @@ const BarracaDetailPage: React.FC = () => {
     }
   }, [barraca]);
 
+  // Load mock menu for barraca 82 (Portuguese fallback when English missing)
+  useEffect(() => {
+    let isMounted = true;
+    (async () => {
+      if (!id) return;
+      const lang = (typeof i18n.language === 'string' && i18n.language.startsWith('pt')) ? 'pt' : 'en';
+      const result = await MenuService.getMenuForBarraca(id, lang as 'en' | 'pt');
+      if (isMounted) setMenu(result);
+      setCommonMenuPreview(MenuService.getCommonMenuPreview(lang as 'en' | 'pt'));
+    })();
+    return () => { isMounted = false; };
+  }, [id, i18n.language]);
+
   const handleLikeToggle = () => {
     setIsLiked(!isLiked);
     setLikeCount(prev => isLiked ? prev - 1 : prev + 1);
@@ -86,7 +97,7 @@ const BarracaDetailPage: React.FC = () => {
       // Find and scroll to the matching menu item
       setTimeout(() => {
         const menuItems = document.querySelectorAll('[data-menu-item]');
-        menuItems.forEach((item, index) => {
+        menuItems.forEach((item) => {
           const itemName = item.getAttribute('data-menu-item');
           if (itemName && itemName.toLowerCase().includes(favoriteName.toLowerCase())) {
             // Scroll the carousel to show this item
@@ -95,7 +106,6 @@ const BarracaDetailPage: React.FC = () => {
               const itemElement = item as HTMLElement;
               const carouselElement = carousel as HTMLElement;
               const itemLeft = itemElement.offsetLeft;
-              const carouselLeft = carouselElement.scrollLeft;
               const carouselWidth = carouselElement.offsetWidth;
               
               // Calculate scroll position to center the item
@@ -425,53 +435,9 @@ const BarracaDetailPage: React.FC = () => {
             {barraca?.description}
           </p>
         </div>
-
-        {/* Favorites Section */}
-        <div className="mb-8 md:mb-16">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4 md:mb-6">
-            Favorites
-          </h2>
-          <div className="space-y-3">
-            <button 
-              onClick={() => handleFavoriteClick('Caipirinha')}
-              className="w-full flex items-center justify-between py-3 border-b border-gray-100 hover:bg-gray-50 transition-colors rounded-lg px-2"
-            >
-              <span className="text-gray-900 font-medium">Caipirinha</span>
-              <span className="text-beach-600 font-semibold">R$ 18</span>
-            </button>
-            <button 
-              onClick={() => handleFavoriteClick('Coconut Water')}
-              className="w-full flex items-center justify-between py-3 border-b border-gray-100 hover:bg-gray-50 transition-colors rounded-lg px-2"
-            >
-              <span className="text-gray-900 font-medium">Coconut Water</span>
-              <span className="text-beach-600 font-semibold">R$ 12</span>
-            </button>
-            <button 
-              onClick={() => handleFavoriteClick('Grilled Fish')}
-              className="w-full flex items-center justify-between py-3 border-b border-gray-100 hover:bg-gray-50 transition-colors rounded-lg px-2"
-            >
-              <span className="text-gray-900 font-medium">Grilled Fish</span>
-              <span className="text-beach-600 font-semibold">R$ 45</span>
-            </button>
-            <button 
-              onClick={() => handleFavoriteClick('Fresh Fruit Plate')}
-              className="w-full flex items-center justify-between py-3 border-b border-gray-100 hover:bg-gray-50 transition-colors rounded-lg px-2"
-            >
-              <span className="text-gray-900 font-medium">Fresh Fruit Plate</span>
-              <span className="text-beach-600 font-semibold">R$ 22</span>
-            </button>
-            <button 
-              onClick={() => handleFavoriteClick('Beach Burger')}
-              className="w-full flex items-center justify-between py-3 hover:bg-gray-50 transition-colors rounded-lg px-2"
-            >
-              <span className="text-gray-900 font-medium">Beach Burger</span>
-              <span className="text-beach-600 font-semibold">R$ 28</span>
-            </button>
-          </div>
-        </div>
-
-        {/* Menu Preview */}
-        {barraca?.menuPreview && barraca.menuPreview.length > 0 && (
+        
+                {/* Common Menu Cards (always visible) */}
+                {commonMenuPreview && commonMenuPreview.length > 0 && (
           <div id="menu-section" className="mb-8 md:mb-16">
             <h2 className="text-2xl font-bold text-gray-900 mb-4 md:mb-6">
               {t('barraca.menu')}
@@ -479,7 +445,7 @@ const BarracaDetailPage: React.FC = () => {
             <div className="relative">
               {/* Menu Carousel */}
               <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-4">
-                {barraca.menuPreview.map((item, index) => (
+                {commonMenuPreview.map((item, index) => (
                   <div
                     key={index}
                     data-menu-item={item}
@@ -538,7 +504,7 @@ const BarracaDetailPage: React.FC = () => {
               
               {/* Scroll Indicators */}
               <div className="flex justify-center mt-4 gap-2">
-                {barraca.menuPreview.map((_, index) => (
+                {commonMenuPreview.map((_, index) => (
                   <div
                     key={index}
                     className="w-2 h-2 rounded-full bg-gray-300"
@@ -548,6 +514,57 @@ const BarracaDetailPage: React.FC = () => {
             </div>
           </div>
         )}
+
+        {/* Favorites Section */}
+        <div className="mb-8 md:mb-16">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4 md:mb-6">
+            Favorites
+          </h2>
+          <div className="space-y-3">
+            <button 
+              onClick={() => handleFavoriteClick('Caipirinha')}
+              className="w-full flex items-center justify-between py-3 border-b border-gray-100 hover:bg-gray-50 transition-colors rounded-lg px-2"
+            >
+              <span className="text-gray-900 font-medium">Caipirinha</span>
+              <span className="text-beach-600 font-semibold">R$ 18</span>
+            </button>
+            <button 
+              onClick={() => handleFavoriteClick('Coconut Water')}
+              className="w-full flex items-center justify-between py-3 border-b border-gray-100 hover:bg-gray-50 transition-colors rounded-lg px-2"
+            >
+              <span className="text-gray-900 font-medium">Coconut Water</span>
+              <span className="text-beach-600 font-semibold">R$ 12</span>
+            </button>
+            <button 
+              onClick={() => handleFavoriteClick('Grilled Fish')}
+              className="w-full flex items-center justify-between py-3 border-b border-gray-100 hover:bg-gray-50 transition-colors rounded-lg px-2"
+            >
+              <span className="text-gray-900 font-medium">Grilled Fish</span>
+              <span className="text-beach-600 font-semibold">R$ 45</span>
+            </button>
+            <button 
+              onClick={() => handleFavoriteClick('Fresh Fruit Plate')}
+              className="w-full flex items-center justify-between py-3 border-b border-gray-100 hover:bg-gray-50 transition-colors rounded-lg px-2"
+            >
+              <span className="text-gray-900 font-medium">Fresh Fruit Plate</span>
+              <span className="text-beach-600 font-semibold">R$ 22</span>
+            </button>
+            <button 
+              onClick={() => handleFavoriteClick('Beach Burger')}
+              className="w-full flex items-center justify-between py-3 hover:bg-gray-50 transition-colors rounded-lg px-2"
+            >
+              <span className="text-gray-900 font-medium">Beach Burger</span>
+              <span className="text-beach-600 font-semibold">R$ 28</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Menu (mock from markdown for barraca 82) */}
+        {menu && (
+          <BarracaMenu menu={menu} />
+        )}
+
+
 
         {/* Amenities */}
         {barraca?.amenities && barraca.amenities.length > 0 && (
