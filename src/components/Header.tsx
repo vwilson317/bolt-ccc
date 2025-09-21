@@ -78,24 +78,11 @@ const Header: React.FC = () => {
                 alt="Carioca Coastal Club Icon Logo"
                 className="h-12 w-12 min-w-12 max-w-12 object-contain transition-all duration-300"
               />
-              <div className="flex flex-col justify-center ml-3 h-12">
-                <span
-                  className={`leading-none font-bold tracking-tight transition-colors duration-300 ${
-                    useSolidHeader ? 'text-beach-500' : 'text-white'
-                  }`} 
-                  style={{ fontSize: '1.55rem', lineHeight: 1.1, letterSpacing: '0.04em' }}
-                >
-                  CARIOCA
-                </span>
-                <span
-                  className={`leading-none font-medium tracking-tight whitespace-nowrap transition-colors duration-300 ${
-                    useSolidHeader ? 'text-beach-500' : 'text-white/80'
-                  }`} 
-                  style={{ fontSize: '0.75rem', lineHeight: 1.1, maxWidth: '90%', alignSelf: 'center', letterSpacing: '0.08em' }}
-                >
-                  COASTAL CLUB
-                </span>
-              </div>
+              <img
+                src={useSolidHeader ? "/logo-text-pink.png" : "/logo-text.png"}
+                alt="Carioca Coastal Club"
+                className="h-10 object-contain transition-all duration-300"
+              />
             </div>
           </Link>
 
