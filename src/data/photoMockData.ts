@@ -50,7 +50,19 @@ export const mockPhotoDates: PhotoDate[] = [
     location: [
       { name: 'Barraca da Thai', barracaId: 'f86c49e6-6c44-4ce8-a455-a981042f4512' }
     ],
-  }
+  },
+  {
+    id: '2025-09-20',
+    date: '2025-09-20',
+    title: 'Beer Pong da Verdade ou Consequencia',
+    photoCount: 0, // Fallback count when Cloudflare is not available
+    archiveCount: 250,
+    thumbnail: 'https://pub-db19578f977b43e184c45b5084d7c029.r2.dev/gallery/2025-09-20/IMG_4971.jpg',
+    description: 'Beer Pong da Verdade ou Consequencia',
+    location: [
+      { name: 'Barraca Da Paloma', barracaId: 'cebfd650-da94-4f0c-8a8e-317ce2c97dcb' }
+    ],
+  },
 ];
 
 export const mockPhotoGalleries: Record<string, PhotoGalleryData> = {
