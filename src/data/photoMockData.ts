@@ -57,7 +57,7 @@ export const mockPhotoDates: PhotoDate[] = [
     title: 'Beer Pong da Verdade ou Consequencia',
     photoCount: 0, // Fallback count when Cloudflare is not available
     archiveCount: 250,
-    thumbnail: 'https://pub-db19578f977b43e184c45b5084d7c029.r2.dev/gallery/2025-09-20/IMG_4971.jpg',
+    thumbnail: 'https://pub-db19578f977b43e184c45b5084d7c029.r2.dev/gallery/2025-09-20/IMG_5045.jpg',
     description: 'Beer Pong da Verdade ou Consequencia',
     location: [
       { name: 'Barraca Da Paloma', barracaId: 'cebfd650-da94-4f0c-8a8e-317ce2c97dcb' }
@@ -234,7 +234,7 @@ export const mockPhotoGalleries: Record<string, PhotoGalleryData> = {
     location: [
       { name: 'Barraca Da Paloma', barracaId: 'cebfd650-da94-4f0c-8a8e-317ce2c97dcb' }
     ],
-    archiveUrl: 'https://photos.app.goo.gl/fELs6UNUdmDGxQz6',
+    archiveUrl: 'https://photos.app.goo.gl/fELs6rUNUdmDGxQz6',
     photos: []
   }
 };
