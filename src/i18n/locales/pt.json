@@ -88,7 +88,21 @@
     "galleryDescription": "A galeria mostra nossas melhores fotos. Todas as fotos disponíveis no arquivo.",
     "allLocations": "Todos os Locais",
     "galleryInfo": "Informações da Galeria",
-    "galleryInfoDescription": "Esta galeria apresenta nossas melhores fotos do evento. Cada foto exibida aqui também está disponível no nosso arquivo completo, onde você pode encontrar todas as fotos tiradas durante este período."
+    "galleryInfoDescription": "Esta galeria apresenta nossas melhores fotos do evento. Cada foto exibida aqui também está disponível no nosso arquivo completo, onde você pode encontrar todas as fotos tiradas durante este período.",
+    "galleryTitles": {
+      "2025-09-20": "Beer Pong da Verdade ou Consequência",
+      "2025-09-05": "Beer pong na Barraca 82",
+      "2025-08-24": "Dia de Mídia Social com as Crianças das Favelas",
+      "2025-08-23": "Dia da Praia dos Gringos",
+      "2025-07-27": "Festa de Lançamento"
+    },
+    "galleryDescriptions": {
+      "2025-09-20": "Beer Pong da Verdade ou Consequência - Uma noite divertida de jogos na praia com amigos e excelente atendimento",
+      "2025-09-05": "Beer pong na praia na barraca 82. Foi muito divertido e o atendimento foi excepcional",
+      "2025-08-24": "Segundo dia da nossa campanha publicitária. As crianças se juntaram a nós em jogos durante a maior parte do dia porque o tempo não estava muito bom. Elas fizeram um trabalho realmente bom, e todos nos divertimos, que é o que mais importa.",
+      "2025-08-23": "Campanha publicitária para 23 de agosto de 2025. Além de fazer publicidade no IG, decidimos ver se as crianças vendendo coisas na praia poderiam nos ajudar. Demos a elas um código QR e pedimos às pessoas para irem ao nosso site, depois nos seguirem. Foi um sucesso enorme!",
+      "2025-07-27": "A festa de lançamento oficial. Tivemos uma participação realmente ótima. Somos gratos por ter conhecido tantas pessoas únicas e gentis."
+    }
   },
   "email": {
     "subscribe": "Entrar no Programa de Fidelidade",

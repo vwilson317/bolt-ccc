@@ -213,5 +213,16 @@ export const mockPhotoGalleries: Record<string, PhotoGalleryData> = {
     archiveUrl: 'https://photos.app.goo.gl/oTdSa9X3pBYzHYyG8',
     photos: [
     ]
+  },
+  '2025-09-20': {
+    id: '2025-09-20',
+    date: '2025-09-20',
+    title: 'Beer Pong da Verdade ou Consequencia',
+    description: 'Beer Pong da Verdade ou Consequencia',
+    location: [
+      { name: 'Barraca Da Paloma', barracaId: 'cebfd650-da94-4f0c-8a8e-317ce2c97dcb' }
+    ],
+    archiveUrl: 'https://photos.app.goo.gl/oTdSa9X3pBYzHYyG8',
+    photos: []
   }
 };
