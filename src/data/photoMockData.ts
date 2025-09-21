@@ -234,7 +234,7 @@ export const mockPhotoGalleries: Record<string, PhotoGalleryData> = {
     location: [
       { name: 'Barraca Da Paloma', barracaId: 'cebfd650-da94-4f0c-8a8e-317ce2c97dcb' }
     ],
-    archiveUrl: 'https://photos.app.goo.gl/oTdSa9X3pBYzHYyG8',
+    archiveUrl: 'https://photos.app.goo.gl/fELs6UNUdmDGxQz6',
     photos: []
   }
 };
