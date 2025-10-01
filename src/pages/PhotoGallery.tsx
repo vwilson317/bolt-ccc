@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { X, ChevronLeft, ChevronRight, Download, Share2, Calendar, MapPin, ExternalLink, Image } from 'lucide-react';
 import { photoService, PhotoGalleryData, Location } from '../services/photoService';
+import { openInstagramLink } from '../utils/ctaButtonUtils';
 import BackNavigation from '../components/BackNavigation';
 import SEOHead from '../components/SEOHead';
 import { 
@@ -69,8 +70,18 @@ const PhotoGallery: React.FC = () => {
     loadGalleryData();
   }, [dateId]);
 
+  const parseLocalDate = (dateString: string) => {
+    // Ensure YYYY-MM-DD is parsed as local date to avoid timezone shift
+    const match = dateString.match(/(\d{4})-(\d{2})-(\d{2})/);
+    if (match) {
+      const [, y, m, d] = match;
+      return new Date(parseInt(y, 10), parseInt(m, 10) - 1, parseInt(d, 10));
+    }
+    return new Date(dateString);
+  };
+
   const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
+    const date = parseLocalDate(dateString);
     return date.toLocaleDateString('en-US', {
       weekday: 'long',
       year: 'numeric',
@@ -106,7 +117,17 @@ const PhotoGallery: React.FC = () => {
           <div className="flex flex-wrap gap-1">
             {location.map((loc, index) => (
               <span key={index} className="flex items-center">
-                {loc.barracaId ? (
+                {loc.instagram ? (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openInstagramLink(loc.instagram!);
+                    }}
+                    className="text-beach-600 hover:text-beach-700 underline transition-colors duration-200 truncate relative z-10 cursor-pointer"
+                  >
+                    {loc.name}
+                  </button>
+                ) : loc.barracaId ? (
                   <Link
                     to={`/barraca/${loc.barracaId}`}
                     className="text-beach-600 hover:text-beach-700 underline transition-colors duration-200 truncate relative z-10"

@@ -4,6 +4,7 @@ import { cloudflareService, CloudflareImage, CloudflareFolder } from './cloudfla
 export interface Location {
   name: string;
   barracaId?: string; // ID to link to barraca detail page
+  instagram?: string; // Instagram handle
 }
 
 export interface Photo {

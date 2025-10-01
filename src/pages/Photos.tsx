@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Calendar, ExternalLink, ChevronRight, MapPin } from 'lucide-react';
+import { Calendar, MapPin } from 'lucide-react';
 import { photoService, PhotoDate, Location } from '../services/photoService';
+import { openInstagramLink } from '../utils/ctaButtonUtils';
 import EmailSubscriptionSection from '../components/EmailSubscriptionSection';
 import SEOHead from '../components/SEOHead';
 
@@ -27,24 +28,9 @@ const Photos: React.FC = () => {
     loadPhotoDates();
   }, []);
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-  };
+  // No date helpers needed here currently
 
-  const formatShortDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric'
-    });
-  };
+  // Note: date formatting helpers removed to avoid unused warnings
 
   const renderLocation = (location: string | Location[] | undefined) => {
     if (!location) return null;
@@ -65,7 +51,17 @@ const Photos: React.FC = () => {
           <div className="flex flex-wrap gap-1">
             {location.map((loc, index) => (
               <span key={index} className="flex items-center">
-                {loc.barracaId ? (
+                {loc.instagram ? (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openInstagramLink(loc.instagram!);
+                    }}
+                    className="text-beach-600 hover:text-beach-700 underline transition-colors duration-200 truncate relative z-10 cursor-pointer"
+                  >
+                    {loc.name}
+                  </button>
+                ) : loc.barracaId ? (
                   <Link
                     to={`/barraca/${loc.barracaId}`}
                     className="text-beach-600 hover:text-beach-700 underline transition-colors duration-200 truncate relative z-10"
@@ -152,16 +148,7 @@ const Photos: React.FC = () => {
                 <h3 className="font-bold text-lg text-gray-800 mb-2 group-hover:text-beach-600 transition-colors duration-200">
                   {photoDate.title}
                 </h3>
-                <p className="text-sm text-gray-600 mb-2 font-medium">
-                  {formatDate(photoDate.date)}
-                </p>
                 {renderLocation(photoDate.location)}
-                <div className="flex items-center justify-between mt-4">
-                  <span className="text-xs text-gray-500 font-light">
-                    {formatShortDate(photoDate.date)}
-                  </span>
-                  <ChevronRight className="h-4 w-4 text-beach-500 group-hover:translate-x-1 transition-transform duration-200" />
-                </div>
                 
                 {/* Photo counts section */}
                 <div className="mt-4 pt-4 border-t border-gray-100">

@@ -1,4 +1,4 @@
-import { PhotoDate, PhotoGalleryData, Location } from '../services/photoService';
+import { PhotoDate, PhotoGalleryData } from '../services/photoService';
 
 export const mockPhotoDates: PhotoDate[] = [
   {
@@ -61,6 +61,18 @@ export const mockPhotoDates: PhotoDate[] = [
     description: 'Beer Pong da Verdade ou Consequencia',
     location: [
       { name: 'Barraca Da Paloma', barracaId: 'cebfd650-da94-4f0c-8a8e-317ce2c97dcb' }
+    ],
+  },
+  {
+    id: '2025-09-30',
+    date: '2025-09-30',
+    title: 'Evento de networking para nômades digitais',
+    photoCount: 0, // Fallback count when Cloudflare is not available
+    archiveCount: 120,
+    thumbnail: 'https://pub-db19578f977b43e184c45b5084d7c029.r2.dev/gallery/2025-09-20/IMG_4971.jpg',
+    description: 'Evento de networking para nômades digitais',
+    location: [
+      {name: 'Rufi Bar', instagram: 'https://www.instagram.com/rufi.bar/'}
     ],
   },
 ];
@@ -235,6 +247,15 @@ export const mockPhotoGalleries: Record<string, PhotoGalleryData> = {
       { name: 'Barraca Da Paloma', barracaId: 'cebfd650-da94-4f0c-8a8e-317ce2c97dcb' }
     ],
     archiveUrl: 'https://photos.app.goo.gl/fELs6rUNUdmDGxQz6',
+    photos: []
+  },
+  '2025-09-30': {
+    id: '2025-09-30',
+    date: '2025-09-30',
+    title: 'Evento de networking para nômades digitais',
+    description: 'Evento de networking para nômades digitais',
+    location: [{name: 'Rufi Bar', instagram: 'https://www.instagram.com/rufi.bar/'}],
+    archiveUrl: 'https://photos.app.goo.gl/4tWESkNjkAWZYW8SA',
     photos: []
   }
 };

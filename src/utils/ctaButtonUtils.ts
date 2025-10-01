@@ -281,19 +281,8 @@ export const handleCTAButtonClick = (action: CTAButtonAction, barraca: Barraca) 
       break;
 
     case 'ig':
-      // Handle Instagram links - open in new tab
-      let instagramUrl = action.value;
-      
-      // Format the URL if it's just a username
-      if (instagramUrl.startsWith('@')) {
-        instagramUrl = `https://instagram.com/${instagramUrl.substring(1)}`;
-      } else if (instagramUrl.match(/^[a-zA-Z0-9._]+$/)) {
-        instagramUrl = `https://instagram.com/${instagramUrl}`;
-      } else if (!instagramUrl.startsWith('http')) {
-        instagramUrl = `https://${instagramUrl}`;
-      }
-      
-      window.open(instagramUrl, '_blank', 'noopener,noreferrer');
+      // Handle Instagram links using the helper function
+      openInstagramLink(action.value);
       break;
 
     case 'reservation':
@@ -377,4 +366,51 @@ const isValidEmail = (email: string): boolean => {
 const isValidPhone = (phone: string): boolean => {
   const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
   return phoneRegex.test(phone.replace(/\D/g, ''));
+};
+
+/**
+ * Opens Instagram links with mobile app support
+ */
+export const openInstagramLink = (instagramUrl: string): void => {
+  // Format the URL if it's just a username
+  let formattedUrl = instagramUrl;
+  if (instagramUrl.startsWith('@')) {
+    formattedUrl = `https://instagram.com/${instagramUrl.substring(1)}`;
+  } else if (instagramUrl.match(/^[a-zA-Z0-9._]+$/)) {
+    formattedUrl = `https://instagram.com/${instagramUrl}`;
+  } else if (!instagramUrl.startsWith('http')) {
+    formattedUrl = `https://${instagramUrl}`;
+  }
+  
+  // Try to open Instagram app on mobile, fallback to web
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  if (isMobile) {
+    // Try to open Instagram app first
+    const appUrl = formattedUrl.replace('https://instagram.com/', 'instagram://user?username=');
+    const fallbackUrl = formattedUrl;
+    
+    // Create a temporary link to handle the app opening
+    const link = document.createElement('a');
+    link.href = appUrl;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    
+    // Set a timeout to fallback to web if app doesn't open
+    const timeout = setTimeout(() => {
+      window.open(fallbackUrl, '_blank', 'noopener,noreferrer');
+    }, 1000);
+    
+    // Try to open the app
+    try {
+      link.click();
+      // Clear timeout if app opens successfully
+      setTimeout(() => clearTimeout(timeout), 500);
+    } catch (error) {
+      clearTimeout(timeout);
+      window.open(fallbackUrl, '_blank', 'noopener,noreferrer');
+    }
+  } else {
+    // Desktop - just open in new tab
+    window.open(formattedUrl, '_blank', 'noopener,noreferrer');
+  }
 };
