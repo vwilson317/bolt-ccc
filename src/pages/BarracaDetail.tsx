@@ -602,7 +602,7 @@ const BarracaDetailPage: React.FC = () => {
         </div> */}
 
         {/* CTA Buttons */}
-        {barraca?.ctaButtons && barraca.ctaButtons.length > 0 && (
+        {/* {barraca?.ctaButtons && barraca.ctaButtons.length > 0 && (
           <div className="pt-6 md:pt-8 border-t border-gray-200">
             <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 md:mb-6">
               Special Offers
@@ -623,7 +623,7 @@ const BarracaDetailPage: React.FC = () => {
                 ))}
             </div>
           </div>
-        )}
+        )} */}
 
         {/* Reviews Section */}
         <div id="reviews-section" className="pt-8 md:pt-16 border-t border-gray-200">
