@@ -395,7 +395,7 @@ const BarracaDetailPage: React.FC = () => {
           </h2>
           <div className="space-y-6">
             {/* Map */}
-            <div className="bg-gray-100 rounded-xl overflow-hidden h-64 md:h-80">
+            {/* <div className="bg-gray-100 rounded-xl overflow-hidden h-64 md:h-80">
               <iframe
                 src={`https://www.google.com/maps/embed/v1/place?key=YOUR_GOOGLE_MAPS_API_KEY&q=${barraca?.coordinates?.lat},${barraca?.coordinates?.lng}&zoom=15&maptype=roadmap`}
                 width="100%"
@@ -406,7 +406,7 @@ const BarracaDetailPage: React.FC = () => {
                 referrerPolicy="no-referrer-when-downgrade"
                 title={`${barraca?.name} location`}
               />
-            </div>
+            </div> */}
             
             {/* Location Details */}
             <div className="bg-gray-50 rounded-xl p-4 md:p-6">
@@ -564,8 +564,6 @@ const BarracaDetailPage: React.FC = () => {
           <BarracaMenu menu={menu} />
         )}
 
-
-
         {/* Amenities */}
         {barraca?.amenities && barraca.amenities.length > 0 && (
           <div className="mb-8 md:mb-16">
@@ -587,7 +585,7 @@ const BarracaDetailPage: React.FC = () => {
         )}
 
         {/* Action Buttons */}
-        <div className="mb-8 md:mb-16">
+        {/* <div className="mb-8 md:mb-16">
           <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
             {barraca?.contact?.phone && (
               <a
@@ -601,7 +599,7 @@ const BarracaDetailPage: React.FC = () => {
               </a>
             )}
           </div>
-        </div>
+        </div> */}
 
         {/* CTA Buttons */}
         {barraca?.ctaButtons && barraca.ctaButtons.length > 0 && (
