@@ -251,7 +251,7 @@ const BarracaDetailPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-white">
       {/* Always Visible WhatsApp Button - Mobile Only */}
-      {barraca?.contact?.phone && (
+      {/* {barraca?.contact?.phone && (
         <div className="fixed bottom-6 right-6 z-50 md:hidden">
           <a
             href={`https://wa.me/${formatPhoneForWhatsApp(barraca.contact.phone)}`}
@@ -262,7 +262,7 @@ const BarracaDetailPage: React.FC = () => {
             <MessageCircle className="h-6 w-6" />
           </a>
         </div>
-      )}
+      )} */}
 
       {/* Full-Width Hero Section */}
       <div className="relative h-96 md:h-[500px] lg:h-[600px] overflow-hidden">
