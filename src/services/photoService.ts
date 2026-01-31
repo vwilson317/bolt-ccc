@@ -17,6 +17,11 @@ export interface Photo {
   timestamp?: string;
   width: number;
   height: number;
+  // Event metadata (for hero carousel)
+  eventTitle?: string;
+  eventDate?: string;
+  eventDescription?: string;
+  eventLocation?: string | Location[];
 }
 
 export interface PhotoDate {
@@ -289,6 +294,49 @@ class PhotoService {
   // Method to check if Cloudflare is available
   isCloudflareAvailable(): boolean {
     return this.useCloudflare;
+  }
+
+  // Method to get curated photos for hero carousel (members and events)
+  async getHeroCarouselPhotos(): Promise<Photo[]> {
+    try {
+      // Get all photo dates
+      const photoDates = await this.getPhotoDates();
+      
+      // Get photos from the most recent events (limit to top 6-10 events)
+      const recentDates = photoDates.slice(0, 10);
+      
+      // Fetch galleries for recent events and collect photos
+      const allPhotos: Photo[] = [];
+      
+      for (const photoDate of recentDates) {
+        try {
+          const gallery = await this.getPhotoGallery(photoDate.id);
+          if (gallery && gallery.photos.length > 0) {
+            // Add metadata to photos (event title, date, etc.)
+            const photosWithMetadata: Photo[] = gallery.photos.map(photo => ({
+              ...photo,
+              eventTitle: gallery.title,
+              eventDate: gallery.date,
+              eventDescription: gallery.description,
+              eventLocation: gallery.location,
+            }));
+            allPhotos.push(...photosWithMetadata);
+          }
+        } catch (error) {
+          console.warn(`Error loading gallery for ${photoDate.id}:`, error);
+        }
+      }
+      
+      // Return a curated selection (limit to 12 photos for carousel)
+      // Prioritize photos with thumbnails or from recent events
+      return allPhotos
+        .filter(photo => photo.url) // Only photos with valid URLs
+        .slice(0, 12);
+    } catch (error) {
+      console.error('Error fetching hero carousel photos:', error);
+      // Fallback: return empty array or some default photos
+      return [];
+    }
   }
 }
 

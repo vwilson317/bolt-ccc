@@ -1,18 +1,34 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ChevronLeft, ChevronRight, MapPin, Check, X as XIcon } from 'lucide-react';
-import { useApp } from '../contexts/AppContext';
-import { getEffectiveOpenStatus } from '../utils/environmentUtils';
+import { ChevronLeft, ChevronRight, MapPin, Calendar } from 'lucide-react';
+import { photoService, Photo } from '../services/photoService';
 
 const HeroCarousel: React.FC = () => {
   const { t } = useTranslation();
-  const { barracas, weatherOverride } = useApp();
+  const [photos, setPhotos] = useState<Photo[]>([]);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [touchStartX, setTouchStartX] = useState<number | null>(null);
   const [touchStartY, setTouchStartY] = useState<number | null>(null);
   const [scrollY, setScrollY] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
   const touchThreshold = 50; // Minimum px to trigger swipe
   const containerRef = useRef<HTMLDivElement>(null);
+
+  // Load photos for hero carousel
+  useEffect(() => {
+    const loadPhotos = async () => {
+      try {
+        const heroPhotos = await photoService.getHeroCarouselPhotos();
+        setPhotos(heroPhotos);
+      } catch (error) {
+        console.error('Error loading hero carousel photos:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadPhotos();
+  }, []);
 
   // Track scroll position for parallax effect
   useEffect(() => {
@@ -48,84 +64,73 @@ const HeroCarousel: React.FC = () => {
     setTouchStartY(null);
   };
 
-  // Filter to only 3-star rated barracas for hero display, limited to 6
-  const threeStarBarracas = barracas
-    .filter(barraca => barraca.rating === 3)
-    .slice(0, 6);
-
   // Auto-advance slides
   useEffect(() => {
+    if (photos.length === 0) return;
     const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % threeStarBarracas.length);
+      setCurrentSlide((prev) => (prev + 1) % photos.length);
     }, 5000);
     return () => clearInterval(timer);
-  }, [threeStarBarracas.length]);
+  }, [photos.length]);
 
   const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % threeStarBarracas.length);
+    setCurrentSlide((prev) => (prev + 1) % photos.length);
   };
 
   const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + threeStarBarracas.length) % threeStarBarracas.length);
+    setCurrentSlide((prev) => (prev - 1 + photos.length) % photos.length);
   };
 
   const goToSlide = (index: number) => {
     setCurrentSlide(index);
   };
 
-  if (threeStarBarracas.length === 0) return null;
-
-  // Helper: Barraca Details Row (for mobile)
-  const BarracaDetailsRow = ({ barraca }: { barraca: typeof threeStarBarracas[0] }) => {
-    const effectiveIsOpen = getEffectiveOpenStatus(barraca, weatherOverride);
-    return (
-      <div className="flex flex-col xs:flex-row items-center justify-center gap-2 px-4 py-3 bg-white/90 backdrop-blur-sm rounded-b-2xl shadow-sm sm:hidden">
-        <div className="flex items-center text-sky-700 font-semibold text-xs">
-          <MapPin className="h-4 w-4 mr-1" />
-          <span className="truncate max-w-[100px]">{barraca.location}</span>
-        </div>
-        <div className="font-bold text-gray-900 text-sm truncate max-w-[150px]">{barraca.name}</div>
-        <div className="text-gray-600 text-xs text-center line-clamp-2 max-w-[120px]">{barraca.description}</div>
-        <div className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium status-pulse ${
-          effectiveIsOpen 
-            ? 'bg-green-100 text-green-700 border border-green-200' 
-            : 'bg-red-100 text-red-700 border border-red-200'
-        }`}>
-          <div className={`w-2 h-2 rounded-full mr-1 dot-pulse ${
-            effectiveIsOpen ? 'bg-green-400' : 'bg-red-400'
-          }`} />
-          {effectiveIsOpen ? t('barraca.open') : t('barraca.closed')}
-        </div>
-      </div>
-    );
+  // Helper to format event location
+  const formatEventLocation = (location: string | Array<{ name: string; barracaId?: string; instagram?: string }> | undefined): string => {
+    if (!location) return '';
+    if (typeof location === 'string') return location;
+    if (Array.isArray(location)) {
+      return location.map(loc => loc.name).join(', ');
+    }
+    return '';
   };
 
+  if (isLoading) {
+    return (
+      <div className="relative h-[66vh] sm:h-[70vh] md:h-screen overflow-hidden z-0 bg-gradient-to-br from-beach-200 to-beach-300 flex items-center justify-center">
+        <div className="text-white text-xl">Loading...</div>
+      </div>
+    );
+  }
+
+  if (photos.length === 0) return null;
+
   // Minimal Mobile Hero Overlay
-  const MinimalMobileHero = ({ barraca }: { barraca: typeof threeStarBarracas[0] }) => {
-    const effectiveIsOpen = getEffectiveOpenStatus(barraca, weatherOverride);
+  const MinimalMobileHero = ({ photo }: { photo: Photo }) => {
+    const eventLocation = formatEventLocation(photo.eventLocation);
     return (
       <div className="absolute inset-0 z-20 sm:hidden pointer-events-none">
         {/* Optional: subtle gradient for readability */}
         <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/60 via-black/10 to-transparent pointer-events-none" />
-        {/* Centered Name and Status */}
+        {/* Centered Event Title */}
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <div className="flex items-center text-white text-2xl font-bold drop-shadow-md truncate max-w-[280px] px-4">
-            {barraca.name}
+          <div className="flex items-center text-white text-2xl font-bold drop-shadow-md truncate max-w-[280px] px-4 text-center">
+            {photo.eventTitle || photo.title || 'Event'}
           </div>
-          <div className="flex items-center text-gray-300 text-xs font-medium uppercase tracking-wider mt-1">
-            {effectiveIsOpen ? (
-              <Check className="h-4 w-4 mr-1 text-gray-300" strokeWidth={2} />
-            ) : (
-              <XIcon className="h-4 w-4 mr-1 text-gray-300" strokeWidth={2} />
-            )}
-            <span>{effectiveIsOpen ? t('barraca.open').toUpperCase() : t('barraca.closed').toUpperCase()}</span>
-          </div>
+          {photo.eventDate && (
+            <div className="flex items-center text-gray-300 text-xs font-medium uppercase tracking-wider mt-1">
+              <Calendar className="h-4 w-4 mr-1 text-gray-300" strokeWidth={2} />
+              <span>{new Date(photo.eventDate).toLocaleDateString()}</span>
+            </div>
+          )}
         </div>
         {/* Location in lower right */}
-        <div className="absolute bottom-4 right-4 flex items-center bg-black/40 rounded-full px-3 py-1 pointer-events-auto">
-          <MapPin className="h-4 w-4 mr-1 text-gray-200" />
-          <span className="text-white text-xs font-medium drop-shadow-md truncate max-w-[120px]">{barraca.location}</span>
-        </div>
+        {eventLocation && (
+          <div className="absolute bottom-4 right-4 flex items-center bg-black/40 rounded-full px-3 py-1 pointer-events-auto">
+            <MapPin className="h-4 w-4 mr-1 text-gray-200" />
+            <span className="text-white text-xs font-medium drop-shadow-md truncate max-w-[120px]">{eventLocation}</span>
+          </div>
+        )}
       </div>
     );
   };
@@ -140,9 +145,9 @@ const HeroCarousel: React.FC = () => {
     >
       {/* Background Images with Parallax Effect */}
       <div className="absolute inset-0">
-        {threeStarBarracas.map((barraca, index) => (
+        {photos.map((photo, index) => (
           <div
-            key={barraca.id}
+            key={photo.id}
             className={`absolute inset-0 transition-opacity duration-1000 ${
               index === currentSlide ? 'opacity-100' : 'opacity-0'
             }`}
@@ -152,8 +157,8 @@ const HeroCarousel: React.FC = () => {
               style={{
                 backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(${
                   window.innerWidth < 768
-                    ? (barraca.photos.vertical[0] || barraca.photos.horizontal[0])
-                    : (barraca.photos.horizontal[0] || barraca.photos.vertical[0])
+                    ? (photo.urlMobile || photo.url)
+                    : photo.url
                 })`,
                 transform: `translateY(${scrollY * 0.5}px)`,
                 transition: 'transform 0.1s ease-out'
@@ -164,7 +169,7 @@ const HeroCarousel: React.FC = () => {
       </div>
 
       {/* Minimal Mobile Hero Overlay */}
-      <MinimalMobileHero barraca={threeStarBarracas[currentSlide]} />
+      <MinimalMobileHero photo={photos[currentSlide]} />
 
       {/* Content Overlay (Desktop Only) with Parallax */}
       <div 
@@ -184,32 +189,34 @@ const HeroCarousel: React.FC = () => {
             </p>
           </div>
 
-          {/* Barraca Info Overlay - Desktop Only */}
+          {/* Event Info Overlay - Desktop Only */}
           <div className="hidden sm:block">
             <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 md:p-6 border border-white/20 inline-block pointer-events-auto">
-              <div className="flex items-center justify-center mb-3 md:mb-4">
-                <MapPin className="h-4 w-4 md:h-5 md:w-5 mr-2 text-sky-300" />
-                <span className="text-base md:text-lg font-semibold">{threeStarBarracas[currentSlide].location}</span>
-              </div>
-              <h3 className="text-xl md:text-3xl font-bold mb-2 truncate max-w-2xl mx-auto">{threeStarBarracas[currentSlide].name}</h3>
-              <p className="text-gray-200 mb-3 md:mb-4 max-w-xl mx-auto text-sm md:text-base line-clamp-2">
-                {threeStarBarracas[currentSlide].description}
-              </p>
-              {(() => {
-                const effectiveIsOpen = getEffectiveOpenStatus(threeStarBarracas[currentSlide], weatherOverride);
-                return (
-                  <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium status-pulse ${
-                    effectiveIsOpen 
-                      ? 'bg-green-500/20 text-green-300 border border-green-400/30' 
-                      : 'bg-red-500/20 text-red-300 border border-red-400/30'
-                  }`}>
-                    <div className={`w-2 h-2 rounded-full mr-2 dot-pulse ${
-                      effectiveIsOpen ? 'bg-green-400' : 'bg-red-400'
-                    }`} />
-                    {effectiveIsOpen ? t('barraca.open') : t('barraca.closed')}
-                  </div>
-                );
-              })()}
+              {formatEventLocation(photos[currentSlide].eventLocation) && (
+                <div className="flex items-center justify-center mb-3 md:mb-4">
+                  <MapPin className="h-4 w-4 md:h-5 md:w-5 mr-2 text-sky-300" />
+                  <span className="text-base md:text-lg font-semibold">{formatEventLocation(photos[currentSlide].eventLocation)}</span>
+                </div>
+              )}
+              <h3 className="text-xl md:text-3xl font-bold mb-2 truncate max-w-2xl mx-auto">
+                {photos[currentSlide].eventTitle || photos[currentSlide].title || 'Event'}
+              </h3>
+              {photos[currentSlide].eventDescription && (
+                <p className="text-gray-200 mb-3 md:mb-4 max-w-xl mx-auto text-sm md:text-base line-clamp-2">
+                  {photos[currentSlide].eventDescription}
+                </p>
+              )}
+              {photos[currentSlide].eventDate && (
+                <div className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-white/10 text-white border border-white/30">
+                  <Calendar className="h-4 w-4 mr-2" />
+                  <span>{new Date(photos[currentSlide].eventDate!).toLocaleDateString('en-US', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                  })}</span>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -231,7 +238,7 @@ const HeroCarousel: React.FC = () => {
 
       {/* Slide Indicators */}
       <div className="absolute bottom-4 sm:bottom-6 md:bottom-8 left-1/2 transform -translate-x-1/2 z-20 flex space-x-2 pointer-events-auto">
-        {threeStarBarracas.map((_, index) => (
+        {photos.map((_, index) => (
           <button
             key={index}
             onClick={() => goToSlide(index)}
