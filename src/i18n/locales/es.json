@@ -7,10 +7,10 @@
     "registerBarraca": "Registrar Barraca"
   },
   "hero": {
-    "title": "Tu Barraca Favorita Te Espera",
-    "subtitle": "Verifica si tu lugar preferido está abierto, reserva sillas y recibe actualizaciones exclusivas",
+    "title": "Únete al Club",
+    "subtitle": "Descubre las mejores fiestas y encuentros en Río de Janeiro",
     "cta": "Encontrar Mi Barraca",
-    "earlyAccess": "Unirse al Programa"
+    "earlyAccess": "Unirse al Programa de Lealtad"
   },
   "weather": {
     "current": "Clima Actual",
@@ -149,8 +149,8 @@
     "whyJoinDescription": "Más que solo encontrar barracas - somos tu conexión con la cultura de las barracas de Río",
     "exclusiveBenefits": "Beneficios Exclusivos de Miembro",
     "exclusiveDescription": "Reserva sillas, recibe actualizaciones de disponibilidad, descubre nuevos lugares y disfruta ofertas especiales de tus barracas favoritas",
-    "joinToday": "Únete al Club Hoy",
-    "joinDescription": "Comienza a disfrutar los beneficios de miembro en tus barracas favoritas. Recibe actualizaciones, reserva sillas y nunca te pierdas el día perfecto en la barraca.",
+    "joinToday": "Regístrate",
+    "joinDescription": "¡Obtén acceso a beneficios exclusivos de miembro!",
     "stats": {
       "availabilityUpdates": "Actualizaciones de Disponibilidad",
       "neighborhoods": "Barrios",
