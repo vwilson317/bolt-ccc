@@ -1,14 +1,14 @@
 {
   "nav": {
     "home": "Home",
-    "discover": "Find Barracas",
+    "discover": "Discover",
     "about": "About",
     "photos": "Photos",
     "registerBarraca": "Register Barraca"
   },
   "hero": {
-    "title": "Your Favorite Barraca Awaits",
-    "subtitle": "Check if your go-to spot is open, reserve chairs, and get exclusive member updates",
+    "title": "Join the Club",
+    "subtitle": "Discover the best parties and meetups in Rio de Janeiro",
     "cta": "Find My Barraca",
     "earlyAccess": "Join Loyalty Program"
   },
@@ -118,7 +118,7 @@
     "success": "Welcome to Carioca Coastal Club!",
     "error": "Please enter a valid email address",
     "failed": "Subscription failed. Please try again.",
-    "benefits": "Get chair reservations, status updates, and exclusive member offers"
+    "benefits": "Get disounts, notifications, updates, and exclusive member offers"
   },
   "loyalty": {
     "benefits": "Member Benefits",
@@ -152,8 +152,8 @@
     "whyJoinDescription": "More than just finding barracas - we're your connection to Rio's barraca culture",
     "exclusiveBenefits": "Exclusive Member Benefits",
     "exclusiveDescription": "Reserve chairs, get availability updates, discover new spots, and enjoy special offers from your favorite barracas",
-    "joinToday": "Join the Club Today",
-    "joinDescription": "Start enjoying member benefits at your favorite barracas. Get updates, reserve chairs, and never miss out on the perfect barraca day.",
+    "joinToday": "Sign up",
+    "joinDescription": "Get access to exclusive member benefits!",
     "stats": {
       "availabilityUpdates": "Availability Updates",
       "neighborhoods": "Neighborhoods",

@@ -1,7 +1,7 @@
 {
   "nav": {
     "home": "Início",
-    "discover": "Encontrar Barracas",
+    "discover": "Descobrir",
     "about": "Sobre",
     "photos": "Fotos",
     "registerBarraca": "Registrar Barraca"
@@ -115,7 +115,7 @@
     "success": "Bem-vindo ao Carioca Coastal Club!",
     "error": "Por favor, digite um endereço de email válido",
     "failed": "A inscrição falhou. Por favor tente novamente.",
-    "benefits": "Receba reservas de cadeiras, atualizações de status e ofertas exclusivas"
+    "benefits": "Obtenha descontos, notificações, atualizações e ofertas exclusivas de membro"
   },
   "loyalty": {
     "benefits": "Benefícios de Membro",

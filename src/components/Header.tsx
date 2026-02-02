@@ -102,7 +102,8 @@ const Header: React.FC = () => {
             >
               {t('nav.home')}
             </Link>
-            <Link
+            {/*
+                        <Link
               to="/discover"
               className={`font-medium transition-colors duration-200 ${
                 isActive('/discover') 
@@ -144,6 +145,7 @@ const Header: React.FC = () => {
             >
               Register Barraca
             </Link>
+            */}
             <Link
               to="/photos"
               className={`font-medium transition-colors duration-200 ${

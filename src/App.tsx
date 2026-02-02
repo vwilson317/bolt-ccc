@@ -51,12 +51,12 @@ function AppContent() {
       <main>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/discover" element={<Discover />} />
-          <Route path="/about" element={<About />} />
+          {/* <Route path="/discover" element={<Discover />} /> */}
+          {/* <Route path="/about" element={<About />} /> */}
           <Route path="/photos" element={<Photos />} />
           <Route path="/photos/:dateId" element={<PhotoGallery />} />
           <Route path="/barraca/:id" element={<BarracaDetailPage />} />
-          <Route path="/register" element={<BarracaRegister />} />
+          {/* <Route path="/register" element={<BarracaRegister />} /> */}
           {/* <Route path="/translation-demo" element={<TranslationDemo />} /> */}
         </Routes>
       </main>

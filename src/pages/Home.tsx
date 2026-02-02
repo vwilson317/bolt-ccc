@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { ArrowRight, MapPin, Users, Calendar, Bell, Gift, Instagram } from 'lucide-react';
+import { ArrowRight, MapPin, Users, Calendar, Bell, Gift, Instagram, ExternalLink } from 'lucide-react';
 import HeroCarousel from '../components/HeroCarousel';
 import WeatherMarquee from '../components/WeatherMarquee';
 import RegistrationMarquee from '../components/RegistrationMarquee';
@@ -76,8 +76,8 @@ const Home: React.FC = () => {
     return (
     <div className="relative">
       <SEOHead
-        title="Carioca Coastal Club - Loyalty Program & Beach Barraca Directory"
-        description="Carioca Coastal Club is a loyalty program and beach barraca directory in Rio de Janeiro. Real-time weather, status updates, and more."
+        title="Carioca Coastal Club - Community and Events"
+        description="First Time in Rio? Join the Carioca Coastal Club to connect with other tourists and locals to find the best partiest and meetups."
         image="https://cariocacoastalclub.com/group-v-1-logo.jpg"
         url="https://cariocacoastalclub.com"
         type="website"
@@ -91,11 +91,45 @@ const Home: React.FC = () => {
       {/* Hero Section */}
       <HeroCarousel />
 
+      <section id="instagram-cta" ref={instagramAnimation.ref} className={`py-4 bg-gradient-to-r from-pink-50 via-purple-50 to-orange-50 relative z-10 border-y border-pink-100 ${instagramAnimation.animationClasses}`}>
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-center">
+            <a
+              href="https://instagram.com/Carioca_Coastal_Club"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 text-pink-600 hover:text-pink-700 active:text-pink-800 transition-colors text-sm font-medium py-2 px-3 -mx-3 rounded-md active:bg-pink-50 md:active:bg-transparent"
+              onClick={() => {
+                // Track Instagram follow click
+                if (window.gtag) {
+                  window.gtag('event', 'instagram_follow_clicked', {
+                    event_category: 'Social',
+                    event_label: 'Home Page CTA'
+                  });
+                }
+              }}
+            >
+              <Instagram className="h-4 w-4" strokeWidth={2} />
+              <span>{t('home.instagram.followButton')}</span>
+              <ExternalLink className="h-3.5 w-3.5" strokeWidth={2} />
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <EmailSubscriptionSection
+        id="loyalty-signup"
+        title={t('home.joinToday')}
+        description={t('home.joinDescription')}
+        animationRef={signupAnimation.ref}
+        animationClasses={signupAnimation.animationClasses}
+      />
+
       {/* Weather Marquee - Home uses white theme with pink top border */}
-      <WeatherMarquee colorScheme="white" useDefaultBorders={false} className="border-t-4 border-pink-500" />
+      {/* <WeatherMarquee colorScheme="white" useDefaultBorders={false} className="border-t-4 border-pink-500" /> */}
 
       {/* Call to Action Section */}
-      <section ref={ctaAnimation.ref} className={`py-16 bg-gradient-to-b from-beach-50 to-white relative z-10 ${ctaAnimation.animationClasses}`}>
+     {/*  <section ref={ctaAnimation.ref} className={`py-16 bg-gradient-to-b from-beach-50 to-white relative z-10 ${ctaAnimation.animationClasses}`}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
             {t('home.yourBarraca')}
@@ -104,7 +138,6 @@ const Home: React.FC = () => {
             {t('home.joinThousands')}
           </p>
           
-          {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
             <Link
               to="/discover"
@@ -128,7 +161,6 @@ const Home: React.FC = () => {
             </button>
           </div>
 
-          {/* Quick Stats with Unique Visitor Counter */}
           <div ref={statsAnimation.ref} className={`grid grid-cols-2 md:grid-cols-4 gap-6 mt-12 ${statsAnimation.animationClasses}`}>
             <div className="text-center">
                               <div className="text-3xl font-bold text-beach-600 mb-2">{barracas.length}<span data-lingo-skip>+</span></div>
@@ -147,7 +179,6 @@ const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* Featured Barracas */}
       <section ref={featuredAnimation.ref} className={`py-16 bg-white relative z-10 ${featuredAnimation.animationClasses}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
@@ -169,7 +200,6 @@ const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* Loyalty Program Features */}
       <section ref={featuresAnimation.ref} className={`py-16 bg-gradient-to-b from-gray-50 to-white relative z-10 ${featuresAnimation.animationClasses}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
@@ -201,8 +231,8 @@ const Home: React.FC = () => {
           </div>
         </div>
       </section>
+      
 
-      {/* Member Benefits */}
       <section ref={benefitsAnimation.ref} className={`py-16 bg-white relative z-10 ${benefitsAnimation.animationClasses}`}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="bg-white rounded-2xl p-8 border border-sand-100 shadow-md">
@@ -235,77 +265,17 @@ const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* Instagram CTA Section */}
-      <section id="instagram-cta" ref={instagramAnimation.ref} className={`py-16 bg-gradient-to-br from-pink-50 via-purple-50 to-orange-50 relative z-10 ${instagramAnimation.animationClasses}`}>
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 md:p-12 shadow-xl border border-pink-100">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              {t('home.instagram.title')}
-            </h2>
-            <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
-              {t('home.instagram.description')}
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-              <a
-                href="https://instagram.com/Carioca_Coastal_Club"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-gradient-to-r from-pink-500 to-purple-600 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:from-pink-600 hover:to-purple-700 transform hover:scale-105 transition-all duration-200 shadow-lg flex items-center justify-center"
-                onClick={() => {
-                  // Track Instagram follow click
-                  if (window.gtag) {
-                    window.gtag('event', 'instagram_follow_clicked', {
-                      event_category: 'Social',
-                      event_label: 'Home Page CTA'
-                    });
-                  }
-                }}
-              >
-                <Instagram className="mr-2 h-5 w-5" strokeWidth={1.5} />
-                {t('home.instagram.followButton')}
-              </a>
-              <button 
-                onClick={scrollToSignup}
-                className="bg-white text-gray-700 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-gray-50 transform hover:scale-105 transition-all duration-200 border-2 border-gray-200 shadow-lg"
-              >
-                {t('hero.earlyAccess')}
-              </button>
-            </div>
-            <div className="grid grid-cols-3 gap-4 text-center">
-              <div className="bg-white/60 rounded-xl p-4">
-                <div className="text-2xl font-bold text-pink-600 mb-1">📸</div>
-                <div className="text-sm text-gray-600">{t('home.instagram.benefits.photos')}</div>
-              </div>
-              <div className="bg-white/60 rounded-xl p-4">
-                <div className="text-2xl font-bold text-purple-600 mb-1">🎯</div>
-                <div className="text-sm text-gray-600">{t('home.instagram.benefits.updates')}</div>
-              </div>
-              <div className="bg-white/60 rounded-xl p-4">
-                <div className="text-2xl font-bold text-orange-600 mb-1">💎</div>
-                <div className="text-sm text-gray-600">{t('home.instagram.benefits.exclusive')}</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+     
+*/}
 
-      {/* Email Subscription */}
-      <EmailSubscriptionSection
-        id="loyalty-signup"
-        title={t('home.joinToday')}
-        description={t('home.joinDescription')}
-        animationRef={signupAnimation.ref}
-        animationClasses={signupAnimation.animationClasses}
-      />
 
       {/* Registration Marquee */}
       {/* <RegistrationMarquee /> */}
-
-      {/* Footer */}
+{/*
       <footer className="bg-gray-900 text-white py-16 relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            {/* Company Info */}
+            {/* Company Info 
             <div className="md:col-span-2">
               <div className="mb-4">
                 <h3 className="text-xl font-bold text-beach-400" data-lingo-skip>Carioca Coastal Club</h3>
@@ -316,7 +286,6 @@ const Home: React.FC = () => {
               </p> 
             </div>
 
-            {/* Quick Links */}
             <div>
               <h4 className="text-lg font-semibold mb-4">{t('home.footer.quickLinks')}</h4>
               <ul className="space-y-2">
@@ -326,7 +295,6 @@ const Home: React.FC = () => {
               </ul>
             </div>
 
-            {/* Contact */}
             <div>
               <h4 className="text-lg font-semibold mb-4">{t('home.footer.contact')}</h4>
               <ul className="space-y-2 text-gray-300">
@@ -354,7 +322,6 @@ const Home: React.FC = () => {
             </div>
           </div>
 
-          {/* Bottom Bar */}
           <div className="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
             <p className="text-gray-400 text-sm">
               {t('home.footer.copyright')}
@@ -362,6 +329,8 @@ const Home: React.FC = () => {
           </div>
         </div>
       </footer>
+
+      */}
     </div>
   );
 };
