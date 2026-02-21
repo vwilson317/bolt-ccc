@@ -521,5 +521,28 @@
   "emailSubscription": {
     "title": "Stay Connected",
     "description": "Get notified about new events and promotions"
+  },
+  "communityHome": {
+    "seo": {
+      "title": "Carioca Coastal Club - Build In Public Community",
+      "description": "A build-in-public community hub sharing projects, experiments, and progress in the open."
+    },
+    "eyebrow": "Community + Build In Public",
+    "title": "Carioca Coastal Club is now a public builder journey.",
+    "description": "This site now tracks what we are building in public: shipping projects, sharing progress, and growing a community around real products.",
+    "whatsappCta": "Join the WhatsApp Group",
+    "projectsTitle": "Projects",
+    "projectsDescription": "A growing list of what we are shipping in public.",
+    "status": {
+      "live": "Live",
+      "building": "Building",
+      "idea": "Idea"
+    },
+    "projects": {
+      "carioca-coastal-club": {
+        "description": "The original beach barraca discovery and loyalty experience, now featured as project #1.",
+        "cta": "View Project"
+      }
+    }
   }
 }

@@ -14,6 +14,7 @@ import EnvironmentInfo from './components/EnvironmentInfo';
 import BarracaDetail from './components/BarracaDetail';
 import LoadingPage from './components/LoadingPage';
 import Home from './pages/Home';
+import CommunityHome from './pages/CommunityHome';
 import Discover from './pages/Discover';
 import About from './pages/About';
 import BarracaDetailPage from './pages/BarracaDetail';
@@ -34,6 +35,9 @@ checkSupabaseConnection().then(connected => {
   }
 });
 
+const isBarracaSubdomain =
+  typeof window !== 'undefined' && window.location.hostname === 'barraca.cariocacoastalclub.com';
+
 function AppContent() {
   const { selectedBarraca, closeBarracaModal, weatherOverride, isInitialLoading } = useApp();
   
@@ -50,7 +54,8 @@ function AppContent() {
       <Header />
       <main>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={isBarracaSubdomain ? <Home /> : <CommunityHome />} />
+          <Route path="/projects/carioca-coastal-club" element={<Home />} />
           <Route path="/discover" element={<Discover />} />
           <Route path="/about" element={<About />} />
           <Route path="/photos" element={<Photos />} />
