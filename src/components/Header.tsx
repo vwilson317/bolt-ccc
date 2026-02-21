@@ -33,18 +33,19 @@ const Header: React.FC = () => {
   const isLoginPage = location.pathname === '/admin';
   const isBarracaDetailPage = location.pathname.startsWith('/barraca/');
   const isAboutPage = location.pathname === '/about';
-  const isHomePage = location.pathname === '/';
+  const isCommunityHomePage = location.pathname === '/';
+  const isLegacyHomePage = location.pathname === '/projects/carioca-coastal-club';
   const isRegisterPage = location.pathname === '/register';
   const isPhotosPage = location.pathname === '/photos';
   const isPhotosDetailPage = location.pathname.startsWith('/photos/');
   const isDiscoverPage = location.pathname === '/discover';
   const isRegisterBarracaPage = location.pathname === '/registration' || location.pathname.startsWith('/registration/');
   
-  // On home page and about page, only show solid header when header bottom border reaches end of hero
+  // Keep legacy carousel page behavior while using a solid header on the new root landing page.
   const headerHeight = 64; // h-16 = 64px
   const useSolidHeader = isLoginPage || isBarracaDetailPage || isMenuOpen || isRegisterPage || isPhotosPage || isPhotosDetailPage  ||
-  isDiscoverPage || isRegisterBarracaPage ||
-    ((isHomePage || isAboutPage) ? scrollY + headerHeight > heroHeight : isScrolled);
+  isDiscoverPage || isRegisterBarracaPage || isCommunityHomePage ||
+    ((isLegacyHomePage || isAboutPage) ? scrollY + headerHeight > heroHeight : isScrolled);
 
   const languages = [
     { code: 'en', name: 'English', flag: '🇺🇸' },

@@ -18,6 +18,10 @@ const Home: React.FC = () => {
   const { t } = useTranslation();
   const { barracas } = useApp();
   const { featureFlags } = useStory();
+  const projectUrl =
+    typeof window !== 'undefined'
+      ? `${window.location.origin}/projects/carioca-coastal-club`
+      : 'https://cariocacoastalclub.com/projects/carioca-coastal-club';
 
   // Scroll animations
   const ctaAnimation = useScrollAnimation('slideUp');
@@ -76,10 +80,10 @@ const Home: React.FC = () => {
     return (
     <div className="relative">
       <SEOHead
-        title="Carioca Coastal Club - Loyalty Program & Beach Barraca Directory"
-        description="Carioca Coastal Club is a loyalty program and beach barraca directory in Rio de Janeiro. Real-time weather, status updates, and more."
+        title="Carioca Coastal Club Project - Loyalty Program & Beach Barraca Directory"
+        description="Project #1: Carioca Coastal Club, a loyalty program and beach barraca directory in Rio de Janeiro with real-time weather and status updates."
         image="https://cariocacoastalclub.com/group-v-1-logo.jpg"
-        url="https://cariocacoastalclub.com"
+        url={projectUrl}
         type="website"
         siteName="Carioca Coastal Club"
         locale="en_US"

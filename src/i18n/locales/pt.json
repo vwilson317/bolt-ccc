@@ -522,5 +522,28 @@
   "emailSubscription": {
     "title": "Mantenha-se Conectado",
     "description": "Receba notificações sobre novos eventos e promoções"
+  },
+  "communityHome": {
+    "seo": {
+      "title": "Carioca Coastal Club - Comunidade Build in Public",
+      "description": "Um hub de comunidade build in public para compartilhar projetos, experimentos e progresso em aberto."
+    },
+    "eyebrow": "Comunidade + Build in Public",
+    "title": "O Carioca Coastal Club agora e uma jornada publica de construcao.",
+    "description": "Este site agora acompanha o que estamos construindo em publico: lancando projetos, compartilhando progresso e crescendo uma comunidade em torno de produtos reais.",
+    "whatsappCta": "Entrar no Grupo do WhatsApp",
+    "projectsTitle": "Projetos",
+    "projectsDescription": "Uma lista crescente do que estamos lancando em publico.",
+    "status": {
+      "live": "No ar",
+      "building": "Em construcao",
+      "idea": "Ideia"
+    },
+    "projects": {
+      "carioca-coastal-club": {
+        "description": "A experiencia original de descoberta de barracas e programa de fidelidade, agora como projeto #1.",
+        "cta": "Ver Projeto"
+      }
+    }
   }
 }
