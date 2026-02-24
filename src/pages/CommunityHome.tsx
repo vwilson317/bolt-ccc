@@ -28,6 +28,13 @@ const projects = [
     ctaLabel: 'View Project',
   },
   {
+    id: 'quatro',
+    name: 'Quartou',
+    description: 'Looking for a room in Brazil? They got you covered.',
+    status: 'live',
+    internalHref: 'http://quartou.com.br/',
+  },
+  {
     id: 'inflama',
     name: 'Inflama',
     description: 'A Brazilian Tinder clone currently being built and tested in public.',
