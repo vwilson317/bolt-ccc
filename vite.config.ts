@@ -78,6 +78,20 @@ export default defineConfig({
   },
 
   build: {
-    sourcemap: true
+    sourcemap: true,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // Core React runtime — tiny, always needed
+          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+          // Supabase client is large; isolate so it can be cached independently
+          'vendor-supabase': ['@supabase/supabase-js'],
+          // Analytics SDKs are non-critical; defer their cache invalidation
+          'vendor-analytics': ['posthog-js', '@sentry/react'],
+          // i18n libraries
+          'vendor-i18n': ['i18next', 'react-i18next'],
+        },
+      },
+    },
   }
 });
