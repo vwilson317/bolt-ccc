@@ -8,20 +8,9 @@ interface RegistrationMarqueeProps {
 
 // Helper function to open Instagram link appropriately
 const openInstagramLink = (instagramHandle: string) => {
-  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
   const cleanHandle = instagramHandle.replace('@', '').replace('https://instagram.com/', '');
-  
-  if (isMobile) {
-    // Try to open Instagram app first, fallback to web
-    window.location.href = `instagram://user?username=${cleanHandle}`;
-    // Fallback after a short delay
-    setTimeout(() => {
-      window.open(`https://instagram.com/${cleanHandle}`, '_blank');
-    }, 1000);
-  } else {
-    // Desktop: open in new tab
-    window.open(`https://instagram.com/${cleanHandle}`, '_blank');
-  }
+  // Open one deterministic tab to avoid mobile deep-link blank/fallback tabs.
+  window.open(`https://instagram.com/${cleanHandle}`, '_blank', 'noopener,noreferrer');
 };
 
 // Mock data for testing the marquee display

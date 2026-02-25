@@ -121,36 +121,12 @@ const ShareButton: React.FC<ShareButtonProps> = ({
     const shareText = `${formatShareText()} ${getShareUrl()}`;
     
     if (isMobileDevice()) {
-      // For mobile devices, copy text and provide instructions
+      // For mobile devices, copy text and open Instagram web in one tab.
       try {
         await navigator.clipboard.writeText(shareText);
         setShareMessage('Text copied! Open Instagram and paste to share');
         setTimeout(() => setShareMessage(''), 4000);
-        
-        // Try to open Instagram app with a simple approach
-        // This will work if Instagram app is installed, otherwise it will fail gracefully
-        const instagramAppUrl = 'instagram://';
-        
-        // Use a try-catch to handle the protocol error gracefully
-        try {
-          // Create a temporary link element to test the protocol
-          const link = document.createElement('a');
-          link.href = instagramAppUrl;
-          link.style.display = 'none';
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          
-          // Set a timeout to open web version as fallback
-          setTimeout(() => {
-            window.open('https://instagram.com', '_blank', 'noopener,noreferrer');
-          }, 1500);
-          
-        } catch (error) {
-          // If protocol fails, just open web version
-          window.open('https://instagram.com', '_blank', 'noopener,noreferrer');
-        }
-        
+        window.open('https://instagram.com', '_blank', 'noopener,noreferrer');
       } catch (error) {
         // Fallback: just copy to clipboard and open web version
         await copyToClipboard();

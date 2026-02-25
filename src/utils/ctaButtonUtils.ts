@@ -382,35 +382,6 @@ export const openInstagramLink = (instagramUrl: string): void => {
     formattedUrl = `https://${instagramUrl}`;
   }
   
-  // Try to open Instagram app on mobile, fallback to web
-  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-  if (isMobile) {
-    // Try to open Instagram app first
-    const appUrl = formattedUrl.replace('https://instagram.com/', 'instagram://user?username=');
-    const fallbackUrl = formattedUrl;
-    
-    // Create a temporary link to handle the app opening
-    const link = document.createElement('a');
-    link.href = appUrl;
-    link.target = '_blank';
-    link.rel = 'noopener noreferrer';
-    
-    // Set a timeout to fallback to web if app doesn't open
-    const timeout = setTimeout(() => {
-      window.open(fallbackUrl, '_blank', 'noopener,noreferrer');
-    }, 1000);
-    
-    // Try to open the app
-    try {
-      link.click();
-      // Clear timeout if app opens successfully
-      setTimeout(() => clearTimeout(timeout), 500);
-    } catch (error) {
-      clearTimeout(timeout);
-      window.open(fallbackUrl, '_blank', 'noopener,noreferrer');
-    }
-  } else {
-    // Desktop - just open in new tab
-    window.open(formattedUrl, '_blank', 'noopener,noreferrer');
-  }
+  // Always open a single tab. Deep-link fallbacks can spawn blank/extra tabs in mobile browsers.
+  window.open(formattedUrl, '_blank', 'noopener,noreferrer');
 };

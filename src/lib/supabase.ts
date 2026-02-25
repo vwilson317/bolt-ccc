@@ -35,8 +35,9 @@ const normalizeRuntimeEnv = (rawEnv: string | undefined): RuntimeEnv => {
 
   // Guard against placeholder/malformed values such as "dev|qa|uat|prod"
   if (value.includes('|') || value.includes(',')) {
-    console.warn(`⚠️ Invalid VITE_APP_ENV value "${rawEnv}". Falling back to "dev".`)
-    return 'dev'
+    const fallback = import.meta.env.PROD ? 'prod' : 'dev'
+    console.warn(`⚠️ Invalid VITE_APP_ENV value "${rawEnv}". Falling back to "${fallback}".`)
+    return fallback
   }
 
   // Production builds should prefer prod when env is missing/unknown

@@ -97,6 +97,33 @@ const isValidUUID = (id: string): boolean => {
   return /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(id);
 };
 
+const normalizeLocationFilters = (locations?: string[]): string[] | null => {
+  if (!locations || locations.length === 0) return null;
+
+  const normalized = locations
+    .map((location) => location?.trim())
+    .filter((location): location is string => Boolean(location))
+    .map((location) => `%${location}%`);
+
+  return normalized.length > 0 ? normalized : null;
+};
+
+const hasActiveFilters = (filters?: {
+  query?: string;
+  location?: string;
+  locations?: string[];
+  status?: 'all' | 'open' | 'closed';
+  rating?: number;
+}) => {
+  return Boolean(
+    filters?.query ||
+    filters?.location ||
+    (filters?.locations && filters.locations.length > 0) ||
+    filters?.rating ||
+    (filters?.status && filters.status !== 'all')
+  );
+};
+
 export class BarracaService {
   // Get all barracas with pagination and optional filters (optimized)
   static async getAll(
@@ -119,7 +146,7 @@ export class BarracaService {
         page_size: pageSize,
         search_query: filters?.query || null,
         location_filter: filters?.location || null,
-        location_filters: filters?.locations || null,
+        location_filters: normalizeLocationFilters(filters?.locations),
         status_filter: filters?.status || 'all',
         rating_filter: filters?.rating || null
       });
@@ -132,6 +159,10 @@ export class BarracaService {
 
       if (!data || data.length === 0) {
         console.log('📭 No data returned from optimized function');
+        if (!hasActiveFilters(filters)) {
+          console.log('🔄 No active filters and no RPC data, trying fallback query...');
+          return this.getAllFallback(page, pageSize, filters);
+        }
         return { barracas: [], total: 0 };
       }
 
@@ -294,7 +325,7 @@ export class BarracaService {
         page_size: pageSize,
         search_query: filters?.query || null,
         location_filter: filters?.location || null,
-        location_filters: filters?.locations || null,
+        location_filters: normalizeLocationFilters(filters?.locations),
         status_filter: filters?.status || 'all',
         rating_filter: filters?.rating || null
       });
@@ -304,6 +335,9 @@ export class BarracaService {
       }
 
       if (!data || data.length === 0) {
+        if (!hasActiveFilters(filters)) {
+          return this.getAllFallback(page, pageSize, filters);
+        }
         return { barracas: [], total: 0 };
       }
 
