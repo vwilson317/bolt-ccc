@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { HelmetProvider } from 'react-helmet-async';
@@ -7,23 +7,25 @@ import { StoryProvider } from './contexts/StoryContext';
 import { WeatherProvider } from './contexts/WeatherContext';
 import { usePostHogAnalytics } from './hooks/usePostHogAnalytics';
 import Header from './components/Header';
-import WeatherBar from './components/WeatherBar';
-import StoryViewer from './components/StoryViewer';
-import EnvironmentBadge from './components/EnvironmentBadge';
-import EnvironmentInfo from './components/EnvironmentInfo';
-import BarracaDetail from './components/BarracaDetail';
 import LoadingPage from './components/LoadingPage';
-import Home from './pages/Home';
-import CommunityHome from './pages/CommunityHome';
-import Discover from './pages/Discover';
-import About from './pages/About';
-import BarracaDetailPage from './pages/BarracaDetail';
-import Photos from './pages/Photos';
-import PhotoGallery from './pages/PhotoGallery';
-import BarracaRegister from './pages/BarracaRegister';
+
+// Lazy-load page components so only the current route's code is fetched on initial load
+const Home = lazy(() => import('./pages/Home'));
+const CommunityHome = lazy(() => import('./pages/CommunityHome'));
+const Discover = lazy(() => import('./pages/Discover'));
+const About = lazy(() => import('./pages/About'));
+const BarracaDetailPage = lazy(() => import('./pages/BarracaDetail'));
+const Photos = lazy(() => import('./pages/Photos'));
+const PhotoGallery = lazy(() => import('./pages/PhotoGallery'));
+const BarracaRegister = lazy(() => import('./pages/BarracaRegister'));
+
+// Lazy-load heavy overlay components that are not needed at initial paint
+const StoryViewer = lazy(() => import('./components/StoryViewer'));
+const BarracaDetail = lazy(() => import('./components/BarracaDetail'));
 
 import { logEnvironmentInfo, checkSupabaseConnection } from './lib/supabase';
 import './i18n';
+
 
 // Log environment info on app start
 logEnvironmentInfo();
@@ -53,27 +55,33 @@ function AppContent() {
     <div className="min-h-screen bg-gray-50">
       <Header />
       <main>
-        <Routes>
-          <Route path="/" element={isBarracaSubdomain ? <Home /> : <CommunityHome />} />
-          <Route path="/projects/carioca-coastal-club" element={<Home />} />
-          <Route path="/discover" element={<Discover />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/photos" element={<Photos />} />
-          <Route path="/photos/:dateId" element={<PhotoGallery />} />
-          <Route path="/barraca/:id" element={<BarracaDetailPage />} />
-          <Route path="/register" element={<BarracaRegister />} />
-          {/* <Route path="/translation-demo" element={<TranslationDemo />} /> */}
-        </Routes>
+        <Suspense fallback={<LoadingPage />}>
+          <Routes>
+            <Route path="/" element={isBarracaSubdomain ? <Home /> : <CommunityHome />} />
+            <Route path="/projects/carioca-coastal-club" element={<Home />} />
+            <Route path="/discover" element={<Discover />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/photos" element={<Photos />} />
+            <Route path="/photos/:dateId" element={<PhotoGallery />} />
+            <Route path="/barraca/:id" element={<BarracaDetailPage />} />
+            <Route path="/register" element={<BarracaRegister />} />
+            {/* <Route path="/translation-demo" element={<TranslationDemo />} /> */}
+          </Routes>
+        </Suspense>
       </main>
-      <StoryViewer />
-      
+      <Suspense fallback={null}>
+        <StoryViewer />
+      </Suspense>
+
       {/* Global Barraca Detail Modal */}
       {selectedBarraca && (
-        <BarracaDetail
-          barraca={selectedBarraca}
-          onClose={closeBarracaModal}
-          weatherOverride={weatherOverride}
-        />
+        <Suspense fallback={null}>
+          <BarracaDetail
+            barraca={selectedBarraca}
+            onClose={closeBarracaModal}
+            weatherOverride={weatherOverride}
+          />
+        </Suspense>
       )}
       
       {/* Firestore Status Indicator - Temporarily disabled */}
