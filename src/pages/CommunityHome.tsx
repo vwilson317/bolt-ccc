@@ -140,7 +140,7 @@ const CommunityHome: React.FC = () => {
                   <Gift className="h-3.5 w-3.5 mr-1.5" />
                   Featured Member Discount
                 </div>
-                <h2 className="mt-3 text-2xl font-bold text-gray-900">Ty&apos;s Barraca Discount Pass</h2>
+                <h2 className="mt-3 text-2xl font-bold text-gray-900">Thais&apos; Barraca Discount Pass</h2>
                 <p className="mt-1 text-gray-700">
                   Follow <span className="font-semibold">@thai.82ipanema</span> and claim your reusable supporter badge.
                 </p>
@@ -158,7 +158,7 @@ const CommunityHome: React.FC = () => {
                 className="inline-flex items-center justify-center px-5 py-3 rounded-xl bg-gradient-to-r from-pink-500 to-purple-600 text-white font-semibold hover:from-pink-600 hover:to-purple-700 transition-all"
               >
                 <Instagram className="h-4 w-4 mr-2" />
-                Open Ty Promo
+                Open Thais Promo
               </Link>
             </div>
           </div>
