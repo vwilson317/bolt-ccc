@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation } from 'react-router-dom';
-import { ArrowRight, MapPin, Users, Calendar, Bell, Gift, Instagram, CheckCircle2 } from 'lucide-react';
+import { ArrowRight, MapPin, Users, Calendar, Bell, Gift, Instagram, CheckCircle2, Sparkles } from 'lucide-react';
 import HeroCarousel from '../components/HeroCarousel';
 import WeatherMarquee from '../components/WeatherMarquee';
 import RegistrationMarquee from '../components/RegistrationMarquee';
@@ -119,17 +119,31 @@ const Home: React.FC = () => {
       return;
     }
 
-    const timeoutId = window.setTimeout(() => {
+    let attempts = 0;
+    const maxAttempts = 12;
+    const retryDelayMs = 140;
+    const topOffset = 88;
+
+    const scrollToPromoSection = () => {
       const instagramSection = document.getElementById('instagram-cta');
       if (instagramSection) {
-        instagramSection.scrollIntoView({
-          behavior: 'smooth',
-          block: 'start'
+        const elementTop = instagramSection.getBoundingClientRect().top + window.scrollY;
+        const targetTop = Math.max(0, elementTop - topOffset);
+        window.scrollTo({
+          top: targetTop,
+          behavior: 'smooth'
         });
+        return;
       }
-    }, 350);
 
-    return () => window.clearTimeout(timeoutId);
+      attempts += 1;
+      if (attempts < maxAttempts) {
+        window.setTimeout(scrollToPromoSection, retryDelayMs);
+      }
+    };
+
+    const initialTimeoutId = window.setTimeout(scrollToPromoSection, 220);
+    return () => window.clearTimeout(initialTimeoutId);
   }, [isThaisPromoActive]);
 
   const handleThaisFollowClick = () => {
@@ -178,6 +192,29 @@ const Home: React.FC = () => {
 
   return (
     <div className="relative">
+      {isThaisPromoActive && hasUnlockedThaisBadge && (
+        <div className="fixed bottom-4 right-4 z-50 w-[calc(100%-2rem)] max-w-sm">
+          <div className="rounded-2xl border border-emerald-300/70 bg-gradient-to-br from-emerald-500 to-teal-500 p-4 text-white shadow-2xl">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <div className="inline-flex items-center rounded-full bg-white/20 px-2.5 py-1 text-[11px] font-semibold tracking-wide">
+                  <Sparkles className="mr-1.5 h-3.5 w-3.5" />
+                  SUPPORTER BADGE
+                </div>
+                <p className="mt-2 text-sm font-semibold">Thais discount badge is active</p>
+                <p className="text-xs text-emerald-50">Show this at the barraca for the promo benefit.</p>
+              </div>
+              <CheckCircle2 className="h-5 w-5 shrink-0" />
+            </div>
+            <button
+              onClick={scrollToInstagram}
+              className="mt-3 w-full rounded-lg bg-white text-emerald-700 px-3 py-2 text-sm font-semibold hover:bg-emerald-50 transition-colors"
+            >
+              Open Promo Details
+            </button>
+          </div>
+        </div>
+      )}
       <SEOHead
         title="Carioca Coastal Club Project - Loyalty Program & Beach Barraca Directory"
         description="Project #1: Carioca Coastal Club, a loyalty program and beach barraca directory in Rio de Janeiro with real-time weather and status updates."
@@ -389,14 +426,27 @@ const Home: React.FC = () => {
                   </button>
                 </div>
                 {hasUnlockedThaisBadge && (
-                  <div className="mt-4 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-800">
-                    <div className="flex items-center font-semibold">
-                      <CheckCircle2 className="mr-2 h-5 w-5" />
-                      Thais Supporter Badge Unlocked
+                  <div className="mt-5 relative overflow-hidden rounded-2xl border border-emerald-200/70 bg-gradient-to-br from-emerald-50 via-white to-teal-50 p-5 shadow-md">
+                    <div className="absolute -top-10 -right-8 h-28 w-28 rounded-full bg-emerald-200/40 blur-2xl" />
+                    <div className="absolute -bottom-10 -left-10 h-28 w-28 rounded-full bg-teal-200/40 blur-2xl" />
+                    <div className="relative flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                      <div>
+                        <div className="inline-flex items-center rounded-full border border-emerald-300 bg-white/80 px-3 py-1 text-xs font-semibold tracking-wide text-emerald-700">
+                          <Sparkles className="mr-1.5 h-3.5 w-3.5" />
+                          VERIFIED SUPPORTER
+                        </div>
+                        <div className="mt-2 flex items-center text-emerald-900 font-bold text-lg">
+                          <CheckCircle2 className="mr-2 h-5 w-5" />
+                          Thais Supporter Badge Unlocked
+                        </div>
+                        <p className="mt-1 text-sm text-emerald-800">
+                          Show this badge at Thais&apos; barraca for the promo discount.
+                        </p>
+                      </div>
+                      <div className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 px-4 py-3 text-white text-sm font-semibold shadow-lg">
+                        @{THAIS_INSTAGRAM_HANDLE}
+                      </div>
                     </div>
-                    <p className="mt-1 text-sm">
-                      Show this badge at Thais&apos; barraca for the promo discount.
-                    </p>
                   </div>
                 )}
               </div>
