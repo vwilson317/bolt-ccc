@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { Link, useLocation } from 'react-router-dom';
 import { ArrowRight, MapPin, Users, Calendar, Bell, Gift, Instagram, CheckCircle2, Sparkles } from 'lucide-react';
 import HeroCarousel from '../components/HeroCarousel';
-import WeatherMarquee from '../components/WeatherMarquee';
 import RegistrationMarquee from '../components/RegistrationMarquee';
 import BarracaGrid from '../components/BarracaGrid';
 import EmailSubscriptionSection from '../components/EmailSubscriptionSection';
@@ -96,13 +95,25 @@ const Home: React.FC = () => {
     }
   };
 
+  const scrollToElementWithOffset = (elementId: string, offset = 96) => {
+    const element = document.getElementById(elementId);
+    if (!element) {
+      return false;
+    }
+
+    const elementTop = element.getBoundingClientRect().top + window.scrollY;
+    const targetTop = Math.max(0, elementTop - offset);
+    window.scrollTo({
+      top: targetTop,
+      behavior: 'smooth'
+    });
+    return true;
+  };
+
   const scrollToInstagram = () => {
-    const instagramSection = document.getElementById('instagram-cta');
-    if (instagramSection) {
-      instagramSection.scrollIntoView({ 
-        behavior: 'smooth',
-        block: 'center'
-      });
+    const didScrollToPromoCard = scrollToElementWithOffset('ty-promo-offer');
+    if (!didScrollToPromoCard) {
+      scrollToElementWithOffset('instagram-cta');
     }
   };
 
@@ -167,31 +178,31 @@ const Home: React.FC = () => {
       return;
     }
 
-    let attempts = 0;
-    const maxAttempts = 12;
-    const retryDelayMs = 140;
-    const topOffset = 88;
+    let ticks = 0;
+    const maxTicks = 14;
+    const intervalMs = 220;
 
-    const scrollToPromoSection = () => {
-      const instagramSection = document.getElementById('instagram-cta');
-      if (instagramSection) {
-        const elementTop = instagramSection.getBoundingClientRect().top + window.scrollY;
-        const targetTop = Math.max(0, elementTop - topOffset);
-        window.scrollTo({
-          top: targetTop,
-          behavior: 'smooth'
-        });
-        return;
+    const alignScrollToPromo = () => {
+      const didScrollToPromoCard = scrollToElementWithOffset('ty-promo-offer');
+      if (!didScrollToPromoCard) {
+        scrollToElementWithOffset('instagram-cta');
       }
 
-      attempts += 1;
-      if (attempts < maxAttempts) {
-        window.setTimeout(scrollToPromoSection, retryDelayMs);
+      ticks += 1;
+      if (ticks >= maxTicks) {
+        window.clearInterval(intervalId);
       }
     };
 
-    const initialTimeoutId = window.setTimeout(scrollToPromoSection, 220);
-    return () => window.clearTimeout(initialTimeoutId);
+    const intervalId = window.setInterval(alignScrollToPromo, intervalMs);
+    const initialTimeoutId = window.setTimeout(alignScrollToPromo, 120);
+    window.addEventListener('load', alignScrollToPromo);
+
+    return () => {
+      window.clearTimeout(initialTimeoutId);
+      window.clearInterval(intervalId);
+      window.removeEventListener('load', alignScrollToPromo);
+    };
   }, [isThaisPromoActive]);
 
   const handleThaisFollowClick = () => {
@@ -356,8 +367,9 @@ const Home: React.FC = () => {
       {/* Hero Section */}
       <HeroCarousel />
 
-      {/* Weather Marquee - Home uses white theme with pink top border */}
-      <WeatherMarquee colorScheme="white" useDefaultBorders={false} className="border-t-4 border-pink-500" />
+      {/* Weather Marquee - Temporarily disabled, keep pink separator */}
+      {/* <WeatherMarquee colorScheme="white" useDefaultBorders={false} className="border-t-4 border-pink-500" /> */}
+      <div className="sticky top-16 z-30 border-t-4 border-pink-500" />
 
       {isThaisPromoActive && (
         <section className="bg-gradient-to-r from-amber-100 via-rose-50 to-white border-y border-amber-200 relative z-10">
@@ -523,7 +535,7 @@ const Home: React.FC = () => {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 md:p-12 shadow-xl border border-pink-100">
             {isThaisPromoActive && (
-              <div className="mb-8 rounded-2xl border border-amber-200 bg-gradient-to-r from-amber-50 via-white to-rose-50 p-6 text-left shadow-sm">
+              <div id="ty-promo-offer" className="mb-8 rounded-2xl border border-amber-200 bg-gradient-to-r from-amber-50 via-white to-rose-50 p-6 text-left shadow-sm">
                 <div className="mb-4 inline-flex items-center rounded-full bg-amber-100 px-3 py-1 text-sm font-semibold text-amber-800">
                   <Gift className="mr-2 h-4 w-4" />
                   Thais Follow Offer
