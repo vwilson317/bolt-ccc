@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { ArrowRight, MessageCircle } from 'lucide-react';
+import { ArrowRight, MessageCircle, Gift, Instagram } from 'lucide-react';
 import SEOHead from '../components/SEOHead';
 import { trackEvent } from '../services/posthogAnalyticsService';
 
@@ -57,6 +57,8 @@ const projects = [
     whatsappHref: 'https://chat.whatsapp.com/Eod2G6s7LCVAMdrjYtOAoc?mode=gi_t',
   },
 ] satisfies Project[];
+
+const THAIS_PROMO_URL = '/projects/carioca-coastal-club?promo=thais-follow';
 
 const statusStyles: Record<string, string> = {
   live: 'bg-emerald-100 text-emerald-700',
@@ -126,6 +128,40 @@ const CommunityHome: React.FC = () => {
               'This site now tracks what we are building in public: shipping projects, sharing progress, and growing a community around real products.'
             )}
           </p>
+        </div>
+      </section>
+
+      <section className="py-10 border-b border-rose-100 bg-gradient-to-r from-amber-50 via-rose-50 to-white">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="rounded-2xl border border-amber-200 bg-white/80 backdrop-blur-sm p-6 shadow-sm">
+            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+              <div>
+                <div className="inline-flex items-center rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-800">
+                  <Gift className="h-3.5 w-3.5 mr-1.5" />
+                  Featured Member Discount
+                </div>
+                <h2 className="mt-3 text-2xl font-bold text-gray-900">Ty&apos;s Barraca Discount Pass</h2>
+                <p className="mt-1 text-gray-700">
+                  Follow <span className="font-semibold">@thai.82ipanema</span> and claim your reusable supporter badge.
+                </p>
+              </div>
+              <Link
+                to={THAIS_PROMO_URL}
+                onClick={() =>
+                  trackEvent('community_promo_open_clicked', {
+                    promo_id: 'thais-follow',
+                    page: 'community_home',
+                    target_path: THAIS_PROMO_URL,
+                    category: 'Community Home',
+                  })
+                }
+                className="inline-flex items-center justify-center px-5 py-3 rounded-xl bg-gradient-to-r from-pink-500 to-purple-600 text-white font-semibold hover:from-pink-600 hover:to-purple-700 transition-all"
+              >
+                <Instagram className="h-4 w-4 mr-2" />
+                Open Ty Promo
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
 
