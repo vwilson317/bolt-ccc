@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation } from 'react-router-dom';
-import { ArrowRight, MapPin, Users, Calendar, Bell, Gift, Instagram, CheckCircle2, Sparkles } from 'lucide-react';
+import { ArrowRight, MapPin, Users, Calendar, Bell, Gift, Instagram, CheckCircle2, Sparkles, X } from 'lucide-react';
 import HeroCarousel from '../components/HeroCarousel';
 import RegistrationMarquee from '../components/RegistrationMarquee';
 import BarracaGrid from '../components/BarracaGrid';
@@ -342,43 +342,63 @@ const Home: React.FC = () => {
   return (
     <div className="relative">
       {isThaisPromoActive && hasUnlockedThaisBadge && (
-        <div className="fixed bottom-5 right-5 z-50">
-          {isBadgeFabExpanded ? (
-            <div className="w-72 rounded-2xl border border-emerald-300/70 bg-gradient-to-br from-emerald-500 to-teal-500 p-4 text-white shadow-2xl animate-fade-in">
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <div className="inline-flex items-center rounded-full bg-white/20 px-2.5 py-1 text-[11px] font-semibold tracking-wide">
-                    <Sparkles className="mr-1.5 h-3.5 w-3.5" />
-                    {promoT('sticky.badgeLabel')}
-                  </div>
-                  <p className="mt-2 text-sm font-semibold">{promoT('sticky.activeTitle')}</p>
-                  <p className="text-xs text-emerald-50">{promoT('sticky.activeDescription')}</p>
-                </div>
+        <>
+          {/* Discreet FAB */}
+          <button
+            onClick={() => setIsBadgeFabExpanded(true)}
+            className="fixed bottom-5 right-5 z-50 h-12 w-12 rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 shadow-lg flex items-center justify-center hover:scale-110 transition-transform"
+            aria-label="Show verified badge"
+          >
+            <Sparkles className="h-5 w-5 text-white" />
+          </button>
+
+          {/* Full-screen lightbox */}
+          {isBadgeFabExpanded && (
+            <div
+              className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm animate-fade-in"
+              onClick={() => setIsBadgeFabExpanded(false)}
+            >
+              <div
+                className="relative mx-6 w-full max-w-sm rounded-3xl bg-gradient-to-br from-emerald-400 via-emerald-500 to-teal-600 p-8 text-white shadow-2xl text-center"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {/* Close */}
                 <button
                   onClick={() => setIsBadgeFabExpanded(false)}
-                  className="shrink-0 rounded-full p-1 hover:bg-white/20 transition-colors"
-                  aria-label="Collapse badge"
+                  className="absolute top-4 right-4 rounded-full p-1.5 bg-white/20 hover:bg-white/30 transition-colors"
+                  aria-label="Close"
                 >
-                  <CheckCircle2 className="h-5 w-5" />
+                  <X className="h-4 w-4" />
                 </button>
+
+                {/* Big checkmark */}
+                <div className="mx-auto mb-5 flex h-24 w-24 items-center justify-center rounded-full bg-white/20 ring-4 ring-white/40">
+                  <CheckCircle2 className="h-14 w-14 text-white" strokeWidth={1.5} />
+                </div>
+
+                {/* Verified label */}
+                <div className="inline-flex items-center rounded-full bg-white/20 px-3 py-1 text-xs font-bold uppercase tracking-widest mb-3">
+                  <Sparkles className="mr-1.5 h-3 w-3" />
+                  {promoT('card.verifiedLabel')}
+                </div>
+
+                {/* Handle */}
+                <p className="text-lg font-bold mb-1">@{THAIS_INSTAGRAM_HANDLE}</p>
+
+                {/* Discount code — large and prominent */}
+                <div className="my-5 rounded-2xl bg-white/20 px-6 py-4">
+                  <p className="text-xs font-semibold uppercase tracking-widest text-emerald-100 mb-1">Discount Code</p>
+                  <p className="text-5xl font-black tracking-wider">{THAIS_DISCOUNT_CODE}</p>
+                </div>
+
+                <p className="text-sm text-emerald-100">{promoT('sticky.activeDescription')}</p>
+
+                {/* Tap-to-dismiss hint */}
+                <p className="mt-6 text-xs text-white/50">Tap outside to dismiss</p>
               </div>
-              <button
-                onClick={scrollToInstagram}
-                className="mt-3 w-full rounded-lg bg-white text-emerald-700 px-3 py-2 text-sm font-semibold hover:bg-emerald-50 transition-colors"
-              >
-                {promoT('sticky.openDetails')}
-              </button>
             </div>
-          ) : (
-            <button
-              onClick={() => setIsBadgeFabExpanded(true)}
-              className="h-12 w-12 rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 shadow-lg flex items-center justify-center hover:scale-110 transition-transform"
-              aria-label="Show promo badge"
-            >
-              <Sparkles className="h-5 w-5 text-white" />
-            </button>
           )}
-        </div>
+        </>
       )}
       <SEOHead
         title="Carioca Coastal Club Project - Loyalty Program & Beach Barraca Directory"
