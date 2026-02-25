@@ -22,7 +22,7 @@ BEGIN
   current_time_local := (check_time AT TIME ZONE 'America/Sao_Paulo')::TIME;
 
   RETURN current_time_local >= TIME '07:00'
-     AND current_time_local <= TIME '17:00';
+     AND current_time_local <= TIME '18:00';
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
