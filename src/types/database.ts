@@ -144,6 +144,47 @@ export interface Database {
           unsubscribe_token?: string
         }
       }
+      promo_claims: {
+        Row: {
+          id: string
+          promo_id: string
+          identifier_type: string
+          identifier_value: string
+          identifier_normalized: string
+          instagram_follow_confirmed: boolean
+          badge_unlocked: boolean
+          metadata: Json
+          last_claimed_at: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          promo_id: string
+          identifier_type: string
+          identifier_value: string
+          identifier_normalized: string
+          instagram_follow_confirmed?: boolean
+          badge_unlocked?: boolean
+          metadata?: Json
+          last_claimed_at?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          promo_id?: string
+          identifier_type?: string
+          identifier_value?: string
+          identifier_normalized?: string
+          instagram_follow_confirmed?: boolean
+          badge_unlocked?: boolean
+          metadata?: Json
+          last_claimed_at?: string
+          created_at?: string
+          updated_at?: string
+        }
+      }
       stories: {
         Row: {
           id: string

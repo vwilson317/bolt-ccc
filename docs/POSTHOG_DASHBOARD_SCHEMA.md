@@ -117,7 +117,7 @@ If you want deeper attribution, add these properties to both community events:
 
 Then add dashboard panels for source-level conversion and WhatsApp join efficiency by campaign.
 
-## 7) Thais Promo Metrics (Instagram Follow -> Badge Unlock)
+## 7) Thais Promo Metrics (Follow -> Claim Pass -> Badge Unlock)
 
 Use this for the promo URL:
 
@@ -134,7 +134,7 @@ Use this for the promo URL:
     - `page_path` (string)
     - `full_path` (string)
     - `badge_previously_unlocked` (boolean)
-    - `validation_model` (`honor_based`)
+    - `validation_model` (`follow_plus_identifier`)
 
 - `thais_instagram_clicked`
   - Trigger: visitor clicks "Follow Thais on Instagram".
@@ -142,20 +142,46 @@ Use this for the promo URL:
     - `promo_id`, `promo_source`, `instagram_handle`, `page_path`, `full_path`
     - `badge_already_unlocked` (boolean)
 
-- `thais_badge_unlocked`
-  - Trigger: visitor clicks "I followed, unlock badge" after follow click.
+- `thais_claim_identifier_submitted`
+  - Trigger: visitor submits email or phone in claim field.
   - Properties:
     - `promo_id`, `promo_source`, `instagram_handle`, `page_path`, `full_path`
-    - `unlock_status` (`new_unlock` | `already_unlocked`)
+    - `identifier_type` (`email` | `phone`)
+
+- `thais_claim_invalid_identifier`
+  - Trigger: visitor submits invalid claim identifier format.
+  - Properties:
+    - `promo_id`, `promo_source`, `instagram_handle`, `page_path`, `full_path`
+
+- `thais_claim_created`
+  - Trigger: new discount pass claim is persisted (or existing record updated) after follow step.
+  - Properties:
+    - `promo_id`, `promo_source`, `instagram_handle`, `page_path`, `full_path`
+    - `identifier_type` (`email` | `phone`)
+    - `was_existing` (boolean)
+
+- `thais_claim_restored`
+  - Trigger: returning user restores badge using existing identifier record.
+  - Properties:
+    - `promo_id`, `promo_source`, `instagram_handle`, `page_path`, `full_path`
+    - `restore_source` (`auto_lookup` | `manual_lookup`)
+    - `identifier_type` (`email` | `phone`)
+
+- `thais_badge_unlocked`
+  - Trigger: badge is unlocked after successful claim path.
+  - Properties:
+    - `promo_id`, `promo_source`, `instagram_handle`, `page_path`, `full_path`
+    - `identifier_type` (`email` | `phone`)
+    - `unlock_status` (`new_unlock` | `existing_record_unlocked`)
 
 - `thais_badge_unlock_blocked`
-  - Trigger: visitor tries to unlock before clicking follow.
+  - Trigger: visitor tries to claim before clicking follow.
   - Properties:
     - `promo_id`, `promo_source`, `instagram_handle`, `page_path`, `full_path`
     - `block_reason` (`follow_step_not_completed`)
-    - `badge_already_unlocked` (boolean)
+    - `identifier_type` (`email` | `phone`)
 
-### Dashboard configuration (7 insights)
+### Dashboard configuration (9 insights)
 
 Create a dashboard named: **Thais Promo Funnel**.
 
@@ -173,40 +199,56 @@ Create a dashboard named: **Thais Promo Funnel**.
    - Interval: daily
    - Filter: `promo_id = thais-follow`
 
-3. **Badge Unlocks**
+3. **Claim Identifier Submissions**
+   - Type: Trend
+   - Event: `thais_claim_identifier_submitted`
+   - Breakdown: `identifier_type`
+   - Interval: daily
+   - Filter: `promo_id = thais-follow`
+
+4. **Badge Unlocks**
    - Type: Trend
    - Event: `thais_badge_unlocked`
    - Breakdown: `unlock_status`
    - Interval: daily
    - Filter: `promo_id = thais-follow`
 
-4. **Unlock Block Rate**
+5. **Restore Successes**
+   - Type: Trend
+   - Event: `thais_claim_restored`
+   - Breakdown: `restore_source`
+   - Interval: daily
+   - Filter: `promo_id = thais-follow`
+
+6. **Unlock Block Rate**
    - Type: Trend
    - Event: `thais_badge_unlock_blocked`
    - Breakdown: `block_reason`
    - Interval: daily
    - Filter: `promo_id = thais-follow`
 
-5. **Funnel: Landing -> Follow Click**
+7. **Funnel: Landing -> Follow Click**
    - Type: Funnel
    - Steps:
      1. `promo_landing_viewed` where `promo_id = thais-follow`
      2. `thais_instagram_clicked` where `promo_id = thais-follow`
    - Conversion window: 1 day
 
-6. **Funnel: Landing -> Badge Unlock**
+8. **Funnel: Landing -> Claim -> Badge Unlock**
    - Type: Funnel
    - Steps:
      1. `promo_landing_viewed` where `promo_id = thais-follow`
-     2. `thais_badge_unlocked` where `promo_id = thais-follow` and `unlock_status = new_unlock`
+     2. `thais_claim_identifier_submitted` where `promo_id = thais-follow`
+     3. `thais_badge_unlocked` where `promo_id = thais-follow` and `unlock_status = new_unlock`
    - Conversion window: 7 days
 
-7. **Funnel: Landing -> Follow Click -> Badge Unlock**
-   - Type: Funnel (3 steps)
+9. **Funnel: Landing -> Follow Click -> Claim -> Badge Unlock**
+   - Type: Funnel (4 steps)
    - Steps:
      1. `promo_landing_viewed` where `promo_id = thais-follow`
      2. `thais_instagram_clicked` where `promo_id = thais-follow`
-     3. `thais_badge_unlocked` where `promo_id = thais-follow` and `unlock_status = new_unlock`
+     3. `thais_claim_identifier_submitted` where `promo_id = thais-follow`
+     4. `thais_badge_unlocked` where `promo_id = thais-follow` and `unlock_status = new_unlock`
    - Conversion window: 7 days
 
 ### Recommended global dashboard filters

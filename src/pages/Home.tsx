@@ -14,9 +14,11 @@ import { useApp } from '../contexts/AppContext';
 import { useStory } from '../contexts/StoryContext';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 import { trackEvent } from '../services/posthogAnalyticsService';
+import { PromoClaimService } from '../services/promoClaimService';
 
 const THAIS_PROMO_QUERY_VALUE = 'thais-follow';
 const THAIS_PROMO_STORAGE_KEY = 'ccc_thais_follow_badge_unlocked';
+const THAIS_PROMO_IDENTIFIER_STORAGE_KEY = 'ccc_thais_follow_identifier';
 const THAIS_INSTAGRAM_URL = 'https://instagram.com/thai.82ipanema';
 const THAIS_INSTAGRAM_HANDLE = 'thai.82ipanema';
 const THAIS_PROMO_SOURCE = 'home_instagram_section';
@@ -28,6 +30,12 @@ const Home: React.FC = () => {
   const { featureFlags } = useStory();
   const [hasClickedThaisFollow, setHasClickedThaisFollow] = useState(false);
   const [hasUnlockedThaisBadge, setHasUnlockedThaisBadge] = useState(false);
+  const [hasClaimedDiscountPass, setHasClaimedDiscountPass] = useState(false);
+  const [promoIdentifierInput, setPromoIdentifierInput] = useState('');
+  const [claimErrorMessage, setClaimErrorMessage] = useState('');
+  const [claimSuccessMessage, setClaimSuccessMessage] = useState('');
+  const [isClaimSubmitting, setIsClaimSubmitting] = useState(false);
+  const [restoredIdentifier, setRestoredIdentifier] = useState('');
   const projectUrl =
     typeof window !== 'undefined'
       ? `${window.location.origin}/projects/carioca-coastal-club`
@@ -104,14 +112,54 @@ const Home: React.FC = () => {
     }
 
     const isUnlocked = window.localStorage.getItem(THAIS_PROMO_STORAGE_KEY) === 'true';
+    const savedIdentifier = window.localStorage.getItem(THAIS_PROMO_IDENTIFIER_STORAGE_KEY) || '';
     setHasUnlockedThaisBadge(isUnlocked);
     setHasClickedThaisFollow(isUnlocked);
+    setHasClaimedDiscountPass(isUnlocked);
+    if (savedIdentifier) {
+      setPromoIdentifierInput(savedIdentifier);
+    }
 
     trackEvent('promo_landing_viewed', {
       ...thaisPromoTrackingContext,
       badge_previously_unlocked: isUnlocked,
-      validation_model: 'honor_based'
+      has_saved_identifier: !!savedIdentifier,
+      validation_model: 'follow_plus_identifier'
     });
+
+    if (!savedIdentifier) {
+      return;
+    }
+
+    let isActive = true;
+    (async () => {
+      const existingClaim = await PromoClaimService.findByIdentifier(
+        THAIS_PROMO_QUERY_VALUE,
+        savedIdentifier
+      );
+
+      if (!isActive || !existingClaim?.badge_unlocked) {
+        return;
+      }
+
+      setHasUnlockedThaisBadge(true);
+      setHasClickedThaisFollow(true);
+      setHasClaimedDiscountPass(true);
+      setRestoredIdentifier(existingClaim.identifier_value);
+      window.localStorage.setItem(THAIS_PROMO_STORAGE_KEY, 'true');
+
+      await PromoClaimService.markLastClaimed(THAIS_PROMO_QUERY_VALUE, savedIdentifier);
+
+      trackEvent('thais_claim_restored', {
+        ...thaisPromoTrackingContext,
+        restore_source: 'auto_lookup',
+        identifier_type: existingClaim.identifier_type
+      });
+    })();
+
+    return () => {
+      isActive = false;
+    };
   }, [isThaisPromoActive, thaisPromoTrackingContext]);
 
   useEffect(() => {
@@ -163,31 +211,108 @@ const Home: React.FC = () => {
     });
   };
 
-  const handleUnlockThaisBadge = () => {
-    if (!hasClickedThaisFollow) {
-      trackEvent('thais_badge_unlock_blocked', {
-        ...thaisPromoTrackingContext,
-        block_reason: 'follow_step_not_completed',
-        badge_already_unlocked: hasUnlockedThaisBadge
+  const handleClaimDiscountPass = async () => {
+    setClaimErrorMessage('');
+    setClaimSuccessMessage('');
+
+    const normalized = PromoClaimService.normalizeIdentifier(promoIdentifierInput);
+    if (!normalized) {
+      setClaimErrorMessage('Enter a valid email or WhatsApp phone number.');
+      trackEvent('thais_claim_invalid_identifier', {
+        ...thaisPromoTrackingContext
       });
       return;
     }
 
-    const alreadyUnlocked = hasUnlockedThaisBadge;
-    setHasUnlockedThaisBadge(true);
-    window.localStorage.setItem(THAIS_PROMO_STORAGE_KEY, 'true');
-
-    if (window.gtag) {
-      window.gtag('event', 'thais_badge_unlocked', {
-        event_category: 'Promo',
-        event_label: 'Thais Supporter Badge'
-      });
-    }
-
-    trackEvent('thais_badge_unlocked', {
+    setIsClaimSubmitting(true);
+    trackEvent('thais_claim_identifier_submitted', {
       ...thaisPromoTrackingContext,
-      unlock_status: alreadyUnlocked ? 'already_unlocked' : 'new_unlock'
+      identifier_type: normalized.type
     });
+
+    try {
+      const existingClaim = await PromoClaimService.findByIdentifier(
+        THAIS_PROMO_QUERY_VALUE,
+        promoIdentifierInput
+      );
+
+      if (existingClaim?.badge_unlocked) {
+        await PromoClaimService.markLastClaimed(THAIS_PROMO_QUERY_VALUE, promoIdentifierInput);
+        setHasUnlockedThaisBadge(true);
+        setHasClickedThaisFollow(true);
+        setHasClaimedDiscountPass(true);
+        setPromoIdentifierInput(existingClaim.identifier_value);
+        setRestoredIdentifier(existingClaim.identifier_value);
+        window.localStorage.setItem(THAIS_PROMO_STORAGE_KEY, 'true');
+        window.localStorage.setItem(THAIS_PROMO_IDENTIFIER_STORAGE_KEY, existingClaim.identifier_value);
+
+        trackEvent('thais_claim_restored', {
+          ...thaisPromoTrackingContext,
+          restore_source: 'manual_lookup',
+          identifier_type: existingClaim.identifier_type
+        });
+
+        setClaimSuccessMessage('Welcome back. Your Ty discount badge has been restored.');
+        return;
+      }
+
+      if (!hasClickedThaisFollow) {
+        trackEvent('thais_badge_unlock_blocked', {
+          ...thaisPromoTrackingContext,
+          block_reason: 'follow_step_not_completed',
+          identifier_type: normalized.type
+        });
+        setClaimErrorMessage(`Follow @${THAIS_INSTAGRAM_HANDLE} first, then claim your pass.`);
+        return;
+      }
+
+      const claimResult = await PromoClaimService.claimOrRestore(
+        THAIS_PROMO_QUERY_VALUE,
+        promoIdentifierInput,
+        {
+          followConfirmed: true,
+          unlockBadge: true,
+          metadata: {
+            promo_source: THAIS_PROMO_SOURCE,
+            instagram_handle: THAIS_INSTAGRAM_HANDLE
+          }
+        }
+      );
+
+      if (!claimResult.claim?.badge_unlocked) {
+        setClaimErrorMessage('Could not save your pass right now. Please try again.');
+        return;
+      }
+
+      setHasUnlockedThaisBadge(true);
+      setHasClaimedDiscountPass(true);
+      setPromoIdentifierInput(claimResult.claim.identifier_value);
+      window.localStorage.setItem(THAIS_PROMO_STORAGE_KEY, 'true');
+      window.localStorage.setItem(THAIS_PROMO_IDENTIFIER_STORAGE_KEY, claimResult.claim.identifier_value);
+
+      if (window.gtag) {
+        window.gtag('event', 'thais_badge_unlocked', {
+          event_category: 'Promo',
+          event_label: 'Thais Supporter Badge'
+        });
+      }
+
+      trackEvent('thais_claim_created', {
+        ...thaisPromoTrackingContext,
+        identifier_type: claimResult.claim.identifier_type,
+        was_existing: claimResult.wasExisting
+      });
+
+      trackEvent('thais_badge_unlocked', {
+        ...thaisPromoTrackingContext,
+        identifier_type: claimResult.claim.identifier_type,
+        unlock_status: claimResult.wasExisting ? 'existing_record_unlocked' : 'new_unlock'
+      });
+
+      setClaimSuccessMessage('Discount pass claimed. Use this identifier next time to restore instantly.');
+    } finally {
+      setIsClaimSubmitting(false);
+    }
   };
 
   return (
@@ -404,26 +529,54 @@ const Home: React.FC = () => {
                   Thais Follow Offer
                 </div>
                 <h3 className="text-2xl font-bold text-gray-900">
-                  Follow Thais&apos; barraca page to unlock your discount badge
+                  Follow Ty&apos;s barraca page and claim your reusable discount pass
                 </h3>
                 <p className="mt-2 text-gray-700">
-                  This reward is only available through this special URL. Instagram follow is honor-based, then you confirm to unlock.
+                  Do these 2 steps once: follow <span className="font-semibold">@{THAIS_INSTAGRAM_HANDLE}</span> and claim with your email or WhatsApp number. Next time, just enter the same identifier to restore your badge.
                 </p>
-                <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center">
+                <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
                   <button
                     onClick={handleThaisFollowClick}
                     className="bg-gradient-to-r from-pink-500 to-purple-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-pink-600 hover:to-purple-700 transition-all duration-200 shadow-lg flex items-center justify-center"
                   >
                     <Instagram className="mr-2 h-5 w-5" strokeWidth={1.5} />
-                    Follow Thais on Instagram
+                    Step 1: Follow Ty on Instagram
                   </button>
-                  <button
-                    onClick={handleUnlockThaisBadge}
-                    disabled={!hasClickedThaisFollow || hasUnlockedThaisBadge}
-                    className="bg-white text-gray-800 px-6 py-3 rounded-xl font-semibold border-2 border-gray-200 hover:bg-gray-50 transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-50"
-                  >
-                    {hasUnlockedThaisBadge ? 'Badge Unlocked' : 'I followed, unlock badge'}
-                  </button>
+                  <div className="sm:col-span-2">
+                    <label className="mb-2 block text-sm font-semibold text-gray-700">
+                      Step 2: Claim pass with email or WhatsApp number
+                    </label>
+                    <div className="flex flex-col gap-3 sm:flex-row">
+                      <input
+                        type="text"
+                        value={promoIdentifierInput}
+                        onChange={(event) => setPromoIdentifierInput(event.target.value)}
+                        placeholder="you@email.com or +55 21 99999-0000"
+                        className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-gray-800 placeholder:text-gray-400 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-100"
+                      />
+                      <button
+                        onClick={handleClaimDiscountPass}
+                        disabled={isClaimSubmitting}
+                        className="bg-white text-gray-800 px-6 py-3 rounded-xl font-semibold border-2 border-gray-200 hover:bg-gray-50 transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-50"
+                      >
+                        {isClaimSubmitting ? 'Saving...' : hasClaimedDiscountPass ? 'Restore / Reconfirm Pass' : 'Claim Ty Discount Pass'}
+                      </button>
+                    </div>
+                    {claimErrorMessage && (
+                      <p className="mt-2 text-sm font-medium text-red-600">{claimErrorMessage}</p>
+                    )}
+                    {claimSuccessMessage && (
+                      <p className="mt-2 text-sm font-medium text-emerald-700">{claimSuccessMessage}</p>
+                    )}
+                  </div>
+                </div>
+                {restoredIdentifier && (
+                  <p className="mt-3 text-sm text-emerald-700">
+                    Restored using: <span className="font-semibold">{restoredIdentifier}</span>
+                  </p>
+                )}
+                <div className="mt-3 text-xs text-gray-500">
+                  Follow must be completed before first-time claim. Existing claim identifiers restore instantly.
                 </div>
                 {hasUnlockedThaisBadge && (
                   <div className="mt-5 relative overflow-hidden rounded-2xl border border-emerald-200/70 bg-gradient-to-br from-emerald-50 via-white to-teal-50 p-5 shadow-md">
@@ -437,10 +590,10 @@ const Home: React.FC = () => {
                         </div>
                         <div className="mt-2 flex items-center text-emerald-900 font-bold text-lg">
                           <CheckCircle2 className="mr-2 h-5 w-5" />
-                          Thais Supporter Badge Unlocked
+                          Ty Supporter Badge Unlocked
                         </div>
                         <p className="mt-1 text-sm text-emerald-800">
-                          Show this badge at Thais&apos; barraca for the promo discount.
+                          Show this badge at Ty&apos;s barraca for the member discount.
                         </p>
                       </div>
                       <div className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 px-4 py-3 text-white text-sm font-semibold shadow-lg">
