@@ -2,10 +2,9 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { MapPin, Clock, MessageCircle, Instagram, Wifi, Umbrella, Hash, Users, MousePointer, Mail } from 'lucide-react';
 import { Barraca } from '../types';
-import StoryRing from './StoryRing';
+// import StoryRing from './StoryRing';
 import CTAButtonGroup from './CTAButtonGroup';
 import StarRating from './StarRating';
-import { useStory } from '../contexts/StoryContext';
 import { useApp } from '../contexts/AppContext';
 import { getEffectiveOpenStatus } from '../utils/environmentUtils';
 import { getFetchPriority } from '../utils/imageUtils';
@@ -16,7 +15,6 @@ interface BarracaGridProps {
 
 const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
   const { t } = useTranslation();
-  const { stories, featureFlags } = useStory();
   const { weatherOverride, openBarracaModal } = useApp();
 
 
@@ -42,9 +40,10 @@ const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
     return cleaned.startsWith('55') ? cleaned : `55${cleaned}`;
   };
 
-  const hasStories = (barracaId: string) => {
-    return stories.some(story => story.barracaId === barracaId);
-  };
+  // Stories feature disabled for now
+  // const hasStories = (barracaId: string) => {
+  //   return stories.some(story => story.barracaId === barracaId);
+  // };
 
 
 
@@ -115,8 +114,8 @@ const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
               </div>
             )}
             
-            {/* Story Ring - Top Center (Mobile Optimized) */}
-            {featureFlags.enableStoryBanner && hasStories(barraca.id) && (
+            {/* Stories feature disabled for now */}
+            {/* {featureFlags.enableStoryBanner && hasStories(barraca.id) && (
               <div className="absolute top-3 left-1/2 transform -translate-x-1/2">
                 <StoryRing
                   barracaId={barraca.id}
@@ -126,7 +125,7 @@ const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
                   showLabel={false}
                 />
               </div>
-            )}
+            )} */}
 
             {/* Mobile Tap Indicator - Only for partnered barracas */}
             {barraca.partnered && (

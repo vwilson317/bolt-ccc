@@ -19,10 +19,40 @@ const isValidApiKey = (key: string): boolean => {
   return !(!key || key.includes('your_') || key === 'your_default_supabase_anon_key' || key.includes('placeholder'))
 }
 
+type RuntimeEnv = 'dev' | 'qa' | 'uat' | 'prod'
+
+const normalizeRuntimeEnv = (rawEnv: string | undefined): RuntimeEnv => {
+  const value = (rawEnv || '').trim().toLowerCase()
+
+  // Handle common aliases from hosting providers / local env files
+  if (value === 'development') return 'dev'
+  if (value === 'production') return 'prod'
+
+  // Known valid values
+  if (value === 'dev' || value === 'qa' || value === 'uat' || value === 'prod') {
+    return value
+  }
+
+  // Guard against placeholder/malformed values such as "dev|qa|uat|prod"
+  if (value.includes('|') || value.includes(',')) {
+    console.warn(`⚠️ Invalid VITE_APP_ENV value "${rawEnv}". Falling back to "dev".`)
+    return 'dev'
+  }
+
+  // Production builds should prefer prod when env is missing/unknown
+  if (import.meta.env.PROD) {
+    console.warn(`⚠️ Unknown VITE_APP_ENV value "${rawEnv}". Falling back to "prod" for production build.`)
+    return 'prod'
+  }
+
+  console.warn(`⚠️ Unknown VITE_APP_ENV value "${rawEnv}". Falling back to "dev".`)
+  return 'dev'
+}
+
+const runtimeEnv = normalizeRuntimeEnv(import.meta.env.VITE_APP_ENV)
+
 // Environment configuration
 const getEnvironmentConfig = () => {
-  const env = import.meta.env.VITE_APP_ENV || 'dev'
-  
   const configs = {
     dev: {
       url: import.meta.env.VITE_SUPABASE_URL_DEV || import.meta.env.VITE_SUPABASE_URL,
@@ -45,12 +75,12 @@ const getEnvironmentConfig = () => {
       schema: 'public'
     }
   }
-  
-  return configs[env as keyof typeof configs] || configs.dev
+
+  return configs[runtimeEnv]
 }
 
 const config = getEnvironmentConfig()
-const currentEnv = import.meta.env.VITE_APP_ENV || 'dev'
+const currentEnv = runtimeEnv
 
 // Check if we have valid Supabase configuration
 const hasValidSupabaseConfig = isValidUrl(config.url) && isValidApiKey(config.anonKey)

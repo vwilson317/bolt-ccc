@@ -104,8 +104,8 @@ class PhotoService {
     try {
       // List folders specifically in the gallery directory
       const folders = await cloudflareService.listFolders('gallery/');
-      
-      return folders.map(folder => {
+
+      const cloudflareDates = folders.map(folder => {
         // Extract date from folder name (assuming format like "2025-01-15" or "2025/01/15")
         const dateMatch = folder.name.match(/(\d{4})[-/](\d{1,2})[-/](\d{1,2})/);
         const date = dateMatch ? `${dateMatch[1]}-${dateMatch[2].padStart(2, '0')}-${dateMatch[3].padStart(2, '0')}` : folder.name;
@@ -122,7 +122,25 @@ class PhotoService {
           description: `Photos from ${this.formatFolderTitle(folder.name)}`,
           location: matchingMock?.location || 'Various locations', // Use mock data location if available
         };
-      }).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+      });
+
+      // Keep Cloudflare as source-of-truth when present, but preserve mock-only entries
+      // so manually defined galleries (e.g. non-gallery/ folder structures) don't disappear.
+      const cloudflareIds = new Set(cloudflareDates.map(item => item.id));
+      const mergedDates = [
+        ...cloudflareDates,
+        ...this.mockPhotoDates.filter(mock => !cloudflareIds.has(mock.id))
+      ];
+
+      return mergedDates.sort((a, b) => {
+        const aTs = new Date(a.date).getTime();
+        const bTs = new Date(b.date).getTime();
+        // Non-date identifiers should still render, just after valid date entries
+        if (Number.isNaN(aTs) && Number.isNaN(bTs)) return 0;
+        if (Number.isNaN(aTs)) return 1;
+        if (Number.isNaN(bTs)) return -1;
+        return bTs - aTs;
+      });
     } catch (error) {
       console.error('Error fetching photo dates from Cloudflare:', error);
       // Fallback to mock data
@@ -132,12 +150,19 @@ class PhotoService {
 
   private async getPhotoGalleryFromCloudflare(dateId: string): Promise<PhotoGalleryData | null> {
     try {
-      // Add gallery/ prefix to the folder path
-      const folderPath = `gallery/${dateId}`;
-      const images = await cloudflareService.listImagesInFolder(folderPath);
-      
+      // Prefer the gallery namespace, but also support legacy/custom root folders.
+      const candidateFolderPaths = [`gallery/${dateId}`, dateId];
+      let images: CloudflareImage[] = [];
+
+      for (const folderPath of candidateFolderPaths) {
+        images = await cloudflareService.listImagesInFolder(folderPath);
+        if (images.length > 0) {
+          break;
+        }
+      }
+
       if (images.length === 0) {
-        return null;
+        return this.mockPhotoGalleries[dateId] || null;
       }
 
       const photos: Photo[] = await Promise.all(

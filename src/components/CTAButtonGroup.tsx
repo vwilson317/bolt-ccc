@@ -1,7 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Barraca, CTAButtonConfig } from '../types';
-import { useStory } from '../contexts/StoryContext';
 import { useApp } from '../contexts/AppContext';
 import { 
   getCTAButtonsForBarraca, 
@@ -31,13 +30,13 @@ const CTAButtonGroup: React.FC<CTAButtonGroupProps> = ({
   context = {}
 }) => {
   const { t } = useTranslation();
-  const { featureFlags } = useStory();
   const { weatherOverride } = useApp();
+  const customCtaButtonsEnabled = true;
 
-  // Get appropriate CTA buttons based on feature flag and configuration
+  // Stories feature is disabled; keep CTA buttons enabled directly.
   const ctaButtons = getCTAButtonsForBarraca(
     barraca, 
-    featureFlags.customCtaButtons, 
+    customCtaButtonsEnabled,
     t,
     { ...context, weatherOverride }
   ).slice(0, maxButtons);

@@ -2,9 +2,7 @@ import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Search, Filter, MapPin, X, CheckCircle, XCircle, Star } from 'lucide-react';
 import { useApp } from '../contexts/AppContext';
-import { useStory } from '../contexts/StoryContext';
 import BarracaGrid from '../components/BarracaGrid';
-import StoryCarousel from '../components/StoryCarousel';
 import LocationFilterCheckboxes from '../components/LocationFilterCheckboxes';
 import StarRating from '../components/StarRating';
 import SEOHead from '../components/SEOHead';
@@ -24,8 +22,7 @@ const Discover: React.FC = () => {
     loadMore,
     isLoading
   } = useApp();
-  const { featureFlags } = useStory();
-    const [showFilters, setShowFilters] = useState(true);
+  const [showFilters, setShowFilters] = useState(true);
 
   // New infinite scroll hook
   const loadingRef = useInfiniteScrollV2({

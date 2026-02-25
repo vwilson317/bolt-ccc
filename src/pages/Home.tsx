@@ -6,11 +6,11 @@ import HeroCarousel from '../components/HeroCarousel';
 import RegistrationMarquee from '../components/RegistrationMarquee';
 import BarracaGrid from '../components/BarracaGrid';
 import EmailSubscriptionSection from '../components/EmailSubscriptionSection';
-import StoryCarousel from '../components/StoryCarousel';
+// import StoryCarousel from '../components/StoryCarousel';
 import UniqueVisitorCounter from '../components/UniqueVisitorCounter';
 import SEOHead from '../components/SEOHead';
 import { useApp } from '../contexts/AppContext';
-import { useStory } from '../contexts/StoryContext';
+// import { useStory } from '../contexts/StoryContext';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 import { trackEvent } from '../services/posthogAnalyticsService';
 import { PromoClaimService } from '../services/promoClaimService';
@@ -27,7 +27,8 @@ const Home: React.FC = () => {
   const { t } = useTranslation();
   const location = useLocation();
   const { barracas } = useApp();
-  const { featureFlags } = useStory();
+  // Stories feature disabled for now
+  // const { featureFlags } = useStory();
   const [hasClickedThaisFollow, setHasClickedThaisFollow] = useState(false);
   const [hasUnlockedThaisBadge, setHasUnlockedThaisBadge] = useState(false);
   const [promoIdentifierInput, setPromoIdentifierInput] = useState('');
@@ -410,8 +411,8 @@ const Home: React.FC = () => {
         locale="en_US"
         twitterCard="summary_large_image"
       />
-      {/* Story Carousel - Only show if feature is enabled */}
-      {featureFlags.enableStoryBanner && <StoryCarousel />}
+      {/* Story carousel disabled for now */}
+      {/* {featureFlags.enableStoryBanner && <StoryCarousel />} */}
       
       {/* Hero Section */}
       <HeroCarousel />

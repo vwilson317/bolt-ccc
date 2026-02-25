@@ -3,12 +3,12 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { HelmetProvider } from 'react-helmet-async';
 import { AppProvider, useApp } from './contexts/AppContext';
-import { StoryProvider } from './contexts/StoryContext';
+// import { StoryProvider } from './contexts/StoryContext';
 import { WeatherProvider } from './contexts/WeatherContext';
 import { usePostHogAnalytics } from './hooks/usePostHogAnalytics';
 import Header from './components/Header';
 import WeatherBar from './components/WeatherBar';
-import StoryViewer from './components/StoryViewer';
+// import StoryViewer from './components/StoryViewer';
 import EnvironmentBadge from './components/EnvironmentBadge';
 import EnvironmentInfo from './components/EnvironmentInfo';
 import BarracaDetail from './components/BarracaDetail';
@@ -65,7 +65,8 @@ function AppContent() {
           {/* <Route path="/translation-demo" element={<TranslationDemo />} /> */}
         </Routes>
       </main>
-      <StoryViewer />
+      {/* Stories feature disabled for now */}
+      {/* <StoryViewer /> */}
       
       {/* Global Barraca Detail Modal */}
       {selectedBarraca && (
@@ -118,13 +119,14 @@ function App() {
   return (
     <HelmetProvider>
       <AppProvider>
-        <StoryProvider>
-          <WeatherProvider>
-            <Router>
-              <AppContent />
-            </Router>
-          </WeatherProvider>
-        </StoryProvider>
+        {/* Stories provider disabled for now */}
+        {/* <StoryProvider> */}
+        <WeatherProvider>
+          <Router>
+            <AppContent />
+          </Router>
+        </WeatherProvider>
+        {/* </StoryProvider> */}
       </AppProvider>
     </HelmetProvider>
   );
