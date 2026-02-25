@@ -190,10 +190,8 @@ export const validateEnvironmentData = (data: any, type: string): boolean => {
 }
 
 /**
- * Calculates the effective open status of a barraca considering weather override, partnered status, and special admin override
- * @param barraca - The barraca object
- * @param weatherOverride - Whether weather override is active
- * @returns The effective open status (true if open, false if closed, null if undetermined for non-partnered)
+ * Calculates the effective open status of a barraca.
+ * Open/closed should follow the backend `isOpen` value directly.
  */
 export const getEffectiveOpenStatus = (barraca: { 
   isOpen: boolean; 
@@ -201,18 +199,12 @@ export const getEffectiveOpenStatus = (barraca: {
   specialAdminOverride?: boolean; 
   specialAdminOverrideExpires?: Date | null;
 }, weatherOverride: boolean): boolean | null => {
-  // Check if special admin override is active and not expired
-  if (barraca.specialAdminOverride && barraca.specialAdminOverrideExpires) {
-    const now = new Date();
-    if (now < barraca.specialAdminOverrideExpires) {
-      return true; // Special admin override takes precedence
-    }
-  }
-  
+  void weatherOverride;
+
   // Non-partnered barracas have undetermined open status
   if (!barraca.partnered) {
     return null;
   }
   
-  return weatherOverride ? false : barraca.isOpen;
+  return barraca.isOpen;
 };

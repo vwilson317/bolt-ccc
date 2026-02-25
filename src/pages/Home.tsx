@@ -18,6 +18,8 @@ import { trackEvent } from '../services/posthogAnalyticsService';
 const THAIS_PROMO_QUERY_VALUE = 'thais-follow';
 const THAIS_PROMO_STORAGE_KEY = 'ccc_thais_follow_badge_unlocked';
 const THAIS_INSTAGRAM_URL = 'https://instagram.com/thai.82ipanema';
+const THAIS_INSTAGRAM_HANDLE = 'thai.82ipanema';
+const THAIS_PROMO_SOURCE = 'home_instagram_section';
 
 const Home: React.FC = () => {
   const { t } = useTranslation();
@@ -34,6 +36,13 @@ const Home: React.FC = () => {
     const params = new URLSearchParams(location.search);
     return params.get('promo') === THAIS_PROMO_QUERY_VALUE;
   }, [location.search]);
+  const thaisPromoTrackingContext = useMemo(() => ({
+    promo_id: THAIS_PROMO_QUERY_VALUE,
+    promo_source: THAIS_PROMO_SOURCE,
+    instagram_handle: THAIS_INSTAGRAM_HANDLE,
+    page_path: location.pathname,
+    full_path: `${location.pathname}${location.search}`
+  }), [location.pathname, location.search]);
 
   // Scroll animations
   const ctaAnimation = useScrollAnimation('slideUp');
@@ -99,9 +108,28 @@ const Home: React.FC = () => {
     setHasClickedThaisFollow(isUnlocked);
 
     trackEvent('promo_landing_viewed', {
-      promo_id: THAIS_PROMO_QUERY_VALUE,
-      source: 'home_instagram_section'
+      ...thaisPromoTrackingContext,
+      badge_previously_unlocked: isUnlocked,
+      validation_model: 'honor_based'
     });
+  }, [isThaisPromoActive, thaisPromoTrackingContext]);
+
+  useEffect(() => {
+    if (!isThaisPromoActive || typeof window === 'undefined') {
+      return;
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      const instagramSection = document.getElementById('instagram-cta');
+      if (instagramSection) {
+        instagramSection.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+    }, 350);
+
+    return () => window.clearTimeout(timeoutId);
   }, [isThaisPromoActive]);
 
   const handleThaisFollowClick = () => {
@@ -116,16 +144,22 @@ const Home: React.FC = () => {
     }
 
     trackEvent('thais_instagram_clicked', {
-      promo_id: THAIS_PROMO_QUERY_VALUE,
-      source: 'home_instagram_section'
+      ...thaisPromoTrackingContext,
+      badge_already_unlocked: hasUnlockedThaisBadge
     });
   };
 
   const handleUnlockThaisBadge = () => {
     if (!hasClickedThaisFollow) {
+      trackEvent('thais_badge_unlock_blocked', {
+        ...thaisPromoTrackingContext,
+        block_reason: 'follow_step_not_completed',
+        badge_already_unlocked: hasUnlockedThaisBadge
+      });
       return;
     }
 
+    const alreadyUnlocked = hasUnlockedThaisBadge;
     setHasUnlockedThaisBadge(true);
     window.localStorage.setItem(THAIS_PROMO_STORAGE_KEY, 'true');
 
@@ -137,8 +171,8 @@ const Home: React.FC = () => {
     }
 
     trackEvent('thais_badge_unlocked', {
-      promo_id: THAIS_PROMO_QUERY_VALUE,
-      source: 'home_instagram_section'
+      ...thaisPromoTrackingContext,
+      unlock_status: alreadyUnlocked ? 'already_unlocked' : 'new_unlock'
     });
   };
 
@@ -162,6 +196,24 @@ const Home: React.FC = () => {
 
       {/* Weather Marquee - Home uses white theme with pink top border */}
       <WeatherMarquee colorScheme="white" useDefaultBorders={false} className="border-t-4 border-pink-500" />
+
+      {isThaisPromoActive && (
+        <section className="bg-gradient-to-r from-amber-100 via-rose-50 to-white border-y border-amber-200 relative z-10">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+              <p className="text-sm md:text-base text-gray-900 font-medium">
+                Thais promo is active for this visit. Follow <span className="font-bold">@{THAIS_INSTAGRAM_HANDLE}</span> and unlock your supporter badge discount.
+              </p>
+              <button
+                onClick={scrollToInstagram}
+                className="inline-flex items-center justify-center bg-gray-900 text-white px-4 py-2 rounded-lg font-semibold hover:bg-gray-800 transition-colors"
+              >
+                Open Promo Offer
+              </button>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Call to Action Section */}
       <section ref={ctaAnimation.ref} className={`py-16 bg-gradient-to-b from-beach-50 to-white relative z-10 ${ctaAnimation.animationClasses}`}>
