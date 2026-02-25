@@ -200,21 +200,21 @@
     },
     "promo": {
       "banner": {
-        "activeMessage": "Ty promo is active for this visit. Follow",
+        "activeMessage": "Promo is active for this visit. Follow",
         "openOffer": "Open Promo Offer"
       },
       "sticky": {
         "badgeLabel": "SUPPORTER BADGE",
-        "activeTitle": "Ty discount badge is active",
+        "activeTitle": "Discount badge is active",
         "activeDescription": "Show this at the barraca for the promo benefit.",
         "openDetails": "Open Promo Details"
       },
       "card": {
-        "badge": "Ty Follow Offer",
-        "title": "Follow Ty's barraca page and claim your reusable discount pass",
+        "badge": "Follow Offer",
+        "title": "Follow Thais' barraca page and claim your reusable discount pass",
         "descriptionPrefix": "Do these 2 steps once: follow",
         "descriptionSuffix": "and claim with your email or WhatsApp number. Next time, just enter the same identifier to restore your badge.",
-        "step1Button": "Step 1: Follow Ty on Instagram",
+        "step1Button": "Step 1: Follow on Instagram",
         "step2Label": "Step 2: Claim pass with email or WhatsApp number",
         "identifierPlaceholder": "you@email.com or +55 21 99999-0000",
         "claimButton": "Claim Discount Pass",
@@ -222,12 +222,12 @@
         "restoredUsing": "Restored using:",
         "note": "Follow must be completed before first-time claim. Existing claim identifiers restore instantly.",
         "verifiedLabel": "VERIFIED SUPPORTER",
-        "unlockedTitle": "Ty Supporter Badge Unlocked",
-        "unlockedDescription": "Show this badge at Ty's barraca and mention code"
+        "unlockedTitle": "Supporter Badge Unlocked",
+        "unlockedDescription": "Show this badge at Thais' barraca and mention code"
       },
       "messages": {
         "invalidIdentifier": "Enter a valid email or WhatsApp phone number.",
-        "restored": "Welcome back. Your Ty discount badge has been restored.",
+        "restored": "Welcome back. Your discount badge has been restored.",
         "followFirst": "Follow @thai.82ipanema first, then claim your pass.",
         "claimedFallback": "Discount pass claimed on this device. Full sync will complete when connection is available.",
         "claimed": "Discount pass claimed. Use this identifier next time to restore instantly.",

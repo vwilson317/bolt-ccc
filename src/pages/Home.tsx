@@ -329,6 +329,10 @@ const Home: React.FC = () => {
     } catch (error) {
       console.error('Error claiming discount pass:', error);
       setClaimErrorMessage(promoT('messages.genericError'));
+      trackEvent('thais_claim_error', {
+        ...thaisPromoTrackingContext,
+        error_message: error instanceof Error ? error.message : String(error)
+      });
     } finally {
       setIsClaimSubmitting(false);
     }

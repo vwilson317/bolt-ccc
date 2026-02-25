@@ -210,21 +210,21 @@
     },
     "promo": {
       "banner": {
-        "activeMessage": "La promo de Ty est active pour cette visite. Suivez",
+        "activeMessage": "La promo est active pour cette visite. Suivez",
         "openOffer": "Ouvrir l'offre promo"
       },
       "sticky": {
         "badgeLabel": "BADGE SUPPORTER",
-        "activeTitle": "Le badge de réduction Ty est actif",
+        "activeTitle": "Le badge de réduction est actif",
         "activeDescription": "Montrez ceci à la barraca pour recevoir l'avantage.",
         "openDetails": "Ouvrir les détails promo"
       },
       "card": {
-        "badge": "Offre Suivre Ty",
-        "title": "Suivez la page de barraca de Ty et réclamez votre pass réduction réutilisable",
+        "badge": "Offre Follow",
+        "title": "Suivez la page de barraca de Thais et réclamez votre pass réduction réutilisable",
         "descriptionPrefix": "Faites ces 2 étapes une seule fois : suivez",
         "descriptionSuffix": "et réclamez avec votre email ou numéro WhatsApp. La prochaine fois, saisissez simplement le même identifiant pour restaurer votre badge.",
-        "step1Button": "Étape 1 : Suivre Ty sur Instagram",
+        "step1Button": "Étape 1 : Suivre sur Instagram",
         "step2Label": "Étape 2 : Réclamer le pass avec email ou WhatsApp",
         "identifierPlaceholder": "vous@email.com ou +55 21 99999-0000",
         "claimButton": "Claim Discount Pass",
@@ -232,12 +232,12 @@
         "restoredUsing": "Restauré avec :",
         "note": "Le follow doit être complété avant la première réclamation. Les identifiants existants se restaurent instantanément.",
         "verifiedLabel": "SUPPORTER VÉRIFIÉ",
-        "unlockedTitle": "Badge Supporter Ty Débloqué",
-        "unlockedDescription": "Montrez ce badge à la barraca de Ty et mentionnez le code"
+        "unlockedTitle": "Badge Supporter Débloqué",
+        "unlockedDescription": "Montrez ce badge à la barraca de Thais et mentionnez le code"
       },
       "messages": {
         "invalidIdentifier": "Entrez un email valide ou un numéro WhatsApp valide.",
-        "restored": "Bon retour. Votre badge de réduction Ty a été restauré.",
+        "restored": "Bon retour. Votre badge de réduction a été restauré.",
         "followFirst": "Suivez @thai.82ipanema d'abord, puis réclamez votre pass.",
         "claimedFallback": "Pass réduction réclamé sur cet appareil. La synchronisation complète sera faite quand la connexion sera disponible.",
         "claimed": "Pass réduction réclamé. Utilisez cet identifiant la prochaine fois pour restaurer instantanément.",
