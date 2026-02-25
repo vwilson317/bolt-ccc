@@ -6,7 +6,7 @@ import { getEffectiveOpenStatus } from '../utils/environmentUtils';
 
 const HeroCarousel: React.FC = () => {
   const { t } = useTranslation();
-  const { barracas, weatherOverride } = useApp();
+  const { barracas, weatherOverride, isInitialLoading } = useApp();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [touchStartX, setTouchStartX] = useState<number | null>(null);
   const [touchStartY, setTouchStartY] = useState<number | null>(null);
@@ -74,7 +74,11 @@ const HeroCarousel: React.FC = () => {
   };
 
   if (threeStarBarracas.length === 0) {
-    return <div className="relative h-[66vh] sm:h-[70vh] md:h-screen overflow-hidden z-0 bg-gray-900" />;
+    // Hold space while loading to prevent layout shift; once loaded with no featured barracas, collapse cleanly
+    if (isInitialLoading) {
+      return <div className="relative h-[66vh] sm:h-[70vh] md:h-screen overflow-hidden z-0 bg-gray-900" />;
+    }
+    return null;
   }
 
   // Helper: Barraca Details Row (for mobile)

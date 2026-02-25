@@ -35,6 +35,7 @@ const Home: React.FC = () => {
   const [claimSuccessMessage, setClaimSuccessMessage] = useState('');
   const [isClaimSubmitting, setIsClaimSubmitting] = useState(false);
   const [restoredIdentifier, setRestoredIdentifier] = useState('');
+  const [isBadgeFabExpanded, setIsBadgeFabExpanded] = useState(false);
   const projectUrl =
     typeof window !== 'undefined'
       ? `${window.location.origin}/projects/carioca-coastal-club`
@@ -341,26 +342,42 @@ const Home: React.FC = () => {
   return (
     <div className="relative">
       {isThaisPromoActive && hasUnlockedThaisBadge && (
-        <div className="fixed bottom-4 right-4 z-50 w-[calc(100%-2rem)] max-w-sm">
-          <div className="rounded-2xl border border-emerald-300/70 bg-gradient-to-br from-emerald-500 to-teal-500 p-4 text-white shadow-2xl">
-            <div className="flex items-start justify-between gap-3">
-              <div>
-                <div className="inline-flex items-center rounded-full bg-white/20 px-2.5 py-1 text-[11px] font-semibold tracking-wide">
-                  <Sparkles className="mr-1.5 h-3.5 w-3.5" />
-                  {promoT('sticky.badgeLabel')}
+        <div className="fixed bottom-5 right-5 z-50">
+          {isBadgeFabExpanded ? (
+            <div className="w-72 rounded-2xl border border-emerald-300/70 bg-gradient-to-br from-emerald-500 to-teal-500 p-4 text-white shadow-2xl animate-fade-in">
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <div className="inline-flex items-center rounded-full bg-white/20 px-2.5 py-1 text-[11px] font-semibold tracking-wide">
+                    <Sparkles className="mr-1.5 h-3.5 w-3.5" />
+                    {promoT('sticky.badgeLabel')}
+                  </div>
+                  <p className="mt-2 text-sm font-semibold">{promoT('sticky.activeTitle')}</p>
+                  <p className="text-xs text-emerald-50">{promoT('sticky.activeDescription')}</p>
                 </div>
-                <p className="mt-2 text-sm font-semibold">{promoT('sticky.activeTitle')}</p>
-                <p className="text-xs text-emerald-50">{promoT('sticky.activeDescription')}</p>
+                <button
+                  onClick={() => setIsBadgeFabExpanded(false)}
+                  className="shrink-0 rounded-full p-1 hover:bg-white/20 transition-colors"
+                  aria-label="Collapse badge"
+                >
+                  <CheckCircle2 className="h-5 w-5" />
+                </button>
               </div>
-              <CheckCircle2 className="h-5 w-5 shrink-0" />
+              <button
+                onClick={scrollToInstagram}
+                className="mt-3 w-full rounded-lg bg-white text-emerald-700 px-3 py-2 text-sm font-semibold hover:bg-emerald-50 transition-colors"
+              >
+                {promoT('sticky.openDetails')}
+              </button>
             </div>
+          ) : (
             <button
-              onClick={scrollToInstagram}
-              className="mt-3 w-full rounded-lg bg-white text-emerald-700 px-3 py-2 text-sm font-semibold hover:bg-emerald-50 transition-colors"
+              onClick={() => setIsBadgeFabExpanded(true)}
+              className="h-12 w-12 rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 shadow-lg flex items-center justify-center hover:scale-110 transition-transform"
+              aria-label="Show promo badge"
             >
-              {promoT('sticky.openDetails')}
+              <Sparkles className="h-5 w-5 text-white" />
             </button>
-          </div>
+          )}
         </div>
       )}
       <SEOHead
