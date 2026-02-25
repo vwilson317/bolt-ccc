@@ -67,7 +67,6 @@
     "password": "Mot de passe",
     "signIn": "Se Connecter"
   },
-
   "photos": {
     "title": "Galeries Photos",
     "description": "Parcourez nos galeries photos sélectionnées avec les meilleures images de nos événements. Chaque photo dans nos galeries est également disponible dans notre archive complète.",
@@ -208,6 +207,42 @@
       "location": "Rio de Janeiro, RJ",
       "instagram": "Instagram",
       "whatsapp": "WhatsApp"
+    },
+    "promo": {
+      "banner": {
+        "activeMessage": "La promo de Ty est active pour cette visite. Suivez",
+        "openOffer": "Ouvrir l'offre promo"
+      },
+      "sticky": {
+        "badgeLabel": "BADGE SUPPORTER",
+        "activeTitle": "Le badge de réduction Ty est actif",
+        "activeDescription": "Montrez ceci à la barraca pour recevoir l'avantage.",
+        "openDetails": "Ouvrir les détails promo"
+      },
+      "card": {
+        "badge": "Offre Suivre Ty",
+        "title": "Suivez la page de barraca de Ty et réclamez votre pass réduction réutilisable",
+        "descriptionPrefix": "Faites ces 2 étapes une seule fois : suivez",
+        "descriptionSuffix": "et réclamez avec votre email ou numéro WhatsApp. La prochaine fois, saisissez simplement le même identifiant pour restaurer votre badge.",
+        "step1Button": "Étape 1 : Suivre Ty sur Instagram",
+        "step2Label": "Étape 2 : Réclamer le pass avec email ou WhatsApp",
+        "identifierPlaceholder": "vous@email.com ou +55 21 99999-0000",
+        "claimButton": "Claim Discount Pass",
+        "saving": "Enregistrement...",
+        "restoredUsing": "Restauré avec :",
+        "note": "Le follow doit être complété avant la première réclamation. Les identifiants existants se restaurent instantanément.",
+        "verifiedLabel": "SUPPORTER VÉRIFIÉ",
+        "unlockedTitle": "Badge Supporter Ty Débloqué",
+        "unlockedDescription": "Montrez ce badge à la barraca de Ty et mentionnez le code"
+      },
+      "messages": {
+        "invalidIdentifier": "Entrez un email valide ou un numéro WhatsApp valide.",
+        "restored": "Bon retour. Votre badge de réduction Ty a été restauré.",
+        "followFirst": "Suivez @thai.82ipanema d'abord, puis réclamez votre pass.",
+        "claimedFallback": "Pass réduction réclamé sur cet appareil. La synchronisation complète sera faite quand la connexion sera disponible.",
+        "claimed": "Pass réduction réclamé. Utilisez cet identifiant la prochaine fois pour restaurer instantanément.",
+        "genericError": "Impossible de réclamer le pass pour le moment. Veuillez réessayer."
+      }
     }
   },
   "about": {
@@ -372,9 +407,9 @@
       "contactInfo": "Informations de Contact",
       "phone": "Numéro de Téléphone",
       "phonePlaceholder": "Entrez votre numéro de téléphone",
-      "email": "Adresse Email",
+      "email": "Email",
       "emailPlaceholder": "Entrez votre adresse email",
-      "instagram": "Compte Instagram",
+      "instagram": "Instagram",
       "instagramPlaceholder": "@votrebarraca",
       "website": "Site Web",
       "websitePlaceholder": "https://votresite.com",
@@ -437,8 +472,6 @@
       "preferredContactMethod": "Méthode de Contact Préférée",
       "selectContactMethod": "Sélectionnez votre méthode de contact préférée",
       "whatsapp": "WhatsApp",
-      "instagram": "Instagram",
-      "email": "Email",
       "englishFluency": "Maîtrise de l'Anglais",
       "englishFluencyDescription": "Avez-vous quelqu'un dans votre équipe qui parle couramment l'anglais?",
       "englishFluencyNo": "Non",
@@ -504,7 +537,6 @@
       "fitness": "Fitness"
     }
   },
-
   "marquee": {
     "title": "Merci de vous être enregistré",
     "loading": "Chargement des barracas enregistrées..."

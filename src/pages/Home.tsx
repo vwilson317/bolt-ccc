@@ -21,6 +21,7 @@ const THAIS_PROMO_IDENTIFIER_STORAGE_KEY = 'ccc_thais_follow_identifier';
 const THAIS_INSTAGRAM_URL = 'https://instagram.com/thai.82ipanema';
 const THAIS_INSTAGRAM_HANDLE = 'thai.82ipanema';
 const THAIS_PROMO_SOURCE = 'home_instagram_section';
+const THAIS_DISCOUNT_CODE = 'TY82';
 
 const Home: React.FC = () => {
   const { t } = useTranslation();
@@ -29,7 +30,6 @@ const Home: React.FC = () => {
   const { featureFlags } = useStory();
   const [hasClickedThaisFollow, setHasClickedThaisFollow] = useState(false);
   const [hasUnlockedThaisBadge, setHasUnlockedThaisBadge] = useState(false);
-  const [hasClaimedDiscountPass, setHasClaimedDiscountPass] = useState(false);
   const [promoIdentifierInput, setPromoIdentifierInput] = useState('');
   const [claimErrorMessage, setClaimErrorMessage] = useState('');
   const [claimSuccessMessage, setClaimSuccessMessage] = useState('');
@@ -50,6 +50,7 @@ const Home: React.FC = () => {
     page_path: location.pathname,
     full_path: `${location.pathname}${location.search}`
   }), [location.pathname, location.search]);
+  const promoT = (key: string) => t(`home.promo.${key}`);
 
   // Scroll animations
   const ctaAnimation = useScrollAnimation('slideUp');
@@ -126,7 +127,6 @@ const Home: React.FC = () => {
     const savedIdentifier = window.localStorage.getItem(THAIS_PROMO_IDENTIFIER_STORAGE_KEY) || '';
     setHasUnlockedThaisBadge(isUnlocked);
     setHasClickedThaisFollow(isUnlocked);
-    setHasClaimedDiscountPass(isUnlocked);
     if (savedIdentifier) {
       setPromoIdentifierInput(savedIdentifier);
     }
@@ -155,7 +155,6 @@ const Home: React.FC = () => {
 
       setHasUnlockedThaisBadge(true);
       setHasClickedThaisFollow(true);
-      setHasClaimedDiscountPass(true);
       setRestoredIdentifier(existingClaim.identifier_value);
       window.localStorage.setItem(THAIS_PROMO_STORAGE_KEY, 'true');
 
@@ -228,7 +227,7 @@ const Home: React.FC = () => {
 
     const normalized = PromoClaimService.normalizeIdentifier(promoIdentifierInput);
     if (!normalized) {
-      setClaimErrorMessage('Enter a valid email or WhatsApp phone number.');
+      setClaimErrorMessage(promoT('messages.invalidIdentifier'));
       trackEvent('thais_claim_invalid_identifier', {
         ...thaisPromoTrackingContext
       });
@@ -251,7 +250,6 @@ const Home: React.FC = () => {
         await PromoClaimService.markLastClaimed(THAIS_PROMO_QUERY_VALUE, promoIdentifierInput);
         setHasUnlockedThaisBadge(true);
         setHasClickedThaisFollow(true);
-        setHasClaimedDiscountPass(true);
         setPromoIdentifierInput(existingClaim.identifier_value);
         setRestoredIdentifier(existingClaim.identifier_value);
         window.localStorage.setItem(THAIS_PROMO_STORAGE_KEY, 'true');
@@ -263,7 +261,7 @@ const Home: React.FC = () => {
           identifier_type: existingClaim.identifier_type
         });
 
-        setClaimSuccessMessage('Welcome back. Your Ty discount badge has been restored.');
+        setClaimSuccessMessage(promoT('messages.restored'));
         return;
       }
 
@@ -273,7 +271,7 @@ const Home: React.FC = () => {
           block_reason: 'follow_step_not_completed',
           identifier_type: normalized.type
         });
-        setClaimErrorMessage(`Follow @${THAIS_INSTAGRAM_HANDLE} first, then claim your pass.`);
+        setClaimErrorMessage(promoT('messages.followFirst'));
         return;
       }
 
@@ -291,12 +289,19 @@ const Home: React.FC = () => {
       );
 
       if (!claimResult.claim?.badge_unlocked) {
-        setClaimErrorMessage('Could not save your pass right now. Please try again.');
+        // Keep the user flow moving even if persistence is unavailable.
+        setHasUnlockedThaisBadge(true);
+        window.localStorage.setItem(THAIS_PROMO_STORAGE_KEY, 'true');
+        window.localStorage.setItem(THAIS_PROMO_IDENTIFIER_STORAGE_KEY, promoIdentifierInput.trim());
+        setClaimSuccessMessage(promoT('messages.claimedFallback'));
+        trackEvent('thais_claim_local_fallback', {
+          ...thaisPromoTrackingContext,
+          identifier_type: normalized.type
+        });
         return;
       }
 
       setHasUnlockedThaisBadge(true);
-      setHasClaimedDiscountPass(true);
       setPromoIdentifierInput(claimResult.claim.identifier_value);
       window.localStorage.setItem(THAIS_PROMO_STORAGE_KEY, 'true');
       window.localStorage.setItem(THAIS_PROMO_IDENTIFIER_STORAGE_KEY, claimResult.claim.identifier_value);
@@ -320,7 +325,10 @@ const Home: React.FC = () => {
         unlock_status: claimResult.wasExisting ? 'existing_record_unlocked' : 'new_unlock'
       });
 
-      setClaimSuccessMessage('Discount pass claimed. Use this identifier next time to restore instantly.');
+      setClaimSuccessMessage(promoT('messages.claimed'));
+    } catch (error) {
+      console.error('Error claiming discount pass:', error);
+      setClaimErrorMessage(promoT('messages.genericError'));
     } finally {
       setIsClaimSubmitting(false);
     }
@@ -335,10 +343,10 @@ const Home: React.FC = () => {
               <div>
                 <div className="inline-flex items-center rounded-full bg-white/20 px-2.5 py-1 text-[11px] font-semibold tracking-wide">
                   <Sparkles className="mr-1.5 h-3.5 w-3.5" />
-                  SUPPORTER BADGE
+                  {promoT('sticky.badgeLabel')}
                 </div>
-                <p className="mt-2 text-sm font-semibold">Thais discount badge is active</p>
-                <p className="text-xs text-emerald-50">Show this at the barraca for the promo benefit.</p>
+                <p className="mt-2 text-sm font-semibold">{promoT('sticky.activeTitle')}</p>
+                <p className="text-xs text-emerald-50">{promoT('sticky.activeDescription')}</p>
               </div>
               <CheckCircle2 className="h-5 w-5 shrink-0" />
             </div>
@@ -346,7 +354,7 @@ const Home: React.FC = () => {
               onClick={scrollToInstagram}
               className="mt-3 w-full rounded-lg bg-white text-emerald-700 px-3 py-2 text-sm font-semibold hover:bg-emerald-50 transition-colors"
             >
-              Open Promo Details
+              {promoT('sticky.openDetails')}
             </button>
           </div>
         </div>
@@ -376,13 +384,13 @@ const Home: React.FC = () => {
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
               <p className="text-sm md:text-base text-gray-900 font-medium">
-                Thais promo is active for this visit. Follow <span className="font-bold">@{THAIS_INSTAGRAM_HANDLE}</span> and unlock your supporter badge discount.
+                {promoT('banner.activeMessage')} <span className="font-bold">@{THAIS_INSTAGRAM_HANDLE}</span>.
               </p>
               <button
                 onClick={scrollToInstagram}
-                className="inline-flex items-center justify-center bg-gray-900 text-white px-4 py-2 rounded-lg font-semibold hover:bg-gray-800 transition-colors"
+                className="inline-flex items-center justify-center bg-gradient-to-r from-pink-500 to-purple-600 text-white px-4 py-2 rounded-lg font-semibold hover:from-pink-600 hover:to-purple-700 transition-all"
               >
-                Open Promo Offer
+                {promoT('banner.openOffer')}
               </button>
             </div>
           </div>
@@ -538,13 +546,13 @@ const Home: React.FC = () => {
               <div id="ty-promo-offer" className="mb-8 rounded-2xl border border-amber-200 bg-gradient-to-r from-amber-50 via-white to-rose-50 p-6 text-left shadow-sm">
                 <div className="mb-4 inline-flex items-center rounded-full bg-amber-100 px-3 py-1 text-sm font-semibold text-amber-800">
                   <Gift className="mr-2 h-4 w-4" />
-                  Thais Follow Offer
+                  {promoT('card.badge')}
                 </div>
                 <h3 className="text-2xl font-bold text-gray-900">
-                  Follow Ty&apos;s barraca page and claim your reusable discount pass
+                  {promoT('card.title')}
                 </h3>
                 <p className="mt-2 text-gray-700">
-                  Do these 2 steps once: follow <span className="font-semibold">@{THAIS_INSTAGRAM_HANDLE}</span> and claim with your email or WhatsApp number. Next time, just enter the same identifier to restore your badge.
+                  {promoT('card.descriptionPrefix')} <span className="font-semibold">@{THAIS_INSTAGRAM_HANDLE}</span> {promoT('card.descriptionSuffix')}
                 </p>
                 <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
                   <button
@@ -552,18 +560,18 @@ const Home: React.FC = () => {
                     className="bg-gradient-to-r from-pink-500 to-purple-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-pink-600 hover:to-purple-700 transition-all duration-200 shadow-lg flex items-center justify-center"
                   >
                     <Instagram className="mr-2 h-5 w-5" strokeWidth={1.5} />
-                    Step 1: Follow Ty on Instagram
+                    {promoT('card.step1Button')}
                   </button>
                   <div className="sm:col-span-2">
                     <label className="mb-2 block text-sm font-semibold text-gray-700">
-                      Step 2: Claim pass with email or WhatsApp number
+                      {promoT('card.step2Label')}
                     </label>
                     <div className="flex flex-col gap-3 sm:flex-row">
                       <input
                         type="text"
                         value={promoIdentifierInput}
                         onChange={(event) => setPromoIdentifierInput(event.target.value)}
-                        placeholder="you@email.com or +55 21 99999-0000"
+                        placeholder={promoT('card.identifierPlaceholder')}
                         className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-gray-800 placeholder:text-gray-400 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-100"
                       />
                       <button
@@ -571,7 +579,7 @@ const Home: React.FC = () => {
                         disabled={isClaimSubmitting}
                         className="bg-white text-gray-800 px-6 py-3 rounded-xl font-semibold border-2 border-gray-200 hover:bg-gray-50 transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-50"
                       >
-                        {isClaimSubmitting ? 'Saving...' : hasClaimedDiscountPass ? 'Restore / Reconfirm Pass' : 'Claim Ty Discount Pass'}
+                        {isClaimSubmitting ? promoT('card.saving') : promoT('card.claimButton')}
                       </button>
                     </div>
                     {claimErrorMessage && (
@@ -584,11 +592,11 @@ const Home: React.FC = () => {
                 </div>
                 {restoredIdentifier && (
                   <p className="mt-3 text-sm text-emerald-700">
-                    Restored using: <span className="font-semibold">{restoredIdentifier}</span>
+                    {promoT('card.restoredUsing')} <span className="font-semibold">{restoredIdentifier}</span>
                   </p>
                 )}
                 <div className="mt-3 text-xs text-gray-500">
-                  Follow must be completed before first-time claim. Existing claim identifiers restore instantly.
+                  {promoT('card.note')}
                 </div>
                 {hasUnlockedThaisBadge && (
                   <div className="mt-5 relative overflow-hidden rounded-2xl border border-emerald-200/70 bg-gradient-to-br from-emerald-50 via-white to-teal-50 p-5 shadow-md">
@@ -598,14 +606,14 @@ const Home: React.FC = () => {
                       <div>
                         <div className="inline-flex items-center rounded-full border border-emerald-300 bg-white/80 px-3 py-1 text-xs font-semibold tracking-wide text-emerald-700">
                           <Sparkles className="mr-1.5 h-3.5 w-3.5" />
-                          VERIFIED SUPPORTER
+                          {promoT('card.verifiedLabel')}
                         </div>
                         <div className="mt-2 flex items-center text-emerald-900 font-bold text-lg">
                           <CheckCircle2 className="mr-2 h-5 w-5" />
-                          Ty Supporter Badge Unlocked
+                          {promoT('card.unlockedTitle')}
                         </div>
                         <p className="mt-1 text-sm text-emerald-800">
-                          Show this badge at Ty&apos;s barraca for the member discount.
+                          {promoT('card.unlockedDescription')} <span className="font-semibold">{THAIS_DISCOUNT_CODE}</span>.
                         </p>
                       </div>
                       <div className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 px-4 py-3 text-white text-sm font-semibold shadow-lg">
