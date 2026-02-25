@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
-import { ArrowRight, MapPin, Users, Calendar, Bell, Gift, Instagram } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
+import { ArrowRight, MapPin, Users, Calendar, Bell, Gift, Instagram, CheckCircle2 } from 'lucide-react';
 import HeroCarousel from '../components/HeroCarousel';
 import WeatherMarquee from '../components/WeatherMarquee';
 import RegistrationMarquee from '../components/RegistrationMarquee';
@@ -13,15 +13,27 @@ import SEOHead from '../components/SEOHead';
 import { useApp } from '../contexts/AppContext';
 import { useStory } from '../contexts/StoryContext';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
+import { trackEvent } from '../services/posthogAnalyticsService';
+
+const THAIS_PROMO_QUERY_VALUE = 'thais-follow';
+const THAIS_PROMO_STORAGE_KEY = 'ccc_thais_follow_badge_unlocked';
+const THAIS_INSTAGRAM_URL = 'https://instagram.com/thai.82ipanema';
 
 const Home: React.FC = () => {
   const { t } = useTranslation();
+  const location = useLocation();
   const { barracas } = useApp();
   const { featureFlags } = useStory();
+  const [hasClickedThaisFollow, setHasClickedThaisFollow] = useState(false);
+  const [hasUnlockedThaisBadge, setHasUnlockedThaisBadge] = useState(false);
   const projectUrl =
     typeof window !== 'undefined'
       ? `${window.location.origin}/projects/carioca-coastal-club`
       : 'https://cariocacoastalclub.com/projects/carioca-coastal-club';
+  const isThaisPromoActive = useMemo(() => {
+    const params = new URLSearchParams(location.search);
+    return params.get('promo') === THAIS_PROMO_QUERY_VALUE;
+  }, [location.search]);
 
   // Scroll animations
   const ctaAnimation = useScrollAnimation('slideUp');
@@ -77,7 +89,60 @@ const Home: React.FC = () => {
     }
   };
 
-    return (
+  useEffect(() => {
+    if (!isThaisPromoActive || typeof window === 'undefined') {
+      return;
+    }
+
+    const isUnlocked = window.localStorage.getItem(THAIS_PROMO_STORAGE_KEY) === 'true';
+    setHasUnlockedThaisBadge(isUnlocked);
+    setHasClickedThaisFollow(isUnlocked);
+
+    trackEvent('promo_landing_viewed', {
+      promo_id: THAIS_PROMO_QUERY_VALUE,
+      source: 'home_instagram_section'
+    });
+  }, [isThaisPromoActive]);
+
+  const handleThaisFollowClick = () => {
+    setHasClickedThaisFollow(true);
+    window.open(THAIS_INSTAGRAM_URL, '_blank', 'noopener,noreferrer');
+
+    if (window.gtag) {
+      window.gtag('event', 'thais_instagram_clicked', {
+        event_category: 'Social',
+        event_label: 'Thais Promo'
+      });
+    }
+
+    trackEvent('thais_instagram_clicked', {
+      promo_id: THAIS_PROMO_QUERY_VALUE,
+      source: 'home_instagram_section'
+    });
+  };
+
+  const handleUnlockThaisBadge = () => {
+    if (!hasClickedThaisFollow) {
+      return;
+    }
+
+    setHasUnlockedThaisBadge(true);
+    window.localStorage.setItem(THAIS_PROMO_STORAGE_KEY, 'true');
+
+    if (window.gtag) {
+      window.gtag('event', 'thais_badge_unlocked', {
+        event_category: 'Promo',
+        event_label: 'Thais Supporter Badge'
+      });
+    }
+
+    trackEvent('thais_badge_unlocked', {
+      promo_id: THAIS_PROMO_QUERY_VALUE,
+      source: 'home_instagram_section'
+    });
+  };
+
+  return (
     <div className="relative">
       <SEOHead
         title="Carioca Coastal Club Project - Loyalty Program & Beach Barraca Directory"
@@ -243,6 +308,47 @@ const Home: React.FC = () => {
       <section id="instagram-cta" ref={instagramAnimation.ref} className={`py-16 bg-gradient-to-br from-pink-50 via-purple-50 to-orange-50 relative z-10 ${instagramAnimation.animationClasses}`}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 md:p-12 shadow-xl border border-pink-100">
+            {isThaisPromoActive && (
+              <div className="mb-8 rounded-2xl border border-amber-200 bg-gradient-to-r from-amber-50 via-white to-rose-50 p-6 text-left shadow-sm">
+                <div className="mb-4 inline-flex items-center rounded-full bg-amber-100 px-3 py-1 text-sm font-semibold text-amber-800">
+                  <Gift className="mr-2 h-4 w-4" />
+                  Thais Follow Offer
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900">
+                  Follow Thais&apos; barraca page to unlock your discount badge
+                </h3>
+                <p className="mt-2 text-gray-700">
+                  This reward is only available through this special URL. Instagram follow is honor-based, then you confirm to unlock.
+                </p>
+                <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center">
+                  <button
+                    onClick={handleThaisFollowClick}
+                    className="bg-gradient-to-r from-pink-500 to-purple-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-pink-600 hover:to-purple-700 transition-all duration-200 shadow-lg flex items-center justify-center"
+                  >
+                    <Instagram className="mr-2 h-5 w-5" strokeWidth={1.5} />
+                    Follow Thais on Instagram
+                  </button>
+                  <button
+                    onClick={handleUnlockThaisBadge}
+                    disabled={!hasClickedThaisFollow || hasUnlockedThaisBadge}
+                    className="bg-white text-gray-800 px-6 py-3 rounded-xl font-semibold border-2 border-gray-200 hover:bg-gray-50 transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    {hasUnlockedThaisBadge ? 'Badge Unlocked' : 'I followed, unlock badge'}
+                  </button>
+                </div>
+                {hasUnlockedThaisBadge && (
+                  <div className="mt-4 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-800">
+                    <div className="flex items-center font-semibold">
+                      <CheckCircle2 className="mr-2 h-5 w-5" />
+                      Thais Supporter Badge Unlocked
+                    </div>
+                    <p className="mt-1 text-sm">
+                      Show this badge at Thais&apos; barraca for the promo discount.
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               {t('home.instagram.title')}
             </h2>
