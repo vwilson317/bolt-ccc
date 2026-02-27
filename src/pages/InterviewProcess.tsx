@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { CheckCircle2, Handshake, MessageSquare, Target, ClipboardCheck } from 'lucide-react';
 import SEOHead from '../components/SEOHead';
+import { trackEvent } from '../services/posthogAnalyticsService';
 
 const processSteps = [
   {
@@ -31,6 +32,27 @@ const processSteps = [
 ];
 
 const InterviewProcess: React.FC = () => {
+  useEffect(() => {
+    trackEvent('interview_process_page_viewed', {
+      page_path: '/interview-process',
+      process_step_count: processSteps.length
+    });
+  }, []);
+
+  const handleStartInterviewClick = () => {
+    trackEvent('interview_process_start_clicked', {
+      page_path: '/interview-process'
+    });
+  };
+
+  const handleResourceClick = () => {
+    trackEvent('interview_resource_clicked', {
+      page_path: '/interview-process',
+      resource_name: 'mundo_lingo_rio',
+      resource_url: 'https://mundolingo.org/Rio-de-Janeiro'
+    });
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 pt-16">
       <SEOHead
@@ -109,6 +131,7 @@ const InterviewProcess: React.FC = () => {
             </p>
             <a
               href="https://wa.me/16789826137?text=Hi%20KRL%20Closet%20Club%2C%20I%20want%20to%20start%20the%20interview%20process."
+              onClick={handleStartInterviewClick}
               className="inline-flex items-center justify-center rounded-xl bg-beach-600 hover:bg-beach-700 text-white font-semibold px-5 py-3 transition-colors duration-200"
             >
               Start Interview Process
@@ -124,6 +147,7 @@ const InterviewProcess: React.FC = () => {
                   href="https://mundolingo.org/Rio-de-Janeiro"
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={handleResourceClick}
                   className="text-beach-700 hover:text-beach-800 underline"
                 >
                   https://mundolingo.org/Rio-de-Janeiro

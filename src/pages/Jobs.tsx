@@ -1,6 +1,7 @@
-import React from 'react';
-import { Briefcase, GraduationCap, Instagram, Users, CheckCircle2, QrCode } from 'lucide-react';
+import React, { useEffect } from 'react';
+import { Briefcase, GraduationCap, Instagram, Users, CheckCircle2, QrCode, Code2 } from 'lucide-react';
 import SEOHead from '../components/SEOHead';
+import { trackEvent } from '../services/posthogAnalyticsService';
 
 type JobListing = {
   title: string;
@@ -100,10 +101,45 @@ const jobs: JobListing[] = [
     applyLink:
       'https://wa.me/16789826137?text=Hi%20KRL%20Closet%20Club%2C%20I%20want%20to%20apply%20for%20the%20Street%20Activation%20%26%20QR%20Outreach%20Ambassador%20role.',
     applyLabel: 'Apply for QR Outreach'
+  },
+  {
+    title: 'Software Engineering Intern (Mission AI)',
+    icon: Code2,
+    commitment: 'Part-time, remote-first with flexible schedule',
+    pay: 'Entry-level stipend',
+    summary:
+      'Support Mission AI and product development through coding tasks, small feature builds, bug fixes, and implementation support across the platform.',
+    responsibilities: [
+      'Work on practical coding tasks with clear guidance from the team',
+      'Help ship small features and fixes in the web product',
+      'Document progress and communicate blockers early'
+    ],
+    idealFor: [
+      'No prior professional experience required',
+      'General interest in software engineering and willingness to learn fast',
+      'Must have access to your own computer and be a trustworthy, reliable person'
+    ],
+    applyLink:
+      'https://wa.me/16789826137?text=Hi%20KRL%20Closet%20Club%2C%20I%20want%20to%20apply%20for%20the%20Software%20Engineering%20Intern%20(Mission%20AI)%20role.',
+    applyLabel: 'Apply for Engineering Intern'
   }
 ];
 
 const Jobs: React.FC = () => {
+  useEffect(() => {
+    trackEvent('jobs_page_viewed', {
+      page_path: '/jobs',
+      role_count: jobs.length
+    });
+  }, []);
+
+  const handleApplyClick = (jobTitle: string) => {
+    trackEvent('jobs_apply_clicked', {
+      page_path: '/jobs',
+      role_title: jobTitle
+    });
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 pt-16">
       <SEOHead
@@ -183,6 +219,7 @@ const Jobs: React.FC = () => {
 
                   <a
                     href={job.applyLink}
+                    onClick={() => handleApplyClick(job.title)}
                     className="mt-6 inline-flex items-center justify-center w-full rounded-xl bg-beach-600 hover:bg-beach-700 text-white font-semibold py-3 transition-colors duration-200"
                   >
                     {job.applyLabel}
