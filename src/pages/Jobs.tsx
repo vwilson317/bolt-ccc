@@ -1,5 +1,5 @@
 import React from 'react';
-import { Briefcase, GraduationCap, Instagram, Users, CheckCircle2 } from 'lucide-react';
+import { Briefcase, GraduationCap, Instagram, Users, CheckCircle2, QrCode } from 'lucide-react';
 import SEOHead from '../components/SEOHead';
 
 type JobListing = {
@@ -28,12 +28,12 @@ const jobs: JobListing[] = [
       'Support outreach and coordination with partners'
     ],
     idealFor: [
-      'University students in Rio who are organized and proactive',
+      'Rio-based candidates; Brazilian background and university enrollment are strong advantages',
       'Strong written communication in Portuguese; English is a plus',
       'Comfortable working in a startup-style environment'
     ],
     applyLink:
-      'mailto:jobs@krlclosetclub.com?subject=Executive%20Assistant%20Application&body=Hi%20KRL%20Closet%20Club%2C%0A%0AI%20am%20applying%20for%20the%20Executive%20Assistant%20role.%0A%0AName%3A%0AUniversity%3A%0AWhatsApp%3A%0A%0AImmediate%20assignment%20submission%3A%0A',
+      'https://wa.me/16789826137?text=Hi%20KRL%20Closet%20Club%2C%20I%20want%20to%20apply%20for%20the%20Executive%20Assistant%20role.',
     applyLabel: 'Apply for Executive Assistant'
   },
   {
@@ -49,12 +49,13 @@ const jobs: JobListing[] = [
       'Track follower growth, saves, shares, and campaign outcomes'
     ],
     idealFor: [
+      'Rio-based candidates; Brazilian background and university enrollment are strong advantages',
       'Students who already create content for Instagram or Reels',
       'Strong visual taste and reliable posting habits',
       'Comfortable talking to people and filming in public'
     ],
     applyLink:
-      'mailto:jobs@krlclosetclub.com?subject=Instagram%20Marketing%20Application&body=Hi%20KRL%20Closet%20Club%2C%0A%0AI%20am%20applying%20for%20the%20Instagram%20Marketing%20role.%0A%0AName%3A%0AUniversity%3A%0AInstagram%20handle%3A%0AWhatsApp%3A%0A%0APortfolio%20or%20sample%20links%3A%0A',
+      'https://wa.me/16789826137?text=Hi%20KRL%20Closet%20Club%2C%20I%20want%20to%20apply%20for%20the%20Instagram%20Marketing%20role.',
     applyLabel: 'Apply for Instagram Marketing'
   },
   {
@@ -70,13 +71,35 @@ const jobs: JobListing[] = [
       'Collect feedback from operators to improve our service'
     ],
     idealFor: [
+      'Rio-based candidates; Brazilian background and university enrollment are strong advantages',
       'Students who enjoy in-person communication and sales-style outreach',
       'Confident, friendly, and resilient with follow-ups',
       'Portuguese fluency required; English helpful for mixed audiences'
     ],
     applyLink:
-      'mailto:jobs@krlclosetclub.com?subject=Customer%20Relationships%20Application&body=Hi%20KRL%20Closet%20Club%2C%0A%0AI%20am%20applying%20for%20the%20Customer%20Relationships%20role.%0A%0AName%3A%0AUniversity%3A%0ANeighborhood%3A%0AWhatsApp%3A%0A%0ABrief%20note%20on%20why%20I%20fit%20this%20role%3A%0A',
+      'https://wa.me/16789826137?text=Hi%20KRL%20Closet%20Club%2C%20I%20want%20to%20apply%20for%20the%20Customer%20Relationships%20role.',
     applyLabel: 'Apply for Customer Relationships'
+  },
+  {
+    title: 'Street Activation & QR Outreach Ambassador',
+    icon: QrCode,
+    commitment: 'Part-time, in-person activation shifts (Rio beaches)',
+    pay: 'Entry-level stipend + performance incentives',
+    summary:
+      'Engage people in high-traffic beach areas, invite them to scan the QR code, and represent the KRL Closet Club mission with confidence and energy.',
+    responsibilities: [
+      'Approach beachgoers and explain the value of scanning the KRL Closet Club QR code',
+      'Share the brand mission clearly and answer common questions',
+      'Track daily scan activity and feedback from conversations'
+    ],
+    idealFor: [
+      'Rio-based candidates; Brazilian background and university enrollment are strong advantages',
+      'Comfortable speaking with new people and maintaining positive energy',
+      'Reliable, coachable, and motivated by measurable outreach results'
+    ],
+    applyLink:
+      'https://wa.me/16789826137?text=Hi%20KRL%20Closet%20Club%2C%20I%20want%20to%20apply%20for%20the%20Street%20Activation%20%26%20QR%20Outreach%20Ambassador%20role.',
+    applyLabel: 'Apply for QR Outreach'
   }
 ];
 
@@ -94,13 +117,14 @@ const Jobs: React.FC = () => {
             <GraduationCap className="h-4 w-4" />
             Rio opportunities for university students
           </p>
-          <h1 className="text-3xl md:text-5xl font-bold leading-tight max-w-4xl">
-            Join KRL Closet Club and build real work experience while earning income
-          </h1>
+          <h1 className="text-3xl md:text-5xl font-bold leading-tight max-w-4xl">Join CC club</h1>
           <p className="text-white/90 text-base md:text-lg mt-5 max-w-3xl">
-            We are hiring motivated young people in Rio. These are entry-level roles with practical
-            responsibilities, mentorship, and flexible schedules designed for student life.
+            We are hiring motivated young people in Rio. Every role on this page is entry-level,
+            with practical responsibilities, mentorship, and flexible schedules designed for student life.
           </p>
+          <div className="mt-6 max-w-3xl rounded-xl border border-white/25 bg-white/10 px-4 py-3 text-sm md:text-base text-white/95">
+            We especially want to hear from candidates who live in Rio. Being Brazilian and currently in university is a strong plus for these openings.
+          </div>
         </div>
       </section>
 
@@ -115,10 +139,18 @@ const Jobs: React.FC = () => {
                     <div className="w-11 h-11 rounded-xl bg-beach-50 text-beach-700 flex items-center justify-center">
                       <Icon className="h-6 w-6" />
                     </div>
-                    <span className="text-xs font-semibold text-gray-600 bg-gray-100 rounded-full px-3 py-1">
-                      {job.commitment}
-                    </span>
+                    <div className="flex flex-wrap items-center justify-end gap-2">
+                      <span className="text-xs font-semibold text-beach-700 bg-beach-50 rounded-full px-3 py-1">
+                        Entry-level
+                      </span>
+                      <span className="text-xs font-semibold text-gray-600 bg-gray-100 rounded-full px-3 py-1">
+                        {job.commitment}
+                      </span>
+                    </div>
                   </div>
+                  <p className="text-xs uppercase tracking-wide text-gray-500 -mt-2 mb-4">
+                    Rio-based applicants preferred
+                  </p>
 
                   <h2 className="text-xl font-bold text-gray-900 mb-2">{job.title}</h2>
                   <p className="text-sm font-medium text-beach-700 mb-3">{job.pay}</p>

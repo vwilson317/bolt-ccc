@@ -18,6 +18,7 @@ import CommunityHome from './pages/CommunityHome';
 import Discover from './pages/Discover';
 import About from './pages/About';
 import Jobs from './pages/Jobs';
+import InterviewProcess from './pages/InterviewProcess';
 import BarracaDetailPage from './pages/BarracaDetail';
 import Photos from './pages/Photos';
 import PhotoGallery from './pages/PhotoGallery';
@@ -60,6 +61,7 @@ function AppContent() {
           <Route path="/discover" element={<Discover />} />
           <Route path="/about" element={<About />} />
           <Route path="/jobs" element={<Jobs />} />
+          <Route path="/interview-process" element={<InterviewProcess />} />
           <Route path="/photos" element={<Photos />} />
           <Route path="/photos/:dateId" element={<PhotoGallery />} />
           <Route path="/barraca/:id" element={<BarracaDetailPage />} />

@@ -40,12 +40,13 @@ const Header: React.FC = () => {
   const isPhotosDetailPage = location.pathname.startsWith('/photos/');
   const isDiscoverPage = location.pathname === '/discover';
   const isJobsPage = location.pathname === '/jobs';
+  const isInterviewProcessPage = location.pathname === '/interview-process';
   const isRegisterBarracaPage = location.pathname === '/registration' || location.pathname.startsWith('/registration/');
   
   // Keep legacy carousel page behavior while using a solid header on the new root landing page.
   const headerHeight = 64; // h-16 = 64px
   const useSolidHeader = isLoginPage || isBarracaDetailPage || isMenuOpen || isRegisterPage || isPhotosPage || isPhotosDetailPage  ||
-  isDiscoverPage || isJobsPage || isRegisterBarracaPage || isCommunityHomePage ||
+  isDiscoverPage || isJobsPage || isInterviewProcessPage || isRegisterBarracaPage || isCommunityHomePage ||
     ((isLegacyHomePage || isAboutPage) ? scrollY + headerHeight > heroHeight : isScrolled);
 
   const languages = [
@@ -131,6 +132,20 @@ const Header: React.FC = () => {
               }`}
             >
               {t('nav.jobs', 'Jobs')}
+            </Link>
+            <Link
+              to="/interview-process"
+              className={`font-medium transition-colors duration-200 ${
+                isActive('/interview-process')
+                  ? useSolidHeader
+                    ? 'text-beach-600 border-b-2 border-beach-600 pb-1'
+                    : 'text-white border-b-2 border-white pb-1'
+                  : useSolidHeader
+                    ? 'text-gray-700 hover:text-beach-600'
+                    : 'text-white/90 hover:text-white'
+              }`}
+            >
+              {t('nav.interviewProcess', 'Interview Process')}
             </Link>
             <Link
               to="/about"
@@ -276,6 +291,17 @@ const Header: React.FC = () => {
                 }`}
               >
                 {t('nav.jobs', 'Jobs')}
+              </Link>
+              <Link
+                to="/interview-process"
+                onClick={() => setIsMenuOpen(false)}
+                className={`font-medium transition-colors duration-200 ${
+                  isActive('/interview-process')
+                    ? useSolidHeader ? 'text-beach-600' : 'text-white'
+                    : useSolidHeader ? 'text-gray-700' : 'text-white/90'
+                }`}
+              >
+                {t('nav.interviewProcess', 'Interview Process')}
               </Link>
               <Link
                 to="/about"
