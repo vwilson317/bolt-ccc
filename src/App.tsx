@@ -1,5 +1,5 @@
 import React, { lazy, Suspense } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { HelmetProvider } from 'react-helmet-async';
 import { AppProvider, useApp } from './contexts/AppContext';
@@ -18,6 +18,7 @@ const BarracaDetailPage = lazy(() => import('./pages/BarracaDetail'));
 const Photos = lazy(() => import('./pages/Photos'));
 const PhotoGallery = lazy(() => import('./pages/PhotoGallery'));
 const BarracaRegister = lazy(() => import('./pages/BarracaRegister'));
+const LanguageExchangeFunnel = lazy(() => import('./pages/LanguageExchangeFunnel'));
 
 // Lazy-load heavy overlay components that are not needed at initial paint
 const StoryViewer = lazy(() => import('./components/StoryViewer'));
@@ -42,6 +43,8 @@ const isBarracaSubdomain =
 
 function AppContent() {
   const { selectedBarraca, closeBarracaModal, weatherOverride, isInitialLoading } = useApp();
+  const location = useLocation();
+  const isMinimalRoute = location.pathname === '/language-exchange';
   
   // Initialize PostHog analytics
   usePostHogAnalytics();
@@ -53,7 +56,7 @@ function AppContent() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header />
+      {!isMinimalRoute && <Header />}
       <main>
         <Suspense fallback={<LoadingPage />}>
           <Routes>
@@ -65,6 +68,7 @@ function AppContent() {
             <Route path="/photos/:dateId" element={<PhotoGallery />} />
             <Route path="/barraca/:id" element={<BarracaDetailPage />} />
             <Route path="/register" element={<BarracaRegister />} />
+            <Route path="/language-exchange" element={<LanguageExchangeFunnel />} />
             {/* <Route path="/translation-demo" element={<TranslationDemo />} /> */}
           </Routes>
         </Suspense>
