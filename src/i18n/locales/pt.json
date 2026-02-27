@@ -523,6 +523,16 @@
     "title": "Mantenha-se Conectado",
     "description": "Receba notificações sobre novos eventos e promoções"
   },
+  "languageExchangeFunnel": {
+    "seo": {
+      "title": "Intercambio Internacional de Idiomas | Sabados no Rio",
+      "description": "Participe do nosso intercambio internacional de idiomas todos os sabados e receba atualizacoes semanais no grupo do WhatsApp."
+    },
+    "eyebrow": "Sabados no Rio",
+    "title": "Intercambio Internacional de Idiomas",
+    "description": "Um encontro semanal simples para praticar idiomas, conhecer novas pessoas e criar comunidade. Entre no grupo do WhatsApp para receber o local exato e as atualizacoes da semana.",
+    "cta": "Entrar no Grupo do WhatsApp"
+  },
   "communityHome": {
     "seo": {
       "title": "Carioca Coastal Club - Comunidade Build in Public",

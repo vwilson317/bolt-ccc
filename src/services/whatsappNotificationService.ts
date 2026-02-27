@@ -1,5 +1,10 @@
 import { BarracaRegistration } from '../types';
 
+const getCurrentLanguage = (): string => {
+  if (typeof navigator === 'undefined') return 'en';
+  return navigator.language || 'en';
+};
+
 export class WhatsAppNotificationService {
   /**
    * Send WhatsApp notification for new barraca registration
@@ -18,7 +23,8 @@ export class WhatsAppNotificationService {
         },
         body: JSON.stringify({
           registration,
-          adminPhoneNumber
+          adminPhoneNumber,
+          language: getCurrentLanguage()
         }),
       });
 
@@ -60,7 +66,8 @@ export class WhatsAppNotificationService {
         body: JSON.stringify({
           registration,
           adminPhoneNumber,
-          customMessage: statusMessage
+          customMessage: statusMessage,
+          language: getCurrentLanguage()
         }),
       });
 
