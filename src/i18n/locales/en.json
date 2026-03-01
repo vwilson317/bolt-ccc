@@ -61,8 +61,6 @@
     "notPartnered": "Not Partnered",
     "notPartneredMessage": "This barraca is not partnered with us. Only basic information is available.",
     "limitedInfo": "Limited info",
-    "open": "Open",
-    "closed": "Closed",
     "undetermined": "Undetermined"
   },
   "login": {
@@ -71,7 +69,6 @@
     "password": "Password",
     "signIn": "Sign In"
   },
-
   "photos": {
     "title": "Photo Galleries",
     "description": "Browse our curated photo galleries featuring the best shots from our events. Every photo in our galleries is also available in our complete archive.",
@@ -414,9 +411,9 @@
       "contactInfo": "Contact Information",
       "phone": "Phone Number",
       "phonePlaceholder": "Enter your phone number",
-      "email": "Email Address",
+      "email": "Email",
       "emailPlaceholder": "Enter your email address",
-      "instagram": "Instagram Handle",
+      "instagram": "Instagram",
       "instagramPlaceholder": "@yourbarraca",
       "website": "Website",
       "websitePlaceholder": "https://yourwebsite.com",
@@ -479,8 +476,6 @@
       "preferredContactMethod": "Preferred Contact Method",
       "selectContactMethod": "Select your preferred contact method",
       "whatsapp": "WhatsApp",
-      "instagram": "Instagram",
-      "email": "Email",
       "englishFluency": "English Fluency",
       "englishFluencyDescription": "Do you have someone on staff who's fluent in English?",
       "englishFluencyNo": "No",
@@ -546,7 +541,6 @@
       "fitness": "Fitness"
     }
   },
-
   "marquee": {
     "title": "Thank you for registering",
     "loading": "Loading registered barracas..."
@@ -590,6 +584,121 @@
       "carioca-coastal-club": {
         "description": "The original beach barraca discovery and loyalty experience, now featured as project #1.",
         "cta": "View Project"
+      }
+    }
+  },
+  "jobsPage": {
+    "seo": {
+      "title": "Jobs | KRL Closet Club",
+      "description": "Open opportunities at KRL Closet Club in Rio de Janeiro for university students and early-career talent."
+    },
+    "hero": {
+      "badge": "Rio opportunities for university students",
+      "title": "Join CC club",
+      "description": "We are hiring motivated young people in Rio. Every role on this page is entry-level, with practical responsibilities, mentorship, and flexible schedules designed for student life.",
+      "highlight": "We especially want to hear from candidates who live in Rio. Being Brazilian and currently in university is a strong plus for these openings."
+    },
+    "labels": {
+      "entryLevel": "Entry-level",
+      "rioPreferred": "Rio-based applicants preferred",
+      "whatYouWillDo": "What you will do",
+      "idealCandidate": "Ideal candidate"
+    },
+    "whatsapp": {
+      "intro": "Hi KRL Closet Club, I want to apply for the {{jobTitle}} role.",
+      "name": "Name",
+      "university": "University",
+      "age": "Age",
+      "interestOptional": "Interest (optional)",
+      "background": "Background"
+    },
+    "roles": {
+      "executiveAssistant": {
+        "title": "Executive Assistant to the CEO",
+        "commitment": "Part-time, flexible hours (Rio-based)",
+        "pay": "Entry-level stipend + paid trial assignment",
+        "summary": "Work directly with the founder to keep operations moving fast: scheduling, follow-ups, and execution support.",
+        "responsibilities": [
+          "Manage calendar, messages, and daily priority tracking",
+          "Create weekly action summaries and keep tasks organized",
+          "Support outreach and coordination with partners"
+        ],
+        "idealFor": [
+          "Rio-based candidates; Brazilian background and university enrollment are strong advantages",
+          "Strong written communication in Portuguese; English is a plus",
+          "Comfortable working in a startup-style environment"
+        ],
+        "applyLabel": "Apply for Executive Assistant"
+      },
+      "socialMediaAssistant": {
+        "title": "Social Media (Instagram) Marketing Assistant",
+        "commitment": "Part-time, field + remote mix",
+        "pay": "Base stipend + growth bonus based on performance",
+        "summary": "Help us grow awareness and engagement on Instagram with consistent content and local storytelling.",
+        "responsibilities": [
+          "Capture and edit short-form content at beach locations",
+          "Plan weekly posting calendar and caption drafts",
+          "Track follower growth, saves, shares, and campaign outcomes"
+        ],
+        "idealFor": [
+          "Rio-based candidates; Brazilian background and university enrollment are strong advantages",
+          "Students who already create content for Instagram or Reels",
+          "Strong visual taste and reliable posting habits",
+          "Comfortable talking to people and filming in public"
+        ],
+        "applyLabel": "Apply for Instagram Marketing"
+      },
+      "customerRelationships": {
+        "title": "Customer Relationships Representative",
+        "commitment": "Part-time, mostly in-person (Rio beaches)",
+        "pay": "Base stipend + signup bonus incentives",
+        "summary": "Meet barraca teams directly, explain KRL Closet Club offerings, and help onboard new partners.",
+        "responsibilities": [
+          "Visit barracas, build trust, and introduce partnership benefits",
+          "Support registration conversations and onboarding follow-through",
+          "Collect feedback from operators to improve our service"
+        ],
+        "idealFor": [
+          "Rio-based candidates; Brazilian background and university enrollment are strong advantages",
+          "Students who enjoy in-person communication and sales-style outreach",
+          "Confident, friendly, and resilient with follow-ups",
+          "Portuguese fluency required; English helpful for mixed audiences"
+        ],
+        "applyLabel": "Apply for Customer Relationships"
+      },
+      "streetActivation": {
+        "title": "Street Activation & QR Outreach Ambassador",
+        "commitment": "Part-time, in-person activation shifts (Rio beaches)",
+        "pay": "Entry-level stipend + performance incentives",
+        "summary": "Engage people in high-traffic beach areas, invite them to scan the QR code, and represent the KRL Closet Club mission with confidence and energy.",
+        "responsibilities": [
+          "Approach beachgoers and explain the value of scanning the KRL Closet Club QR code",
+          "Share the brand mission clearly and answer common questions",
+          "Track daily scan activity and feedback from conversations"
+        ],
+        "idealFor": [
+          "Rio-based candidates; Brazilian background and university enrollment are strong advantages",
+          "Comfortable speaking with new people and maintaining positive energy",
+          "Reliable, coachable, and motivated by measurable outreach results"
+        ],
+        "applyLabel": "Apply for QR Outreach"
+      },
+      "engineeringIntern": {
+        "title": "Software Engineering Intern (Mission AI)",
+        "commitment": "Part-time, remote-first with flexible schedule",
+        "pay": "Entry-level stipend",
+        "summary": "Support Mission AI and product development through coding tasks, small feature builds, bug fixes, and implementation support across the platform.",
+        "responsibilities": [
+          "Work on practical coding tasks with clear guidance from the team",
+          "Help ship small features and fixes in the web product",
+          "Document progress and communicate blockers early"
+        ],
+        "idealFor": [
+          "No prior professional experience required",
+          "General interest in software engineering and willingness to learn fast",
+          "Must have access to your own computer and be a trustworthy, reliable person"
+        ],
+        "applyLabel": "Apply for Engineering Intern"
       }
     }
   }

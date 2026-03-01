@@ -589,5 +589,120 @@
         "cta": "Ver Projeto"
       }
     }
+  },
+  "jobsPage": {
+    "seo": {
+      "title": "Vagas | CC Club",
+      "description": "Oportunidades abertas no CC Club no Rio de Janeiro para universitarios e talentos em inicio de carreira."
+    },
+    "hero": {
+      "badge": "Oportunidades no Rio para universitarios",
+      "title": "Junte-se ao CC club",
+      "description": "Estamos contratando jovens motivados no Rio. Todas as vagas desta pagina sao de nivel inicial, com responsabilidades praticas, mentoria e horarios flexiveis para a vida universitaria.",
+      "highlight": "Queremos especialmente candidatos que moram no Rio. Ser brasileiro e estar na universidade e um grande diferencial para essas vagas."
+    },
+    "labels": {
+      "entryLevel": "Nivel inicial",
+      "rioPreferred": "Preferencia para candidatos baseados no Rio",
+      "whatYouWillDo": "O que voce vai fazer",
+      "idealCandidate": "Candidato ideal"
+    },
+    "whatsapp": {
+      "intro": "Oi CC Club, quero me candidatar para a vaga de {{jobTitle}}.",
+      "name": "Nome",
+      "university": "Universidade",
+      "age": "Idade",
+      "interestOptional": "Interesse (opcional)",
+      "background": "Background"
+    },
+    "roles": {
+      "executiveAssistant": {
+        "title": "Assistente Executiva(o) do CEO",
+        "commitment": "Meio periodo, horarios flexiveis (base no Rio)",
+        "pay": "Bolsa inicial + tarefa teste remunerada",
+        "summary": "Trabalhe diretamente com o fundador para manter a operacao acelerada: agenda, follow-ups e suporte de execucao.",
+        "responsibilities": [
+          "Gerenciar agenda, mensagens e prioridades diarias",
+          "Criar resumos semanais de acoes e manter tarefas organizadas",
+          "Apoiar outreach e coordenacao com parceiros"
+        ],
+        "idealFor": [
+          "Candidatos baseados no Rio; ser brasileiro e estar na universidade sao fortes diferenciais",
+          "Boa comunicacao escrita em portugues; ingles e um diferencial",
+          "Confortavel em ambiente de startup"
+        ],
+        "applyLabel": "Candidatar para Assistente Executiva(o)"
+      },
+      "socialMediaAssistant": {
+        "title": "Assistente de Marketing para Redes Sociais (Instagram)",
+        "commitment": "Meio periodo, modelo misto campo + remoto",
+        "pay": "Bolsa base + bonus de crescimento por desempenho",
+        "summary": "Ajude a aumentar alcance e engajamento no Instagram com conteudo consistente e narrativa local.",
+        "responsibilities": [
+          "Captar e editar conteudo curto em locais de praia",
+          "Planejar calendario semanal de posts e rascunhos de legenda",
+          "Acompanhar crescimento, salvamentos, compartilhamentos e resultados de campanha"
+        ],
+        "idealFor": [
+          "Candidatos baseados no Rio; ser brasileiro e estar na universidade sao fortes diferenciais",
+          "Estudantes que ja criam conteudo para Instagram ou Reels",
+          "Bom senso visual e consistencia de postagem",
+          "Confortavel para conversar com pessoas e gravar em publico"
+        ],
+        "applyLabel": "Candidatar para Marketing de Instagram"
+      },
+      "customerRelationships": {
+        "title": "Representante de Relacionamento com Clientes",
+        "commitment": "Meio periodo, majoritariamente presencial (praias do Rio)",
+        "pay": "Bolsa base + incentivos por novos cadastros",
+        "summary": "Conheca equipes de barraca presencialmente, explique as ofertas do CC Club e apoie o onboarding de novos parceiros.",
+        "responsibilities": [
+          "Visitar barracas, construir confianca e apresentar beneficios da parceria",
+          "Apoiar conversas de cadastro e acompanhamento de onboarding",
+          "Coletar feedback dos operadores para melhorar o servico"
+        ],
+        "idealFor": [
+          "Candidatos baseados no Rio; ser brasileiro e estar na universidade sao fortes diferenciais",
+          "Estudantes que gostam de comunicacao presencial e abordagem comercial",
+          "Perfil confiante, amigavel e resiliente em follow-ups",
+          "Fluencia em portugues obrigatoria; ingles ajuda em publico misto"
+        ],
+        "applyLabel": "Candidatar para Relacionamento com Clientes"
+      },
+      "streetActivation": {
+        "title": "Embaixador(a) de Ativacao de Rua e Outreach com QR",
+        "commitment": "Meio periodo, turnos presenciais de ativacao (praias do Rio)",
+        "pay": "Bolsa inicial + incentivos por performance",
+        "summary": "Engaje pessoas em areas de grande movimento na praia, convide para escanear o QR code e represente a missao da CC Club com energia e confianca.",
+        "responsibilities": [
+          "Abordar frequentadores e explicar o valor de escanear o QR code da CC Club",
+          "Comunicar a missao da marca com clareza e responder duvidas comuns",
+          "Registrar atividade diaria de scans e feedback das conversas"
+        ],
+        "idealFor": [
+          "Candidatos baseados no Rio; ser brasileiro e estar na universidade sao fortes diferenciais",
+          "Confortavel para falar com pessoas novas e manter energia positiva",
+          "Confiavel, treinavel e motivado por resultados de outreach"
+        ],
+        "applyLabel": "Candidatar para Outreach com QR"
+      },
+      "engineeringIntern": {
+        "title": "Estagiario(a) de Engenharia de Software (Mission AI)",
+        "commitment": "Meio periodo, remoto com horario flexivel",
+        "pay": "Bolsa inicial",
+        "summary": "Apoie o Mission AI e o desenvolvimento de produto com tarefas de codigo, pequenas features, correcao de bugs e suporte de implementacao.",
+        "responsibilities": [
+          "Trabalhar em tarefas praticas de codigo com orientacao da equipe",
+          "Ajudar a entregar pequenas features e correcos no produto web",
+          "Documentar progresso e comunicar bloqueios cedo"
+        ],
+        "idealFor": [
+          "Nao exige experiencia profissional previa",
+          "Interesse geral em engenharia de software e vontade de aprender rapido",
+          "Precisa ter computador proprio e ser uma pessoa confiavel"
+        ],
+        "applyLabel": "Candidatar para Estagio em Engenharia"
+      }
+    }
   }
 }

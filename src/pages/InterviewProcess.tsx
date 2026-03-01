@@ -31,6 +31,16 @@ const processSteps = [
   }
 ];
 
+const interviewStartMessage = encodeURIComponent(
+  'Hi CC Club, I want to start the interview process.\n\n' +
+    'Role interested in:\n' +
+    'Name:\n' +
+    'University:\n' +
+    'Age:\n' +
+    'Interest (optional):\n' +
+    'Background:'
+);
+
 const InterviewProcess: React.FC = () => {
   useEffect(() => {
     trackEvent('interview_process_page_viewed', {
@@ -56,8 +66,8 @@ const InterviewProcess: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50 pt-16">
       <SEOHead
-        title="Interview Process | KRL Closet Club"
-        description="Learn the KRL Closet Club interview process and practical challenge centered on partnership progress."
+        title="Interview Process | CC Club"
+        description="Learn the CC Club interview process and practical challenge centered on partnership progress."
       />
 
       <section className="bg-gradient-to-br from-gray-900 via-gray-800 to-beach-900 text-white">
@@ -130,7 +140,7 @@ const InterviewProcess: React.FC = () => {
               challenge brief and success criteria.
             </p>
             <a
-              href="https://wa.me/16789826137?text=Hi%20KRL%20Closet%20Club%2C%20I%20want%20to%20start%20the%20interview%20process."
+              href={`https://wa.me/16789826137?text=${interviewStartMessage}`}
               onClick={handleStartInterviewClick}
               className="inline-flex items-center justify-center rounded-xl bg-beach-600 hover:bg-beach-700 text-white font-semibold px-5 py-3 transition-colors duration-200"
             >

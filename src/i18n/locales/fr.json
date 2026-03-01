@@ -590,5 +590,120 @@
         "cta": "Voir le Projet"
       }
     }
+  },
+  "jobsPage": {
+    "seo": {
+      "title": "Offres | CC Club",
+      "description": "Postes ouverts chez CC Club a Rio de Janeiro pour etudiants universitaires et talents en debut de carriere."
+    },
+    "hero": {
+      "badge": "Opportunites a Rio pour etudiants universitaires",
+      "title": "Rejoignez le CC club",
+      "description": "Nous recrutons des jeunes motives a Rio. Chaque poste de cette page est de niveau debutant, avec des responsabilites concretes, du mentorat et des horaires flexibles adaptes a la vie etudiante.",
+      "highlight": "Nous voulons surtout entendre les candidats qui vivent a Rio. Etre bresilien et actuellement a l universite est un fort avantage pour ces postes."
+    },
+    "labels": {
+      "entryLevel": "Niveau debutant",
+      "rioPreferred": "Candidats bases a Rio preferes",
+      "whatYouWillDo": "Vos missions",
+      "idealCandidate": "Profil ideal"
+    },
+    "whatsapp": {
+      "intro": "Bonjour CC Club, je veux postuler au poste de {{jobTitle}}.",
+      "name": "Nom",
+      "university": "Universite",
+      "age": "Age",
+      "interestOptional": "Interet (optionnel)",
+      "background": "Parcours"
+    },
+    "roles": {
+      "executiveAssistant": {
+        "title": "Assistant(e) Executif(ve) du CEO",
+        "commitment": "Temps partiel, horaires flexibles (base a Rio)",
+        "pay": "Bourse debutant + mission test remuneree",
+        "summary": "Travaillez directement avec le fondateur pour accelerer l execution: agenda, suivis et support operationnel.",
+        "responsibilities": [
+          "Gerer calendrier, messages et priorites quotidiennes",
+          "Creer des resumes d action hebdomadaires et garder les taches organisees",
+          "Soutenir l outreach et la coordination avec les partenaires"
+        ],
+        "idealFor": [
+          "Candidats bases a Rio; etre bresilien et inscrit a l universite est un fort avantage",
+          "Bonne communication ecrite en portugais; anglais apprecie",
+          "A l aise dans un environnement startup"
+        ],
+        "applyLabel": "Postuler au role Assistant Executif"
+      },
+      "socialMediaAssistant": {
+        "title": "Assistant(e) Marketing Reseaux Sociaux (Instagram)",
+        "commitment": "Temps partiel, mix terrain + remote",
+        "pay": "Bourse de base + bonus de croissance selon performance",
+        "summary": "Aidez-nous a augmenter la visibilite et l engagement sur Instagram avec un contenu regulier et un storytelling local.",
+        "responsibilities": [
+          "Capturer et monter du contenu court sur les plages",
+          "Planifier le calendrier hebdomadaire de publication et les brouillons de legende",
+          "Suivre croissance, sauvegardes, partages et resultats de campagne"
+        ],
+        "idealFor": [
+          "Candidats bases a Rio; etre bresilien et inscrit a l universite est un fort avantage",
+          "Etudiants qui creent deja du contenu pour Instagram ou Reels",
+          "Sens visuel solide et discipline de publication",
+          "A l aise pour parler aux gens et filmer en public"
+        ],
+        "applyLabel": "Postuler au role Marketing Instagram"
+      },
+      "customerRelationships": {
+        "title": "Representant(e) Relations Clients",
+        "commitment": "Temps partiel, principalement en presentiel (plages de Rio)",
+        "pay": "Bourse de base + primes sur nouvelles inscriptions",
+        "summary": "Rencontrez les equipes de barraca, presentez les offres CC Club et accompagnez l onboarding de nouveaux partenaires.",
+        "responsibilities": [
+          "Visiter les barracas, creer la confiance et presenter les avantages du partenariat",
+          "Soutenir les conversations d inscription et le suivi d onboarding",
+          "Collecter les retours des operateurs pour ameliorer le service"
+        ],
+        "idealFor": [
+          "Candidats bases a Rio; etre bresilien et inscrit a l universite est un fort avantage",
+          "Etudiants qui aiment la communication en face a face et l outreach commercial",
+          "Profil confiant, amical et resilient dans les suivis",
+          "Portugais courant requis; anglais utile pour public mixte"
+        ],
+        "applyLabel": "Postuler au role Relations Clients"
+      },
+      "streetActivation": {
+        "title": "Ambassadeur(rice) Activation Terrain et Outreach QR",
+        "commitment": "Temps partiel, shifts d activation en presentiel (plages de Rio)",
+        "pay": "Bourse debutant + incentives de performance",
+        "summary": "Engagez les personnes dans les zones de plage tres frequentees, invitez-les a scanner le QR code et representez la mission CC Club avec energie et assurance.",
+        "responsibilities": [
+          "Aborder les visiteurs et expliquer la valeur du scan du QR code CC Club",
+          "Presenter clairement la mission de la marque et repondre aux questions courantes",
+          "Suivre l activite quotidienne de scans et les retours des conversations"
+        ],
+        "idealFor": [
+          "Candidats bases a Rio; etre bresilien et inscrit a l universite est un fort avantage",
+          "A l aise pour parler a de nouvelles personnes et garder une energie positive",
+          "Fiable, coachable et motive par des resultats mesurables d outreach"
+        ],
+        "applyLabel": "Postuler au role Outreach QR"
+      },
+      "engineeringIntern": {
+        "title": "Stagiaire Ingenierie Logicielle (Mission AI)",
+        "commitment": "Temps partiel, remote-first avec horaires flexibles",
+        "pay": "Bourse debutant",
+        "summary": "Soutenez Mission AI et le developpement produit via des taches de code, petites fonctionnalites, corrections de bugs et support de mise en oeuvre.",
+        "responsibilities": [
+          "Travailler sur des taches de code concretes avec guidance de l equipe",
+          "Aider a livrer de petites fonctionnalites et corrections sur le produit web",
+          "Documenter les progres et signaler les blocages tot"
+        ],
+        "idealFor": [
+          "Aucune experience professionnelle prealable requise",
+          "Interet general pour l ingenierie logicielle et envie d apprendre vite",
+          "Doit disposer de son propre ordinateur et etre une personne fiable"
+        ],
+        "applyLabel": "Postuler au role Stagiaire Ingenierie"
+      }
+    }
   }
 }
