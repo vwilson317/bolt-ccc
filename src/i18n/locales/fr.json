@@ -558,6 +558,16 @@
     "title": "Restez Connecté",
     "description": "Recevez des notifications sur les nouveaux événements et promotions"
   },
+  "languageExchangeFunnel": {
+    "seo": {
+      "title": "Echange Linguistique International | Samedis a Rio",
+      "description": "Rejoignez notre echange linguistique international chaque samedi et recevez les mises a jour hebdomadaires sur WhatsApp."
+    },
+    "eyebrow": "Samedis a Rio",
+    "title": "Echange Linguistique International",
+    "description": "Un rendez-vous hebdomadaire simple pour pratiquer les langues, rencontrer de nouvelles personnes et creer une communaute. Rejoignez le groupe WhatsApp pour recevoir le lieu exact et les mises a jour de la semaine.",
+    "cta": "Rejoindre le Groupe WhatsApp"
+  },
   "communityHome": {
     "seo": {
       "title": "Carioca Coastal Club - Communaute Build in Public",

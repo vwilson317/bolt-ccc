@@ -1,5 +1,5 @@
 import React from 'react';
-import { Thermometer, Droplets, Wind, Cloud } from 'lucide-react';
+import { Thermometer, Droplets, Wind, Cloud, MapPin } from 'lucide-react';
 import { useWeather } from '../contexts/WeatherContext';
 import { useApp } from '../contexts/AppContext';
 
@@ -42,7 +42,7 @@ const WeatherMarquee: React.FC<WeatherMarqueeProps> = ({
         return (
           <div className="flex items-center gap-3 mr-6" key={`${keyPrefix}-${loc}`}>
             <div className="flex items-center gap-0.5 text-sm font-semibold">
-              <i className={`fa fa-map-marker h-4 w-4 ${colorScheme === 'pink' ? 'text-white' : 'text-pink-500'}`} aria-hidden="true"></i>
+              <MapPin className={`h-4 w-4 ${colorScheme === 'pink' ? 'text-white' : 'text-pink-500'}`} aria-hidden="true" />
               <span className={`truncate ${colorScheme === 'pink' ? 'text-white' : 'text-pink-500'}`} data-lingo-skip>{loc}</span>
             </div>
             <div className="flex items-center gap-1 text-sm opacity-95">
