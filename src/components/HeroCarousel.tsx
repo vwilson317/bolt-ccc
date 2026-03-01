@@ -11,6 +11,8 @@ const HeroCarousel: React.FC = () => {
   const [touchStartX, setTouchStartX] = useState<number | null>(null);
   const [touchStartY, setTouchStartY] = useState<number | null>(null);
   const [scrollY, setScrollY] = useState(0);
+  // Track which slide indices have had their image loaded at least once
+  const [loadedSlides, setLoadedSlides] = useState<Set<number>>(new Set([0]));
   const touchThreshold = 50; // Minimum px to trigger swipe
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -53,23 +55,52 @@ const HeroCarousel: React.FC = () => {
     .filter(barraca => barraca.rating === 3)
     .slice(0, 6);
 
+  const total = threeStarBarracas.length;
+
+  // When currentSlide changes, mark the next slide as loaded so its image is preloaded
+  useEffect(() => {
+    if (total === 0) return;
+    const next = (currentSlide + 1) % total;
+    setLoadedSlides(prev => {
+      if (prev.has(next)) return prev;
+      const updated = new Set(prev);
+      updated.add(next);
+      return updated;
+    });
+  }, [currentSlide, total]);
+
   // Auto-advance slides
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % threeStarBarracas.length);
+      setCurrentSlide((prev) => (prev + 1) % total);
     }, 5000);
     return () => clearInterval(timer);
-  }, [threeStarBarracas.length]);
+  }, [total]);
 
   const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % threeStarBarracas.length);
+    setCurrentSlide((prev) => (prev + 1) % total);
   };
 
   const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + threeStarBarracas.length) % threeStarBarracas.length);
+    setCurrentSlide((prev) => {
+      const prev2 = (prev - 1 + total) % total;
+      setLoadedSlides(ls => {
+        if (ls.has(prev2)) return ls;
+        const updated = new Set(ls);
+        updated.add(prev2);
+        return updated;
+      });
+      return prev2;
+    });
   };
 
   const goToSlide = (index: number) => {
+    setLoadedSlides(prev => {
+      if (prev.has(index)) return prev;
+      const updated = new Set(prev);
+      updated.add(index);
+      return updated;
+    });
     setCurrentSlide(index);
   };
 
@@ -145,28 +176,36 @@ const HeroCarousel: React.FC = () => {
       onTouchEnd={handleTouchEnd}
     >
       {/* Background Images with Parallax Effect */}
+      {/* Only slides in loadedSlides have their backgroundImage set; unloaded slides render
+          as invisible placeholders so they don't trigger an image fetch. */}
       <div className="absolute inset-0">
-        {threeStarBarracas.map((barraca, index) => (
-          <div
-            key={barraca.id}
-            className={`absolute inset-0 transition-opacity duration-1000 ${
-              index === currentSlide ? 'opacity-100' : 'opacity-0'
-            }`}
-          >
+        {threeStarBarracas.map((barraca, index) => {
+          const isLoaded = loadedSlides.has(index);
+          const imageUrl = isLoaded
+            ? (window.innerWidth < 768
+                ? (barraca.photos.vertical[0] || barraca.photos.horizontal[0])
+                : (barraca.photos.horizontal[0] || barraca.photos.vertical[0]))
+            : undefined;
+          return (
             <div
-              className="w-full h-full bg-cover bg-center"
-              style={{
-                backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(${
-                  window.innerWidth < 768
-                    ? (barraca.photos.vertical[0] || barraca.photos.horizontal[0])
-                    : (barraca.photos.horizontal[0] || barraca.photos.vertical[0])
-                })`,
-                transform: `translateY(${scrollY * 0.5}px)`,
-                transition: 'transform 0.1s ease-out'
-              }}
-            />
-          </div>
-        ))}
+              key={barraca.id}
+              className={`absolute inset-0 transition-opacity duration-1000 ${
+                index === currentSlide ? 'opacity-100' : 'opacity-0'
+              }`}
+            >
+              <div
+                className="w-full h-full bg-cover bg-center"
+                style={{
+                  backgroundImage: imageUrl
+                    ? `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(${imageUrl})`
+                    : undefined,
+                  transform: `translateY(${scrollY * 0.5}px)`,
+                  transition: 'transform 0.1s ease-out'
+                }}
+              />
+            </div>
+          );
+        })}
       </div>
 
       {/* Minimal Mobile Hero Overlay */}

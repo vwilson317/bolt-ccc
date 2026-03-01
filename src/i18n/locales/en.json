@@ -560,6 +560,16 @@
     "title": "Stay Connected",
     "description": "Get notified about new events and promotions"
   },
+  "languageExchangeFunnel": {
+    "seo": {
+      "title": "International Language Exchange | Saturdays in Rio",
+      "description": "Join our international language exchange every Saturday and get weekly updates in the WhatsApp group."
+    },
+    "eyebrow": "Saturdays in Rio",
+    "title": "International Language Exchange",
+    "description": "A simple weekly meetup to practice languages, meet new people, and build community. Join the WhatsApp group for the exact location and weekly updates.",
+    "cta": "Join WhatsApp Group"
+  },
   "communityHome": {
     "seo": {
       "title": "Carioca Coastal Club - Build In Public Community",
