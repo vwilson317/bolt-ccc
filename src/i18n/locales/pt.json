@@ -246,6 +246,11 @@
       "whatsapp": "WhatsApp"
     }
   },
+  "thaisPromoPage": {
+    "heading": "Promoção Barraca Thai 82",
+    "intro": "Você está a um passo de desbloquear um desconto de apoiador na barraca da Thais em Ipanema. Já faz parte da comunidade?",
+    "whatsappCta": "Entrar na comunidade do WhatsApp"
+  },
   "about": {
     "title": "Sobre o Carioca Coastal Club",
     "subtitle": "Somos a plataforma de fidelidade que conecta os amantes das barracas do Rio com seus locais favoritos. Veja se sua barraca está aberta, reserve cadeiras e aproveite benefícios exclusivos de membro.",

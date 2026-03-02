@@ -1,42 +1,33 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { Gift, Instagram } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { MessageCircle } from 'lucide-react';
+import ThaisPromotion from '../components/ThaisPromotion';
 
-const THAIS_PROMO_CLAIM_URL = '/projects/carioca-coastal-club?promo=thais-follow';
+const CCC_WHATSAPP_URL = 'https://chat.whatsapp.com/FVLJK8eqKzUKY7oUfnymD5?mode=gi_t';
 
 const ThaisPromoPage: React.FC = () => {
+  const { t } = useTranslation();
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50 via-rose-50 to-white pt-28 pb-16">
       <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
-        <div className="rounded-3xl border border-amber-200 bg-white p-8 shadow-lg">
-          <div className="inline-flex items-center rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-800">
-            <Gift className="mr-1.5 h-3.5 w-3.5" />
-            Thai82 Promotion
-          </div>
-
-          <h1 className="mt-4 text-3xl font-bold text-gray-900">Thais&apos; Barraca Discount Pass</h1>
-          <p className="mt-3 text-gray-700">
-            Follow <span className="font-semibold">@thai.82ipanema</span> and claim your reusable supporter badge.
-          </p>
-
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <a
-              href="https://instagram.com/thai.82ipanema"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-pink-500 to-purple-600 px-5 py-3 font-semibold text-white transition-all hover:from-pink-600 hover:to-purple-700"
-            >
-              <Instagram className="mr-2 h-4 w-4" />
-              Follow on Instagram
-            </a>
-            <Link
-              to={THAIS_PROMO_CLAIM_URL}
-              className="inline-flex items-center justify-center rounded-xl border border-gray-300 px-5 py-3 font-semibold text-gray-700 transition-colors hover:bg-gray-50"
-            >
-              Open Claim Page
-            </Link>
-          </div>
+        {/* Quick intro */}
+        <div className="mb-8 text-center">
+          <h1 className="text-3xl font-bold text-gray-900 mb-3">{t('thaisPromoPage.heading')}</h1>
+          <p className="text-gray-600 mb-5">{t('thaisPromoPage.intro')}</p>
+          <a
+            href={CCC_WHATSAPP_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 rounded-xl bg-green-500 px-5 py-3 font-semibold text-white hover:bg-green-600 transition-colors shadow-md"
+          >
+            <MessageCircle className="h-5 w-5" />
+            {t('thaisPromoPage.whatsappCta')}
+          </a>
         </div>
+
+        {/* Promotion — reused from the home page */}
+        <ThaisPromotion promoSource="tye_promo_page" />
       </div>
     </div>
   );
