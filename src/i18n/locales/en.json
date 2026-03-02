@@ -243,6 +243,11 @@
       "location": "Rio de Janeiro, RJ"
     }
   },
+  "thaisPromoPage": {
+    "heading": "Thai 82 barraca Promo",
+    "intro": "You're moments away from unlocking a supporter discount at Thais' barraca in Ipanema. Already part of the community?",
+    "whatsappCta": "Join the WhatsApp community"
+  },
   "about": {
     "title": "About Carioca Coastal Club",
     "subtitle": "We're the loyalty platform connecting Rio's barraca lovers with their favorite spots. Check if your barraca is open, reserve chairs, and enjoy exclusive member benefits.",
