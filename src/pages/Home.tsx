@@ -417,6 +417,9 @@ const Home: React.FC = () => {
       {/* Hero Section */}
       <HeroCarousel />
 
+      {/* Registration Marquee - Thank you section below hero */}
+      <RegistrationMarquee />
+
       {/* Weather Marquee - Temporarily disabled, keep pink separator */}
       {/* <WeatherMarquee colorScheme="white" useDefaultBorders={false} className="border-t-4 border-pink-500" /> */}
       <div className="sticky top-16 z-30 border-t-4 border-pink-500" />
