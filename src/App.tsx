@@ -8,6 +8,7 @@ import { WeatherProvider } from './contexts/WeatherContext';
 import { usePostHogAnalytics } from './hooks/usePostHogAnalytics';
 import Header from './components/Header';
 import LoadingPage from './components/LoadingPage';
+import ErrorBoundary from './components/ErrorBoundary';
 
 // Lazy-load page components so only the current route's code is fetched on initial load
 const Home = lazy(() => import('./pages/Home'));
@@ -23,7 +24,7 @@ const BarracaRegister = lazy(() => import('./pages/BarracaRegister'));
 const LanguageExchangeFunnel = lazy(() => import('./pages/LanguageExchangeFunnel'));
 
 // Lazy-load heavy overlay components that are not needed at initial paint
-const StoryViewer = lazy(() => import('./components/StoryViewer'));
+// StoryViewer removed: StoryProvider is disabled and StoryViewer would throw without it
 const BarracaDetail = lazy(() => import('./components/BarracaDetail'));
 
 import { logEnvironmentInfo, checkSupabaseConnection } from './lib/supabase';
@@ -77,11 +78,6 @@ function AppContent() {
           </Routes>
         </Suspense>
       </main>
-      <Suspense fallback={null}>
-        <StoryViewer />
-      </Suspense>
-
-
       {/* Global Barraca Detail Modal */}
       {selectedBarraca && (
         <Suspense fallback={null}>
@@ -133,18 +129,20 @@ function AppContent() {
 
 function App() {
   return (
-    <HelmetProvider>
-      <AppProvider>
-        {/* Stories provider disabled for now */}
-        {/* <StoryProvider> */}
-        <WeatherProvider>
-          <Router>
-            <AppContent />
-          </Router>
-        </WeatherProvider>
-        {/* </StoryProvider> */}
-      </AppProvider>
-    </HelmetProvider>
+    <ErrorBoundary context="app-root">
+      <HelmetProvider>
+        <AppProvider>
+          {/* Stories provider disabled for now */}
+          {/* <StoryProvider> */}
+          <WeatherProvider>
+            <Router>
+              <AppContent />
+            </Router>
+          </WeatherProvider>
+          {/* </StoryProvider> */}
+        </AppProvider>
+      </HelmetProvider>
+    </ErrorBoundary>
   );
 }
 
