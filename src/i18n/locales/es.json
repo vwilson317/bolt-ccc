@@ -234,7 +234,8 @@
         "note": "Debes completar el follow antes del primer reclamo. Los identificadores existentes se restauran al instante.",
         "verifiedLabel": "SEGUIDOR VERIFICADO",
         "unlockedTitle": "Insignia de Apoyo Desbloqueada",
-        "unlockedDescription": "Muestra esta insignia en la barraca de Thais y menciona el código"
+        "unlockedDescription": "Muestra esta insignia en la barraca de Thais y menciona el código",
+        "addToWallet": "Añadir a la Cartera"
       },
       "messages": {
         "invalidIdentifier": "Ingresa un email válido o un número de WhatsApp válido.",
@@ -242,7 +243,9 @@
         "followFirst": "Sigue a @thai.82ipanema primero y luego reclama tu pase.",
         "claimedFallback": "Pase de descuento reclamado en este dispositivo. La sincronización completa se hará cuando haya conexión.",
         "claimed": "Pase de descuento reclamado. Usa este identificador la próxima vez para restaurarlo al instante.",
-        "genericError": "No se pudo reclamar el pase ahora. Inténtalo de nuevo."
+        "genericError": "No se pudo reclamar el pase ahora. Inténtalo de nuevo.",
+        "walletAdded": "¡Guardado! Muestra este código en la barraca.",
+        "walletCopied": "¡Código copiado al portapapeles!"
       }
     }
   },
