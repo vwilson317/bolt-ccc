@@ -3,6 +3,7 @@ import { getEnvironmentConfig } from './environmentUtils';
 
 export const initSentry = () => {
   const config = getEnvironmentConfig();
+  const dsn = import.meta.env.VITE_SENTRY_DSN;
   
   // Only initialize Sentry in environments where error reporting is enabled
   if (!config.allowedFeatures.errorReporting) {
@@ -10,38 +11,48 @@ export const initSentry = () => {
     return;
   }
 
-  Sentry.init({
-    dsn: import.meta.env.VITE_SENTRY_DSN,
-    environment: config.schema,
-    integrations: [
-      Sentry.browserTracingIntegration(),
-      Sentry.replayIntegration({
-        // Capture 10% of all sessions,
-        // plus 100% of sessions with an error
-        sessionSampleRate: 0.1,
-        errorSampleRate: 1.0,
-      }),
-    ],
-    // Performance Monitoring
-    tracesSampleRate: config.isProduction ? 0.1 : 1.0,
-    // Release Health
-    autoSessionTracking: true,
-    // Capture Console
-    beforeSend(event) {
-      // Filter out development noise
-      if (config.isDevelopment && event.level === 'info') {
-        return null;
-      }
-      return event;
-    },
-    beforeBreadcrumb(breadcrumb) {
-      // Filter out noisy breadcrumbs in production
-      if (config.isProduction && breadcrumb.category === 'console' && breadcrumb.level === 'log') {
-        return null;
-      }
-      return breadcrumb;
-    },
-  });
+  if (!dsn) {
+    console.warn('Sentry DSN missing, skipping Sentry initialization');
+    return;
+  }
+
+  try {
+    Sentry.init({
+      dsn,
+      environment: config.schema,
+      integrations: [
+        Sentry.browserTracingIntegration(),
+        Sentry.replayIntegration({
+          // Capture 10% of all sessions,
+          // plus 100% of sessions with an error
+          sessionSampleRate: 0.1,
+          errorSampleRate: 1.0,
+        }),
+      ],
+      // Performance Monitoring
+      tracesSampleRate: config.isProduction ? 0.1 : 1.0,
+      // Release Health
+      autoSessionTracking: true,
+      // Capture Console
+      beforeSend(event) {
+        // Filter out development noise
+        if (config.isDevelopment && event.level === 'info') {
+          return null;
+        }
+        return event;
+      },
+      beforeBreadcrumb(breadcrumb) {
+        // Filter out noisy breadcrumbs in production
+        if (config.isProduction && breadcrumb.category === 'console' && breadcrumb.level === 'log') {
+          return null;
+        }
+        return breadcrumb;
+      },
+    });
+  } catch (error) {
+    console.error('Sentry initialization failed, continuing without error reporting:', error);
+    return;
+  }
 
   // Set user context
   Sentry.setTag('environment', config.name);
@@ -173,22 +184,14 @@ export const withPerformanceMonitoring = async <T>(
     return operation();
   }
 
-  const transaction = Sentry.startTransaction({
-    name: operationName,
-    op: 'function',
-    tags,
-  });
-
-  try {
-    const result = await operation();
-    transaction.setStatus('ok');
-    return result;
-  } catch (error) {
-    transaction.setStatus('internal_error');
-    throw error;
-  } finally {
-    transaction.finish();
-  }
+  return Sentry.startSpan(
+    {
+      name: operationName,
+      op: 'function',
+      attributes: tags,
+    },
+    async () => operation()
+  );
 };
 
 export { Sentry };
