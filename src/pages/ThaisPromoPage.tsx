@@ -10,7 +10,7 @@ const ThaisPromoPage: React.FC = () => {
       <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
         {/* Quick intro */}
         <div className="mb-8 text-center">
-          <h1 className="text-3xl font-bold text-gray-900 mb-3">Tye&apos;s Barraca Promotion</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-3">Thai 82 barraca Promo</h1>
           <p className="text-gray-600 mb-5">
             You&apos;re moments away from unlocking a supporter discount at Thais&apos; barraca in Ipanema.
             Already part of the community?
