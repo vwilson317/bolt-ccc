@@ -221,7 +221,8 @@
         "note": "É preciso concluir o follow antes do primeiro resgate. Identificadores já cadastrados restauram na hora.",
         "verifiedLabel": "APOIADOR VERIFICADO",
         "unlockedTitle": "Badge de Apoiador Desbloqueado",
-        "unlockedDescription": "Mostre este badge na barraca da Thais e informe o código"
+        "unlockedDescription": "Mostre este badge na barraca da Thais e informe o código",
+        "addToWallet": "Adicionar à Carteira"
       },
       "messages": {
         "invalidIdentifier": "Digite um email válido ou número de WhatsApp válido.",
@@ -229,7 +230,9 @@
         "followFirst": "Siga @thai.82ipanema primeiro e depois resgate seu passe.",
         "claimedFallback": "Passe de desconto resgatado neste dispositivo. A sincronização completa será concluída quando a conexão estiver disponível.",
         "claimed": "Passe de desconto resgatado. Use este identificador na próxima vez para restaurar instantaneamente.",
-        "genericError": "Não foi possível resgatar o passe agora. Tente novamente."
+        "genericError": "Não foi possível resgatar o passe agora. Tente novamente.",
+        "walletAdded": "Salvo! Mostre este código na barraca.",
+        "walletCopied": "Código copiado!"
       }
     },
     "footer": {

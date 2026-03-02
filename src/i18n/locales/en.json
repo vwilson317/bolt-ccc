@@ -222,7 +222,8 @@
         "note": "Follow must be completed before first-time claim. Existing claim identifiers restore instantly.",
         "verifiedLabel": "VERIFIED SUPPORTER",
         "unlockedTitle": "Supporter Badge Unlocked",
-        "unlockedDescription": "Show this badge at Thais' barraca and mention code"
+        "unlockedDescription": "Show this badge at Thais' barraca and mention code",
+        "addToWallet": "Add to Wallet"
       },
       "messages": {
         "invalidIdentifier": "Enter a valid email or WhatsApp phone number.",
@@ -230,7 +231,9 @@
         "followFirst": "Follow @thai.82ipanema first, then claim your pass.",
         "claimedFallback": "Discount pass claimed on this device. Full sync will complete when connection is available.",
         "claimed": "Discount pass claimed. Use this identifier next time to restore instantly.",
-        "genericError": "Unable to claim discount pass right now. Please try again."
+        "genericError": "Unable to claim discount pass right now. Please try again.",
+        "walletAdded": "Saved! Show this code at the barraca.",
+        "walletCopied": "Code copied to clipboard!"
       }
     },
     "footer": {

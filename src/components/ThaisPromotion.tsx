@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
-import { Gift, Instagram, CheckCircle2, Sparkles, X } from 'lucide-react';
+import { Gift, Instagram, CheckCircle2, Sparkles, X, Wallet } from 'lucide-react';
 import { trackEvent } from '../services/posthogAnalyticsService';
 import { PromoClaimService } from '../services/promoClaimService';
 
@@ -29,6 +29,7 @@ const ThaisPromotion: React.FC<ThaisPromotionProps> = ({
   const [isClaimSubmitting, setIsClaimSubmitting] = useState(false);
   const [restoredIdentifier, setRestoredIdentifier] = useState('');
   const [isBadgeFabExpanded, setIsBadgeFabExpanded] = useState(false);
+  const [walletMessage, setWalletMessage] = useState('');
 
   const trackingContext = useMemo(() => ({
     promo_id: THAIS_PROMO_QUERY_VALUE,
@@ -221,6 +222,39 @@ const ThaisPromotion: React.FC<ThaisPromotionProps> = ({
     }
   };
 
+  const handleAddToWallet = async () => {
+    trackEvent('thais_add_to_wallet_clicked', {
+      ...trackingContext,
+      promo_code: THAIS_DISCOUNT_CODE,
+    });
+
+    const shareText = `${promoT('card.unlockedDescription')} ${THAIS_DISCOUNT_CODE}.\n@${THAIS_INSTAGRAM_HANDLE}`;
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: promoT('card.unlockedTitle'),
+          text: shareText,
+        });
+        setWalletMessage(promoT('messages.walletAdded'));
+        trackEvent('thais_wallet_shared', { ...trackingContext });
+        return;
+      } catch {
+        // fall through to clipboard
+      }
+    }
+
+    try {
+      await navigator.clipboard.writeText(`${THAIS_DISCOUNT_CODE}`);
+      setWalletMessage(promoT('messages.walletCopied'));
+      trackEvent('thais_wallet_code_copied', { ...trackingContext });
+    } catch {
+      setWalletMessage(promoT('messages.walletCopied'));
+    }
+
+    setTimeout(() => setWalletMessage(''), 3000);
+  };
+
   return (
     <>
       {/* Discreet FAB + full-screen lightbox */}
@@ -268,7 +302,20 @@ const ThaisPromotion: React.FC<ThaisPromotionProps> = ({
                 </div>
 
                 <p className="text-sm text-emerald-100">{promoT('sticky.activeDescription')}</p>
-                <p className="mt-6 text-xs text-white/50">Tap outside to dismiss</p>
+
+                <button
+                  onClick={handleAddToWallet}
+                  className="mt-5 w-full flex items-center justify-center gap-2 rounded-2xl bg-white/20 hover:bg-white/30 px-5 py-3 text-sm font-semibold text-white transition-colors"
+                >
+                  <Wallet className="h-4 w-4" />
+                  {promoT('card.addToWallet')}
+                </button>
+
+                {walletMessage && (
+                  <p className="mt-2 text-xs font-medium text-emerald-200">{walletMessage}</p>
+                )}
+
+                <p className="mt-4 text-xs text-white/50">Tap outside to dismiss</p>
               </div>
             </div>
           )}
@@ -353,6 +400,18 @@ const ThaisPromotion: React.FC<ThaisPromotionProps> = ({
                 @{THAIS_INSTAGRAM_HANDLE}
               </div>
             </div>
+            <div className="mt-4 flex flex-col gap-2 sm:flex-row">
+              <button
+                onClick={handleAddToWallet}
+                className="flex items-center justify-center gap-2 rounded-xl border border-emerald-300 bg-white px-5 py-2.5 text-sm font-semibold text-emerald-700 shadow-sm hover:bg-emerald-50 transition-colors"
+              >
+                <Wallet className="h-4 w-4" />
+                {promoT('card.addToWallet')}
+              </button>
+            </div>
+            {walletMessage && (
+              <p className="mt-2 text-sm font-medium text-emerald-700">{walletMessage}</p>
+            )}
           </div>
         )}
       </div>

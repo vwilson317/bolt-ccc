@@ -235,7 +235,8 @@
         "note": "Le follow doit être complété avant la première réclamation. Les identifiants existants se restaurent instantanément.",
         "verifiedLabel": "SUPPORTER VÉRIFIÉ",
         "unlockedTitle": "Badge Supporter Débloqué",
-        "unlockedDescription": "Montrez ce badge à la barraca de Thais et mentionnez le code"
+        "unlockedDescription": "Montrez ce badge à la barraca de Thais et mentionnez le code",
+        "addToWallet": "Ajouter au Portefeuille"
       },
       "messages": {
         "invalidIdentifier": "Entrez un email valide ou un numéro WhatsApp valide.",
@@ -243,7 +244,9 @@
         "followFirst": "Suivez @thai.82ipanema d'abord, puis réclamez votre pass.",
         "claimedFallback": "Pass réduction réclamé sur cet appareil. La synchronisation complète sera faite quand la connexion sera disponible.",
         "claimed": "Pass réduction réclamé. Utilisez cet identifiant la prochaine fois pour restaurer instantanément.",
-        "genericError": "Impossible de réclamer le pass pour le moment. Veuillez réessayer."
+        "genericError": "Impossible de réclamer le pass pour le moment. Veuillez réessayer.",
+        "walletAdded": "Enregistré ! Montrez ce code à la barraca.",
+        "walletCopied": "Code copié dans le presse-papier !"
       }
     }
   },
