@@ -25,7 +25,7 @@ export const getEnvironmentConfig = (): EnvironmentConfig => {
   const env = environmentInfo.environment
 
   const configs: Record<string, EnvironmentConfig> = {
-    development: {
+    dev: {
       name: 'Development',
       schema: 'dev',
       isDevelopment: true,
@@ -85,7 +85,7 @@ export const getEnvironmentConfig = (): EnvironmentConfig => {
         visitorData: 7 // 1 week visitor data
       }
     },
-    production: {
+    prod: {
       name: 'Production',
       schema: 'prod',
       isDevelopment: false,
@@ -107,7 +107,7 @@ export const getEnvironmentConfig = (): EnvironmentConfig => {
     }
   }
 
-  return configs[env] || configs.development
+  return configs[env] || configs.dev
 }
 
 export const isFeatureEnabled = (feature: keyof EnvironmentConfig['allowedFeatures']): boolean => {
@@ -128,12 +128,12 @@ export const getEnvironmentBadge = (): { text: string; color: string; visible: b
   }
   
   const badges = {
-    development: { text: 'DEV', color: 'bg-blue-500', visible: true },
+    dev: { text: 'DEV', color: 'bg-blue-500', visible: true },
     qa: { text: 'QA', color: 'bg-yellow-500', visible: true },
     uat: { text: 'UAT', color: 'bg-purple-500', visible: true }
   }
-  
-  return badges[config.schema as keyof typeof badges] || badges.development
+
+  return badges[config.schema as keyof typeof badges] || badges.dev
 }
 
 export const logEnvironmentInfo = () => {
