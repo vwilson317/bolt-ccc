@@ -10,7 +10,7 @@ const Header: React.FC = () => {
   const [heroHeight, setHeroHeight] = useState(0);
   const { t, i18n } = useTranslation();
   const location = useLocation();
-  const { isScrolled, scrollY } = useScrollPosition();
+  const { scrollY } = useScrollPosition();
 
   // Calculate hero height on mount and resize
   useEffect(() => {
@@ -29,25 +29,14 @@ const Header: React.FC = () => {
     return () => window.removeEventListener('resize', calculateHeroHeight);
   }, []);
 
-  // Check if we're on pages that should always have a solid header
-  const isLoginPage = location.pathname === '/admin';
-  const isBarracaDetailPage = location.pathname.startsWith('/barraca/');
-  const isAboutPage = location.pathname === '/about';
-  const isCommunityHomePage = location.pathname === '/';
+  // Only these pages intentionally use a transparent hero header that becomes solid on scroll.
+  // All other pages (including any future pages) default to a solid header.
   const isLegacyHomePage = location.pathname === '/projects/carioca-coastal-club';
-  const isRegisterPage = location.pathname === '/register';
-  const isPhotosPage = location.pathname === '/photos';
-  const isPhotosDetailPage = location.pathname.startsWith('/photos/');
-  const isDiscoverPage = location.pathname === '/discover';
-  const isJobsPage = location.pathname === '/jobs';
-  const isInterviewProcessPage = location.pathname === '/interview-process';
-  const isRegisterBarracaPage = location.pathname === '/registration' || location.pathname.startsWith('/registration/');
-  
-  // Keep legacy carousel page behavior while using a solid header on the new root landing page.
+  const isAboutPage = location.pathname === '/about';
+  const isTransparentHeroPage = isLegacyHomePage || isAboutPage;
+
   const headerHeight = 64; // h-16 = 64px
-  const useSolidHeader = isLoginPage || isBarracaDetailPage || isMenuOpen || isRegisterPage || isPhotosPage || isPhotosDetailPage  ||
-  isDiscoverPage || isJobsPage || isInterviewProcessPage || isRegisterBarracaPage || isCommunityHomePage ||
-    ((isLegacyHomePage || isAboutPage) ? scrollY + headerHeight > heroHeight : isScrolled);
+  const useSolidHeader = isMenuOpen || !isTransparentHeroPage || scrollY + headerHeight > heroHeight;
 
   const languages = [
     { code: 'en', name: 'English', flag: '🇺🇸' },
