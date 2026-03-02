@@ -1,5 +1,5 @@
 import React, { lazy, Suspense } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Navigate, Routes, Route, useLocation } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { HelmetProvider } from 'react-helmet-async';
 import { AppProvider, useApp } from './contexts/AppContext';
@@ -65,6 +65,7 @@ function AppContent() {
           <Routes>
             <Route path="/" element={isBarracaSubdomain ? <Home /> : <CommunityHome />} />
             <Route path="/projects/carioca-coastal-club" element={<Home />} />
+            <Route path="/thai82" element={<Navigate to="/projects/carioca-coastal-club?promo=thais-follow" replace />} />
             <Route path="/discover" element={<Discover />} />
             <Route path="/about" element={<About />} />
             <Route path="/jobs" element={<Jobs />} />
