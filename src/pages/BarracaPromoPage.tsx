@@ -11,15 +11,17 @@
  *   active = false   → coming-soon / paused teaser (same UI; admin controls which)
  */
 import React, { useEffect, useState } from 'react';
-import { useParams, Navigate } from 'react-router-dom';
+import { useParams, Navigate, useLocation } from 'react-router-dom';
 import { MessageCircle, Instagram, Clock } from 'lucide-react';
 import BarracaPromotion from '../components/BarracaPromotion';
 import { getBarracaPromoBySlug } from '../data/barracaPromos';
 import { supabase } from '../lib/supabase';
+import { trackEvent } from '../services/posthogAnalyticsService';
 
 const BarracaPromoPage: React.FC = () => {
   const { barracaSlug } = useParams<{ barracaSlug: string }>();
   const barraca = barracaSlug ? getBarracaPromoBySlug(barracaSlug) : undefined;
+  const location = useLocation();
 
   // null = still loading from DB, boolean = resolved
   const [isActive, setIsActive] = useState<boolean | null>(null);
@@ -125,6 +127,13 @@ const BarracaPromoPage: React.FC = () => {
               href={barraca.whatsappUrl}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() =>
+                trackEvent('barraca_promo_whatsapp_clicked', {
+                  promo_id: barraca.id,
+                  page_path: location.pathname,
+                  full_path: `${location.pathname}${location.search}`,
+                })
+              }
               className="inline-flex items-center gap-2 rounded-xl bg-green-500 px-5 py-3 font-semibold text-white hover:bg-green-600 transition-colors shadow-md"
             >
               <MessageCircle className="h-5 w-5" />
