@@ -5,6 +5,12 @@
 [build.environment]
   NODE_VERSION = "22"
 
+# Bundle the PEM certificate files with the pkpass function so they are
+# available on the Lambda filesystem at runtime.  The private key is NOT
+# stored here — it stays in the APPLE_PASS_KEY_PEM environment variable.
+[functions.generate-pkpass]
+  included_files = ["netlify/functions/certs/*.pem"]
+
 [dev]
   functions = "netlify/functions"
   publish = "dist"
