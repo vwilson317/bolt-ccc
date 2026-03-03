@@ -1,27 +1,67 @@
 /**
  * BarracaPromoPage — one generic page that serves every barraca's promo.
  *
- * Active barracas  → full claim flow via BarracaPromotion
- * Inactive barracas → "coming soon" teaser with a follow link
+ * Active status hierarchy (highest priority first):
+ *   1. Supabase `barraca_promos` table  ← admin can toggle without a redeploy
+ *   2. Static `active` field in barracaPromos.ts  ← fallback default
  *
- * Route params: slug comes from :barracaSlug in the router.
+ * States:
+ *   loading          → brief skeleton while Supabase is checked
+ *   active = true    → full BarracaPromotion claim flow
+ *   active = false   → coming-soon / paused teaser (same UI; admin controls which)
  */
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, Navigate } from 'react-router-dom';
 import { MessageCircle, Instagram, Clock } from 'lucide-react';
 import BarracaPromotion from '../components/BarracaPromotion';
 import { getBarracaPromoBySlug } from '../data/barracaPromos';
+import { supabase } from '../lib/supabase';
 
 const BarracaPromoPage: React.FC = () => {
   const { barracaSlug } = useParams<{ barracaSlug: string }>();
   const barraca = barracaSlug ? getBarracaPromoBySlug(barracaSlug) : undefined;
 
+  // null = still loading from DB, boolean = resolved
+  const [isActive, setIsActive] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    if (!barraca) return;
+
+    supabase
+      .from('barraca_promos')
+      .select('active')
+      .eq('id', barraca.id)
+      .maybeSingle()
+      .then(({ data }) => {
+        // DB row wins; fall back to static config when no row exists yet
+        setIsActive(data ? (data as { active: boolean }).active : barraca.active);
+      })
+      .catch(() => {
+        // Network / Supabase error → fall back to static config
+        setIsActive(barraca.active);
+      });
+  }, [barraca]);
+
   if (!barraca) return <Navigate to="/" replace />;
 
   // ------------------------------------------------------------------
-  // Coming-soon view
+  // Loading state — avoid flash of wrong content
   // ------------------------------------------------------------------
-  if (!barraca.active) {
+  if (isActive === null) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 pt-28 pb-16 flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4 text-gray-400">
+          <div className="h-10 w-10 rounded-full border-4 border-gray-200 border-t-emerald-500 animate-spin" />
+          <p className="text-sm">Loading promo…</p>
+        </div>
+      </div>
+    );
+  }
+
+  // ------------------------------------------------------------------
+  // Not active — coming-soon / paused
+  // ------------------------------------------------------------------
+  if (!isActive) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 pt-28 pb-16">
         <div className="mx-auto max-w-md px-4 text-center">
@@ -65,7 +105,7 @@ const BarracaPromoPage: React.FC = () => {
   }
 
   // ------------------------------------------------------------------
-  // Active promo view
+  // Active promo
   // ------------------------------------------------------------------
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50 via-rose-50 to-white pt-28 pb-16">
@@ -77,8 +117,7 @@ const BarracaPromoPage: React.FC = () => {
           <p className="text-gray-600 mb-5">
             Follow{' '}
             <span className="font-semibold">@{barraca.instagramHandle}</span> and
-            claim your reusable supporter discount at{' '}
-            {barraca.barracaLocation}.
+            claim your reusable supporter discount at {barraca.barracaLocation}.
           </p>
 
           {barraca.whatsappUrl && (
