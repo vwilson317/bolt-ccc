@@ -5,35 +5,42 @@
  * iOS Safari and Chrome-on-iOS intercept the `application/vnd.apple.pkpass`
  * MIME type and open the system "Add to Wallet" sheet automatically.
  *
+ * ─── Certificate files (stored in the repo, bundled with the function) ──────
+ *
+ *  Apple's three PEM certificates used to sign a PKPass together exceed
+ *  AWS Lambda's 4 KB hard limit on total environment variables.  To work
+ *  around this, the two PUBLIC certificates are stored as files that get
+ *  bundled with the Lambda deployment (via `included_files` in netlify.toml).
+ *  Only the PRIVATE KEY stays in an environment variable.
+ *
+ *  netlify/functions/certs/pass_cert.pem   ← Pass Type ID public certificate
+ *    Convert: openssl x509 -inform DER -in pass.cer -out pass_cert.pem
+ *
+ *  netlify/functions/certs/wwdr.pem        ← Apple WWDR G3 intermediate cert
+ *    Download: https://www.apple.com/certificateauthority/AppleWWDRCAG3.cer
+ *    Convert:  openssl x509 -inform DER -in AppleWWDRCAG3.cer -out wwdr.pem
+ *
  * ─── Required environment variables ────────────────────────────────────────
  *
  *  APPLE_TEAM_IDENTIFIER        10-char Apple Developer Team ID (e.g. AB1CD2EF3G)
- *  APPLE_PASS_TYPE_IDENTIFIER   Pass type ID from your developer account
- *                                 e.g. pass.com.cariocacoastalclub.promo
- *  APPLE_PASS_CERT_PEM          Your Pass Type ID certificate in PEM format
- *                                 (the .cer file converted: openssl x509 -inform DER -in pass.cer -out pass.pem)
- *  APPLE_PASS_KEY_PEM           The private key for the certificate in PEM format
- *                                 (openssl pkcs12 -in Certificates.p12 -nocerts -nodes -out key.pem)
- *  APPLE_WWDR_CERT_PEM          Apple WWDR G3 intermediate certificate in PEM format
- *                                 Download: https://www.apple.com/certificateauthority/AppleWWDRCAG3.cer
- *                                 Convert:  openssl x509 -inform DER -in AppleWWDRCAG3.cer -out wwdr.pem
- *
- * ─── How to set them in Netlify ─────────────────────────────────────────────
- *
- *  In Site Settings → Environment Variables, add each variable above.
- *  Multi-line PEM values: paste the full PEM block (-----BEGIN … -----END …)
- *  exactly as-is; Netlify handles newlines correctly.
+ *  APPLE_PASS_TYPE_IDENTIFIER   Pass type ID (e.g. pass.com.cariocacoastalclub.promo)
+ *  APPLE_PASS_KEY_PEM           Private key for the Pass Type ID certificate
+ *                                 openssl pkcs12 -in Certificates.p12 -nocerts -nodes -out key.pem
+ *                                 Paste the full PEM block in Netlify → Site Settings → Env Vars.
  *
  * ─── Local testing ───────────────────────────────────────────────────────────
  *
- *  Add the env vars to .env and run:
- *    netlify dev
- *  Then visit: http://localhost:8888/.netlify/functions/generate-pkpass?barracaPromoId=thais-follow
- *  On iOS (Safari or Chrome) the Wallet sheet will appear.
+ *  1. Place real pass_cert.pem and wwdr.pem in netlify/functions/certs/
+ *  2. Add APPLE_TEAM_IDENTIFIER, APPLE_PASS_TYPE_IDENTIFIER, APPLE_PASS_KEY_PEM to .env
+ *  3. Run: netlify dev
+ *  4. Visit: http://localhost:8888/.netlify/functions/generate-pkpass?barracaPromoId=thais-follow
+ *     On iOS (Safari or Chrome) the Wallet sheet will appear.
  */
 
 import type { Handler, HandlerEvent } from '@netlify/functions';
 import crypto from 'crypto';
+import { existsSync, readFileSync } from 'fs';
+import { join } from 'path';
 
 // We use dynamic require so the function can still be loaded even when
 // the optional packages are not installed — it will just return a 503.
@@ -49,6 +56,38 @@ try {
   forge = require('node-forge');
 } catch {
   // packages not installed — handled at runtime below
+}
+
+// ---------------------------------------------------------------------------
+// Certificate file loader
+// ---------------------------------------------------------------------------
+
+/**
+ * Load a PEM certificate file that was bundled with the function via
+ * `included_files` in netlify.toml.
+ *
+ * Netlify preserves the project-root-relative path inside the Lambda package
+ * (extracted to /var/task), so we try both __dirname-relative and
+ * process.cwd()-relative paths to work in local `netlify dev` as well.
+ */
+function loadCertFile(projectRelativePath: string): string {
+  const candidates = [
+    // Local development: __dirname = netlify/functions/  (TypeScript source dir)
+    join(__dirname, '..', '..', projectRelativePath),
+    // Lambda runtime: /var/task — included_files preserves the project-root path
+    join(process.cwd(), projectRelativePath),
+    // In case esbuild places the bundle inside the functions dir
+    join(__dirname, projectRelativePath),
+  ];
+
+  for (const p of candidates) {
+    if (existsSync(p)) return readFileSync(p, 'utf8');
+  }
+
+  throw new Error(
+    `Certificate file not found: ${projectRelativePath}\nSearched:\n` +
+      candidates.join('\n'),
+  );
 }
 
 // ---------------------------------------------------------------------------
@@ -273,17 +312,13 @@ export const handler: Handler = async (event: HandlerEvent) => {
   // ── Check env vars ─────────────────────────────────────────────────────────
   const teamId = process.env.APPLE_TEAM_IDENTIFIER;
   const passTypeId = process.env.APPLE_PASS_TYPE_IDENTIFIER;
-  const certPem = process.env.APPLE_PASS_CERT_PEM;
   const keyPem = process.env.APPLE_PASS_KEY_PEM;
-  const wwdrPem = process.env.APPLE_WWDR_CERT_PEM;
 
-  if (!teamId || !passTypeId || !certPem || !keyPem || !wwdrPem) {
+  if (!teamId || !passTypeId || !keyPem) {
     const missing = [
       !teamId && 'APPLE_TEAM_IDENTIFIER',
       !passTypeId && 'APPLE_PASS_TYPE_IDENTIFIER',
-      !certPem && 'APPLE_PASS_CERT_PEM',
       !keyPem && 'APPLE_PASS_KEY_PEM',
-      !wwdrPem && 'APPLE_WWDR_CERT_PEM',
     ].filter(Boolean);
 
     return {
@@ -292,6 +327,26 @@ export const handler: Handler = async (event: HandlerEvent) => {
         error: 'Apple Wallet not configured. Set the required environment variables in Netlify.',
         missing,
         docs: 'See the comment block at the top of netlify/functions/generate-pkpass.ts',
+      }),
+      headers: { 'Content-Type': 'application/json' },
+    };
+  }
+
+  // ── Load certificate files (bundled with the function via included_files) ──
+  let certPem: string;
+  let wwdrPem: string;
+
+  try {
+    certPem = loadCertFile('netlify/functions/certs/pass_cert.pem');
+    wwdrPem = loadCertFile('netlify/functions/certs/wwdr.pem');
+  } catch (err) {
+    console.error('generate-pkpass: failed to load certificate files:', err);
+    return {
+      statusCode: 503,
+      body: JSON.stringify({
+        error: 'Apple Wallet certificate files are missing or unreadable.',
+        detail: err instanceof Error ? err.message : String(err),
+        hint: 'Place pass_cert.pem and wwdr.pem in netlify/functions/certs/ — see the file headers for instructions.',
       }),
       headers: { 'Content-Type': 'application/json' },
     };
