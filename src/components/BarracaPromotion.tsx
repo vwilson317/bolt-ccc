@@ -73,9 +73,13 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
 
     const isUnlocked = window.localStorage.getItem(barraca.storageKey) === 'true';
     const savedId = window.localStorage.getItem(barraca.identifierStorageKey) || '';
+    // Session flag: survives page refresh but NOT a new browser session.
+    // Separate key per barraca so following Thais doesn't count for Marcinho, etc.
+    const followedThisSession =
+      window.sessionStorage.getItem(`ccc_follow_session_${barraca.id}`) === 'true';
 
     setHasBadge(isUnlocked);
-    setHasClickedFollow(isUnlocked);
+    setHasClickedFollow(isUnlocked || followedThisSession);
     if (savedId) setIdentifierInput(savedId);
 
     trackEvent('barraca_promo_viewed', {
@@ -116,6 +120,7 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
   // ---------------------------------------------------------------------------
   const handleFollowClick = () => {
     setHasClickedFollow(true);
+    window.sessionStorage.setItem(`ccc_follow_session_${barraca.id}`, 'true');
     window.open(barraca.instagramUrl, '_blank', 'noopener,noreferrer');
     trackEvent('barraca_promo_instagram_clicked', {
       ...trackCtx,
