@@ -233,12 +233,10 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
 
     if (isIOS) {
       const url = `/.netlify/functions/generate-pkpass?barracaPromoId=${encodeURIComponent(barraca.id)}`;
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `${barraca.discountCode}.pkpass`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      // Navigate directly instead of using <a download> so the OS-level MIME
+      // type handler (application/vnd.apple.pkpass) can intercept the response
+      // and open the Wallet app. The download attribute bypasses this in Chrome.
+      window.location.href = url;
       setWalletMessage(promoT('messages.walletIOS'));
       trackEvent('barraca_promo_wallet_ios_triggered', trackCtx);
       setTimeout(() => setWalletMessage(''), 4000);
