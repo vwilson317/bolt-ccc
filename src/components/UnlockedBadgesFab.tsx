@@ -7,6 +7,7 @@
  * • 2+ badges        → stacked FAB with count chip → badge tray → individual lightbox
  */
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { CheckCircle2, Sparkles, Wallet, X } from 'lucide-react';
 import { BARRACA_PROMOS, type BarracaPromoConfig } from '../data/barracaPromos';
 import { useBadgeContext } from '../contexts/BadgeContext';
@@ -224,7 +225,7 @@ const UnlockedBadgesFab: React.FC = () => {
 
   const primary = unlockedBarracas[0];
 
-  return (
+  return createPortal(
     <>
       {/* FAB */}
       <button
@@ -254,7 +255,8 @@ const UnlockedBadgesFab: React.FC = () => {
           onClose={() => setActiveLightbox(null)}
         />
       )}
-    </>
+    </>,
+    document.body,
   );
 };
 
