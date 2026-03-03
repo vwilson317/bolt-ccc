@@ -1,10 +1,11 @@
 /**
- * HakaPromotion — generic Instagram-follow → badge → discount-pass flow.
+ * BarracaPromotion — generic Instagram-follow → badge → discount-pass flow.
  *
- * Supports every haka in the registry. Pass a HakaConfig and it handles:
+ * Supports every barraca in the promo registry. Pass a BarracaPromoConfig
+ * and it handles:
  *  • Instagram follow step
  *  • Identifier claim / restore
- *  • Apple Wallet PKPass download on iOS Safari
+ *  • Apple Wallet PKPass download on iOS
  *  • Web Share API / clipboard fallback on other platforms
  */
 import React, { useEffect, useMemo, useState } from 'react';
@@ -14,11 +15,10 @@ import { Gift, Instagram, CheckCircle2, Sparkles, Wallet } from 'lucide-react';
 import { trackEvent } from '../services/posthogAnalyticsService';
 import { PromoClaimService } from '../services/promoClaimService';
 import { useBadgeContext } from '../contexts/BadgeContext';
-import type { HakaConfig } from '../data/hakas';
+import type { BarracaPromoConfig } from '../data/barracaPromos';
 
 // ---------------------------------------------------------------------------
-// iOS detection — if true we'll offer an Apple Wallet PKPass download.
-// Works for both Safari and Chrome-on-iOS (which also handles .pkpass files).
+// iOS detection — works for Safari and Chrome-on-iOS (both handle .pkpass)
 // ---------------------------------------------------------------------------
 function detectIOS(): boolean {
   if (typeof navigator === 'undefined') return false;
@@ -28,13 +28,13 @@ function detectIOS(): boolean {
   );
 }
 
-interface HakaPromotionProps {
-  haka: HakaConfig;
+interface BarracaPromotionProps {
+  barraca: BarracaPromoConfig;
   promoSource?: string;
 }
 
-const HakaPromotion: React.FC<HakaPromotionProps> = ({
-  haka,
+const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
+  barraca,
   promoSource = 'home_instagram_section',
 }) => {
   const { t } = useTranslation();
@@ -56,13 +56,13 @@ const HakaPromotion: React.FC<HakaPromotionProps> = ({
 
   const trackCtx = useMemo(
     () => ({
-      promo_id: haka.id,
+      promo_id: barraca.id,
       promo_source: promoSource,
-      instagram_handle: haka.instagramHandle,
+      instagram_handle: barraca.instagramHandle,
       page_path: location.pathname,
       full_path: `${location.pathname}${location.search}`,
     }),
-    [haka.id, haka.instagramHandle, promoSource, location.pathname, location.search],
+    [barraca.id, barraca.instagramHandle, promoSource, location.pathname, location.search],
   );
 
   // ---------------------------------------------------------------------------
@@ -71,14 +71,14 @@ const HakaPromotion: React.FC<HakaPromotionProps> = ({
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    const isUnlocked = window.localStorage.getItem(haka.storageKey) === 'true';
-    const savedId = window.localStorage.getItem(haka.identifierStorageKey) || '';
+    const isUnlocked = window.localStorage.getItem(barraca.storageKey) === 'true';
+    const savedId = window.localStorage.getItem(barraca.identifierStorageKey) || '';
 
     setHasBadge(isUnlocked);
     setHasClickedFollow(isUnlocked);
     if (savedId) setIdentifierInput(savedId);
 
-    trackEvent('promo_landing_viewed', {
+    trackEvent('barraca_promo_viewed', {
       ...trackCtx,
       badge_previously_unlocked: isUnlocked,
       has_saved_identifier: !!savedId,
@@ -88,17 +88,17 @@ const HakaPromotion: React.FC<HakaPromotionProps> = ({
 
     let active = true;
     (async () => {
-      const claim = await PromoClaimService.findByIdentifier(haka.id, savedId);
+      const claim = await PromoClaimService.findByIdentifier(barraca.id, savedId);
       if (!active || !claim?.badge_unlocked) return;
 
       setHasBadge(true);
       setHasClickedFollow(true);
       setRestoredIdentifier(claim.identifier_value);
-      window.localStorage.setItem(haka.storageKey, 'true');
-      unlockBadge(haka.id);
+      window.localStorage.setItem(barraca.storageKey, 'true');
+      unlockBadge(barraca.id);
 
-      await PromoClaimService.markLastClaimed(haka.id, savedId);
-      trackEvent('haka_claim_restored', {
+      await PromoClaimService.markLastClaimed(barraca.id, savedId);
+      trackEvent('barraca_promo_claim_restored', {
         ...trackCtx,
         restore_source: 'auto_lookup',
         identifier_type: claim.identifier_type,
@@ -116,8 +116,8 @@ const HakaPromotion: React.FC<HakaPromotionProps> = ({
   // ---------------------------------------------------------------------------
   const handleFollowClick = () => {
     setHasClickedFollow(true);
-    window.open(haka.instagramUrl, '_blank', 'noopener,noreferrer');
-    trackEvent('haka_instagram_clicked', {
+    window.open(barraca.instagramUrl, '_blank', 'noopener,noreferrer');
+    trackEvent('barraca_promo_instagram_clicked', {
       ...trackCtx,
       badge_already_unlocked: hasBadge,
     });
@@ -133,25 +133,25 @@ const HakaPromotion: React.FC<HakaPromotionProps> = ({
     const normalized = PromoClaimService.normalizeIdentifier(identifierInput);
     if (!normalized) {
       setClaimError(promoT('messages.invalidIdentifier'));
-      trackEvent('haka_claim_invalid_identifier', trackCtx);
+      trackEvent('barraca_promo_invalid_identifier', trackCtx);
       return;
     }
 
     setIsSubmitting(true);
-    trackEvent('haka_claim_identifier_submitted', {
+    trackEvent('barraca_promo_identifier_submitted', {
       ...trackCtx,
       identifier_type: normalized.type,
     });
 
     try {
-      const existing = await PromoClaimService.findByIdentifier(haka.id, identifierInput);
+      const existing = await PromoClaimService.findByIdentifier(barraca.id, identifierInput);
 
       if (existing?.badge_unlocked) {
-        await PromoClaimService.markLastClaimed(haka.id, identifierInput);
+        await PromoClaimService.markLastClaimed(barraca.id, identifierInput);
         _persistBadge(existing.identifier_value);
         setRestoredIdentifier(existing.identifier_value);
         setClaimSuccess(promoT('messages.restored'));
-        trackEvent('haka_claim_restored', {
+        trackEvent('barraca_promo_claim_restored', {
           ...trackCtx,
           restore_source: 'manual_lookup',
           identifier_type: existing.identifier_type,
@@ -161,42 +161,42 @@ const HakaPromotion: React.FC<HakaPromotionProps> = ({
 
       if (!hasClickedFollow) {
         setClaimError(
-          promoT('messages.followFirst', { instagramHandle: haka.instagramHandle }),
+          promoT('messages.followFirst', { instagramHandle: barraca.instagramHandle }),
         );
-        trackEvent('haka_badge_unlock_blocked', {
+        trackEvent('barraca_promo_badge_blocked', {
           ...trackCtx,
           block_reason: 'follow_step_not_completed',
         });
         return;
       }
 
-      const result = await PromoClaimService.claimOrRestore(haka.id, identifierInput, {
+      const result = await PromoClaimService.claimOrRestore(barraca.id, identifierInput, {
         followConfirmed: true,
         unlockBadge: true,
         metadata: {
           promo_source: promoSource,
-          instagram_handle: haka.instagramHandle,
+          instagram_handle: barraca.instagramHandle,
         },
       });
 
       if (!result.claim?.badge_unlocked) {
         _persistBadge(identifierInput.trim());
         setClaimSuccess(promoT('messages.claimedFallback'));
-        trackEvent('haka_claim_local_fallback', trackCtx);
+        trackEvent('barraca_promo_claim_local_fallback', trackCtx);
         return;
       }
 
       _persistBadge(result.claim.identifier_value);
       setClaimSuccess(promoT('messages.claimed'));
-      trackEvent('haka_badge_unlocked', {
+      trackEvent('barraca_promo_badge_unlocked', {
         ...trackCtx,
         identifier_type: result.claim.identifier_type,
         unlock_status: result.wasExisting ? 'existing_record_unlocked' : 'new_unlock',
       });
     } catch (err) {
-      console.error('Error claiming badge:', err);
+      console.error('Error claiming barraca promo badge:', err);
       setClaimError(promoT('messages.genericError'));
-      trackEvent('haka_claim_error', {
+      trackEvent('barraca_promo_claim_error', {
         ...trackCtx,
         error_message: err instanceof Error ? err.message : String(err),
       });
@@ -209,9 +209,9 @@ const HakaPromotion: React.FC<HakaPromotionProps> = ({
     setHasBadge(true);
     setHasClickedFollow(true);
     setIdentifierInput(identifierValue);
-    window.localStorage.setItem(haka.storageKey, 'true');
-    window.localStorage.setItem(haka.identifierStorageKey, identifierValue);
-    unlockBadge(haka.id);
+    window.localStorage.setItem(barraca.storageKey, 'true');
+    window.localStorage.setItem(barraca.identifierStorageKey, identifierValue);
+    unlockBadge(barraca.id);
   };
 
   // ---------------------------------------------------------------------------
@@ -220,30 +220,27 @@ const HakaPromotion: React.FC<HakaPromotionProps> = ({
   //  • Others → Web Share API or clipboard copy
   // ---------------------------------------------------------------------------
   const handleAddToWallet = async () => {
-    trackEvent('haka_add_to_wallet_clicked', {
+    trackEvent('barraca_promo_wallet_clicked', {
       ...trackCtx,
-      promo_code: haka.discountCode,
+      promo_code: barraca.discountCode,
       platform: isIOS ? 'ios' : 'other',
     });
 
     if (isIOS) {
-      // Trigger PKPass download — iOS Safari / Chrome will intercept the
-      // application/vnd.apple.pkpass MIME type and open Apple Wallet.
-      const url = `/.netlify/functions/generate-pkpass?hakaId=${encodeURIComponent(haka.id)}`;
+      const url = `/.netlify/functions/generate-pkpass?barracaPromoId=${encodeURIComponent(barraca.id)}`;
       const link = document.createElement('a');
       link.href = url;
-      link.download = `${haka.discountCode}.pkpass`;
+      link.download = `${barraca.discountCode}.pkpass`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
       setWalletMessage(promoT('messages.walletIOS'));
-      trackEvent('haka_wallet_ios_pkpass_triggered', trackCtx);
+      trackEvent('barraca_promo_wallet_ios_triggered', trackCtx);
       setTimeout(() => setWalletMessage(''), 4000);
       return;
     }
 
-    // Non-iOS: try Web Share first, then clipboard
-    const shareText = `${promoT('card.unlockedDescription', { discountCode: haka.discountCode })} ${haka.discountCode}.\n@${haka.instagramHandle}`;
+    const shareText = `${promoT('card.unlockedDescription')} ${barraca.discountCode}.\n@${barraca.instagramHandle}`;
 
     if (navigator.share) {
       try {
@@ -252,7 +249,7 @@ const HakaPromotion: React.FC<HakaPromotionProps> = ({
           text: shareText,
         });
         setWalletMessage(promoT('messages.walletAdded'));
-        trackEvent('haka_wallet_shared', trackCtx);
+        trackEvent('barraca_promo_wallet_shared', trackCtx);
         setTimeout(() => setWalletMessage(''), 3000);
         return;
       } catch {
@@ -261,18 +258,15 @@ const HakaPromotion: React.FC<HakaPromotionProps> = ({
     }
 
     try {
-      await navigator.clipboard.writeText(haka.discountCode);
+      await navigator.clipboard.writeText(barraca.discountCode);
       setWalletMessage(promoT('messages.walletCopied'));
-      trackEvent('haka_wallet_code_copied', trackCtx);
+      trackEvent('barraca_promo_wallet_code_copied', trackCtx);
     } catch {
       setWalletMessage(promoT('messages.walletCopied'));
     }
     setTimeout(() => setWalletMessage(''), 3000);
   };
 
-  // ---------------------------------------------------------------------------
-  // Wallet button label changes per platform
-  // ---------------------------------------------------------------------------
   const walletButtonLabel = isIOS
     ? promoT('card.addToAppleWallet')
     : promoT('card.addToWallet');
@@ -281,19 +275,19 @@ const HakaPromotion: React.FC<HakaPromotionProps> = ({
   // Render
   // ---------------------------------------------------------------------------
   return (
-    <div id={`${haka.slug}-promo-offer`} className="rounded-2xl border border-amber-200 bg-gradient-to-r from-amber-50 via-white to-rose-50 p-6 text-left shadow-sm">
+    <div id={`${barraca.slug}-promo-offer`} className="rounded-2xl border border-amber-200 bg-gradient-to-r from-amber-50 via-white to-rose-50 p-6 text-left shadow-sm">
       <div className="mb-4 inline-flex items-center rounded-full bg-amber-100 px-3 py-1 text-sm font-semibold text-amber-800">
         <Gift className="mr-2 h-4 w-4" />
         {promoT('card.badge')}
       </div>
 
       <h3 className="text-2xl font-bold text-gray-900">
-        {promoT('card.title', { name: haka.name })}
+        {promoT('card.title', { name: barraca.name })}
       </h3>
 
       <p className="mt-2 text-gray-700">
         {promoT('card.descriptionPrefix')}{' '}
-        <span className="font-semibold">@{haka.instagramHandle}</span>{' '}
+        <span className="font-semibold">@{barraca.instagramHandle}</span>{' '}
         {promoT('card.descriptionSuffix')}
       </p>
 
@@ -364,11 +358,11 @@ const HakaPromotion: React.FC<HakaPromotionProps> = ({
               </div>
               <p className="mt-1 text-sm text-emerald-800">
                 {promoT('card.unlockedDescription')}{' '}
-                <span className="font-semibold">{haka.discountCode}</span>.
+                <span className="font-semibold">{barraca.discountCode}</span>.
               </p>
             </div>
             <div className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 px-4 py-3 text-white text-sm font-semibold shadow-lg">
-              @{haka.instagramHandle}
+              @{barraca.instagramHandle}
             </div>
           </div>
 
@@ -391,4 +385,4 @@ const HakaPromotion: React.FC<HakaPromotionProps> = ({
   );
 };
 
-export default HakaPromotion;
+export default BarracaPromotion;

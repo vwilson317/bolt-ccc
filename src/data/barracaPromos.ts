@@ -1,8 +1,8 @@
 /**
- * Haka registry — every Instagram partner barraca that runs a CCC follower promo.
- * Add new hakas here; the rest of the UI is driven off this config.
+ * Barraca promo registry — every partner barraca that runs a CCC follower promo.
+ * Add new barracas here; the rest of the UI is driven off this config.
  */
-export interface HakaConfig {
+export interface BarracaPromoConfig {
   /** Unique ID used as `promo_id` in the DB (must be URL-safe) */
   id: string;
   /** URL slug, e.g. /thai82 */
@@ -36,7 +36,7 @@ export interface HakaConfig {
   identifierStorageKey: string;
 }
 
-export const HAKAS: HakaConfig[] = [
+export const BARRACA_PROMOS: BarracaPromoConfig[] = [
   {
     id: 'thais-follow',
     slug: 'thai82',
@@ -61,9 +61,9 @@ export const HAKAS: HakaConfig[] = [
     instagramUrl: 'https://instagram.com/marcinho33',
     discountCode: 'MARC33',
     barracaLocation: 'Rio de Janeiro',
-    badgeFromColor: 'blue-500',
-    badgeToColor: 'indigo-500',
-    passBackgroundRgb: 'rgb(59,130,246)',
+    badgeFromColor: 'yellow-500',
+    badgeToColor: 'amber-600',
+    passBackgroundRgb: 'rgb(234,179,8)',
     active: false,
     storageKey: 'ccc_badge_marcinho33-follow',
     identifierStorageKey: 'ccc_identifier_marcinho33-follow',
@@ -76,17 +76,17 @@ export const HAKAS: HakaConfig[] = [
     instagramUrl: 'https://instagram.com/nino101',
     discountCode: 'NINO101',
     barracaLocation: 'Rio de Janeiro',
-    badgeFromColor: 'rose-500',
-    badgeToColor: 'pink-500',
-    passBackgroundRgb: 'rgb(244,63,94)',
+    badgeFromColor: 'slate-400',
+    badgeToColor: 'slate-600',
+    passBackgroundRgb: 'rgb(100,116,139)',
     active: false,
     storageKey: 'ccc_badge_nino101-follow',
     identifierStorageKey: 'ccc_identifier_nino101-follow',
   },
 ];
 
-export const getHakaBySlug = (slug: string): HakaConfig | undefined =>
-  HAKAS.find((h) => h.slug === slug);
+export const getBarracaPromoBySlug = (slug: string): BarracaPromoConfig | undefined =>
+  BARRACA_PROMOS.find((b) => b.slug === slug);
 
-export const getHakaById = (id: string): HakaConfig | undefined =>
-  HAKAS.find((h) => h.id === id);
+export const getBarracaPromoById = (id: string): BarracaPromoConfig | undefined =>
+  BARRACA_PROMOS.find((b) => b.id === id);

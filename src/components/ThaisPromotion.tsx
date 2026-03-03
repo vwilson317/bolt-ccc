@@ -1,10 +1,10 @@
 /**
- * ThaisPromotion — thin backward-compatible wrapper around HakaPromotion.
- * Existing imports in Home.tsx and ThaisPromoPage.tsx continue to work unchanged.
+ * ThaisPromotion — thin backward-compatible wrapper around BarracaPromotion.
+ * Existing imports in Home.tsx continue to work unchanged.
  */
 import React from 'react';
-import HakaPromotion from './HakaPromotion';
-import { getHakaById } from '../data/hakas';
+import BarracaPromotion from './BarracaPromotion';
+import { getBarracaPromoById } from '../data/barracaPromos';
 
 interface ThaisPromotionProps {
   promoSource?: string;
@@ -13,9 +13,9 @@ interface ThaisPromotionProps {
 const ThaisPromotion: React.FC<ThaisPromotionProps> = ({
   promoSource = 'home_instagram_section',
 }) => {
-  const haka = getHakaById('thais-follow');
-  if (!haka) return null;
-  return <HakaPromotion haka={haka} promoSource={promoSource} />;
+  const barraca = getBarracaPromoById('thais-follow');
+  if (!barraca) return null;
+  return <BarracaPromotion barraca={barraca} promoSource={promoSource} />;
 };
 
 export default ThaisPromotion;

@@ -25,7 +25,7 @@ const PhotoGallery = lazy(() => import('./pages/PhotoGallery'));
 const BarracaRegister = lazy(() => import('./pages/BarracaRegister'));
 const LanguageExchangeFunnel = lazy(() => import('./pages/LanguageExchangeFunnel'));
 const ThaisPromoPage = lazy(() => import('./pages/ThaisPromoPage'));
-const HakaPromoPage = lazy(() => import('./pages/HakaPromoPage'));
+const BarracaPromoPage = lazy(() => import('./pages/BarracaPromoPage'));
 
 // Lazy-load heavy overlay components that are not needed at initial paint
 // StoryViewer removed: StoryProvider is disabled and StoryViewer would throw without it
@@ -79,8 +79,8 @@ function AppContent() {
             <Route path="/barraca/:id" element={<BarracaDetailPage />} />
             <Route path="/register" element={<BarracaRegister />} />
             <Route path="/language-exchange" element={<LanguageExchangeFunnel />} />
-            {/* Generic haka promo pages (/:hakaSlug last so named routes take priority) */}
-            <Route path="/:hakaSlug" element={<HakaPromoPage />} />
+            {/* Generic barraca promo pages (/:barracaSlug last so named routes take priority) */}
+            <Route path="/:barracaSlug" element={<BarracaPromoPage />} />
             {/* <Route path="/translation-demo" element={<TranslationDemo />} /> */}
           </Routes>
         </Suspense>

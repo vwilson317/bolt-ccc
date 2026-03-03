@@ -1,11 +1,11 @@
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
-import { HAKAS } from '../data/hakas';
+import { BARRACA_PROMOS } from '../data/barracaPromos';
 
 interface BadgeContextValue {
-  /** IDs of hakas whose badge is currently unlocked */
+  /** IDs of barracas whose badge is currently unlocked */
   unlockedIds: Set<string>;
   /** Call this after a successful claim so the FAB updates immediately */
-  unlockBadge: (hakaId: string) => void;
+  unlockBadge: (barracaPromoId: string) => void;
 }
 
 const BadgeContext = createContext<BadgeContextValue>({
@@ -17,9 +17,9 @@ export const BadgeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [unlockedIds, setUnlockedIds] = useState<Set<string>>(() => {
     if (typeof window === 'undefined') return new Set();
     const initial = new Set<string>();
-    HAKAS.forEach((h) => {
-      if (window.localStorage.getItem(h.storageKey) === 'true') {
-        initial.add(h.id);
+    BARRACA_PROMOS.forEach((b) => {
+      if (window.localStorage.getItem(b.storageKey) === 'true') {
+        initial.add(b.id);
       }
     });
     return initial;
@@ -28,14 +28,14 @@ export const BadgeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   // Re-sync whenever localStorage is written from another tab
   useEffect(() => {
     const onStorage = (e: StorageEvent) => {
-      const haka = HAKAS.find((h) => h.storageKey === e.key);
-      if (!haka) return;
+      const barraca = BARRACA_PROMOS.find((b) => b.storageKey === e.key);
+      if (!barraca) return;
       if (e.newValue === 'true') {
-        setUnlockedIds((prev) => new Set([...prev, haka.id]));
+        setUnlockedIds((prev) => new Set([...prev, barraca.id]));
       } else {
         setUnlockedIds((prev) => {
           const next = new Set(prev);
-          next.delete(haka.id);
+          next.delete(barraca.id);
           return next;
         });
       }
@@ -44,8 +44,8 @@ export const BadgeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     return () => window.removeEventListener('storage', onStorage);
   }, []);
 
-  const unlockBadge = useCallback((hakaId: string) => {
-    setUnlockedIds((prev) => new Set([...prev, hakaId]));
+  const unlockBadge = useCallback((barracaPromoId: string) => {
+    setUnlockedIds((prev) => new Set([...prev, barracaPromoId]));
   }, []);
 
   return (

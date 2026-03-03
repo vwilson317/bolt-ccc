@@ -1,7 +1,7 @@
 /**
  * generate-pkpass — Netlify Function
  *
- * Generates an Apple Wallet PKPass (.pkpass) for a given haka promo.
+ * Generates an Apple Wallet PKPass (.pkpass) for a given barraca promo.
  * iOS Safari and Chrome-on-iOS intercept the `application/vnd.apple.pkpass`
  * MIME type and open the system "Add to Wallet" sheet automatically.
  *
@@ -28,7 +28,7 @@
  *
  *  Add the env vars to .env and run:
  *    netlify dev
- *  Then visit: http://localhost:8888/.netlify/functions/generate-pkpass?hakaId=thais-follow
+ *  Then visit: http://localhost:8888/.netlify/functions/generate-pkpass?barracaPromoId=thais-follow
  *  On iOS (Safari or Chrome) the Wallet sheet will appear.
  */
 
@@ -52,10 +52,10 @@ try {
 }
 
 // ---------------------------------------------------------------------------
-// Inline haka data (duplicated from src/data/hakas.ts so the Netlify function
+// Inline barraca promo data (duplicated from src/data/barracaPromos.ts so the Netlify function
 // bundle doesn't need to resolve client-side module paths)
 // ---------------------------------------------------------------------------
-interface HakaMeta {
+interface BarracaPromoMeta {
   id: string;
   name: string;
   instagramHandle: string;
@@ -64,7 +64,7 @@ interface HakaMeta {
   passBackgroundRgb: string;
 }
 
-const HAKA_MAP: Record<string, HakaMeta> = {
+const BARRACA_PROMO_MAP: Record<string, BarracaPromoMeta> = {
   'thais-follow': {
     id: 'thais-follow',
     name: 'Thais',
@@ -79,7 +79,7 @@ const HAKA_MAP: Record<string, HakaMeta> = {
     instagramHandle: 'marcinho33',
     discountCode: 'MARC33',
     barracaLocation: 'Rio de Janeiro',
-    passBackgroundRgb: 'rgb(59,130,246)',
+    passBackgroundRgb: 'rgb(234,179,8)',
   },
   'nino101-follow': {
     id: 'nino101-follow',
@@ -87,7 +87,7 @@ const HAKA_MAP: Record<string, HakaMeta> = {
     instagramHandle: 'nino101',
     discountCode: 'NINO101',
     barracaLocation: 'Rio de Janeiro',
-    passBackgroundRgb: 'rgb(244,63,94)',
+    passBackgroundRgb: 'rgb(100,116,139)',
   },
 };
 
@@ -140,7 +140,7 @@ function signManifest(
  * Build and return a signed .pkpass as a Buffer.
  */
 async function buildPkPass(
-  haka: HakaMeta,
+  barraca: BarracaPromoMeta,
   teamId: string,
   passTypeId: string,
   certPem: string,
@@ -151,12 +151,12 @@ async function buildPkPass(
   const passJson = {
     formatVersion: 1,
     passTypeIdentifier: passTypeId,
-    serialNumber: `${haka.id}-${Date.now()}`,
+    serialNumber: `${barraca.id}-${Date.now()}`,
     teamIdentifier: teamId,
     organizationName: 'Carioca Coastal Club',
-    description: `${haka.name}'s Barraca Discount Pass`,
+    description: `${barraca.name}'s Barraca Discount Pass`,
     foregroundColor: 'rgb(255,255,255)',
-    backgroundColor: haka.passBackgroundRgb,
+    backgroundColor: barraca.passBackgroundRgb,
     labelColor: 'rgb(209,250,229)',
     logoText: 'Carioca Coastal Club',
     coupon: {
@@ -164,50 +164,50 @@ async function buildPkPass(
         {
           key: 'offer',
           label: 'DISCOUNT CODE',
-          value: haka.discountCode,
+          value: barraca.discountCode,
         },
       ],
       secondaryFields: [
         {
           key: 'barraca',
           label: 'BARRACA',
-          value: `@${haka.instagramHandle}`,
+          value: `@${barraca.instagramHandle}`,
         },
       ],
       auxiliaryFields: [
         {
           key: 'location',
           label: 'LOCATION',
-          value: haka.barracaLocation,
+          value: barraca.barracaLocation,
         },
       ],
       backFields: [
         {
           key: 'terms',
           label: 'TERMS & CONDITIONS',
-          value: `Show this pass at ${haka.name}'s barraca in ${haka.barracaLocation}. You must follow @${haka.instagramHandle} on Instagram to qualify. Code cannot be combined with other offers.`,
+          value: `Show this pass at ${barraca.name}'s barraca in ${barraca.barracaLocation}. You must follow @${barraca.instagramHandle} on Instagram to qualify. Code cannot be combined with other offers.`,
         },
         {
           key: 'contact',
           label: 'INSTAGRAM',
-          value: `@${haka.instagramHandle}`,
+          value: `@${barraca.instagramHandle}`,
         },
       ],
     },
     barcodes: [
       {
-        message: haka.discountCode,
+        message: barraca.discountCode,
         format: 'PKBarcodeFormatQR',
         messageEncoding: 'iso-8859-1',
-        altText: haka.discountCode,
+        altText: barraca.discountCode,
       },
     ],
     // Legacy barcode field for older iOS versions
     barcode: {
-      message: haka.discountCode,
+      message: barraca.discountCode,
       format: 'PKBarcodeFormatQR',
       messageEncoding: 'iso-8859-1',
-      altText: haka.discountCode,
+      altText: barraca.discountCode,
     },
   };
 
@@ -247,13 +247,13 @@ export const handler: Handler = async (event: HandlerEvent) => {
     return { statusCode: 405, body: 'Method not allowed' };
   }
 
-  // ── Resolve haka ───────────────────────────────────────────────────────────
-  const hakaId = event.queryStringParameters?.hakaId ?? '';
-  const haka = HAKA_MAP[hakaId];
-  if (!haka) {
+  // ── Resolve barraca promo ───────────────────────────────────────────────────────────
+  const barracaPromoId = event.queryStringParameters?.barracaPromoId ?? '';
+  const barraca = BARRACA_PROMO_MAP[barracaPromoId];
+  if (!barraca) {
     return {
       statusCode: 400,
-      body: JSON.stringify({ error: `Unknown hakaId: ${hakaId}` }),
+      body: JSON.stringify({ error: `Unknown barracaPromoId: ${barracaPromoId}` }),
       headers: { 'Content-Type': 'application/json' },
     };
   }
@@ -300,7 +300,7 @@ export const handler: Handler = async (event: HandlerEvent) => {
   // ── Generate the pass ──────────────────────────────────────────────────────
   try {
     const passBuffer = await buildPkPass(
-      haka,
+      barraca,
       teamId,
       passTypeId,
       certPem,
@@ -312,7 +312,7 @@ export const handler: Handler = async (event: HandlerEvent) => {
       statusCode: 200,
       headers: {
         'Content-Type': 'application/vnd.apple.pkpass',
-        'Content-Disposition': `attachment; filename="${haka.discountCode}.pkpass"`,
+        'Content-Disposition': `attachment; filename="${barraca.discountCode}.pkpass"`,
         'Cache-Control': 'no-store',
       },
       body: passBuffer.toString('base64'),
