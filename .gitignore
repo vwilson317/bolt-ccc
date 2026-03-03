@@ -28,5 +28,11 @@ supabase/.temp/
 # Local Netlify folder
 .netlify
 
+# Apple Wallet private key — never commit this.
+# The public certs (pass_cert.pem, wwdr.pem) ARE committed and bundled with
+# the Lambda function.  Only the private key must stay out of git.
+netlify/functions/certs/*.key.pem
+netlify/functions/certs/key.pem
+
 # Sentry Config File
 .env.sentry-build-plugin
