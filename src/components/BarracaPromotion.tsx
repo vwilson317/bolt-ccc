@@ -131,21 +131,19 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
 }) => {
   const { t } = useTranslation();
   const location = useLocation();
-  const { unlockBadge } = useBadgeContext();
+  const { unlockBadge, unlockedIds } = useBadgeContext();
 
-  // Lazily read localStorage on the very first render so the correct state is
-  // available immediately — before useEffect fires.  This prevents the input
-  // from flashing visible for users who already have an active badge.
+  // hasBadge is derived directly from the badge context — the single source of
+  // truth — so it is always in sync with the FAB and never needs a separate
+  // local state copy.  BadgeContext is itself initialised from localStorage via
+  // a lazy useState, so the value is already correct on the very first render.
+  const hasBadge = unlockedIds.has(barraca.id);
+
   const [hasClickedFollow, setHasClickedFollow] = useState(() => {
     if (typeof window === 'undefined') return false;
-    const isUnlocked = window.localStorage.getItem(barraca.storageKey) === 'true';
     const followedThisSession =
       window.sessionStorage.getItem(`ccc_follow_session_${barraca.id}`) === 'true';
-    return isUnlocked || followedThisSession;
-  });
-  const [hasBadge, setHasBadge] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    return window.localStorage.getItem(barraca.storageKey) === 'true';
+    return hasBadge || followedThisSession;
   });
   const [identifierInput, setIdentifierInput] = useState(() => {
     if (typeof window === 'undefined') return '';
@@ -156,9 +154,8 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [restoredIdentifier, setRestoredIdentifier] = useState(() => {
     if (typeof window === 'undefined') return '';
-    const isUnlocked = window.localStorage.getItem(barraca.storageKey) === 'true';
     const savedId = window.localStorage.getItem(barraca.identifierStorageKey) || '';
-    return isUnlocked && savedId ? savedId : '';
+    return hasBadge && savedId ? savedId : '';
   });
   const [walletMessage, setWalletMessage] = useState('');
   const [isIOS] = useState(detectIOS);
@@ -166,11 +163,10 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
   // Hides the claim input so it doesn't flash before the badge is restored.
   const [isRestoringSession, setIsRestoringSession] = useState(() => {
     if (typeof window === 'undefined') return false;
-    const isUnlocked = window.localStorage.getItem(barraca.storageKey) === 'true';
     const savedId = window.localStorage.getItem(barraca.identifierStorageKey) || '';
     // Hide input while we check the DB only when we have a saved identifier
     // but the badge hasn't been confirmed yet.
-    return !isUnlocked && !!savedId;
+    return !hasBadge && !!savedId;
   });
 
   const promoT = (key: string, vars?: Record<string, string>) =>
@@ -215,7 +211,6 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
 
       if (!claim?.badge_unlocked) return;
 
-      setHasBadge(true);
       setHasClickedFollow(true);
       setRestoredIdentifier(claim.identifier_value);
       window.localStorage.setItem(barraca.storageKey, 'true');
@@ -331,7 +326,6 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
   };
 
   const _persistBadge = (identifierValue: string) => {
-    setHasBadge(true);
     setHasClickedFollow(true);
     setIdentifierInput(identifierValue);
     window.localStorage.setItem(barraca.storageKey, 'true');
