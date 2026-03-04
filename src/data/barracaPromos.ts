@@ -20,6 +20,8 @@ export interface BarracaPromoConfig {
   whatsappUrl?: string;
   /** Optional path to a barraca logo/image shown at the top of the promo page (relative to /public) */
   logoPath?: string;
+  /** When true the logo fills the full width of its container instead of rendering as a circle */
+  logoFull?: boolean;
 
   // --- Appearance ---
   /** Tailwind `from-*` colour used in badge gradient */
@@ -79,6 +81,7 @@ export const BARRACA_PROMOS: BarracaPromoConfig[] = [
     discountCode: 'RJ53',
     barracaLocation: 'Rio de Janeiro',
     logoPath: '/miriam53-logo.png',
+    logoFull: true,
     badgeFromColor: 'zinc-400',
     badgeToColor: 'zinc-600',
     passBackgroundRgb: 'rgb(113,113,122)',
