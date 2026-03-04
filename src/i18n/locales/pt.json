@@ -251,6 +251,17 @@
       "whatsapp": "WhatsApp"
     }
   },
+  "barracaPromoPage": {
+    "loading": "Carregando promoção…",
+    "title": "Promoção da Barraca {{name}}",
+    "intro": "Siga @{{instagramHandle}} e resgate seu desconto de apoiador reutilizável em {{location}}.",
+    "whatsappCta": "Entrar na comunidade do WhatsApp",
+    "comingSoon": "Em Breve",
+    "comingSoonTitle": "Passe da Barraca {{name}}",
+    "comingSoonDescription": "Estamos fazendo uma parceria com @{{instagramHandle}} para um desconto exclusivo para seguidores dos membros do Carioca Coastal Club. Siga agora para estar pronto quando a promoção for lançada.",
+    "comingSoonFollowButton": "Seguir @{{instagramHandle}}",
+    "comingSoonNote": "O código de desconto será revelado no lançamento. Fique ligado!"
+  },
   "thaisPromoPage": {
     "heading": "Promoção Barraca Thai 82",
     "intro": "Você está a um passo de desbloquear um desconto de apoiador na barraca da Thais em Ipanema. Já faz parte da comunidade?",

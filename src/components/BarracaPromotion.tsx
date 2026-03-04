@@ -393,7 +393,7 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
       </p>
 
       <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
-        {/* Step 1 */}
+        {/* Step 1 — always visible */}
         <button
           onClick={handleFollowClick}
           className="bg-gradient-to-r from-pink-500 to-purple-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-pink-600 hover:to-purple-700 transition-all duration-200 shadow-lg flex items-center justify-center"
@@ -402,35 +402,37 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
           {promoT('card.step1Button')}
         </button>
 
-        {/* Step 2 */}
-        <div className="sm:col-span-2">
-          <label className="mb-2 block text-sm font-semibold text-gray-700">
-            {promoT('card.step2Label')}
-          </label>
-          <div className="flex flex-col gap-3 sm:flex-row">
-            <input
-              type="text"
-              value={identifierInput}
-              onChange={(e) => setIdentifierInput(e.target.value)}
-              placeholder={promoT('card.identifierPlaceholder')}
-              className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-gray-800 placeholder:text-gray-400 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-100"
-            />
-            <button
-              onClick={handleClaim}
-              disabled={isSubmitting}
-              className="bg-white text-gray-800 px-6 py-3 rounded-xl font-semibold border-2 border-gray-200 hover:bg-gray-50 transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              {isSubmitting ? promoT('card.saving') : promoT('card.claimButton')}
-            </button>
-          </div>
+        {/* Step 2 — hidden once badge is unlocked */}
+        {!hasBadge && (
+          <div className="sm:col-span-2">
+            <label className="mb-2 block text-sm font-semibold text-gray-700">
+              {promoT('card.step2Label')}
+            </label>
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <input
+                type="text"
+                value={identifierInput}
+                onChange={(e) => setIdentifierInput(e.target.value)}
+                placeholder={promoT('card.identifierPlaceholder')}
+                className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-gray-800 placeholder:text-gray-400 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-100"
+              />
+              <button
+                onClick={handleClaim}
+                disabled={isSubmitting}
+                className="bg-white text-gray-800 px-6 py-3 rounded-xl font-semibold border-2 border-gray-200 hover:bg-gray-50 transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {isSubmitting ? promoT('card.saving') : promoT('card.claimButton')}
+              </button>
+            </div>
 
-          {claimError && (
-            <p className="mt-2 text-sm font-medium text-red-600">{claimError}</p>
-          )}
-          {claimSuccess && (
-            <p className="mt-2 text-sm font-medium text-emerald-700">{claimSuccess}</p>
-          )}
-        </div>
+            {claimError && (
+              <p className="mt-2 text-sm font-medium text-red-600">{claimError}</p>
+            )}
+            {claimSuccess && (
+              <p className="mt-2 text-sm font-medium text-emerald-700">{claimSuccess}</p>
+            )}
+          </div>
+        )}
       </div>
 
       {restoredIdentifier && (
@@ -440,7 +442,9 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
         </p>
       )}
 
-      <div className="mt-3 text-xs text-gray-500">{promoT('card.note')}</div>
+      {!hasBadge && (
+        <div className="mt-3 text-xs text-gray-500">{promoT('card.note')}</div>
+      )}
 
       {/* Unlocked badge panel — colours driven by barraca config */}
       {hasBadge && (() => {

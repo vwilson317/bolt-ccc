@@ -24,7 +24,6 @@ const Photos = lazy(() => import('./pages/Photos'));
 const PhotoGallery = lazy(() => import('./pages/PhotoGallery'));
 const BarracaRegister = lazy(() => import('./pages/BarracaRegister'));
 const LanguageExchangeFunnel = lazy(() => import('./pages/LanguageExchangeFunnel'));
-const ThaisPromoPage = lazy(() => import('./pages/ThaisPromoPage'));
 const BarracaPromoPage = lazy(() => import('./pages/BarracaPromoPage'));
 
 // Lazy-load heavy overlay components that are not needed at initial paint
@@ -69,7 +68,6 @@ function AppContent() {
           <Routes>
             <Route path="/" element={isBarracaSubdomain ? <Home /> : <CommunityHome />} />
             <Route path="/projects/carioca-coastal-club" element={<Home />} />
-            <Route path="/thai82" element={<ThaisPromoPage />} />
             <Route path="/discover" element={<Discover />} />
             <Route path="/about" element={<About />} />
             <Route path="/jobs" element={<Jobs />} />
