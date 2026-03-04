@@ -142,6 +142,9 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
   const [restoredIdentifier, setRestoredIdentifier] = useState('');
   const [walletMessage, setWalletMessage] = useState('');
   const [isIOS] = useState(detectIOS);
+  // True while an async DB lookup is in progress for a saved identifier.
+  // Hides the claim input so it doesn't flash before the badge is restored.
+  const [isRestoringSession, setIsRestoringSession] = useState(false);
 
   const promoT = (key: string, vars?: Record<string, string>) =>
     t(`home.promo.${key}`, vars ?? {});
@@ -172,7 +175,19 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
 
     setHasBadge(isUnlocked);
     setHasClickedFollow(isUnlocked || followedThisSession);
-    if (savedId) setIdentifierInput(savedId);
+
+    if (savedId) {
+      setIdentifierInput(savedId);
+      if (isUnlocked) {
+        // Badge already confirmed in localStorage — show the identifier immediately
+        // without waiting for the DB round-trip.
+        setRestoredIdentifier(savedId);
+      } else {
+        // Saved identifier exists but badge not yet confirmed — hide the input
+        // while we check the DB so it doesn't flash then disappear.
+        setIsRestoringSession(true);
+      }
+    }
 
     trackEvent('barraca_promo_viewed', {
       ...trackCtx,
@@ -185,7 +200,11 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
     let active = true;
     (async () => {
       const claim = await PromoClaimService.findByIdentifier(barraca.id, savedId);
-      if (!active || !claim?.badge_unlocked) return;
+      if (!active) return;
+
+      setIsRestoringSession(false);
+
+      if (!claim?.badge_unlocked) return;
 
       setHasBadge(true);
       setHasClickedFollow(true);
@@ -402,8 +421,8 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
           {promoT('card.step1Button')}
         </button>
 
-        {/* Step 2 — hidden once badge is unlocked */}
-        {!hasBadge && (
+        {/* Step 2 — hidden once badge is unlocked or while session is being restored */}
+        {!hasBadge && !isRestoringSession && (
           <div className="sm:col-span-2">
             <label className="mb-2 block text-sm font-semibold text-gray-700">
               {promoT('card.step2Label')}
@@ -442,7 +461,7 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
         </p>
       )}
 
-      {!hasBadge && (
+      {!hasBadge && !isRestoringSession && (
         <div className="mt-3 text-xs text-gray-500">{promoT('card.note')}</div>
       )}
 

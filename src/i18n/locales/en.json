@@ -257,6 +257,7 @@
     "comingSoonTitle": "{{name}}'s Barraca Pass",
     "comingSoonDescription": "We're teaming up with @{{instagramHandle}} on an exclusive follower discount for Carioca Coastal Club members. Follow them now so you're ready when the promo launches.",
     "comingSoonFollowButton": "Follow @{{instagramHandle}}",
+    "comingSoonWhatsappCta": "Join the CC Club WhatsApp",
     "comingSoonNote": "Discount code will be revealed at launch. Stay tuned!"
   },
   "thaisPromoPage": {

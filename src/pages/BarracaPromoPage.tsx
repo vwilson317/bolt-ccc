@@ -105,6 +105,27 @@ const BarracaPromoPage: React.FC = () => {
             {t('barracaPromoPage.comingSoonFollowButton', { instagramHandle: barraca.instagramHandle })}
           </a>
 
+          {barraca.whatsappUrl && (
+            <div className="mt-4">
+              <a
+                href={barraca.whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() =>
+                  trackEvent('barraca_promo_whatsapp_clicked', {
+                    promo_id: barraca.id,
+                    page_path: location.pathname,
+                    full_path: `${location.pathname}${location.search}`,
+                  })
+                }
+                className="inline-flex items-center gap-2 rounded-xl bg-green-500 px-6 py-3 font-semibold text-white hover:bg-green-600 transition-colors shadow-md"
+              >
+                <MessageCircle className="h-5 w-5" />
+                {t('barracaPromoPage.comingSoonWhatsappCta')}
+              </a>
+            </div>
+          )}
+
           <p className="mt-6 text-sm text-gray-400">
             {t('barracaPromoPage.comingSoonNote')}
           </p>
