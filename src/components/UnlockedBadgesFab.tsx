@@ -21,6 +21,11 @@ function detectIOS(): boolean {
   );
 }
 
+function detectIOSChrome(): boolean {
+  if (typeof navigator === 'undefined') return false;
+  return /CriOS/i.test(navigator.userAgent);
+}
+
 // ---------------------------------------------------------------------------
 // Single-badge lightbox
 // ---------------------------------------------------------------------------
@@ -38,10 +43,14 @@ const BadgeLightbox: React.FC<BadgeLightboxProps> = ({ barraca, onClose }) => {
 
     if (isIOS) {
       const url = `/.netlify/functions/generate-pkpass?barracaPromoId=${encodeURIComponent(barraca.id)}`;
-      // Navigate directly instead of using <a download> so the OS-level MIME
-      // type handler (application/vnd.apple.pkpass) can intercept the response
-      // and open the Wallet app. The download attribute bypasses this in Chrome.
-      window.location.href = url;
+      if (detectIOSChrome()) {
+        // Chrome on iOS does not intercept .pkpass via page navigation — it
+        // renders a blank page instead. Opening a new tab lets the OS-level
+        // MIME handler pick up the response without navigating away.
+        window.open(url, '_blank', 'noopener');
+      } else {
+        window.location.href = url;
+      }
       setWalletMessage('Opening Apple Wallet…');
       setTimeout(() => setWalletMessage(''), 4000);
       return;

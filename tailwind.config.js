@@ -61,5 +61,14 @@ export default {
       },
     },
   },
+  safelist: [
+    // Badge gradient colours assembled dynamically from BarracaPromoConfig.
+    // Tailwind cannot detect these at build time, so we safelist them here.
+    // Add a new row whenever a new barraca with a new colour family is added.
+    'from-emerald-500', 'to-teal-500',
+    'from-yellow-500', 'to-amber-600',
+    'from-zinc-400',   'to-zinc-600',
+    'from-slate-400',  'to-slate-600',
+  ],
   plugins: [],
 };

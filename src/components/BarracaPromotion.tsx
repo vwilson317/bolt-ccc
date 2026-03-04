@@ -18,7 +18,7 @@ import { useBadgeContext } from '../contexts/BadgeContext';
 import type { BarracaPromoConfig } from '../data/barracaPromos';
 
 // ---------------------------------------------------------------------------
-// iOS detection — works for Safari and Chrome-on-iOS (both handle .pkpass)
+// iOS detection helpers
 // ---------------------------------------------------------------------------
 function detectIOS(): boolean {
   if (typeof navigator === 'undefined') return false;
@@ -26,6 +26,98 @@ function detectIOS(): boolean {
     /iP(hone|ad|od)/.test(navigator.userAgent) ||
     (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
   );
+}
+
+// Chrome on iOS uses a WKWebView that does NOT intercept .pkpass via
+// window.location.href navigation the way Safari does, so it ends up showing
+// a blank page. Detect it so we can open a new tab instead.
+function detectIOSChrome(): boolean {
+  if (typeof navigator === 'undefined') return false;
+  return /CriOS/i.test(navigator.userAgent);
+}
+
+// ---------------------------------------------------------------------------
+// Per-barraca panel colour scheme (avoids hardcoded emerald/teal for every
+// barraca — Tailwind would purge dynamically-assembled class names anyway).
+// ---------------------------------------------------------------------------
+interface PanelColors {
+  bg: string;
+  borderColor: string;
+  blob1: string;
+  blob2: string;
+  badgeBorder: string;
+  badgeText: string;
+  titleColor: string;
+  descColor: string;
+  handleGradient: string;
+  btnBorder: string;
+  btnText: string;
+  msgColor: string;
+}
+
+function getPanelColors(badgeFromColor: string): PanelColors {
+  const family = badgeFromColor.split('-')[0];
+
+  const schemes: Record<string, PanelColors> = {
+    emerald: {
+      bg: 'linear-gradient(to bottom right, #ecfdf5, #ffffff, #f0fdfa)',
+      borderColor: 'rgba(167,243,208,0.7)',
+      blob1: 'rgba(167,243,208,0.4)',
+      blob2: 'rgba(153,246,228,0.4)',
+      badgeBorder: '#6ee7b7',
+      badgeText: '#047857',
+      titleColor: '#022c22',
+      descColor: '#065f46',
+      handleGradient: 'linear-gradient(to right, #10b981, #14b8a6)',
+      btnBorder: '#6ee7b7',
+      btnText: '#047857',
+      msgColor: '#047857',
+    },
+    zinc: {
+      bg: 'linear-gradient(to bottom right, #fafafa, #ffffff, #f4f4f5)',
+      borderColor: 'rgba(228,228,231,0.7)',
+      blob1: 'rgba(228,228,231,0.4)',
+      blob2: 'rgba(212,212,216,0.4)',
+      badgeBorder: '#d4d4d8',
+      badgeText: '#3f3f46',
+      titleColor: '#18181b',
+      descColor: '#27272a',
+      handleGradient: 'linear-gradient(to right, #a1a1aa, #52525b)',
+      btnBorder: '#d4d4d8',
+      btnText: '#3f3f46',
+      msgColor: '#3f3f46',
+    },
+    yellow: {
+      bg: 'linear-gradient(to bottom right, #fefce8, #ffffff, #fef9c3)',
+      borderColor: 'rgba(254,240,138,0.7)',
+      blob1: 'rgba(254,240,138,0.4)',
+      blob2: 'rgba(253,230,138,0.4)',
+      badgeBorder: '#fcd34d',
+      badgeText: '#b45309',
+      titleColor: '#451a03',
+      descColor: '#78350f',
+      handleGradient: 'linear-gradient(to right, #eab308, #d97706)',
+      btnBorder: '#fcd34d',
+      btnText: '#b45309',
+      msgColor: '#b45309',
+    },
+    slate: {
+      bg: 'linear-gradient(to bottom right, #f8fafc, #ffffff, #f1f5f9)',
+      borderColor: 'rgba(226,232,240,0.7)',
+      blob1: 'rgba(226,232,240,0.4)',
+      blob2: 'rgba(203,213,225,0.4)',
+      badgeBorder: '#cbd5e1',
+      badgeText: '#334155',
+      titleColor: '#0f172a',
+      descColor: '#1e293b',
+      handleGradient: 'linear-gradient(to right, #94a3b8, #475569)',
+      btnBorder: '#cbd5e1',
+      btnText: '#334155',
+      msgColor: '#334155',
+    },
+  };
+
+  return schemes[family] ?? schemes.emerald;
 }
 
 interface BarracaPromotionProps {
@@ -233,10 +325,16 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
 
     if (isIOS) {
       const url = `/.netlify/functions/generate-pkpass?barracaPromoId=${encodeURIComponent(barraca.id)}`;
-      // Navigate directly instead of using <a download> so the OS-level MIME
-      // type handler (application/vnd.apple.pkpass) can intercept the response
-      // and open the Wallet app. The download attribute bypasses this in Chrome.
-      window.location.href = url;
+      if (detectIOSChrome()) {
+        // Chrome on iOS does not intercept .pkpass via page navigation — it
+        // renders a blank page instead. Opening a new tab lets the OS-level
+        // MIME handler pick up the response without navigating away.
+        window.open(url, '_blank', 'noopener');
+      } else {
+        // Safari: navigate directly so the OS MIME handler opens Wallet.
+        // The <a download> attribute bypasses MIME handling in older Safari.
+        window.location.href = url;
+      }
       setWalletMessage(promoT('messages.walletIOS'));
       trackEvent('barraca_promo_wallet_ios_triggered', trackCtx);
       setTimeout(() => setWalletMessage(''), 4000);
@@ -344,50 +442,72 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
 
       <div className="mt-3 text-xs text-gray-500">{promoT('card.note')}</div>
 
-      {/* Unlocked badge panel */}
-      {hasBadge && (
-        <div className="mt-5 relative overflow-hidden rounded-2xl border border-emerald-200/70 bg-gradient-to-br from-emerald-50 via-white to-teal-50 p-5 shadow-md">
-          <div className="absolute -top-10 -right-8 h-28 w-28 rounded-full bg-emerald-200/40 blur-2xl" />
-          <div className="absolute -bottom-10 -left-10 h-28 w-28 rounded-full bg-teal-200/40 blur-2xl" />
-          <div className="relative mb-4 flex items-center justify-center gap-2">
-            <img src="/logo-icon-color.png" alt="Carioca Coastal Club" className="h-8 w-8" />
-            <img src="/logo-text-pink.png" alt="Carioca Coastal Club" className="h-6" />
-          </div>
-          <div className="relative flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <div className="inline-flex items-center rounded-full border border-emerald-300 bg-white/80 px-3 py-1 text-xs font-semibold tracking-wide text-emerald-700">
-                <Sparkles className="mr-1.5 h-3.5 w-3.5" />
-                {promoT('card.verifiedLabel')}
-              </div>
-              <div className="mt-2 flex items-center text-emerald-900 font-bold text-lg">
-                <CheckCircle2 className="mr-2 h-5 w-5" />
-                {promoT('card.unlockedTitle')}
-              </div>
-              <p className="mt-1 text-sm text-emerald-800">
-                {promoT('card.unlockedDescription')}{' '}
-                <span className="font-semibold">{barraca.discountCode}</span>.
-              </p>
+      {/* Unlocked badge panel — colours driven by barraca config */}
+      {hasBadge && (() => {
+        const pc = getPanelColors(barraca.badgeFromColor);
+        return (
+          <div
+            className="mt-5 relative overflow-hidden rounded-2xl border p-5 shadow-md"
+            style={{ background: pc.bg, borderColor: pc.borderColor }}
+          >
+            <div
+              className="absolute -top-10 -right-8 h-28 w-28 rounded-full blur-2xl"
+              style={{ background: pc.blob1 }}
+            />
+            <div
+              className="absolute -bottom-10 -left-10 h-28 w-28 rounded-full blur-2xl"
+              style={{ background: pc.blob2 }}
+            />
+            <div className="relative mb-4 flex items-center justify-center gap-2">
+              <img src="/logo-icon-color.png" alt="Carioca Coastal Club" className="h-8 w-8" />
+              <img src="/logo-text-pink.png" alt="Carioca Coastal Club" className="h-6" />
             </div>
-            <div className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 px-4 py-3 text-white text-sm font-semibold shadow-lg">
-              @{barraca.instagramHandle}
+            <div className="relative flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <div
+                  className="inline-flex items-center rounded-full border bg-white/80 px-3 py-1 text-xs font-semibold tracking-wide"
+                  style={{ borderColor: pc.badgeBorder, color: pc.badgeText }}
+                >
+                  <Sparkles className="mr-1.5 h-3.5 w-3.5" />
+                  {promoT('card.verifiedLabel')}
+                </div>
+                <div
+                  className="mt-2 flex items-center font-bold text-lg"
+                  style={{ color: pc.titleColor }}
+                >
+                  <CheckCircle2 className="mr-2 h-5 w-5" />
+                  {promoT('card.unlockedTitle')}
+                </div>
+                <p className="mt-1 text-sm" style={{ color: pc.descColor }}>
+                  {promoT('card.unlockedDescription')}{' '}
+                  <span className="font-semibold">{barraca.discountCode}</span>.
+                </p>
+              </div>
+              <div
+                className="inline-flex items-center justify-center rounded-xl px-4 py-3 text-white text-sm font-semibold shadow-lg"
+                style={{ background: pc.handleGradient }}
+              >
+                @{barraca.instagramHandle}
+              </div>
             </div>
-          </div>
 
-          <div className="mt-4 flex flex-col gap-2 sm:flex-row">
-            <button
-              onClick={handleAddToWallet}
-              className="flex items-center justify-center gap-2 rounded-xl border border-emerald-300 bg-white px-5 py-2.5 text-sm font-semibold text-emerald-700 shadow-sm hover:bg-emerald-50 transition-colors"
-            >
-              <Wallet className="h-4 w-4" />
-              {walletButtonLabel}
-            </button>
-          </div>
+            <div className="mt-4 flex flex-col gap-2 sm:flex-row">
+              <button
+                onClick={handleAddToWallet}
+                className="flex items-center justify-center gap-2 rounded-xl border bg-white px-5 py-2.5 text-sm font-semibold shadow-sm hover:bg-gray-50 transition-colors"
+                style={{ borderColor: pc.btnBorder, color: pc.btnText }}
+              >
+                <Wallet className="h-4 w-4" />
+                {walletButtonLabel}
+              </button>
+            </div>
 
-          {walletMessage && (
-            <p className="mt-2 text-sm font-medium text-emerald-700">{walletMessage}</p>
-          )}
-        </div>
-      )}
+            {walletMessage && (
+              <p className="mt-2 text-sm font-medium" style={{ color: pc.msgColor }}>{walletMessage}</p>
+            )}
+          </div>
+        );
+      })()}
     </div>
   );
 };

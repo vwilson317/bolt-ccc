@@ -222,30 +222,32 @@
       },
       "card": {
         "badge": "Oferta de Follow",
-        "title": "Sigue la página de la barraca de Thais y reclama tu pase de descuento reutilizable",
+        "title": "Sigue la página de la barraca de {{name}} y reclama tu pase de descuento reutilizable",
         "descriptionPrefix": "Haz estos 2 pasos una vez: sigue",
         "descriptionSuffix": "y reclama con tu email o número de WhatsApp. La próxima vez, solo ingresa el mismo identificador para restaurar tu insignia.",
         "step1Button": "Paso 1: Sigue en Instagram",
         "step2Label": "Paso 2: Reclama el pase con email o WhatsApp",
         "identifierPlaceholder": "tu@email.com o +55 21 99999-0000",
-        "claimButton": "Claim Discount Pass",
+        "claimButton": "Reclamar Pase de Descuento",
         "saving": "Guardando...",
         "restoredUsing": "Restaurado usando:",
         "note": "Debes completar el follow antes del primer reclamo. Los identificadores existentes se restauran al instante.",
         "verifiedLabel": "SEGUIDOR VERIFICADO",
         "unlockedTitle": "Insignia de Apoyo Desbloqueada",
-        "unlockedDescription": "Muestra esta insignia en la barraca de Thais y menciona el código",
-        "addToWallet": "Añadir a la Cartera"
+        "unlockedDescription": "Muestra esta insignia en la barraca y menciona el código",
+        "addToWallet": "Copiar / Compartir Código",
+        "addToAppleWallet": "Añadir a Apple Wallet"
       },
       "messages": {
         "invalidIdentifier": "Ingresa un email válido o un número de WhatsApp válido.",
         "restored": "Bienvenido de nuevo. Tu insignia de descuento fue restaurada.",
-        "followFirst": "Sigue a @thai.82ipanema primero y luego reclama tu pase.",
+        "followFirst": "Sigue a @{{instagramHandle}} primero y luego reclama tu pase.",
         "claimedFallback": "Pase de descuento reclamado en este dispositivo. La sincronización completa se hará cuando haya conexión.",
         "claimed": "Pase de descuento reclamado. Usa este identificador la próxima vez para restaurarlo al instante.",
         "genericError": "No se pudo reclamar el pase ahora. Inténtalo de nuevo.",
         "walletAdded": "¡Guardado! Muestra este código en la barraca.",
-        "walletCopied": "¡Código copiado al portapapeles!"
+        "walletCopied": "¡Código copiado al portapapeles!",
+        "walletIOS": "Abriendo Apple Wallet…"
       }
     }
   },
