@@ -458,10 +458,6 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
               className="absolute -bottom-10 -left-10 h-28 w-28 rounded-full blur-2xl"
               style={{ background: pc.blob2 }}
             />
-            <div className="relative mb-4 flex items-center justify-center gap-2">
-              <img src="/logo-icon-color.png" alt="Carioca Coastal Club" className="h-8 w-8" />
-              <img src="/logo-text-pink.png" alt="Carioca Coastal Club" className="h-6" />
-            </div>
             <div className="relative flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <div

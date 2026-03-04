@@ -122,11 +122,19 @@ const BarracaPromoPage: React.FC = () => {
       <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
         <div className="mb-8 text-center">
           {barraca.logoPath && (
-            <img
-              src={barraca.logoPath}
-              alt={`${barraca.name} logo`}
-              className="mx-auto mb-5 h-28 w-28 rounded-full object-cover shadow-lg"
-            />
+            barraca.logoFull ? (
+              <img
+                src={barraca.logoPath}
+                alt={`${barraca.name} logo`}
+                className="mb-5 w-full rounded-2xl object-cover shadow-lg"
+              />
+            ) : (
+              <img
+                src={barraca.logoPath}
+                alt={`${barraca.name} logo`}
+                className="mx-auto mb-5 h-28 w-28 rounded-full object-cover shadow-lg"
+              />
+            )
           )}
           <h1 className="text-3xl font-bold text-gray-900 mb-3">
             {barraca.name}'s Barraca Promo
