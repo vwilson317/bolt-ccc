@@ -159,15 +159,6 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
   });
   const [walletMessage, setWalletMessage] = useState('');
   const [isIOS] = useState(detectIOS);
-  // True while an async DB lookup is in progress for a saved identifier.
-  // Hides the claim input so it doesn't flash before the badge is restored.
-  const [isRestoringSession, setIsRestoringSession] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    const savedId = window.localStorage.getItem(barraca.identifierStorageKey) || '';
-    // Hide input while we check the DB only when we have a saved identifier
-    // but the badge hasn't been confirmed yet.
-    return !hasBadge && !!savedId;
-  });
 
   const promoT = (key: string, vars?: Record<string, string>) =>
     t(`home.promo.${key}`, vars ?? {});
@@ -206,8 +197,6 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
     (async () => {
       const claim = await PromoClaimService.findByIdentifier(barraca.id, savedId);
       if (!active) return;
-
-      setIsRestoringSession(false);
 
       if (!claim?.badge_unlocked) return;
 
@@ -424,8 +413,8 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
           {promoT('card.step1Button')}
         </button>
 
-        {/* Step 2 — hidden once badge is unlocked or while session is being restored */}
-        {!hasBadge && !isRestoringSession && (
+        {/* Step 2 — hidden once badge is unlocked */}
+        {!hasBadge && (
           <div className="sm:col-span-2">
             <label className="mb-2 block text-sm font-semibold text-gray-700">
               {promoT('card.step2Label')}
@@ -464,7 +453,7 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
         </p>
       )}
 
-      {!hasBadge && !isRestoringSession && (
+      {!hasBadge && (
         <div className="mt-3 text-xs text-gray-500">{promoT('card.note')}</div>
       )}
 
