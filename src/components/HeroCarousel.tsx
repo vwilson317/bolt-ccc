@@ -6,7 +6,11 @@ import { useApp } from '../contexts/AppContext';
 import { getEffectiveOpenStatus } from '../utils/environmentUtils';
 import { BARRACA_PROMOS } from '../data/barracaPromos';
 
-const FEATURED_PROMO_IDS = ['thais-follow', 'miriam53-follow', 'marcinho33-follow'];
+const FEATURED_PROMOS = [
+  { id: 'thais-follow', preferredBarracaNumber: '82' },
+  { id: 'miriam53-follow', preferredBarracaNumber: '53' },
+  { id: 'marcinho33-follow', preferredBarracaNumber: '33' },
+];
 
 const normalizeText = (value: string) =>
   value
@@ -14,6 +18,8 @@ const normalizeText = (value: string) =>
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
     .replace(/[^a-z0-9]/g, '');
+
+const normalizeBarracaNumber = (value?: string) => (value || '').replace(/\D/g, '');
 
 const HeroCarousel: React.FC = () => {
   const { t } = useTranslation();
@@ -27,20 +33,31 @@ const HeroCarousel: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const promoBarracas = useMemo(() => {
-    const featuredPromos = FEATURED_PROMO_IDS
-      .map((id) => BARRACA_PROMOS.find((promo) => promo.id === id))
-      .filter((promo): promo is (typeof BARRACA_PROMOS)[number] => !!promo);
+    const featuredPromos = FEATURED_PROMOS
+      .map((entry) => {
+        const promo = BARRACA_PROMOS.find((candidate) => candidate.id === entry.id);
+        if (!promo) return null;
+        return { promo, preferredBarracaNumber: entry.preferredBarracaNumber };
+      })
+      .filter(
+        (entry): entry is { promo: (typeof BARRACA_PROMOS)[number]; preferredBarracaNumber: string } => !!entry,
+      );
 
     return featuredPromos
-      .map((promo) => {
+      .map(({ promo, preferredBarracaNumber }) => {
         const normalizedPromoName = normalizeText(promo.name);
         const normalizedInstagram = normalizeText(promo.instagramHandle);
+        const normalizedPreferredBarracaNumber = normalizeBarracaNumber(preferredBarracaNumber);
 
         const barraca = barracas.find((candidate) => {
           const normalizedBarracaName = normalizeText(candidate.name);
           const normalizedBarracaInstagram = normalizeText(candidate.contact.instagram || '');
+          const normalizedCandidateBarracaNumber = normalizeBarracaNumber(candidate.barracaNumber);
 
           return (
+            normalizedCandidateBarracaNumber.length > 0 &&
+            normalizedCandidateBarracaNumber === normalizedPreferredBarracaNumber
+          ) || (
             normalizedBarracaName.includes(normalizedPromoName) ||
             normalizedPromoName.includes(normalizedBarracaName) ||
             normalizedBarracaInstagram === normalizedInstagram
