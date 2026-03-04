@@ -209,30 +209,32 @@
       },
       "card": {
         "badge": "Oferta de Follow",
-        "title": "Siga a página da barraca da Thais e resgate seu passe de desconto reutilizável",
+        "title": "Siga a página da barraca de {{name}} e resgate seu passe de desconto reutilizável",
         "descriptionPrefix": "Faça estes 2 passos uma vez: siga",
         "descriptionSuffix": "e resgate com seu email ou número de WhatsApp. Na próxima vez, basta inserir o mesmo identificador para restaurar seu badge.",
         "step1Button": "Passo 1: Siga no Instagram",
         "step2Label": "Passo 2: Resgate o passe com email ou WhatsApp",
         "identifierPlaceholder": "voce@email.com ou +55 21 99999-0000",
-        "claimButton": "Claim Discount Pass",
+        "claimButton": "Resgatar Passe de Desconto",
         "saving": "Salvando...",
         "restoredUsing": "Restaurado usando:",
         "note": "É preciso concluir o follow antes do primeiro resgate. Identificadores já cadastrados restauram na hora.",
         "verifiedLabel": "APOIADOR VERIFICADO",
         "unlockedTitle": "Badge de Apoiador Desbloqueado",
-        "unlockedDescription": "Mostre este badge na barraca da Thais e informe o código",
-        "addToWallet": "Adicionar à Carteira"
+        "unlockedDescription": "Mostre este badge na barraca e informe o código",
+        "addToWallet": "Copiar / Compartilhar Código",
+        "addToAppleWallet": "Adicionar à Carteira Apple"
       },
       "messages": {
         "invalidIdentifier": "Digite um email válido ou número de WhatsApp válido.",
         "restored": "Bem-vindo de volta. Seu badge de desconto foi restaurado.",
-        "followFirst": "Siga @thai.82ipanema primeiro e depois resgate seu passe.",
+        "followFirst": "Siga @{{instagramHandle}} primeiro e depois resgate seu passe.",
         "claimedFallback": "Passe de desconto resgatado neste dispositivo. A sincronização completa será concluída quando a conexão estiver disponível.",
         "claimed": "Passe de desconto resgatado. Use este identificador na próxima vez para restaurar instantaneamente.",
         "genericError": "Não foi possível resgatar o passe agora. Tente novamente.",
         "walletAdded": "Salvo! Mostre este código na barraca.",
-        "walletCopied": "Código copiado!"
+        "walletCopied": "Código copiado!",
+        "walletIOS": "Abrindo a Carteira Apple…"
       }
     },
     "footer": {
