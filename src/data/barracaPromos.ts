@@ -40,6 +40,9 @@ export interface BarracaPromoConfig {
   identifierStorageKey: string;
 }
 
+/** Shared CCC community WhatsApp group link used across all promo pages */
+export const CCC_WHATSAPP_URL = 'https://chat.whatsapp.com/FVLJK8eqKzUKY7oUfnymD5?mode=gi_t';
+
 export const BARRACA_PROMOS: BarracaPromoConfig[] = [
   {
     id: 'thais-follow',
@@ -49,7 +52,7 @@ export const BARRACA_PROMOS: BarracaPromoConfig[] = [
     instagramUrl: 'https://instagram.com/thai.82ipanema',
     discountCode: 'TY82',
     barracaLocation: 'Ipanema, Rio de Janeiro',
-    whatsappUrl: 'https://chat.whatsapp.com/FVLJK8eqKzUKY7oUfnymD5?mode=gi_t',
+    whatsappUrl: CCC_WHATSAPP_URL,
     badgeFromColor: 'emerald-500',
     badgeToColor: 'teal-500',
     passBackgroundRgb: 'rgb(16,185,129)',
@@ -65,6 +68,7 @@ export const BARRACA_PROMOS: BarracaPromoConfig[] = [
     instagramUrl: 'https://instagram.com/marcinho33',
     discountCode: 'MARC33',
     barracaLocation: 'Rio de Janeiro',
+    whatsappUrl: CCC_WHATSAPP_URL,
     badgeFromColor: 'yellow-500',
     badgeToColor: 'amber-600',
     passBackgroundRgb: 'rgb(234,179,8)',
@@ -80,6 +84,7 @@ export const BARRACA_PROMOS: BarracaPromoConfig[] = [
     instagramUrl: 'https://instagram.com/barraca_rj_53',
     discountCode: 'RJ53',
     barracaLocation: 'Rio de Janeiro',
+    whatsappUrl: CCC_WHATSAPP_URL,
     logoPath: '/miriam53-logo.png',
     logoFull: true,
     badgeFromColor: 'zinc-400',
@@ -97,6 +102,7 @@ export const BARRACA_PROMOS: BarracaPromoConfig[] = [
     instagramUrl: 'https://instagram.com/nino101',
     discountCode: 'NINO101',
     barracaLocation: 'Rio de Janeiro',
+    whatsappUrl: CCC_WHATSAPP_URL,
     badgeFromColor: 'slate-400',
     badgeToColor: 'slate-600',
     passBackgroundRgb: 'rgb(100,116,139)',

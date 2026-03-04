@@ -120,7 +120,7 @@ const BarracaPromoPage: React.FC = () => {
     <div className="min-h-screen bg-gradient-to-br from-amber-50 via-rose-50 to-white pt-28 pb-16">
       <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
         <div className="mb-8 text-center">
-          {barraca.logoPath && (
+          {barraca.logoPath ? (
             barraca.logoFull ? (
               <img
                 src={barraca.logoPath}
@@ -134,6 +134,10 @@ const BarracaPromoPage: React.FC = () => {
                 className="mx-auto mb-5 h-28 w-28 rounded-full object-cover shadow-lg"
               />
             )
+          ) : (
+            <div
+              className={`mx-auto mb-5 h-28 w-28 rounded-full bg-gradient-to-br from-${barraca.badgeFromColor} to-${barraca.badgeToColor} shadow-lg`}
+            />
           )}
           <h1 className="text-3xl font-bold text-gray-900 mb-3">
             {t('barracaPromoPage.title', { name: barraca.name })}
