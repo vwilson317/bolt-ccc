@@ -133,18 +133,45 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
   const location = useLocation();
   const { unlockBadge } = useBadgeContext();
 
-  const [hasClickedFollow, setHasClickedFollow] = useState(false);
-  const [hasBadge, setHasBadge] = useState(false);
-  const [identifierInput, setIdentifierInput] = useState('');
+  // Lazily read localStorage on the very first render so the correct state is
+  // available immediately — before useEffect fires.  This prevents the input
+  // from flashing visible for users who already have an active badge.
+  const [hasClickedFollow, setHasClickedFollow] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    const isUnlocked = window.localStorage.getItem(barraca.storageKey) === 'true';
+    const followedThisSession =
+      window.sessionStorage.getItem(`ccc_follow_session_${barraca.id}`) === 'true';
+    return isUnlocked || followedThisSession;
+  });
+  const [hasBadge, setHasBadge] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return window.localStorage.getItem(barraca.storageKey) === 'true';
+  });
+  const [identifierInput, setIdentifierInput] = useState(() => {
+    if (typeof window === 'undefined') return '';
+    return window.localStorage.getItem(barraca.identifierStorageKey) || '';
+  });
   const [claimError, setClaimError] = useState('');
   const [claimSuccess, setClaimSuccess] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [restoredIdentifier, setRestoredIdentifier] = useState('');
+  const [restoredIdentifier, setRestoredIdentifier] = useState(() => {
+    if (typeof window === 'undefined') return '';
+    const isUnlocked = window.localStorage.getItem(barraca.storageKey) === 'true';
+    const savedId = window.localStorage.getItem(barraca.identifierStorageKey) || '';
+    return isUnlocked && savedId ? savedId : '';
+  });
   const [walletMessage, setWalletMessage] = useState('');
   const [isIOS] = useState(detectIOS);
   // True while an async DB lookup is in progress for a saved identifier.
   // Hides the claim input so it doesn't flash before the badge is restored.
-  const [isRestoringSession, setIsRestoringSession] = useState(false);
+  const [isRestoringSession, setIsRestoringSession] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    const isUnlocked = window.localStorage.getItem(barraca.storageKey) === 'true';
+    const savedId = window.localStorage.getItem(barraca.identifierStorageKey) || '';
+    // Hide input while we check the DB only when we have a saved identifier
+    // but the badge hasn't been confirmed yet.
+    return !isUnlocked && !!savedId;
+  });
 
   const promoT = (key: string, vars?: Record<string, string>) =>
     t(`home.promo.${key}`, vars ?? {});
@@ -161,33 +188,14 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
   );
 
   // ---------------------------------------------------------------------------
-  // Initialise from localStorage + auto-restore from DB
+  // Analytics + auto-restore badge from DB (initial state already set above
+  // via lazy useState initialisers so there is no flash on first render).
   // ---------------------------------------------------------------------------
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
     const isUnlocked = window.localStorage.getItem(barraca.storageKey) === 'true';
     const savedId = window.localStorage.getItem(barraca.identifierStorageKey) || '';
-    // Session flag: survives page refresh but NOT a new browser session.
-    // Separate key per barraca so following Thais doesn't count for Marcinho, etc.
-    const followedThisSession =
-      window.sessionStorage.getItem(`ccc_follow_session_${barraca.id}`) === 'true';
-
-    setHasBadge(isUnlocked);
-    setHasClickedFollow(isUnlocked || followedThisSession);
-
-    if (savedId) {
-      setIdentifierInput(savedId);
-      if (isUnlocked) {
-        // Badge already confirmed in localStorage — show the identifier immediately
-        // without waiting for the DB round-trip.
-        setRestoredIdentifier(savedId);
-      } else {
-        // Saved identifier exists but badge not yet confirmed — hide the input
-        // while we check the DB so it doesn't flash then disappear.
-        setIsRestoringSession(true);
-      }
-    }
 
     trackEvent('barraca_promo_viewed', {
       ...trackCtx,
@@ -195,7 +203,8 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
       has_saved_identifier: !!savedId,
     });
 
-    if (!savedId) return;
+    // Nothing to look up — badge already confirmed or no saved identifier.
+    if (!savedId || isUnlocked) return;
 
     let active = true;
     (async () => {
