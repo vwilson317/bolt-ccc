@@ -266,13 +266,13 @@ const BarracaRegister: React.FC = () => {
 
       // Real-time validation
       if (field === 'phone' && value.trim()) {
-        const validation = validateBrazilianPhone(value);
+        const validation = validatePhone(value, formData.countryCode || '+55');
         if (!validation.isValid) {
           setValidationErrors(prev => ({
             ...prev,
             phone: validation.error
           }));
-          
+
           logWarning('Phone validation failed', 'validation-error', {
             field: 'phone',
             error: validation.error,
@@ -385,46 +385,64 @@ const BarracaRegister: React.FC = () => {
 
     // Remove all non-digit characters
     const cleanPhone = phone.replace(/\D/g, '');
-    
+
     // Brazilian phone numbers should be 10-11 digits
     if (cleanPhone.length < 10 || cleanPhone.length > 11) {
-      return { 
-        isValid: false, 
-        error: 'Brazilian phone must be 10-11 digits (e.g., 11987654321 or 1134567890)' 
+      return {
+        isValid: false,
+        error: 'Brazilian phone must be 10-11 digits (e.g., 11987654321 or 1134567890)'
       };
     }
-    
+
     // Check if it starts with a valid area code (11-99)
     const areaCode = parseInt(cleanPhone.substring(0, 2));
     if (areaCode < 11 || areaCode > 99) {
-      return { 
-        isValid: false, 
-        error: 'Invalid Brazilian area code (must be between 11-99)' 
+      return {
+        isValid: false,
+        error: 'Invalid Brazilian area code (must be between 11-99)'
       };
     }
-    
+
     // For mobile numbers (11 digits), check if the third digit is 9
     if (cleanPhone.length === 11) {
       const thirdDigit = parseInt(cleanPhone.charAt(2));
       if (thirdDigit !== 9) {
-        return { 
-          isValid: false, 
-          error: 'Mobile numbers must start with 9 after area code (e.g., 11987654321)' 
+        return {
+          isValid: false,
+          error: 'Mobile numbers must start with 9 after area code (e.g., 11987654321)'
         };
       }
     }
-    
+
     // For landline numbers (10 digits), check if the third digit is between 2-5
     if (cleanPhone.length === 10) {
       const thirdDigit = parseInt(cleanPhone.charAt(2));
       if (thirdDigit < 2 || thirdDigit > 5) {
-        return { 
-          isValid: false, 
-          error: 'Landline numbers must have 3rd digit between 2-5 (e.g., 1134567890)' 
+        return {
+          isValid: false,
+          error: 'Landline numbers must have 3rd digit between 2-5 (e.g., 1134567890)'
         };
       }
     }
-    
+
+    return { isValid: true };
+  };
+
+  const validatePhone = (phone: string, countryCode: string): { isValid: boolean; error?: string } => {
+    if (!phone.trim()) {
+      return { isValid: false, error: 'Phone number is required' };
+    }
+
+    if (countryCode === '+55') {
+      return validateBrazilianPhone(phone);
+    }
+
+    // General validation for non-Brazilian country codes
+    const cleanPhone = phone.replace(/\D/g, '');
+    if (cleanPhone.length < 6 || cleanPhone.length > 15) {
+      return { isValid: false, error: 'Please enter a valid phone number' };
+    }
+
     return { isValid: true };
   };
 
@@ -486,7 +504,7 @@ const BarracaRegister: React.FC = () => {
       }
       
       // Validate phone number
-      const phoneValidation = validateBrazilianPhone(formData.contact?.phone || '');
+      const phoneValidation = validatePhone(formData.contact?.phone || '', formData.countryCode || '+55');
       if (!phoneValidation.isValid) {
         errors.phone = phoneValidation.error!;
       }
