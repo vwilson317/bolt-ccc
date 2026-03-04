@@ -67,11 +67,19 @@ const BarracaPromoPage: React.FC = () => {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 pt-28 pb-16">
         <div className="mx-auto max-w-md px-4 text-center">
-          <div
-            className={`mx-auto mb-6 h-24 w-24 rounded-full bg-gradient-to-br from-${barraca.badgeFromColor} to-${barraca.badgeToColor} flex items-center justify-center shadow-xl`}
-          >
-            <Clock className="h-12 w-12 text-white" />
-          </div>
+          {barraca.logoPath ? (
+            <img
+              src={barraca.logoPath}
+              alt={`${barraca.name} logo`}
+              className="mx-auto mb-6 h-24 w-24 rounded-full object-cover shadow-xl"
+            />
+          ) : (
+            <div
+              className={`mx-auto mb-6 h-24 w-24 rounded-full bg-gradient-to-br from-${barraca.badgeFromColor} to-${barraca.badgeToColor} flex items-center justify-center shadow-xl`}
+            >
+              <Clock className="h-12 w-12 text-white" />
+            </div>
+          )}
 
           <div className="inline-flex items-center rounded-full bg-amber-100 px-3 py-1 text-xs font-bold uppercase tracking-widest text-amber-700 mb-4">
             Coming Soon
@@ -113,6 +121,13 @@ const BarracaPromoPage: React.FC = () => {
     <div className="min-h-screen bg-gradient-to-br from-amber-50 via-rose-50 to-white pt-28 pb-16">
       <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
         <div className="mb-8 text-center">
+          {barraca.logoPath && (
+            <img
+              src={barraca.logoPath}
+              alt={`${barraca.name} logo`}
+              className="mx-auto mb-5 h-28 w-28 rounded-full object-cover shadow-lg"
+            />
+          )}
           <h1 className="text-3xl font-bold text-gray-900 mb-3">
             {barraca.name}'s Barraca Promo
           </h1>

@@ -18,6 +18,8 @@ export interface BarracaPromoConfig {
   barracaLocation: string;
   /** Optional WhatsApp community link shown on the promo page */
   whatsappUrl?: string;
+  /** Optional path to a barraca logo/image shown at the top of the promo page (relative to /public) */
+  logoPath?: string;
 
   // --- Appearance ---
   /** Tailwind `from-*` colour used in badge gradient */
@@ -67,6 +69,22 @@ export const BARRACA_PROMOS: BarracaPromoConfig[] = [
     active: true,
     storageKey: 'ccc_badge_marcinho33-follow',
     identifierStorageKey: 'ccc_identifier_marcinho33-follow',
+  },
+  {
+    id: 'miriam53-follow',
+    slug: 'miriam53',
+    name: 'Miriam 53',
+    instagramHandle: 'barraca_rj_53',
+    instagramUrl: 'https://instagram.com/barraca_rj_53',
+    discountCode: 'RJ53',
+    barracaLocation: 'Rio de Janeiro',
+    logoPath: '/miriam53-logo.png',
+    badgeFromColor: 'zinc-400',
+    badgeToColor: 'zinc-600',
+    passBackgroundRgb: 'rgb(113,113,122)',
+    active: true,
+    storageKey: 'ccc_badge_miriam53-follow',
+    identifierStorageKey: 'ccc_identifier_miriam53-follow',
   },
   {
     id: 'nino101-follow',
