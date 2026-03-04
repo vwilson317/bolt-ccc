@@ -465,7 +465,8 @@ const BarracaRegister: React.FC = () => {
     // Remove the country code if it's at the beginning of the phone number
     const codeToRemove = countryCode.replace('+', '');
     if (phone.startsWith(countryCode) || phone.startsWith(codeToRemove)) {
-      return phone.replace(new RegExp(`^(${countryCode}|${codeToRemove})\\s*`), '').trim();
+      const escapedCountryCode = countryCode.replace(/[+]/g, '\\+');
+      return phone.replace(new RegExp(`^(${escapedCountryCode}|${codeToRemove})\\s*`), '').trim();
     }
     return phone;
   };
