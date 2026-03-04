@@ -44,8 +44,6 @@ checkSupabaseConnection().then(connected => {
   }
 });
 
-const isBarracaSubdomain =
-  typeof window !== 'undefined' && window.location.hostname === 'barraca.cariocacoastalclub.com';
 
 function AppContent() {
   const { selectedBarraca, closeBarracaModal, weatherOverride, isInitialLoading } = useApp();
@@ -66,7 +64,8 @@ function AppContent() {
       <main>
         <Suspense fallback={<LoadingPage />}>
           <Routes>
-            <Route path="/" element={isBarracaSubdomain ? <Home /> : <CommunityHome />} />
+            <Route path="/" element={<Home />} />
+            <Route path="/projects" element={<CommunityHome />} />
             <Route path="/projects/carioca-coastal-club" element={<Home />} />
             <Route path="/discover" element={<Discover />} />
             <Route path="/about" element={<About />} />
