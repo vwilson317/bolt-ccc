@@ -349,6 +349,10 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
         <div className="mt-5 relative overflow-hidden rounded-2xl border border-emerald-200/70 bg-gradient-to-br from-emerald-50 via-white to-teal-50 p-5 shadow-md">
           <div className="absolute -top-10 -right-8 h-28 w-28 rounded-full bg-emerald-200/40 blur-2xl" />
           <div className="absolute -bottom-10 -left-10 h-28 w-28 rounded-full bg-teal-200/40 blur-2xl" />
+          <div className="relative mb-4 flex items-center justify-center gap-2">
+            <img src="/logo-icon-color.png" alt="Carioca Coastal Club" className="h-8 w-8" />
+            <img src="/logo-text-pink.png" alt="Carioca Coastal Club" className="h-6" />
+          </div>
           <div className="relative flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <div className="inline-flex items-center rounded-full border border-emerald-300 bg-white/80 px-3 py-1 text-xs font-semibold tracking-wide text-emerald-700">
