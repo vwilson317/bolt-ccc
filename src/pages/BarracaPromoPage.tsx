@@ -12,6 +12,7 @@
  */
 import React, { useEffect, useState } from 'react';
 import { useParams, Navigate, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { MessageCircle, Instagram, Clock } from 'lucide-react';
 import BarracaPromotion from '../components/BarracaPromotion';
 import { getBarracaPromoBySlug } from '../data/barracaPromos';
@@ -22,6 +23,7 @@ const BarracaPromoPage: React.FC = () => {
   const { barracaSlug } = useParams<{ barracaSlug: string }>();
   const barraca = barracaSlug ? getBarracaPromoBySlug(barracaSlug) : undefined;
   const location = useLocation();
+  const { t } = useTranslation();
 
   // null = still loading from DB, boolean = resolved
   const [isActive, setIsActive] = useState<boolean | null>(null);
@@ -54,7 +56,7 @@ const BarracaPromoPage: React.FC = () => {
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 pt-28 pb-16 flex items-center justify-center">
         <div className="flex flex-col items-center gap-4 text-gray-400">
           <div className="h-10 w-10 rounded-full border-4 border-gray-200 border-t-emerald-500 animate-spin" />
-          <p className="text-sm">Loading promo…</p>
+          <p className="text-sm">{t('barracaPromoPage.loading')}</p>
         </div>
       </div>
     );
@@ -82,18 +84,15 @@ const BarracaPromoPage: React.FC = () => {
           )}
 
           <div className="inline-flex items-center rounded-full bg-amber-100 px-3 py-1 text-xs font-bold uppercase tracking-widest text-amber-700 mb-4">
-            Coming Soon
+            {t('barracaPromoPage.comingSoon')}
           </div>
 
           <h1 className="text-3xl font-bold text-gray-900 mb-3">
-            {barraca.name}'s Barraca Pass
+            {t('barracaPromoPage.comingSoonTitle', { name: barraca.name })}
           </h1>
 
           <p className="text-gray-600 mb-8">
-            We're teaming up with{' '}
-            <span className="font-semibold">@{barraca.instagramHandle}</span> on an
-            exclusive follower discount for Carioca Coastal Club members. Follow them
-            now so you're ready when the promo launches.
+            {t('barracaPromoPage.comingSoonDescription', { instagramHandle: barraca.instagramHandle })}
           </p>
 
           <a
@@ -103,11 +102,11 @@ const BarracaPromoPage: React.FC = () => {
             className={`inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-${barraca.badgeFromColor} to-${barraca.badgeToColor} px-6 py-3 font-semibold text-white shadow-md hover:opacity-90 transition-opacity`}
           >
             <Instagram className="h-5 w-5" strokeWidth={1.5} />
-            Follow @{barraca.instagramHandle}
+            {t('barracaPromoPage.comingSoonFollowButton', { instagramHandle: barraca.instagramHandle })}
           </a>
 
           <p className="mt-6 text-sm text-gray-400">
-            Discount code will be revealed at launch. Stay tuned!
+            {t('barracaPromoPage.comingSoonNote')}
           </p>
         </div>
       </div>
@@ -137,12 +136,10 @@ const BarracaPromoPage: React.FC = () => {
             )
           )}
           <h1 className="text-3xl font-bold text-gray-900 mb-3">
-            {barraca.name}'s Barraca Promo
+            {t('barracaPromoPage.title', { name: barraca.name })}
           </h1>
           <p className="text-gray-600 mb-5">
-            Follow{' '}
-            <span className="font-semibold">@{barraca.instagramHandle}</span> and
-            claim your reusable supporter discount at {barraca.barracaLocation}.
+            {t('barracaPromoPage.intro', { instagramHandle: barraca.instagramHandle, location: barraca.barracaLocation })}
           </p>
 
           {barraca.whatsappUrl && (
@@ -160,7 +157,7 @@ const BarracaPromoPage: React.FC = () => {
               className="inline-flex items-center gap-2 rounded-xl bg-green-500 px-5 py-3 font-semibold text-white hover:bg-green-600 transition-colors shadow-md"
             >
               <MessageCircle className="h-5 w-5" />
-              Join the WhatsApp community
+              {t('barracaPromoPage.whatsappCta')}
             </a>
           )}
         </div>
