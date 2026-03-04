@@ -38,11 +38,26 @@ const BarracaPromoPage: React.FC = () => {
       .maybeSingle()
       .then(({ data }) => {
         // DB row wins; fall back to static config when no row exists yet
-        setIsActive(data ? (data as { active: boolean }).active : barraca.active);
+        const active = data ? (data as { active: boolean }).active : barraca.active;
+        setIsActive(active);
+        trackEvent('barraca_promo_page_viewed', {
+          promo_id: barraca.id,
+          promo_name: barraca.name,
+          instagram_handle: barraca.instagramHandle,
+          is_active: active,
+          page_path: location.pathname,
+        });
       })
       .catch(() => {
         // Network / Supabase error → fall back to static config
         setIsActive(barraca.active);
+        trackEvent('barraca_promo_page_viewed', {
+          promo_id: barraca.id,
+          promo_name: barraca.name,
+          instagram_handle: barraca.instagramHandle,
+          is_active: barraca.active,
+          page_path: location.pathname,
+        });
       });
   }, [barraca]);
 
@@ -99,6 +114,14 @@ const BarracaPromoPage: React.FC = () => {
             href={barraca.instagramUrl}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() =>
+              trackEvent('barraca_promo_instagram_clicked', {
+                promo_id: barraca.id,
+                instagram_handle: barraca.instagramHandle,
+                context: 'coming_soon',
+                page_path: location.pathname,
+              })
+            }
             className={`inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-${barraca.badgeFromColor} to-${barraca.badgeToColor} px-6 py-3 font-semibold text-white shadow-md hover:opacity-90 transition-opacity`}
           >
             <Instagram className="h-5 w-5" strokeWidth={1.5} />
