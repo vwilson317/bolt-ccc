@@ -15,6 +15,7 @@ import { useParams, Navigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { MessageCircle, Instagram, Clock } from 'lucide-react';
 import BarracaPromotion from '../components/BarracaPromotion';
+import SEOHead from '../components/SEOHead';
 import { getBarracaPromoBySlug } from '../data/barracaPromos';
 import { supabase } from '../lib/supabase';
 import { trackEvent } from '../services/posthogAnalyticsService';
@@ -63,17 +64,25 @@ const BarracaPromoPage: React.FC = () => {
 
   if (!barraca) return <Navigate to="/" replace />;
 
+  const pageTitle = `${barraca.name} — Carioca Coastal Club`;
+  const pageDescription = `Follow @${barraca.instagramHandle} on Instagram and get your exclusive discount badge at ${barraca.barracaLocation}.`;
+  const pageImage = barraca.logoPath ?? '/logo_320x320.png';
+  const pageUrl = `https://cariocacoastalclub.com/promo/${barraca.slug}`;
+
   // ------------------------------------------------------------------
   // Loading state — avoid flash of wrong content
   // ------------------------------------------------------------------
   if (isActive === null) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 pt-28 pb-16 flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4 text-gray-400">
-          <div className="h-10 w-10 rounded-full border-4 border-gray-200 border-t-emerald-500 animate-spin" />
-          <p className="text-sm">{t('barracaPromoPage.loading')}</p>
+      <>
+        <SEOHead title={pageTitle} description={pageDescription} image={pageImage} url={pageUrl} />
+        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 pt-28 pb-16 flex items-center justify-center">
+          <div className="flex flex-col items-center gap-4 text-gray-400">
+            <div className="h-10 w-10 rounded-full border-4 border-gray-200 border-t-emerald-500 animate-spin" />
+            <p className="text-sm">{t('barracaPromoPage.loading')}</p>
+          </div>
         </div>
-      </div>
+      </>
     );
   }
 
@@ -82,6 +91,8 @@ const BarracaPromoPage: React.FC = () => {
   // ------------------------------------------------------------------
   if (!isActive) {
     return (
+      <>
+        <SEOHead title={pageTitle} description={pageDescription} image={pageImage} url={pageUrl} />
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 pt-28 pb-16">
         <div className="mx-auto max-w-md px-4 text-center">
           {barraca.logoPath ? (
@@ -154,6 +165,7 @@ const BarracaPromoPage: React.FC = () => {
           </p>
         </div>
       </div>
+      </>
     );
   }
 
@@ -161,6 +173,8 @@ const BarracaPromoPage: React.FC = () => {
   // Active promo
   // ------------------------------------------------------------------
   return (
+    <>
+      <SEOHead title={pageTitle} description={pageDescription} image={pageImage} url={pageUrl} />
     <div className="min-h-screen bg-gradient-to-br from-amber-50 via-rose-50 to-white pt-28 pb-16">
       <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
         <div className="mb-8 text-center">
@@ -213,6 +227,7 @@ const BarracaPromoPage: React.FC = () => {
         <BarracaPromotion barraca={barraca} promoSource={`${barraca.slug}_promo_page`} />
       </div>
     </div>
+    </>
   );
 };
 
