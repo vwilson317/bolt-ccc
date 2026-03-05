@@ -390,8 +390,9 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
       {/* Input + Instagram button — visible when badge not yet claimed */}
       {!hasBadge && (
         <div className="mt-5">
-          <label className="mb-2 block text-sm font-semibold text-gray-700">
+          <label className="mb-2 flex items-center gap-1 text-sm font-semibold text-gray-700">
             {promoT('card.step2Label')}
+            <span className="text-pink-500" aria-hidden="true">*</span>
           </label>
           <input
             type="text"
