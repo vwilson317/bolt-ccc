@@ -99,7 +99,7 @@ const BarracaPromoPage: React.FC = () => {
             <img
               src={barraca.logoPath}
               alt={`${barraca.name} logo`}
-              className="mx-auto mb-6 h-24 w-24 object-contain shadow-xl"
+              className="mx-auto mb-6 h-32 w-32 object-contain"
             />
           ) : (
             <div
@@ -189,7 +189,7 @@ const BarracaPromoPage: React.FC = () => {
               <img
                 src={barraca.logoPath}
                 alt={`${barraca.name} logo`}
-                className="mx-auto mb-5 h-28 w-28 object-contain shadow-lg"
+                className="mx-auto mb-5 h-36 w-36 object-contain"
               />
             )
           ) : (
