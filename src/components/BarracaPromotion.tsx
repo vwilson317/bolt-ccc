@@ -182,7 +182,7 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
     const isUnlocked = window.localStorage.getItem(barraca.storageKey) === 'true';
     const savedId = window.localStorage.getItem(barraca.identifierStorageKey) || '';
 
-    trackEvent('barraca_promo_viewed', {
+    trackEvent(`${barraca.id}_promo_viewed`, {
       ...trackCtx,
       badge_previously_unlocked: isUnlocked,
       has_saved_identifier: !!savedId,
@@ -204,7 +204,7 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
       unlockBadge(barraca.id);
 
       await PromoClaimService.markLastClaimed(barraca.id, savedId);
-      trackEvent('barraca_promo_claim_restored', {
+      trackEvent(`${barraca.id}_promo_claim_restored`, {
         ...trackCtx,
         restore_source: 'auto_lookup',
         identifier_type: claim.identifier_type,
@@ -229,20 +229,20 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
     const normalized = PromoClaimService.normalizeIdentifier(identifierInput);
     if (!normalized) {
       setClaimError(promoT('messages.invalidIdentifier'));
-      trackEvent('barraca_promo_invalid_identifier', trackCtx);
+      trackEvent(`${barraca.id}_promo_invalid_identifier`, trackCtx);
       return;
     }
 
     // Open Instagram immediately so the browser doesn't block the popup.
     window.open(barraca.instagramUrl, '_blank', 'noopener,noreferrer');
     setHasClickedFollow(true);
-    trackEvent('barraca_promo_instagram_clicked', {
+    trackEvent(`${barraca.id}_promo_instagram_clicked`, {
       ...trackCtx,
       badge_already_unlocked: hasBadge,
     });
 
     setIsSubmitting(true);
-    trackEvent('barraca_promo_identifier_submitted', {
+    trackEvent(`${barraca.id}_promo_identifier_submitted`, {
       ...trackCtx,
       identifier_type: normalized.type,
     });
@@ -255,7 +255,7 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
         _persistBadge(existing.identifier_value);
         setRestoredIdentifier(existing.identifier_value);
         setClaimSuccess(promoT('messages.restored'));
-        trackEvent('barraca_promo_claim_restored', {
+        trackEvent(`${barraca.id}_promo_claim_restored`, {
           ...trackCtx,
           restore_source: 'manual_lookup',
           identifier_type: existing.identifier_type,
@@ -275,13 +275,13 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
       if (!result.claim?.badge_unlocked) {
         _persistBadge(identifierInput.trim());
         setClaimSuccess(promoT('messages.claimedFallback'));
-        trackEvent('barraca_promo_claim_local_fallback', trackCtx);
+        trackEvent(`${barraca.id}_promo_claim_local_fallback`, trackCtx);
         return;
       }
 
       _persistBadge(result.claim.identifier_value);
       setClaimSuccess(promoT('messages.claimed'));
-      trackEvent('barraca_promo_badge_unlocked', {
+      trackEvent(`${barraca.id}_promo_badge_unlocked`, {
         ...trackCtx,
         identifier_type: result.claim.identifier_type,
         unlock_status: result.wasExisting ? 'existing_record_unlocked' : 'new_unlock',
@@ -289,7 +289,7 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
     } catch (err) {
       console.error('Error claiming barraca promo badge:', err);
       setClaimError(promoT('messages.genericError'));
-      trackEvent('barraca_promo_claim_error', {
+      trackEvent(`${barraca.id}_promo_claim_error`, {
         ...trackCtx,
         error_message: err instanceof Error ? err.message : String(err),
       });
@@ -312,7 +312,7 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
   //  • Others → Web Share API or clipboard copy
   // ---------------------------------------------------------------------------
   const handleAddToWallet = async () => {
-    trackEvent('barraca_promo_wallet_clicked', {
+    trackEvent(`${barraca.id}_promo_wallet_clicked`, {
       ...trackCtx,
       promo_code: barraca.discountCode,
       platform: isIOS ? 'ios' : 'other',
@@ -331,7 +331,7 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
         window.location.href = url;
       }
       setWalletMessage(promoT('messages.walletIOS'));
-      trackEvent('barraca_promo_wallet_ios_triggered', trackCtx);
+      trackEvent(`${barraca.id}_promo_wallet_ios_triggered`, trackCtx);
       setTimeout(() => setWalletMessage(''), 4000);
       return;
     }
@@ -345,7 +345,7 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
           text: shareText,
         });
         setWalletMessage(promoT('messages.walletAdded'));
-        trackEvent('barraca_promo_wallet_shared', trackCtx);
+        trackEvent(`${barraca.id}_promo_wallet_shared`, trackCtx);
         setTimeout(() => setWalletMessage(''), 3000);
         return;
       } catch {
@@ -356,7 +356,7 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
     try {
       await navigator.clipboard.writeText(barraca.discountCode);
       setWalletMessage(promoT('messages.walletCopied'));
-      trackEvent('barraca_promo_wallet_code_copied', trackCtx);
+      trackEvent(`${barraca.id}_promo_wallet_code_copied`, trackCtx);
     } catch {
       setWalletMessage(promoT('messages.walletCopied'));
     }
