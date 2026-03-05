@@ -234,7 +234,16 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
     }
 
     // Open Instagram immediately so the browser doesn't block the popup.
-    window.open(barraca.instagramUrl, '_blank', 'noopener,noreferrer');
+    // Use an anchor click instead of window.open() features string — the
+    // features-string form of noopener/noreferrer is unreliable across browsers
+    // and can produce a blank tab.
+    const a = document.createElement('a');
+    a.href = barraca.instagramUrl;
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
     setHasClickedFollow(true);
     trackEvent('barraca_promo_instagram_clicked', {
       ...trackCtx,
@@ -390,8 +399,9 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
       {/* Input + Instagram button — visible when badge not yet claimed */}
       {!hasBadge && (
         <div className="mt-5">
-          <label className="mb-2 block text-sm font-semibold text-gray-700">
+          <label className="mb-2 flex items-center gap-1 text-sm font-semibold text-gray-700">
             {promoT('card.step2Label')}
+            <span className="text-pink-500" aria-hidden="true">*</span>
           </label>
           <input
             type="text"
