@@ -25,6 +25,7 @@ const PhotoGallery = lazy(() => import('./pages/PhotoGallery'));
 const BarracaRegister = lazy(() => import('./pages/BarracaRegister'));
 const LanguageExchangeFunnel = lazy(() => import('./pages/LanguageExchangeFunnel'));
 const BarracaPromoPage = lazy(() => import('./pages/BarracaPromoPage'));
+const CoastalClubPassPage = lazy(() => import('./pages/CoastalClubPassPage'));
 
 // Lazy-load heavy overlay components that are not needed at initial paint
 // StoryViewer removed: StoryProvider is disabled and StoryViewer would throw without it
@@ -77,6 +78,8 @@ function AppContent() {
             <Route path="/barraca/:id" element={<BarracaDetailPage />} />
             <Route path="/register" element={<BarracaRegister />} />
             <Route path="/language-exchange" element={<LanguageExchangeFunnel />} />
+            {/* CCC All-Access Pass — must be listed before the generic :slug route */}
+            <Route path="/loyalty/coastal-club-pass" element={<CoastalClubPassPage />} />
             {/* Loyalty promo pages at /loyalty/:slug for SEO-friendly URLs */}
             <Route path="/loyalty/:slug" element={<BarracaPromoPage />} />
             {/* <Route path="/translation-demo" element={<TranslationDemo />} /> */}

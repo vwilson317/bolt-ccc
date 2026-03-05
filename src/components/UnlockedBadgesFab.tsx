@@ -1,15 +1,19 @@
 /**
  * UnlockedBadgesFab — global floating action button that shows all
- * badges the user has unlocked across every barraca promo.
+ * badges the user has unlocked across every barraca promo, plus the
+ * CCC All-Access Pass if active.
  *
  * • 0 badges unlocked → renders nothing
- * • 1 badge          → single teal FAB → badge lightbox with code + wallet action
+ * • 1 badge          → single FAB → badge lightbox with code + wallet action
  * • 2+ badges        → stacked FAB with count chip → badge tray → individual lightbox
+ *
+ * The CCC All-Access Pass badge always appears first in the tray.
  */
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
-import { CheckCircle2, Sparkles, Wallet, X } from 'lucide-react';
+import { Award, CheckCircle2, Sparkles, Wallet, X } from 'lucide-react';
 import { BARRACA_PROMOS, type BarracaPromoConfig } from '../data/barracaPromos';
+import { CCC_PASS_CONFIG, CCC_PASS_ID } from '../data/cccPass';
 import { useBadgeContext } from '../contexts/BadgeContext';
 import { trackEvent } from '../services/posthogAnalyticsService';
 
@@ -27,7 +31,77 @@ function detectIOSChrome(): boolean {
 }
 
 // ---------------------------------------------------------------------------
-// Single-badge lightbox
+// CCC All-Access Pass lightbox
+// ---------------------------------------------------------------------------
+interface CCCPassLightboxProps {
+  onClose: () => void;
+}
+
+const CCCPassLightbox: React.FC<CCCPassLightboxProps> = ({ onClose }) => {
+  const activeBarracas = BARRACA_PROMOS.filter((b) => b.active);
+
+  return (
+    <div
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      <div
+        className="relative mx-6 w-full max-w-sm rounded-3xl p-8 text-white shadow-2xl text-center overflow-hidden"
+        style={{ background: 'linear-gradient(135deg, #ec4899 0%, #e11d48 100%)' }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Decorative blobs */}
+        <div className="absolute -top-8 -right-8 h-36 w-36 rounded-full bg-white/10 pointer-events-none" />
+        <div className="absolute -bottom-8 -left-8 h-28 w-28 rounded-full bg-white/10 pointer-events-none" />
+
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 rounded-full p-1.5 bg-white/20 hover:bg-white/30 transition-colors"
+          aria-label="Fechar"
+        >
+          <X className="h-4 w-4" />
+        </button>
+
+        <div className="relative">
+          <div className="mx-auto mb-5 flex h-24 w-24 items-center justify-center rounded-full bg-white/20 ring-4 ring-white/40">
+            <Award className="h-14 w-14 text-white" strokeWidth={1.5} />
+          </div>
+
+          <div className="inline-flex items-center rounded-full bg-white/20 px-3 py-1 text-xs font-bold uppercase tracking-widest mb-3">
+            <Sparkles className="mr-1.5 h-3 w-3" />
+            PASSE ALL-ACCESS
+          </div>
+
+          <p className="text-2xl font-black mb-1">Carioca Coastal Club</p>
+          <p className="text-sm opacity-75 mb-5">
+            Passe ativo em {activeBarracas.length} barracas parceiras
+          </p>
+
+          <div className="rounded-2xl bg-white/15 px-4 py-4 text-left">
+            <p className="text-xs font-bold uppercase tracking-widest opacity-70 mb-3">
+              Barracas incluídas
+            </p>
+            <div className="flex flex-wrap gap-1.5">
+              {activeBarracas.map((b) => (
+                <span
+                  key={b.id}
+                  className="rounded-full bg-white/25 px-2.5 py-1 text-xs font-semibold"
+                >
+                  {b.name}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          <p className="mt-5 text-xs opacity-40">Toque fora para fechar</p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ---------------------------------------------------------------------------
+// Single-badge lightbox (per-barraca promos)
 // ---------------------------------------------------------------------------
 interface BadgeLightboxProps {
   barraca: BarracaPromoConfig;
@@ -44,9 +118,6 @@ const BadgeLightbox: React.FC<BadgeLightboxProps> = ({ barraca, onClose }) => {
     if (isIOS) {
       const url = `/.netlify/functions/generate-pkpass?barracaPromoId=${encodeURIComponent(barraca.id)}`;
       if (detectIOSChrome()) {
-        // Chrome on iOS does not intercept .pkpass via page navigation — it
-        // renders a blank page instead. Opening a new tab lets the OS-level
-        // MIME handler pick up the response without navigating away.
         window.open(url, '_blank', 'noopener');
       } else {
         window.location.href = url;
@@ -182,11 +253,24 @@ const BadgeTray: React.FC<BadgeTrayProps> = ({ barracas, onSelectBarraca, onClos
               <span
                 className={`flex-shrink-0 h-10 w-10 rounded-full bg-gradient-to-br from-${b.badgeFromColor} to-${b.badgeToColor} flex items-center justify-center`}
               >
-                <Sparkles className="h-4 w-4 text-white" />
+                {b.id === CCC_PASS_ID ? (
+                  <Award className="h-4 w-4 text-white" />
+                ) : (
+                  <Sparkles className="h-4 w-4 text-white" />
+                )}
               </span>
               <div className="min-w-0">
-                <p className="font-semibold text-gray-900 truncate">@{b.instagramHandle}</p>
-                <p className="text-sm text-gray-500 font-mono">{b.discountCode}</p>
+                {b.id === CCC_PASS_ID ? (
+                  <>
+                    <p className="font-semibold text-gray-900 truncate">Carioca Coastal Club</p>
+                    <p className="text-sm text-gray-500">Passe All-Access</p>
+                  </>
+                ) : (
+                  <>
+                    <p className="font-semibold text-gray-900 truncate">@{b.instagramHandle}</p>
+                    <p className="text-sm text-gray-500 font-mono">{b.discountCode}</p>
+                  </>
+                )}
               </div>
               <CheckCircle2 className="ml-auto h-5 w-5 text-emerald-500 flex-shrink-0" />
             </button>
@@ -196,7 +280,7 @@ const BadgeTray: React.FC<BadgeTrayProps> = ({ barracas, onSelectBarraca, onClos
 
       <div className="px-6 py-4 bg-gray-50">
         <p className="text-xs text-gray-400 text-center">
-          Tap a badge to view your discount code
+          Tap a badge to view your pass
         </p>
       </div>
     </div>
@@ -210,27 +294,40 @@ const UnlockedBadgesFab: React.FC = () => {
   const { unlockedIds } = useBadgeContext();
   const [trayOpen, setTrayOpen] = useState(false);
   const [activeLightbox, setActiveLightbox] = useState<BarracaPromoConfig | null>(null);
+  const [cccPassOpen, setCCCPassOpen] = useState(false);
 
+  const hasCCCPass = unlockedIds.has(CCC_PASS_ID);
   const unlockedBarracas = BARRACA_PROMOS.filter((b) => unlockedIds.has(b.id));
 
-  if (unlockedBarracas.length === 0) return null;
+  // CCC pass always comes first
+  const allBadges: BarracaPromoConfig[] = [
+    ...(hasCCCPass ? [CCC_PASS_CONFIG] : []),
+    ...unlockedBarracas,
+  ];
+
+  if (allBadges.length === 0) return null;
 
   const openBadge = (barraca: BarracaPromoConfig) => {
     setTrayOpen(false);
-    setActiveLightbox(barraca);
-    trackEvent('barraca_promo_fab_badge_opened', { barraca_promo_id: barraca.id });
-  };
-
-  const handleFabClick = () => {
-    if (unlockedBarracas.length === 1) {
-      openBadge(unlockedBarracas[0]);
+    if (barraca.id === CCC_PASS_ID) {
+      setCCCPassOpen(true);
+      trackEvent('ccc_pass_fab_badge_opened', {});
     } else {
-      setTrayOpen(true);
-      trackEvent('barraca_promo_fab_tray_opened', { count: unlockedBarracas.length });
+      setActiveLightbox(barraca);
+      trackEvent('barraca_promo_fab_badge_opened', { barraca_promo_id: barraca.id });
     }
   };
 
-  const primary = unlockedBarracas[0];
+  const handleFabClick = () => {
+    if (allBadges.length === 1) {
+      openBadge(allBadges[0]);
+    } else {
+      setTrayOpen(true);
+      trackEvent('barraca_promo_fab_tray_opened', { count: allBadges.length });
+    }
+  };
+
+  const primary = allBadges[0];
 
   return createPortal(
     <>
@@ -238,19 +335,23 @@ const UnlockedBadgesFab: React.FC = () => {
       <button
         onClick={handleFabClick}
         className={`fixed bottom-5 right-5 z-50 h-14 w-14 rounded-full bg-gradient-to-br from-${primary.badgeFromColor} to-${primary.badgeToColor} shadow-lg flex items-center justify-center hover:scale-110 transition-transform`}
-        aria-label="Show your barraca discount badges"
+        aria-label="Show your badges"
       >
-        <Sparkles className="h-6 w-6 text-white" />
-        {unlockedBarracas.length > 1 && (
+        {primary.id === CCC_PASS_ID ? (
+          <Award className="h-6 w-6 text-white" />
+        ) : (
+          <Sparkles className="h-6 w-6 text-white" />
+        )}
+        {allBadges.length > 1 && (
           <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-white text-xs font-black text-gray-800 shadow">
-            {unlockedBarracas.length}
+            {allBadges.length}
           </span>
         )}
       </button>
 
       {trayOpen && (
         <BadgeTray
-          barracas={unlockedBarracas}
+          barracas={allBadges}
           onSelectBarraca={openBadge}
           onClose={() => setTrayOpen(false)}
         />
@@ -261,6 +362,10 @@ const UnlockedBadgesFab: React.FC = () => {
           barraca={activeLightbox}
           onClose={() => setActiveLightbox(null)}
         />
+      )}
+
+      {cccPassOpen && (
+        <CCCPassLightbox onClose={() => setCCCPassOpen(false)} />
       )}
     </>,
     document.body,
