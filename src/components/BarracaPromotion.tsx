@@ -17,6 +17,7 @@ import { PromoClaimService } from '../services/promoClaimService';
 import { useBadgeContext } from '../contexts/BadgeContext';
 import { BARRACA_PROMOS } from '../data/barracaPromos';
 import type { BarracaPromoConfig } from '../data/barracaPromos';
+import { CCC_PASS_ID, CCC_PASS_IDENTIFIER_KEY } from '../data/cccPass';
 
 // ---------------------------------------------------------------------------
 // iOS detection helpers
@@ -140,10 +141,15 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
   // a lazy useState, so the value is already correct on the very first render.
   const hasBadge = unlockedIds.has(barraca.id);
 
-  // If the user has a badge for a different barraca, reuse their saved
-  // identifier so they don't have to type it again.
+  // If the user has a badge for a different barraca (or the CCC pass), reuse
+  // their saved identifier so the input is hidden and they don't have to type again.
   const existingBadgeIdentifier = useMemo(() => {
     if (typeof window === 'undefined') return '';
+    // CCC all-access pass identifier takes priority
+    if (unlockedIds.has(CCC_PASS_ID)) {
+      const cccId = window.localStorage.getItem(CCC_PASS_IDENTIFIER_KEY);
+      if (cccId) return cccId;
+    }
     for (const id of unlockedIds) {
       if (id === barraca.id) continue;
       const other = BARRACA_PROMOS.find((b) => b.id === id);
