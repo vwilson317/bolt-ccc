@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { ArrowRight, MessageCircle, Gift, Instagram } from 'lucide-react';
@@ -14,6 +14,19 @@ type Project = {
   externalHref?: string;
   whatsappHref?: string;
   ctaLabel?: string;
+};
+
+type JobType = 'internship' | 'entry-level';
+type CompensationType = 'unpaid' | 'paid';
+
+type Job = {
+  id: string;
+  title: string;
+  team: string;
+  type: JobType;
+  compensation: CompensationType;
+  location: string;
+  summary: string;
 };
 
 const projects = [
@@ -66,8 +79,124 @@ const statusStyles: Record<string, string> = {
   idea: 'bg-slate-100 text-slate-700',
 };
 
+const jobs = [
+  {
+    id: 'social-content-internship',
+    title: 'Social Content Internship',
+    team: 'Social & Brand',
+    type: 'internship',
+    compensation: 'unpaid',
+    location: 'Rio de Janeiro · Hybrid',
+    summary: 'Support content planning, captions, and daily publishing while learning creator workflows.',
+  },
+  {
+    id: 'social-content-assistant',
+    title: 'Social Content Assistant',
+    team: 'Social & Brand',
+    type: 'entry-level',
+    compensation: 'paid',
+    location: 'Rio de Janeiro · Hybrid',
+    summary: 'Own posting calendars, coordinate assets, and track performance on core social channels.',
+  },
+  {
+    id: 'community-operations-internship',
+    title: 'Community Operations Internship',
+    team: 'Community Operations',
+    type: 'internship',
+    compensation: 'unpaid',
+    location: 'Rio de Janeiro · On-site',
+    summary: 'Help run events, member onboarding, and community support tasks with close team mentorship.',
+  },
+  {
+    id: 'community-operations-associate',
+    title: 'Community Operations Associate',
+    team: 'Community Operations',
+    type: 'entry-level',
+    compensation: 'paid',
+    location: 'Rio de Janeiro · On-site',
+    summary: 'Coordinate event execution, support workflows, and weekly community reporting.',
+  },
+  {
+    id: 'web-product-internship',
+    title: 'Web Product Internship',
+    team: 'Product & Engineering',
+    type: 'internship',
+    compensation: 'unpaid',
+    location: 'Remote · Brazil',
+    summary: 'Assist with QA, content updates, and simple UI improvements in a fast ship environment.',
+  },
+  {
+    id: 'junior-web-product-specialist',
+    title: 'Junior Web Product Specialist',
+    team: 'Product & Engineering',
+    type: 'entry-level',
+    compensation: 'paid',
+    location: 'Remote · Brazil',
+    summary: 'Ship small product updates, collaborate with design, and maintain high-quality user flows.',
+  },
+  {
+    id: 'photography-internship',
+    title: 'Photography Internship',
+    team: 'Creative Media',
+    type: 'internship',
+    compensation: 'unpaid',
+    location: 'Rio de Janeiro · On-site',
+    summary: 'Capture beach, event, and community moments while learning composition, lighting, and editing.',
+  },
+  {
+    id: 'junior-photography-assistant',
+    title: 'Junior Photography Assistant',
+    team: 'Creative Media',
+    type: 'entry-level',
+    compensation: 'paid',
+    location: 'Rio de Janeiro · On-site',
+    summary: 'Lead photo sessions, organize assets, and deliver edited photo sets for campaigns and social.',
+  },
+  {
+    id: 'marketing-internship',
+    title: 'Marketing Internship',
+    team: 'Growth & Partnerships',
+    type: 'internship',
+    compensation: 'unpaid',
+    location: 'Rio de Janeiro · Hybrid',
+    summary: 'Support campaign research, outreach, and reporting across growth and partnerships projects.',
+  },
+  {
+    id: 'junior-marketing-coordinator',
+    title: 'Junior Marketing Coordinator',
+    team: 'Growth & Partnerships',
+    type: 'entry-level',
+    compensation: 'paid',
+    location: 'Rio de Janeiro · Hybrid',
+    summary: 'Coordinate marketing initiatives, partner activations, and channel-level campaign analysis.',
+  },
+] satisfies Job[];
+
+const compensationStyles: Record<CompensationType, string> = {
+  unpaid: 'bg-orange-100 text-orange-700',
+  paid: 'bg-emerald-100 text-emerald-700',
+};
+
+const typeStyles: Record<JobType, string> = {
+  internship: 'bg-sky-100 text-sky-700',
+  'entry-level': 'bg-purple-100 text-purple-700',
+};
+
+const typeLabels: Record<JobType, string> = {
+  internship: 'Internship',
+  'entry-level': 'Entry-level',
+};
+
+const compensationLabels: Record<CompensationType, string> = {
+  unpaid: 'Unpaid',
+  paid: 'Paid',
+};
+
 const CommunityHome: React.FC = () => {
   const { t } = useTranslation();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedType, setSelectedType] = useState<'all' | JobType>('all');
+  const [selectedCompensation, setSelectedCompensation] = useState<'all' | CompensationType>('all');
 
   useEffect(() => {
     trackEvent('community_home_viewed', {
@@ -97,6 +226,31 @@ const CommunityHome: React.FC = () => {
     },
     []
   );
+
+  const filteredJobs = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+
+    return jobs
+      .filter((job) => {
+        const matchesQuery =
+          query.length === 0 ||
+          [job.title, job.team, job.summary, job.location].some((value) =>
+            value.toLowerCase().includes(query)
+          );
+        const matchesType = selectedType === 'all' || job.type === selectedType;
+        const matchesCompensation =
+          selectedCompensation === 'all' || job.compensation === selectedCompensation;
+
+        return matchesQuery && matchesType && matchesCompensation;
+      })
+      .sort((a, b) => {
+        if (a.compensation === b.compensation) {
+          return a.title.localeCompare(b.title);
+        }
+
+        return a.compensation === 'unpaid' ? -1 : 1;
+      });
+  }, [searchQuery, selectedType, selectedCompensation]);
 
   return (
     <div className="min-h-screen bg-white">
@@ -227,6 +381,94 @@ const CommunityHome: React.FC = () => {
               </article>
             ))}
           </div>
+        </div>
+      </section>
+
+      <section className="py-16 bg-slate-50 border-y border-slate-100">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="mb-8">
+            <h2 className="text-3xl font-bold text-gray-900 mb-2">
+              {t('communityHome.jobsTitle', 'Open Roles')}
+            </h2>
+            <p className="text-gray-600">
+              {t(
+                'communityHome.jobsDescription',
+                'Browse internships and entry-level roles. Unpaid internships are listed first, followed by paid opportunities.'
+              )}
+            </p>
+          </div>
+
+          <div className="bg-white border border-gray-200 rounded-2xl p-4 md:p-6 mb-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <label className="flex flex-col gap-2">
+                <span className="text-sm font-semibold text-gray-700">Search roles</span>
+                <input
+                  type="search"
+                  value={searchQuery}
+                  onChange={(event) => setSearchQuery(event.target.value)}
+                  placeholder="Photography, marketing, community..."
+                  className="rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-beach-300"
+                />
+              </label>
+
+              <label className="flex flex-col gap-2">
+                <span className="text-sm font-semibold text-gray-700">Role type</span>
+                <select
+                  value={selectedType}
+                  onChange={(event) => setSelectedType(event.target.value as 'all' | JobType)}
+                  className="rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-beach-300"
+                >
+                  <option value="all">All role types</option>
+                  <option value="internship">Internships</option>
+                  <option value="entry-level">Entry-level</option>
+                </select>
+              </label>
+
+              <label className="flex flex-col gap-2">
+                <span className="text-sm font-semibold text-gray-700">Compensation</span>
+                <select
+                  value={selectedCompensation}
+                  onChange={(event) =>
+                    setSelectedCompensation(event.target.value as 'all' | CompensationType)
+                  }
+                  className="rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-beach-300"
+                >
+                  <option value="all">All compensation types</option>
+                  <option value="unpaid">Unpaid</option>
+                  <option value="paid">Paid</option>
+                </select>
+              </label>
+            </div>
+          </div>
+
+          {filteredJobs.length === 0 ? (
+            <div className="bg-white border border-dashed border-gray-300 rounded-2xl p-8 text-center text-gray-600">
+              No roles match your filters yet. Try a different search term.
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {filteredJobs.map((job) => (
+                <article key={job.id} className="border border-gray-200 rounded-2xl p-6 shadow-sm bg-white">
+                  <div className="flex flex-wrap items-center gap-2 mb-3">
+                    <span
+                      className={`text-xs font-semibold uppercase tracking-wide px-3 py-1 rounded-full ${typeStyles[job.type]}`}
+                    >
+                      {typeLabels[job.type]}
+                    </span>
+                    <span
+                      className={`text-xs font-semibold uppercase tracking-wide px-3 py-1 rounded-full ${compensationStyles[job.compensation]}`}
+                    >
+                      {compensationLabels[job.compensation]}
+                    </span>
+                  </div>
+                  <h3 className="text-xl font-semibold text-gray-900">{job.title}</h3>
+                  <p className="text-sm text-gray-500 mt-1">{job.team}</p>
+                  <p className="text-gray-600 mt-4">{job.summary}</p>
+                  <p className="text-sm text-gray-500 mt-4">{job.location}</p>
+                </article>
+              ))}
+            </div>
+          )}
         </div>
       </section>
     </div>
