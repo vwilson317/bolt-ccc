@@ -29,6 +29,34 @@ const BarracaPromoPage: React.FC = () => {
   // null = still loading from DB, boolean = resolved
   const [isActive, setIsActive] = useState<boolean | null>(null);
 
+  // Fire page-viewed immediately on mount so bounces are never missed,
+  // and page-left on unmount with time spent. Runs once per barraca slug.
+  useEffect(() => {
+    if (!barraca) return;
+    const enteredAt = Date.now();
+
+    trackEvent('barraca_promo_page_viewed', {
+      promo_id: barraca.id,
+      promo_name: barraca.name,
+      promo_slug: barraca.slug,
+      instagram_handle: barraca.instagramHandle,
+      page_path: location.pathname,
+      referrer: typeof document !== 'undefined' ? (document.referrer || null) : null,
+    });
+
+    return () => {
+      trackEvent('barraca_promo_page_left', {
+        promo_id: barraca.id,
+        promo_name: barraca.name,
+        promo_slug: barraca.slug,
+        page_path: location.pathname,
+        time_on_page_ms: Date.now() - enteredAt,
+      });
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [barraca?.id]);
+
+  // Resolve active status from DB; fires a separate event once the result is known.
   useEffect(() => {
     if (!barraca) return;
 
@@ -41,22 +69,24 @@ const BarracaPromoPage: React.FC = () => {
         // DB row wins; fall back to static config when no row exists yet
         const active = data ? (data as { active: boolean }).active : barraca.active;
         setIsActive(active);
-        trackEvent('barraca_promo_page_viewed', {
+        trackEvent('barraca_promo_active_status_resolved', {
           promo_id: barraca.id,
           promo_name: barraca.name,
           instagram_handle: barraca.instagramHandle,
           is_active: active,
+          source: 'db',
           page_path: location.pathname,
         });
       })
       .catch(() => {
         // Network / Supabase error → fall back to static config
         setIsActive(barraca.active);
-        trackEvent('barraca_promo_page_viewed', {
+        trackEvent('barraca_promo_active_status_resolved', {
           promo_id: barraca.id,
           promo_name: barraca.name,
           instagram_handle: barraca.instagramHandle,
           is_active: barraca.active,
+          source: 'fallback',
           page_path: location.pathname,
         });
       });
