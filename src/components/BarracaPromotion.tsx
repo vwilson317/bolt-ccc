@@ -15,6 +15,7 @@ import { Gift, Instagram, CheckCircle2, Sparkles, Wallet } from 'lucide-react';
 import { trackEvent } from '../services/posthogAnalyticsService';
 import { PromoClaimService } from '../services/promoClaimService';
 import { useBadgeContext } from '../contexts/BadgeContext';
+import { BARRACA_PROMOS } from '../data/barracaPromos';
 import type { BarracaPromoConfig } from '../data/barracaPromos';
 
 // ---------------------------------------------------------------------------
@@ -139,6 +140,20 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
   // a lazy useState, so the value is already correct on the very first render.
   const hasBadge = unlockedIds.has(barraca.id);
 
+  // If the user has a badge for a different barraca, reuse their saved
+  // identifier so they don't have to type it again.
+  const existingBadgeIdentifier = useMemo(() => {
+    if (typeof window === 'undefined') return '';
+    for (const id of unlockedIds) {
+      if (id === barraca.id) continue;
+      const other = BARRACA_PROMOS.find((b) => b.id === id);
+      if (!other) continue;
+      const saved = window.localStorage.getItem(other.identifierStorageKey);
+      if (saved) return saved;
+    }
+    return '';
+  }, [unlockedIds, barraca.id]);
+
   const [hasClickedFollow, setHasClickedFollow] = useState(() => {
     if (typeof window === 'undefined') return false;
     return hasBadge;
@@ -226,7 +241,8 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
     setClaimError('');
     setClaimSuccess('');
 
-    const normalized = PromoClaimService.normalizeIdentifier(identifierInput);
+    const effectiveIdentifier = existingBadgeIdentifier || identifierInput;
+    const normalized = PromoClaimService.normalizeIdentifier(effectiveIdentifier);
     if (!normalized) {
       setClaimError(promoT('messages.invalidIdentifier'));
       trackEvent('barraca_promo_invalid_identifier', trackCtx);
@@ -257,10 +273,10 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
     });
 
     try {
-      const existing = await PromoClaimService.findByIdentifier(barraca.id, identifierInput);
+      const existing = await PromoClaimService.findByIdentifier(barraca.id, effectiveIdentifier);
 
       if (existing?.badge_unlocked) {
-        await PromoClaimService.markLastClaimed(barraca.id, identifierInput);
+        await PromoClaimService.markLastClaimed(barraca.id, effectiveIdentifier);
         _persistBadge(existing.identifier_value);
         setRestoredIdentifier(existing.identifier_value);
         setClaimSuccess(promoT('messages.restored'));
@@ -272,7 +288,7 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
         return;
       }
 
-      const result = await PromoClaimService.claimOrRestore(barraca.id, identifierInput, {
+      const result = await PromoClaimService.claimOrRestore(barraca.id, effectiveIdentifier, {
         followConfirmed: true,
         unlockBadge: true,
         metadata: {
@@ -282,7 +298,7 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
       });
 
       if (!result.claim?.badge_unlocked) {
-        _persistBadge(identifierInput.trim());
+        _persistBadge(effectiveIdentifier.trim());
         setClaimSuccess(promoT('messages.claimedFallback'));
         trackEvent('barraca_promo_claim_local_fallback', trackCtx);
         return;
@@ -399,18 +415,22 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
       {/* Input + Instagram button — visible when badge not yet claimed */}
       {!hasBadge && (
         <div className="mt-5">
-          <label className="mb-2 flex items-center gap-1 text-sm font-semibold text-gray-700">
-            {promoT('card.step2Label')}
-            <span className="text-pink-500" aria-hidden="true">*</span>
-          </label>
-          <input
-            type="text"
-            value={identifierInput}
-            onChange={(e) => setIdentifierInput(e.target.value)}
-            placeholder={promoT('card.identifierPlaceholder')}
-            className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-gray-800 placeholder:text-gray-400 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-100"
-          />
-          <p className="mt-2 text-xs text-gray-500">{promoT('card.note')}</p>
+          {!existingBadgeIdentifier && (
+            <>
+              <label className="mb-2 flex items-center gap-1 text-sm font-semibold text-gray-700">
+                {promoT('card.step2Label')}
+                <span className="text-pink-500" aria-hidden="true">*</span>
+              </label>
+              <input
+                type="text"
+                value={identifierInput}
+                onChange={(e) => setIdentifierInput(e.target.value)}
+                placeholder={promoT('card.identifierPlaceholder')}
+                className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-gray-800 placeholder:text-gray-400 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-100"
+              />
+              <p className="mt-2 text-xs text-gray-500">{promoT('card.note')}</p>
+            </>
+          )}
 
           <div className="mt-3">
             <button
