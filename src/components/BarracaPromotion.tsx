@@ -141,9 +141,7 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
 
   const [hasClickedFollow, setHasClickedFollow] = useState(() => {
     if (typeof window === 'undefined') return false;
-    const followedThisSession =
-      window.sessionStorage.getItem(`ccc_follow_session_${barraca.id}`) === 'true';
-    return hasBadge || followedThisSession;
+    return hasBadge;
   });
   const [identifierInput, setIdentifierInput] = useState(() => {
     if (typeof window === 'undefined') return '';
@@ -220,22 +218,11 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
   }, []);
 
   // ---------------------------------------------------------------------------
-  // Step 1: Follow Instagram
+  // Combined: Follow Instagram + Claim badge
+  // Validates the identifier first, then opens Instagram and submits the claim.
+  // On failure the button stays visible so the user can retry.
   // ---------------------------------------------------------------------------
-  const handleFollowClick = () => {
-    setHasClickedFollow(true);
-    window.sessionStorage.setItem(`ccc_follow_session_${barraca.id}`, 'true');
-    window.open(barraca.instagramUrl, '_blank', 'noopener,noreferrer');
-    trackEvent('barraca_promo_instagram_clicked', {
-      ...trackCtx,
-      badge_already_unlocked: hasBadge,
-    });
-  };
-
-  // ---------------------------------------------------------------------------
-  // Step 2: Claim / restore badge
-  // ---------------------------------------------------------------------------
-  const handleClaim = async () => {
+  const handleFollowAndClaim = async () => {
     setClaimError('');
     setClaimSuccess('');
 
@@ -245,6 +232,14 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
       trackEvent('barraca_promo_invalid_identifier', trackCtx);
       return;
     }
+
+    // Open Instagram immediately so the browser doesn't block the popup.
+    window.open(barraca.instagramUrl, '_blank', 'noopener,noreferrer');
+    setHasClickedFollow(true);
+    trackEvent('barraca_promo_instagram_clicked', {
+      ...trackCtx,
+      badge_already_unlocked: hasBadge,
+    });
 
     setIsSubmitting(true);
     trackEvent('barraca_promo_identifier_submitted', {
@@ -264,17 +259,6 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
           ...trackCtx,
           restore_source: 'manual_lookup',
           identifier_type: existing.identifier_type,
-        });
-        return;
-      }
-
-      if (!hasClickedFollow) {
-        setClaimError(
-          promoT('messages.followFirst', { instagramHandle: barraca.instagramHandle }),
-        );
-        trackEvent('barraca_promo_badge_blocked', {
-          ...trackCtx,
-          block_reason: 'follow_step_not_completed',
         });
         return;
       }
@@ -403,46 +387,38 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
         {promoT('card.descriptionSuffix')}
       </p>
 
-      {/* Instagram button — always visible */}
-      <div className="mt-5">
-        <button
-          onClick={handleFollowClick}
-          className="bg-gradient-to-r from-pink-500 to-purple-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-pink-600 hover:to-purple-700 transition-all duration-200 shadow-lg flex items-center justify-center"
-        >
-          <Instagram className="mr-2 h-5 w-5" strokeWidth={1.5} />
-          {promoT('card.step1Button')}
-        </button>
-      </div>
-
-      {/* Claim input — only rendered after follow click, when the user has no badge */}
-      {hasClickedFollow && !hasBadge && (
-        <div className="mt-4">
+      {/* Input + Instagram button — visible when badge not yet claimed */}
+      {!hasBadge && (
+        <div className="mt-5">
           <label className="mb-2 block text-sm font-semibold text-gray-700">
             {promoT('card.step2Label')}
           </label>
-          <div className="flex flex-col gap-3 sm:flex-row">
-            <input
-              type="text"
-              value={identifierInput}
-              onChange={(e) => setIdentifierInput(e.target.value)}
-              placeholder={promoT('card.identifierPlaceholder')}
-              className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-gray-800 placeholder:text-gray-400 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-100"
-            />
+          <input
+            type="text"
+            value={identifierInput}
+            onChange={(e) => setIdentifierInput(e.target.value)}
+            placeholder={promoT('card.identifierPlaceholder')}
+            className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-gray-800 placeholder:text-gray-400 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-100"
+          />
+          <p className="mt-2 text-xs text-gray-500">{promoT('card.note')}</p>
+
+          <div className="mt-3">
             <button
-              onClick={handleClaim}
+              onClick={handleFollowAndClaim}
               disabled={isSubmitting}
-              className="bg-white text-gray-800 px-6 py-3 rounded-xl font-semibold border-2 border-gray-200 hover:bg-gray-50 transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-50"
+              className="bg-gradient-to-r from-pink-500 to-purple-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-pink-600 hover:to-purple-700 transition-all duration-200 shadow-lg flex items-center justify-center disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {isSubmitting ? promoT('card.saving') : promoT('card.claimButton')}
+              <Instagram className="mr-2 h-5 w-5" strokeWidth={1.5} />
+              {isSubmitting ? promoT('card.saving') : promoT('card.step1Button')}
             </button>
           </div>
+
           {claimError && (
-            <p className="mt-2 text-sm font-medium text-red-600">{claimError}</p>
+            <p className="mt-3 text-sm font-medium text-red-600">{claimError}</p>
           )}
           {claimSuccess && (
-            <p className="mt-2 text-sm font-medium text-emerald-700">{claimSuccess}</p>
+            <p className="mt-3 text-sm font-medium text-emerald-700">{claimSuccess}</p>
           )}
-          <p className="mt-3 text-xs text-gray-500">{promoT('card.note')}</p>
         </div>
       )}
 
