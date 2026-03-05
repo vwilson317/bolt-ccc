@@ -67,7 +67,7 @@ const BarracaPromoPage: React.FC = () => {
   const pageTitle = `${barraca.name} — Carioca Coastal Club`;
   const pageDescription = `Follow @${barraca.instagramHandle} on Instagram and get your exclusive discount badge at ${barraca.barracaLocation}.`;
   const pageImage = barraca.logoPath ?? '/logo_320x320.png';
-  const pageUrl = `https://cariocacoastalclub.com/promo/${barraca.slug}`;
+  const pageUrl = `https://cariocacoastalclub.com/${barraca.slug}`;
 
   // ------------------------------------------------------------------
   // Loading state — avoid flash of wrong content
