@@ -414,8 +414,8 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
         </button>
       </div>
 
-      {/* Claim input — only rendered when the user has no badge */}
-      {!hasBadge && (
+      {/* Claim input — only rendered after follow click, when the user has no badge */}
+      {hasClickedFollow && !hasBadge && (
         <div className="mt-4">
           <label className="mb-2 block text-sm font-semibold text-gray-700">
             {promoT('card.step2Label')}
