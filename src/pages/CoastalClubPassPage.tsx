@@ -8,9 +8,11 @@
  * the other 50% see "Não sei" — both unlock the badge identically.
  */
 import React, { useState, useMemo } from 'react';
+import { QRCodeSVG } from 'qrcode.react';
 import {
   Award,
   CheckCircle2,
+  Copy,
   MapPin,
   Sparkles,
   Star,
@@ -125,6 +127,82 @@ const ActivePassView: React.FC<{ activeBarracas: typeof BARRACA_PROMOS }> = ({
 );
 
 // ---------------------------------------------------------------------------
+// PIX payment card
+// ---------------------------------------------------------------------------
+
+const PIX_KEY = '+5521990532728';
+const PIX_DISPLAY = '(21) 99053-2728';
+
+const PixPaymentCard: React.FC = () => {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(PIX_KEY).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
+
+  return (
+    <div className="rounded-3xl bg-white border border-pink-100 shadow-sm p-6 mb-8">
+      <div className="flex items-center gap-2 mb-4">
+        <div className="h-7 w-7 rounded-full flex items-center justify-center"
+          style={{ background: 'linear-gradient(to bottom right, #ec4899, #e11d48)' }}>
+          {/* PIX logo approximation via text */}
+          <span className="text-white text-[9px] font-black leading-none">PIX</span>
+        </div>
+        <p className="text-sm font-bold text-gray-900">Pague via PIX</p>
+        <span className="ml-auto rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-semibold text-emerald-700">
+          R$30/mês
+        </span>
+      </div>
+
+      <p className="text-xs text-gray-500 mb-5">
+        Escaneie o QR code abaixo com o app do seu banco, ou copie a chave PIX (celular).
+      </p>
+
+      {/* QR Code */}
+      <div className="flex justify-center mb-5">
+        <div className="rounded-2xl border-2 border-pink-100 p-4 bg-white shadow-inner">
+          <QRCodeSVG
+            value={PIX_KEY}
+            size={180}
+            fgColor="#be185d"
+            bgColor="#ffffff"
+            level="M"
+          />
+        </div>
+      </div>
+
+      {/* Copyable key */}
+      <button
+        onClick={handleCopy}
+        className="w-full flex items-center justify-between gap-3 rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm transition-colors hover:bg-pink-50 hover:border-pink-200 active:scale-[0.99]"
+      >
+        <span className="font-mono text-gray-700 tracking-wide">{PIX_DISPLAY}</span>
+        <span className="flex items-center gap-1.5 text-xs font-semibold text-pink-600">
+          {copied ? (
+            <>
+              <CheckCircle2 className="h-3.5 w-3.5" />
+              Copiado!
+            </>
+          ) : (
+            <>
+              <Copy className="h-3.5 w-3.5" />
+              Copiar chave
+            </>
+          )}
+        </span>
+      </button>
+
+      <p className="text-center text-xs text-gray-400 mt-3">
+        Após pagar, envie o comprovante no WhatsApp para ativar seu passe.
+      </p>
+    </div>
+  );
+};
+
+// ---------------------------------------------------------------------------
 // Main page
 // ---------------------------------------------------------------------------
 
@@ -237,10 +315,11 @@ const CoastalClubPassPage: React.FC = () => {
             {/* Benefits */}
             <ul className="space-y-3 mb-8">
               {[
-                `Desconto exclusivo em ${activeBarracas.length} barracas parceiras`,
-                'Badge digital do Carioca Coastal Club',
-                'Válido durante toda a temporada',
-                'Comunidade WhatsApp com outros membros',
+                'Barraca perks — descontos exclusivos nos parceiros',
+                'WhatsApp beach intel — dicas e condições em tempo real',
+                'Meetups — encontros com a comunidade',
+                'Events — acesso prioritário a eventos CCC',
+                'Insider spots — lugares secretos recomendados',
               ].map((benefit) => (
                 <li key={benefit} className="flex items-start gap-3">
                   <div className="flex-shrink-0 mt-0.5 h-5 w-5 rounded-full bg-pink-100 flex items-center justify-center">
@@ -309,6 +388,9 @@ const CoastalClubPassPage: React.FC = () => {
               <span>Comunidade CCC</span>
             </div>
           </div>
+
+          {/* PIX payment */}
+          <PixPaymentCard />
 
           {/* Partner barracas */}
           <div className="mb-8">
