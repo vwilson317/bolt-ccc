@@ -31,7 +31,7 @@ const Header: React.FC = () => {
 
   // Only these pages intentionally use a transparent hero header that becomes solid on scroll.
   // All other pages (including any future pages) default to a solid header.
-  const isLegacyHomePage = location.pathname === '/projects/carioca-coastal-club';
+  const isLegacyHomePage = location.pathname === '/' || location.pathname === '/projects/carioca-coastal-club';
   const isAboutPage = location.pathname === '/about';
   const isTransparentHeroPage = isLegacyHomePage || isAboutPage;
 

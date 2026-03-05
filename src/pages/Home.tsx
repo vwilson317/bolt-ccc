@@ -25,8 +25,8 @@ const Home: React.FC = () => {
   // const { featureFlags } = useStory();
   const projectUrl =
     typeof window !== 'undefined'
-      ? `${window.location.origin}/projects/carioca-coastal-club`
-      : 'https://cariocacoastalclub.com/projects/carioca-coastal-club';
+      ? `${window.location.origin}/`
+      : 'https://cariocacoastalclub.com/';
   const isThaisPromoActive = useMemo(() => {
     const params = new URLSearchParams(location.search);
     return params.get('promo') === THAIS_PROMO_QUERY_VALUE;
