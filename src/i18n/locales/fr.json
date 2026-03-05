@@ -727,5 +727,39 @@
         "applyLabel": "Postuler au role Stagiaire Ingenierie"
       }
     }
+  },
+  "cccPassPage": {
+    "activePass": "PASS ACTIF",
+    "activePassDescription": "Votre pass tout accès est actif ! Profitez de réductions dans toutes les barracas partenaires.",
+    "includedBarracas": "Barracas incluses",
+    "badgeHint": "Votre badge apparaît sur le bouton flottant en bas à droite ↘",
+    "pixTitle": "Payer via PIX",
+    "pixDescription": "Scannez le QR code ci-dessous avec votre application bancaire, ou copiez la clé PIX (téléphone).",
+    "copyKey": "Copier la clé",
+    "copied": "Copié !",
+    "pixNote": "Après le paiement, envoyez le reçu sur WhatsApp pour activer votre pass.",
+    "passBadgeLabel": "PASS TOUT ACCÈS",
+    "heroSubtitle": "Accès total à toutes les barracas partenaires",
+    "activeCount": "{{count}} barracas actives · Rio de Janeiro",
+    "priceSubtitle": "Pass Tout Inclus · Annulez quand vous voulez",
+    "benefit1": "Barraca perks — réductions exclusives chez les partenaires",
+    "benefit2": "WhatsApp beach intel — conseils et conditions en temps réel",
+    "benefit3": "Meetups — rencontres avec la communauté",
+    "benefit4": "Events — accès prioritaire aux événements CCC",
+    "benefit5": "Insider spots — lieux secrets recommandés",
+    "identifierLabel": "Votre email ou téléphone",
+    "identifierPlaceholder": "email@exemple.com ou (21) 99999-9999",
+    "identifierError": "Veuillez entrer votre email ou téléphone pour continuer.",
+    "ctaSubscribe": "S'abonner pour R$30/mois",
+    "ctaDunno": "Je ne sais pas",
+    "ctaActivating": "Activation…",
+    "noCommitment": "Essai sans engagement · Aucun frais ne sera prélevé maintenant",
+    "testimonial": "\"La meilleure façon de profiter de l'été carioca.\"",
+    "community": "Communauté CCC",
+    "includedInPass": "Barracas incluses dans le pass",
+    "statusActive": "Actif",
+    "statusComingSoon": "Bientôt",
+    "seoTitle": "Carioca Coastal Club Pass — Pass Tout Accès · R$30/mois",
+    "seoDescription": "Accès illimité à {{count}} barracas partenaires à Rio de Janeiro pour seulement R$30 par mois. Badge exclusif du Carioca Coastal Club."
   }
 }

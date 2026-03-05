@@ -8,6 +8,7 @@
  * the other 50% see "Não sei" — both unlock the badge identically.
  */
 import React, { useState, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { QRCodeSVG } from 'qrcode.react';
 import {
   Award,
@@ -74,57 +75,60 @@ function barracaGradient(fromColor: string, toColor: string): React.CSSPropertie
 
 const ActivePassView: React.FC<{ activeBarracas: typeof BARRACA_PROMOS }> = ({
   activeBarracas,
-}) => (
-  <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-rose-50 pt-28 pb-16">
-    <div className="mx-auto max-w-lg px-4">
-      {/* Badge */}
-      <div className="text-center mb-8">
-        <div className="mx-auto mb-6 flex h-28 w-28 items-center justify-center rounded-full shadow-2xl ring-8 ring-pink-100"
-          style={{ background: 'linear-gradient(to bottom right, #ec4899, #e11d48)' }}>
-          <Award className="h-16 w-16 text-white" strokeWidth={1.5} />
+}) => {
+  const { t } = useTranslation();
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-rose-50 pt-28 pb-16">
+      <div className="mx-auto max-w-lg px-4">
+        {/* Badge */}
+        <div className="text-center mb-8">
+          <div className="mx-auto mb-6 flex h-28 w-28 items-center justify-center rounded-full shadow-2xl ring-8 ring-pink-100"
+            style={{ background: 'linear-gradient(to bottom right, #ec4899, #e11d48)' }}>
+            <Award className="h-16 w-16 text-white" strokeWidth={1.5} />
+          </div>
+
+          <div className="inline-flex items-center gap-2 rounded-full bg-pink-100 px-4 py-1.5 text-sm font-bold text-pink-700 mb-4">
+            <CheckCircle2 className="h-4 w-4" />
+            {t('cccPassPage.activePass')}
+          </div>
+
+          <h1 className="text-3xl font-black text-gray-900 mb-2">Carioca Coastal Club</h1>
+          <p className="text-gray-500 mb-8">
+            {t('cccPassPage.activePassDescription')}
+          </p>
         </div>
 
-        <div className="inline-flex items-center gap-2 rounded-full bg-pink-100 px-4 py-1.5 text-sm font-bold text-pink-700 mb-4">
-          <CheckCircle2 className="h-4 w-4" />
-          PASSE ATIVO
+        {/* Partner list */}
+        <div className="rounded-3xl bg-white border border-pink-100 shadow-sm p-6 mb-6">
+          <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-4">
+            {t('cccPassPage.includedBarracas')}
+          </p>
+          <div className="space-y-3">
+            {activeBarracas.map((b) => (
+              <div key={b.id} className="flex items-center gap-3">
+                <div
+                  className="h-9 w-9 rounded-full flex-shrink-0 flex items-center justify-center shadow"
+                  style={barracaGradient(b.badgeFromColor, b.badgeToColor)}
+                >
+                  <Sparkles className="h-4 w-4 text-white" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="font-semibold text-gray-900 leading-tight">{b.name}</p>
+                  <p className="text-xs text-gray-400">{b.barracaLocation}</p>
+                </div>
+                <CheckCircle2 className="h-5 w-5 text-emerald-500 flex-shrink-0" />
+              </div>
+            ))}
+          </div>
         </div>
 
-        <h1 className="text-3xl font-black text-gray-900 mb-2">Carioca Coastal Club</h1>
-        <p className="text-gray-500 mb-8">
-          Seu passe all-access está ativo! Aproveite descontos em todas as barracas parceiras.
+        <p className="text-center text-sm text-gray-400">
+          {t('cccPassPage.badgeHint')}
         </p>
       </div>
-
-      {/* Partner list */}
-      <div className="rounded-3xl bg-white border border-pink-100 shadow-sm p-6 mb-6">
-        <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-4">
-          Barracas incluídas
-        </p>
-        <div className="space-y-3">
-          {activeBarracas.map((b) => (
-            <div key={b.id} className="flex items-center gap-3">
-              <div
-                className="h-9 w-9 rounded-full flex-shrink-0 flex items-center justify-center shadow"
-                style={barracaGradient(b.badgeFromColor, b.badgeToColor)}
-              >
-                <Sparkles className="h-4 w-4 text-white" />
-              </div>
-              <div className="min-w-0 flex-1">
-                <p className="font-semibold text-gray-900 leading-tight">{b.name}</p>
-                <p className="text-xs text-gray-400">{b.barracaLocation}</p>
-              </div>
-              <CheckCircle2 className="h-5 w-5 text-emerald-500 flex-shrink-0" />
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <p className="text-center text-sm text-gray-400">
-        Seu badge aparece no botão flutuante no canto inferior direito ↘
-      </p>
     </div>
-  </div>
-);
+  );
+};
 
 // ---------------------------------------------------------------------------
 // PIX payment card
@@ -134,6 +138,7 @@ const PIX_KEY = '+5521990532728';
 const PIX_DISPLAY = '(21) 99053-2728';
 
 const PixPaymentCard: React.FC = () => {
+  const { t } = useTranslation();
   const [copied, setCopied] = useState(false);
 
   const handleCopy = () => {
@@ -148,17 +153,16 @@ const PixPaymentCard: React.FC = () => {
       <div className="flex items-center gap-2 mb-4">
         <div className="h-7 w-7 rounded-full flex items-center justify-center"
           style={{ background: 'linear-gradient(to bottom right, #ec4899, #e11d48)' }}>
-          {/* PIX logo approximation via text */}
           <span className="text-white text-[9px] font-black leading-none">PIX</span>
         </div>
-        <p className="text-sm font-bold text-gray-900">Pague via PIX</p>
+        <p className="text-sm font-bold text-gray-900">{t('cccPassPage.pixTitle')}</p>
         <span className="ml-auto rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-semibold text-emerald-700">
           R$30/mês
         </span>
       </div>
 
       <p className="text-xs text-gray-500 mb-5">
-        Escaneie o QR code abaixo com o app do seu banco, ou copie a chave PIX (celular).
+        {t('cccPassPage.pixDescription')}
       </p>
 
       {/* QR Code */}
@@ -184,19 +188,19 @@ const PixPaymentCard: React.FC = () => {
           {copied ? (
             <>
               <CheckCircle2 className="h-3.5 w-3.5" />
-              Copiado!
+              {t('cccPassPage.copied')}
             </>
           ) : (
             <>
               <Copy className="h-3.5 w-3.5" />
-              Copiar chave
+              {t('cccPassPage.copyKey')}
             </>
           )}
         </span>
       </button>
 
       <p className="text-center text-xs text-gray-400 mt-3">
-        Após pagar, envie o comprovante no WhatsApp para ativar seu passe.
+        {t('cccPassPage.pixNote')}
       </p>
     </div>
   );
@@ -207,6 +211,7 @@ const PixPaymentCard: React.FC = () => {
 // ---------------------------------------------------------------------------
 
 const CoastalClubPassPage: React.FC = () => {
+  const { t } = useTranslation();
   const { unlockBadge, unlockedIds } = useBadgeContext();
   const hasPass = unlockedIds.has(CCC_PASS_ID);
 
@@ -229,7 +234,7 @@ const CoastalClubPassPage: React.FC = () => {
   const handleSignUp = () => {
     const trimmed = identifier.trim();
     if (!trimmed) {
-      setError('Por favor, insira seu e-mail ou telefone para continuar.');
+      setError(t('cccPassPage.identifierError'));
       return;
     }
 
@@ -248,9 +253,8 @@ const CoastalClubPassPage: React.FC = () => {
     setIsSubmitting(false);
   };
 
-  const seoTitle = 'Carioca Coastal Club Pass — Passe All-Access · R$30/mês';
-  const seoDescription =
-    `Acesso ilimitado a ${activeBarracas.length} barracas parceiras no Rio de Janeiro por apenas R$30 por mês. Badge exclusivo do Carioca Coastal Club.`;
+  const seoTitle = t('cccPassPage.seoTitle');
+  const seoDescription = t('cccPassPage.seoDescription', { count: activeBarracas.length });
 
   if (hasPass) {
     return (
@@ -280,18 +284,18 @@ const CoastalClubPassPage: React.FC = () => {
 
           <div className="inline-flex items-center gap-2 rounded-full bg-white/20 px-4 py-1.5 text-sm font-bold uppercase tracking-widest mb-5">
             <Sparkles className="h-3.5 w-3.5" />
-            PASSE ALL-ACCESS
+            {t('cccPassPage.passBadgeLabel')}
           </div>
 
           <h1 className="text-4xl sm:text-5xl font-black mb-3 leading-tight">
             Carioca<br />Coastal Club
           </h1>
           <p className="text-lg font-medium opacity-90 mb-2">
-            Acesso total a todas as barracas parceiras
+            {t('cccPassPage.heroSubtitle')}
           </p>
           <div className="flex items-center justify-center gap-2 opacity-75 text-sm">
             <MapPin className="h-4 w-4" />
-            <span>{activeBarracas.length} barracas ativas · Rio de Janeiro</span>
+            <span>{t('cccPassPage.activeCount', { count: activeBarracas.length })}</span>
           </div>
         </div>
       </div>
@@ -309,18 +313,20 @@ const CoastalClubPassPage: React.FC = () => {
                 <span className="text-7xl font-black text-gray-900 leading-none">30</span>
                 <span className="text-xl text-gray-400 self-end mb-1">/mês</span>
               </div>
-              <p className="text-sm text-gray-400 mt-2">Passe All-Inclusive · Cancele quando quiser</p>
+              <p className="text-sm text-gray-400 mt-2">{t('cccPassPage.priceSubtitle')}</p>
             </div>
 
             {/* Benefits */}
             <ul className="space-y-3 mb-8">
-              {[
-                'Barraca perks — descontos exclusivos nos parceiros',
-                'WhatsApp beach intel — dicas e condições em tempo real',
-                'Meetups — encontros com a comunidade',
-                'Events — acesso prioritário a eventos CCC',
-                'Insider spots — lugares secretos recomendados',
-              ].map((benefit) => (
+              {(
+                [
+                  t('cccPassPage.benefit1'),
+                  t('cccPassPage.benefit2'),
+                  t('cccPassPage.benefit3'),
+                  t('cccPassPage.benefit4'),
+                  t('cccPassPage.benefit5'),
+                ] as string[]
+              ).map((benefit) => (
                 <li key={benefit} className="flex items-start gap-3">
                   <div className="flex-shrink-0 mt-0.5 h-5 w-5 rounded-full bg-pink-100 flex items-center justify-center">
                     <CheckCircle2 className="h-3.5 w-3.5 text-pink-600" />
@@ -333,7 +339,7 @@ const CoastalClubPassPage: React.FC = () => {
             {/* Sign-up form */}
             <div className="space-y-3">
               <label className="block text-sm font-semibold text-gray-700">
-                Seu e-mail ou telefone
+                {t('cccPassPage.identifierLabel')}
               </label>
               <input
                 type="text"
@@ -343,7 +349,7 @@ const CoastalClubPassPage: React.FC = () => {
                   setError('');
                 }}
                 onKeyDown={(e) => e.key === 'Enter' && handleSignUp()}
-                placeholder="email@exemplo.com ou (21) 99999-9999"
+                placeholder={t('cccPassPage.identifierPlaceholder')}
                 className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-gray-800 placeholder:text-gray-400 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-100 transition-colors"
               />
 
@@ -361,14 +367,14 @@ const CoastalClubPassPage: React.FC = () => {
                 style={{ background: 'linear-gradient(to right, #ec4899, #e11d48)' }}
               >
                 {isSubmitting
-                  ? 'Ativando…'
+                  ? t('cccPassPage.ctaActivating')
                   : abVariant === 'subscribe'
-                  ? 'Assinar por R$30/mês'
-                  : 'Não sei'}
+                  ? t('cccPassPage.ctaSubscribe')
+                  : t('cccPassPage.ctaDunno')}
               </button>
 
               <p className="text-center text-xs text-gray-400">
-                Teste sem compromisso · Nenhuma cobrança será feita agora
+                {t('cccPassPage.noCommitment')}
               </p>
             </div>
           </div>
@@ -381,11 +387,11 @@ const CoastalClubPassPage: React.FC = () => {
               ))}
             </div>
             <p className="text-sm font-medium text-gray-700">
-              "A melhor forma de curtir o verão carioca."
+              {t('cccPassPage.testimonial')}
             </p>
             <div className="flex items-center justify-center gap-1.5 mt-2 text-xs text-gray-400">
               <Users className="h-3.5 w-3.5" />
-              <span>Comunidade CCC</span>
+              <span>{t('cccPassPage.community')}</span>
             </div>
           </div>
 
@@ -396,7 +402,7 @@ const CoastalClubPassPage: React.FC = () => {
           <div className="mb-8">
             <h2 className="text-base font-bold text-gray-900 mb-4 flex items-center gap-2">
               <MapPin className="h-4 w-4 text-pink-500" />
-              Barracas incluídas no passe
+              {t('cccPassPage.includedInPass')}
             </h2>
 
             <div className="space-y-3">
@@ -424,7 +430,7 @@ const CoastalClubPassPage: React.FC = () => {
                         : 'bg-amber-100 text-amber-700'
                     }`}
                   >
-                    {b.active ? 'Ativo' : 'Em breve'}
+                    {b.active ? t('cccPassPage.statusActive') : t('cccPassPage.statusComingSoon')}
                   </span>
                 </div>
               ))}
@@ -439,10 +445,10 @@ const CoastalClubPassPage: React.FC = () => {
               className="w-full rounded-2xl py-4 text-lg font-bold text-white shadow-lg transition-all hover:scale-[1.02] active:scale-[0.99] disabled:opacity-60"
               style={{ background: 'linear-gradient(to right, #ec4899, #e11d48)' }}
             >
-              {abVariant === 'subscribe' ? 'Assinar por R$30/mês' : 'Não sei'}
+              {abVariant === 'subscribe' ? t('cccPassPage.ctaSubscribe') : t('cccPassPage.ctaDunno')}
             </button>
             <p className="text-xs text-gray-400 mt-3">
-              Teste sem compromisso · Nenhuma cobrança será feita agora
+              {t('cccPassPage.noCommitment')}
             </p>
           </div>
         </div>

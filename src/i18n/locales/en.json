@@ -723,5 +723,39 @@
         "applyLabel": "Apply for Engineering Intern"
       }
     }
+  },
+  "cccPassPage": {
+    "activePass": "PASS ACTIVE",
+    "activePassDescription": "Your all-access pass is active! Enjoy discounts at all partner barracas.",
+    "includedBarracas": "Included barracas",
+    "badgeHint": "Your badge appears on the floating button in the bottom right corner ↘",
+    "pixTitle": "Pay via PIX",
+    "pixDescription": "Scan the QR code below with your banking app, or copy the PIX key (phone).",
+    "copyKey": "Copy key",
+    "copied": "Copied!",
+    "pixNote": "After paying, send the receipt on WhatsApp to activate your pass.",
+    "passBadgeLabel": "ALL-ACCESS PASS",
+    "heroSubtitle": "Full access to all partner barracas",
+    "activeCount": "{{count}} active barracas · Rio de Janeiro",
+    "priceSubtitle": "All-Inclusive Pass · Cancel anytime",
+    "benefit1": "Barraca perks — exclusive discounts at partners",
+    "benefit2": "WhatsApp beach intel — real-time tips and conditions",
+    "benefit3": "Meetups — community get-togethers",
+    "benefit4": "Events — priority access to CCC events",
+    "benefit5": "Insider spots — secret recommended places",
+    "identifierLabel": "Your email or phone",
+    "identifierPlaceholder": "email@example.com or (21) 99999-9999",
+    "identifierError": "Please enter your email or phone to continue.",
+    "ctaSubscribe": "Subscribe for R$30/month",
+    "ctaDunno": "Not sure",
+    "ctaActivating": "Activating…",
+    "noCommitment": "No commitment trial · No charge will be made now",
+    "testimonial": "\"The best way to enjoy a carioca summer.\"",
+    "community": "CCC Community",
+    "includedInPass": "Barracas included in the pass",
+    "statusActive": "Active",
+    "statusComingSoon": "Coming soon",
+    "seoTitle": "Carioca Coastal Club Pass — All-Access Pass · R$30/month",
+    "seoDescription": "Unlimited access to {{count}} partner barracas in Rio de Janeiro for just R$30 per month. Exclusive Carioca Coastal Club badge."
   }
 }
