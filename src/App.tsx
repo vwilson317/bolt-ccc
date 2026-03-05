@@ -77,8 +77,8 @@ function AppContent() {
             <Route path="/barraca/:id" element={<BarracaDetailPage />} />
             <Route path="/register" element={<BarracaRegister />} />
             <Route path="/language-exchange" element={<LanguageExchangeFunnel />} />
-            {/* Generic barraca promo pages (/:barracaSlug last so named routes take priority) */}
-            <Route path="/:barracaSlug" element={<BarracaPromoPage />} />
+            {/* Loyalty promo pages at /loyalty/:slug for SEO-friendly URLs */}
+            <Route path="/loyalty/:slug" element={<BarracaPromoPage />} />
             {/* <Route path="/translation-demo" element={<TranslationDemo />} /> */}
           </Routes>
         </Suspense>

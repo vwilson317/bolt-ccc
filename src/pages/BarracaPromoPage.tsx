@@ -21,8 +21,8 @@ import { supabase } from '../lib/supabase';
 import { trackEvent } from '../services/posthogAnalyticsService';
 
 const BarracaPromoPage: React.FC = () => {
-  const { barracaSlug } = useParams<{ barracaSlug: string }>();
-  const barraca = barracaSlug ? getBarracaPromoBySlug(barracaSlug) : undefined;
+  const { slug } = useParams<{ slug: string }>();
+  const barraca = slug ? getBarracaPromoBySlug(slug) : undefined;
   const location = useLocation();
   const { t } = useTranslation();
 
@@ -67,7 +67,7 @@ const BarracaPromoPage: React.FC = () => {
   const pageTitle = `${barraca.name} — Carioca Coastal Club`;
   const pageDescription = `Follow @${barraca.instagramHandle} on Instagram and get your exclusive discount badge at ${barraca.barracaLocation}.`;
   const pageImage = barraca.logoPath ?? '/logo_320x320.png';
-  const pageUrl = `https://cariocacoastalclub.com/${barraca.slug}`;
+  const pageUrl = `https://cariocacoastalclub.com/loyalty/${barraca.slug}`;
 
   // ------------------------------------------------------------------
   // Loading state — avoid flash of wrong content
