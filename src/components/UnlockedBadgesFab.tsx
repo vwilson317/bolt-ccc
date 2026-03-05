@@ -37,8 +37,14 @@ interface CCCPassLightboxProps {
   onClose: () => void;
 }
 
+const BADGE_DISPLAY_LIMIT = 5;
+
 const CCCPassLightbox: React.FC<CCCPassLightboxProps> = ({ onClose }) => {
   const activeBarracas = BARRACA_PROMOS.filter((b) => b.active);
+  const [showAll, setShowAll] = useState(false);
+
+  const visibleBarracas = showAll ? activeBarracas : activeBarracas.slice(0, BADGE_DISPLAY_LIMIT);
+  const hiddenCount = activeBarracas.length - BADGE_DISPLAY_LIMIT;
 
   return (
     <div
@@ -82,7 +88,7 @@ const CCCPassLightbox: React.FC<CCCPassLightboxProps> = ({ onClose }) => {
               Barracas incluídas
             </p>
             <div className="flex flex-wrap gap-1.5">
-              {activeBarracas.map((b) => (
+              {visibleBarracas.map((b) => (
                 <span
                   key={b.id}
                   className="rounded-full bg-white/25 px-2.5 py-1 text-xs font-semibold"
@@ -91,6 +97,14 @@ const CCCPassLightbox: React.FC<CCCPassLightboxProps> = ({ onClose }) => {
                 </span>
               ))}
             </div>
+            {!showAll && hiddenCount > 0 && (
+              <button
+                onClick={() => setShowAll(true)}
+                className="mt-3 text-xs font-semibold opacity-80 hover:opacity-100 underline underline-offset-2 transition-opacity"
+              >
+                +{hiddenCount} mais
+              </button>
+            )}
           </div>
 
           <p className="mt-5 text-xs opacity-40">Toque fora para fechar</p>
