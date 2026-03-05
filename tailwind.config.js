@@ -69,6 +69,8 @@ export default {
     'from-yellow-500', 'to-amber-600',
     'from-zinc-400',   'to-zinc-600',
     'from-slate-400',  'to-slate-600',
+    // CCC All-Access Pass badge (brand pink)
+    'from-pink-500',   'to-rose-600',
   ],
   plugins: [],
 };

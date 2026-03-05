@@ -726,5 +726,39 @@
         "applyLabel": "Candidatar para Estagio em Engenharia"
       }
     }
+  },
+  "cccPassPage": {
+    "activePass": "PASSE ATIVO",
+    "activePassDescription": "Seu passe all-access está ativo! Aproveite descontos em todas as barracas parceiras.",
+    "includedBarracas": "Barracas incluídas",
+    "badgeHint": "Seu badge aparece no botão flutuante no canto inferior direito ↘",
+    "pixTitle": "Pague via PIX",
+    "pixDescription": "Escaneie o QR code abaixo com o app do seu banco, ou copie a chave PIX (celular).",
+    "copyKey": "Copiar chave",
+    "copied": "Copiado!",
+    "pixNote": "Após pagar, envie o comprovante no WhatsApp para ativar seu passe.",
+    "passBadgeLabel": "PASSE ALL-ACCESS",
+    "heroSubtitle": "Acesso total a todas as barracas parceiras",
+    "activeCount": "{{count}} barracas ativas · Rio de Janeiro",
+    "priceSubtitle": "Passe All-Inclusive · Cancele quando quiser",
+    "benefit1": "Barraca perks — descontos exclusivos nos parceiros",
+    "benefit2": "WhatsApp beach intel — dicas e condições em tempo real",
+    "benefit3": "Meetups — encontros com a comunidade",
+    "benefit4": "Events — acesso prioritário a eventos CCC",
+    "benefit5": "Insider spots — lugares secretos recomendados",
+    "identifierLabel": "Seu e-mail ou telefone",
+    "identifierPlaceholder": "email@exemplo.com ou (21) 99999-9999",
+    "identifierError": "Por favor, insira seu e-mail ou telefone para continuar.",
+    "ctaSubscribe": "Assinar por R$30/mês",
+    "ctaDunno": "Não sei",
+    "ctaActivating": "Ativando…",
+    "noCommitment": "Teste sem compromisso · Nenhuma cobrança será feita agora",
+    "testimonial": "\"A melhor forma de curtir o verão carioca.\"",
+    "community": "Comunidade CCC",
+    "includedInPass": "Barracas incluídas no passe",
+    "statusActive": "Ativo",
+    "statusComingSoon": "Em breve",
+    "seoTitle": "Carioca Coastal Club Pass — Passe All-Access · R$30/mês",
+    "seoDescription": "Acesso ilimitado a {{count}} barracas parceiras no Rio de Janeiro por apenas R$30 por mês. Badge exclusivo do Carioca Coastal Club."
   }
 }
