@@ -234,7 +234,16 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
     }
 
     // Open Instagram immediately so the browser doesn't block the popup.
-    window.open(barraca.instagramUrl, '_blank', 'noopener,noreferrer');
+    // Use an anchor click instead of window.open() features string — the
+    // features-string form of noopener/noreferrer is unreliable across browsers
+    // and can produce a blank tab.
+    const a = document.createElement('a');
+    a.href = barraca.instagramUrl;
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
     setHasClickedFollow(true);
     trackEvent('barraca_promo_instagram_clicked', {
       ...trackCtx,
