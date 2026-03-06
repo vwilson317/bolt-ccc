@@ -52,7 +52,7 @@ const CCCPassLightbox: React.FC<CCCPassLightboxProps> = ({ onClose }) => {
       onClick={onClose}
     >
       <div
-        className="relative mx-6 w-full max-w-sm rounded-3xl p-8 text-white shadow-2xl text-center overflow-hidden"
+        className="relative mx-6 w-full max-w-sm rounded-3xl p-8 text-white shadow-2xl text-center overflow-y-auto max-h-[calc(100vh-4rem)]"
         style={{ background: 'linear-gradient(135deg, #ec4899 0%, #e11d48 100%)' }}
         onClick={(e) => e.stopPropagation()}
       >
@@ -236,7 +236,7 @@ const BadgeTray: React.FC<BadgeTrayProps> = ({ barracas, onSelectBarraca, onClos
     onClick={onClose}
   >
     <div
-      className="mb-24 mx-4 w-full max-w-sm rounded-3xl bg-white shadow-2xl overflow-hidden"
+      className="mb-24 mx-4 w-full max-w-sm rounded-3xl bg-white shadow-2xl overflow-hidden max-h-[70vh] flex flex-col"
       onClick={(e) => e.stopPropagation()}
     >
       <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
@@ -257,7 +257,7 @@ const BadgeTray: React.FC<BadgeTrayProps> = ({ barracas, onSelectBarraca, onClos
         </button>
       </div>
 
-      <ul className="divide-y divide-gray-100">
+      <ul className="divide-y divide-gray-100 overflow-y-auto flex-1">
         {barracas.map((b) => (
           <li key={b.id}>
             <button
