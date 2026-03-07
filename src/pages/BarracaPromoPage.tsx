@@ -263,6 +263,27 @@ const BarracaPromoPage: React.FC = () => {
       <SEOHead title={pageTitle} description={pageDescription} image={pageImage} url={pageUrl} />
     <div className="min-h-screen bg-gradient-to-br from-amber-50 via-rose-50 to-white pt-28 pb-16">
       <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
+        {barraca.slug === 'thai82' && (
+          <a
+            href="https://www.instagram.com/reel/DVSC1xkjThB/?utm_source=ig_web_button_share_sheet"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block mb-8"
+            onClick={() =>
+              trackEvent('thai82_promo_ad_flier_clicked', {
+                promo_id: barraca.id,
+                page_path: location.pathname,
+              })
+            }
+          >
+            <img
+              src="https://images.cariocacoastalclub.com/thai-promo/sat-meetup-v1.jpg"
+              alt="Thai 82 event flier"
+              className="w-full rounded-2xl shadow-lg object-cover"
+              style={{ maxHeight: '70vh' }}
+            />
+          </a>
+        )}
         <div className="mb-8 text-center">
           {barraca.logoPath ? (
             barraca.logoFull ? (
