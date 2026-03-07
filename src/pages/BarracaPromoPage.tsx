@@ -151,25 +151,7 @@ const BarracaPromoPage: React.FC = () => {
             {t('barracaPromoPage.comingSoonDescription', { instagramHandle: barraca.instagramHandle })}
           </p>
 
-          <a
-            href={barraca.instagramUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() =>
-              trackEvent(`${barraca.id}_promo_instagram_clicked`, {
-                promo_id: barraca.id,
-                instagram_handle: barraca.instagramHandle,
-                context: 'coming_soon',
-                page_path: location.pathname,
-              })
-            }
-            className={`inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-${barraca.badgeFromColor} to-${barraca.badgeToColor} px-6 py-3 font-semibold text-white shadow-md hover:opacity-90 transition-opacity`}
-          >
-            <Instagram className="h-5 w-5" strokeWidth={1.5} />
-            {t('barracaPromoPage.comingSoonFollowButton', { instagramHandle: barraca.instagramHandle })}
-          </a>
-
-          <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
+          <div className="flex flex-wrap items-center justify-center gap-3">
             {barraca.whatsappUrl && (
               <a
                 href={barraca.whatsappUrl}
@@ -204,6 +186,26 @@ const BarracaPromoPage: React.FC = () => {
             >
               <Instagram className="h-5 w-5" strokeWidth={1.5} />
               {t('barracaPromoPage.comingSoonInstagramCta')}
+            </a>
+          </div>
+
+          <div className="mt-4">
+            <a
+              href={barraca.instagramUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() =>
+                trackEvent(`${barraca.id}_promo_instagram_clicked`, {
+                  promo_id: barraca.id,
+                  instagram_handle: barraca.instagramHandle,
+                  context: 'coming_soon',
+                  page_path: location.pathname,
+                })
+              }
+              className={`inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-${barraca.badgeFromColor} to-${barraca.badgeToColor} px-6 py-3 font-semibold text-white shadow-md hover:opacity-90 transition-opacity`}
+            >
+              <Instagram className="h-5 w-5" strokeWidth={1.5} />
+              {t('barracaPromoPage.comingSoonFollowButton', { instagramHandle: barraca.instagramHandle })}
             </a>
           </div>
 
