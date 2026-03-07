@@ -261,29 +261,34 @@ const BarracaPromoPage: React.FC = () => {
   return (
     <>
       <SEOHead title={pageTitle} description={pageDescription} image={pageImage} url={pageUrl} />
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-rose-50 to-white pt-28 pb-16">
-      <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
-        {barraca.slug === 'thai82' && (
-          <a
-            href="https://www.instagram.com/reel/DVSC1xkjThB/?utm_source=ig_web_button_share_sheet"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block mb-8"
-            onClick={() =>
-              trackEvent('thai82_promo_ad_flier_clicked', {
-                promo_id: barraca.id,
-                page_path: location.pathname,
-              })
-            }
-          >
-            <img
-              src="https://images.cariocacoastalclub.com/thai-promo/sat-meetup-v1.jpg"
-              alt="Thai 82 event flier"
-              className="w-full rounded-2xl shadow-lg object-cover"
-              style={{ maxHeight: '70vh' }}
-            />
-          </a>
-        )}
+    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-rose-50 to-white pb-16">
+      {barraca.slug === 'thai82' && (
+        <a
+          href="https://www.instagram.com/reel/DVSC1xkjThB/?utm_source=ig_web_button_share_sheet"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="relative block"
+          style={{ width: '100vw', height: '100vh', marginLeft: 'calc(50% - 50vw)' }}
+          onClick={() =>
+            trackEvent('thai82_promo_ad_flier_clicked', {
+              promo_id: barraca.id,
+              page_path: location.pathname,
+            })
+          }
+        >
+          <img
+            src="https://images.cariocacoastalclub.com/thai-promo/sat-meetup-v1.jpg"
+            alt="Thai 82 event flier"
+            className="w-full h-full"
+            style={{ objectFit: 'contain', transform: 'scale(0.8)', transformOrigin: 'center center' }}
+          />
+          <div className="absolute bottom-6 right-6 flex items-center gap-2 rounded-full bg-black/60 px-4 py-2 text-sm font-semibold text-white backdrop-blur-sm animate-pulse">
+            <Instagram className="h-4 w-4" strokeWidth={1.5} />
+            Tap to watch reel
+          </div>
+        </a>
+      )}
+      <div className={`mx-auto max-w-2xl px-4 sm:px-6 lg:px-8 ${barraca.slug === 'thai82' ? 'pt-10' : 'pt-28'}`}>
         <div className="mb-8 text-center">
           {barraca.logoPath ? (
             barraca.logoFull ? (
@@ -311,41 +316,43 @@ const BarracaPromoPage: React.FC = () => {
             {t('barracaPromoPage.intro', { instagramHandle: barraca.instagramHandle, location: barraca.barracaLocation })}
           </p>
 
-          <div className="flex flex-wrap items-center justify-center gap-3">
-            {barraca.whatsappUrl && (
+          <div className="flex flex-col items-center gap-3">
+            <div className="flex w-full gap-3">
+              {barraca.whatsappUrl && (
+                <a
+                  href={barraca.whatsappUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() =>
+                    trackEvent(`${barraca.id}_promo_whatsapp_clicked`, {
+                      promo_id: barraca.id,
+                      page_path: location.pathname,
+                      full_path: `${location.pathname}${location.search}`,
+                    })
+                  }
+                  className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-green-500 px-5 py-3 font-semibold text-white hover:bg-green-600 transition-colors shadow-md"
+                >
+                  <MessageCircle className="h-5 w-5" />
+                  {t('barracaPromoPage.whatsappCta')}
+                </a>
+              )}
               <a
-                href={barraca.whatsappUrl}
+                href="https://instagram.com/Carioca_Coastal_Club"
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() =>
-                  trackEvent(`${barraca.id}_promo_whatsapp_clicked`, {
+                  trackEvent(`${barraca.id}_promo_ccc_instagram_clicked`, {
                     promo_id: barraca.id,
                     page_path: location.pathname,
                     full_path: `${location.pathname}${location.search}`,
                   })
                 }
-                className="inline-flex items-center gap-2 rounded-xl bg-green-500 px-5 py-3 font-semibold text-white hover:bg-green-600 transition-colors shadow-md"
+                className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 px-5 py-3 font-semibold text-white hover:opacity-90 transition-opacity shadow-md"
               >
-                <MessageCircle className="h-5 w-5" />
-                {t('barracaPromoPage.whatsappCta')}
+                <Instagram className="h-5 w-5" strokeWidth={1.5} />
+                {t('barracaPromoPage.instagramCta')}
               </a>
-            )}
-            <a
-              href="https://instagram.com/Carioca_Coastal_Club"
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() =>
-                trackEvent(`${barraca.id}_promo_ccc_instagram_clicked`, {
-                  promo_id: barraca.id,
-                  page_path: location.pathname,
-                  full_path: `${location.pathname}${location.search}`,
-                })
-              }
-              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 px-5 py-3 font-semibold text-white hover:opacity-90 transition-opacity shadow-md"
-            >
-              <Instagram className="h-5 w-5" strokeWidth={1.5} />
-              {t('barracaPromoPage.instagramCta')}
-            </a>
+            </div>
             <button
               onClick={handleShare}
               className="inline-flex items-center gap-2 rounded-xl bg-white border border-gray-200 px-5 py-3 font-semibold text-gray-700 hover:bg-gray-50 transition-colors shadow-md"
