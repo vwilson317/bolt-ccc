@@ -152,26 +152,8 @@ const BarracaPromoPage: React.FC = () => {
             {t('barracaPromoPage.comingSoonDescription', { instagramHandle: barraca.instagramHandle })}
           </p>
 
-          <a
-            href={barraca.instagramUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() =>
-              trackEvent(`${barraca.id}_promo_instagram_clicked`, {
-                promo_id: barraca.id,
-                instagram_handle: barraca.instagramHandle,
-                context: 'coming_soon',
-                page_path: location.pathname,
-              })
-            }
-            className={`inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-${barraca.badgeFromColor} to-${barraca.badgeToColor} px-6 py-3 font-semibold text-white shadow-md hover:opacity-90 transition-opacity`}
-          >
-            <Instagram className="h-5 w-5" strokeWidth={1.5} />
-            {t('barracaPromoPage.comingSoonFollowButton', { instagramHandle: barraca.instagramHandle })}
-          </a>
-
-          {barraca.whatsappUrl && (
-            <div className="mt-4">
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            {barraca.whatsappUrl && (
               <a
                 href={barraca.whatsappUrl}
                 target="_blank"
@@ -188,8 +170,45 @@ const BarracaPromoPage: React.FC = () => {
                 <MessageCircle className="h-5 w-5" />
                 {t('barracaPromoPage.comingSoonWhatsappCta')}
               </a>
-            </div>
-          )}
+            )}
+            <a
+              href="https://instagram.com/Carioca_Coastal_Club"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() =>
+                trackEvent(`${barraca.id}_promo_ccc_instagram_clicked`, {
+                  promo_id: barraca.id,
+                  page_path: location.pathname,
+                  full_path: `${location.pathname}${location.search}`,
+                  context: 'coming_soon',
+                })
+              }
+              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-3 font-semibold text-white hover:opacity-90 transition-opacity shadow-md"
+            >
+              <Instagram className="h-5 w-5" strokeWidth={1.5} />
+              {t('barracaPromoPage.comingSoonInstagramCta')}
+            </a>
+          </div>
+
+          <div className="mt-4">
+            <a
+              href={barraca.instagramUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() =>
+                trackEvent(`${barraca.id}_promo_instagram_clicked`, {
+                  promo_id: barraca.id,
+                  instagram_handle: barraca.instagramHandle,
+                  context: 'coming_soon',
+                  page_path: location.pathname,
+                })
+              }
+              className={`inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-${barraca.badgeFromColor} to-${barraca.badgeToColor} px-6 py-3 font-semibold text-white shadow-md hover:opacity-90 transition-opacity`}
+            >
+              <Instagram className="h-5 w-5" strokeWidth={1.5} />
+              {t('barracaPromoPage.comingSoonFollowButton', { instagramHandle: barraca.instagramHandle })}
+            </a>
+          </div>
 
           <p className="mt-6 text-sm text-gray-400">
             {t('barracaPromoPage.comingSoonNote')}
@@ -209,7 +228,6 @@ const BarracaPromoPage: React.FC = () => {
     try {
       await navigator.clipboard.writeText(shareText);
     } catch {
-      // Fallback for browsers without clipboard API
       const ta = document.createElement('textarea');
       ta.value = shareText;
       ta.style.position = 'fixed';
@@ -245,6 +263,27 @@ const BarracaPromoPage: React.FC = () => {
       <SEOHead title={pageTitle} description={pageDescription} image={pageImage} url={pageUrl} />
     <div className="min-h-screen bg-gradient-to-br from-amber-50 via-rose-50 to-white pt-28 pb-16">
       <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
+        {barraca.slug === 'thai82' && (
+          <a
+            href="https://www.instagram.com/reel/DVSC1xkjThB/?utm_source=ig_web_button_share_sheet"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block mb-8"
+            onClick={() =>
+              trackEvent('thai82_promo_ad_flier_clicked', {
+                promo_id: barraca.id,
+                page_path: location.pathname,
+              })
+            }
+          >
+            <img
+              src="https://images.cariocacoastalclub.com/thai-promo/sat-meetup-v1.jpg"
+              alt="Thai 82 event flier"
+              className="w-full rounded-2xl shadow-lg object-cover"
+              style={{ maxHeight: '70vh' }}
+            />
+          </a>
+        )}
         <div className="mb-8 text-center">
           {barraca.logoPath ? (
             barraca.logoFull ? (
@@ -291,6 +330,22 @@ const BarracaPromoPage: React.FC = () => {
                 {t('barracaPromoPage.whatsappCta')}
               </a>
             )}
+            <a
+              href="https://instagram.com/Carioca_Coastal_Club"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() =>
+                trackEvent(`${barraca.id}_promo_ccc_instagram_clicked`, {
+                  promo_id: barraca.id,
+                  page_path: location.pathname,
+                  full_path: `${location.pathname}${location.search}`,
+                })
+              }
+              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 px-5 py-3 font-semibold text-white hover:opacity-90 transition-opacity shadow-md"
+            >
+              <Instagram className="h-5 w-5" strokeWidth={1.5} />
+              {t('barracaPromoPage.instagramCta')}
+            </a>
             <button
               onClick={handleShare}
               className="inline-flex items-center gap-2 rounded-xl bg-white border border-gray-200 px-5 py-3 font-semibold text-gray-700 hover:bg-gray-50 transition-colors shadow-md"

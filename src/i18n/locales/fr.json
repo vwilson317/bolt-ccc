@@ -257,11 +257,13 @@
     "title": "Promo Barraca {{name}}",
     "intro": "Suivez @{{instagramHandle}} et réclamez votre réduction supporter réutilisable à {{location}}.",
     "whatsappCta": "Rejoindre la communauté WhatsApp",
+    "instagramCta": "Nous suivre sur Instagram",
     "comingSoon": "Bientôt disponible",
     "comingSoonTitle": "Pass Barraca {{name}}",
     "comingSoonDescription": "Nous nous associons avec @{{instagramHandle}} pour une réduction exclusive pour les abonnés membres du Carioca Coastal Club. Suivez-les maintenant pour être prêt au lancement de la promo.",
     "comingSoonFollowButton": "Suivre @{{instagramHandle}}",
     "comingSoonWhatsappCta": "Rejoindre le WhatsApp du CC Club",
+    "comingSoonInstagramCta": "Nous suivre sur Instagram",
     "comingSoonNote": "Le code de réduction sera révélé au lancement. Restez à l'écoute !"
   },
   "thaisPromoPage": {

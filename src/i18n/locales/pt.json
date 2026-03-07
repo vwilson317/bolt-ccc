@@ -256,11 +256,13 @@
     "title": "Promoção da Barraca {{name}}",
     "intro": "Siga @{{instagramHandle}} e resgate seu desconto de apoiador reutilizável em {{location}}.",
     "whatsappCta": "Entrar na comunidade do WhatsApp",
+    "instagramCta": "Nos siga no Instagram",
     "comingSoon": "Em Breve",
     "comingSoonTitle": "Passe da Barraca {{name}}",
     "comingSoonDescription": "Estamos fazendo uma parceria com @{{instagramHandle}} para um desconto exclusivo para seguidores dos membros do Carioca Coastal Club. Siga agora para estar pronto quando a promoção for lançada.",
     "comingSoonFollowButton": "Seguir @{{instagramHandle}}",
     "comingSoonWhatsappCta": "Entrar no WhatsApp do CC Club",
+    "comingSoonInstagramCta": "Nos siga no Instagram",
     "comingSoonNote": "O código de desconto será revelado no lançamento. Fique ligado!"
   },
   "thaisPromoPage": {
