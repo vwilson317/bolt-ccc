@@ -268,7 +268,7 @@ const BarracaPromoPage: React.FC = () => {
           target="_blank"
           rel="noopener noreferrer"
           className="relative block"
-          style={{ width: '100vw', height: '100vh', marginLeft: 'calc(50% - 50vw)' }}
+          style={{ width: '100vw', height: '100svh', marginLeft: 'calc(50% - 50vw)' }}
           onClick={() =>
             trackEvent('thai82_promo_ad_flier_clicked', {
               promo_id: barraca.id,
@@ -280,10 +280,10 @@ const BarracaPromoPage: React.FC = () => {
             src="https://images.cariocacoastalclub.com/thai-promo/sat-meetup-v1.jpg"
             alt="Thai 82 event flier"
             className="w-full h-full"
-            style={{ objectFit: 'contain', transform: 'scale(0.8)', transformOrigin: 'center center' }}
+            style={{ objectFit: 'cover' }}
           />
-          <div className="absolute bottom-6 right-6 flex items-center gap-2 rounded-full bg-black/60 px-4 py-2 text-sm font-semibold text-white backdrop-blur-sm animate-pulse">
-            <Instagram className="h-4 w-4" strokeWidth={1.5} />
+          <div className="absolute bottom-6 right-4 flex items-center gap-1.5 rounded-full bg-black/60 px-3 py-1.5 text-xs font-semibold text-white backdrop-blur-sm animate-pulse">
+            <Instagram className="h-3.5 w-3.5" strokeWidth={1.5} />
             Tap to watch reel
           </div>
         </a>
@@ -330,9 +330,9 @@ const BarracaPromoPage: React.FC = () => {
                       full_path: `${location.pathname}${location.search}`,
                     })
                   }
-                  className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-green-500 px-5 py-3 font-semibold text-white hover:bg-green-600 transition-colors shadow-md"
+                  className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-xl bg-green-500 px-3 py-2 text-sm font-semibold text-white hover:bg-green-600 transition-colors shadow-md"
                 >
-                  <MessageCircle className="h-5 w-5" />
+                  <MessageCircle className="h-4 w-4" />
                   {t('barracaPromoPage.whatsappCta')}
                 </a>
               )}
@@ -347,9 +347,9 @@ const BarracaPromoPage: React.FC = () => {
                     full_path: `${location.pathname}${location.search}`,
                   })
                 }
-                className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 px-5 py-3 font-semibold text-white hover:opacity-90 transition-opacity shadow-md"
+                className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 px-3 py-2 text-sm font-semibold text-white hover:opacity-90 transition-opacity shadow-md"
               >
-                <Instagram className="h-5 w-5" strokeWidth={1.5} />
+                <Instagram className="h-4 w-4" strokeWidth={1.5} />
                 {t('barracaPromoPage.instagramCta')}
               </a>
             </div>
