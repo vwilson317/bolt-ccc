@@ -13,8 +13,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Navigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { MessageCircle, Instagram, Clock, Share2 } from 'lucide-react';
-import toast from 'react-hot-toast';
+import { MessageCircle, Instagram, Clock } from 'lucide-react';
 import BarracaPromotion from '../components/BarracaPromotion';
 import SEOHead from '../components/SEOHead';
 import { getBarracaPromoBySlug } from '../data/barracaPromos';
@@ -170,8 +169,8 @@ const BarracaPromoPage: React.FC = () => {
             {t('barracaPromoPage.comingSoonFollowButton', { instagramHandle: barraca.instagramHandle })}
           </a>
 
-          {barraca.whatsappUrl && (
-            <div className="mt-4">
+          <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
+            {barraca.whatsappUrl && (
               <a
                 href={barraca.whatsappUrl}
                 target="_blank"
@@ -188,8 +187,25 @@ const BarracaPromoPage: React.FC = () => {
                 <MessageCircle className="h-5 w-5" />
                 {t('barracaPromoPage.comingSoonWhatsappCta')}
               </a>
-            </div>
-          )}
+            )}
+            <a
+              href="https://instagram.com/Carioca_Coastal_Club"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() =>
+                trackEvent(`${barraca.id}_promo_ccc_instagram_clicked`, {
+                  promo_id: barraca.id,
+                  page_path: location.pathname,
+                  full_path: `${location.pathname}${location.search}`,
+                  context: 'coming_soon',
+                })
+              }
+              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-3 font-semibold text-white hover:opacity-90 transition-opacity shadow-md"
+            >
+              <Instagram className="h-5 w-5" strokeWidth={1.5} />
+              {t('barracaPromoPage.comingSoonInstagramCta')}
+            </a>
+          </div>
 
           <p className="mt-6 text-sm text-gray-400">
             {t('barracaPromoPage.comingSoonNote')}
@@ -203,43 +219,6 @@ const BarracaPromoPage: React.FC = () => {
   // ------------------------------------------------------------------
   // Active promo
   // ------------------------------------------------------------------
-  const handleShare = async () => {
-    const shareText = `Check out ${barraca.name}!\n@${barraca.instagramHandle}\n${pageUrl}`;
-
-    try {
-      await navigator.clipboard.writeText(shareText);
-    } catch {
-      // Fallback for browsers without clipboard API
-      const ta = document.createElement('textarea');
-      ta.value = shareText;
-      ta.style.position = 'fixed';
-      ta.style.opacity = '0';
-      document.body.appendChild(ta);
-      ta.focus();
-      ta.select();
-      document.execCommand('copy');
-      document.body.removeChild(ta);
-    }
-
-    toast(
-      <div className="flex flex-col gap-0.5 text-sm">
-        <span className="font-bold">Check out {barraca.name}!</span>
-        <span className="text-gray-300">@{barraca.instagramHandle}</span>
-        <span className="text-gray-400 text-xs">{pageUrl}</span>
-      </div>,
-      { duration: 4000, icon: '📋' }
-    );
-
-    trackEvent(`${barraca.id}_promo_share_clicked`, {
-      promo_id: barraca.id,
-      promo_name: barraca.name,
-      promo_slug: barraca.slug,
-      instagram_handle: barraca.instagramHandle,
-      share_url: pageUrl,
-      page_path: location.pathname,
-    });
-  };
-
   return (
     <>
       <SEOHead title={pageTitle} description={pageDescription} image={pageImage} url={pageUrl} />
@@ -291,13 +270,22 @@ const BarracaPromoPage: React.FC = () => {
                 {t('barracaPromoPage.whatsappCta')}
               </a>
             )}
-            <button
-              onClick={handleShare}
-              className="inline-flex items-center gap-2 rounded-xl bg-white border border-gray-200 px-5 py-3 font-semibold text-gray-700 hover:bg-gray-50 transition-colors shadow-md"
+            <a
+              href="https://instagram.com/Carioca_Coastal_Club"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() =>
+                trackEvent(`${barraca.id}_promo_ccc_instagram_clicked`, {
+                  promo_id: barraca.id,
+                  page_path: location.pathname,
+                  full_path: `${location.pathname}${location.search}`,
+                })
+              }
+              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 px-5 py-3 font-semibold text-white hover:opacity-90 transition-opacity shadow-md"
             >
-              <Share2 className="h-5 w-5" />
-              Share
-            </button>
+              <Instagram className="h-5 w-5" strokeWidth={1.5} />
+              {t('barracaPromoPage.instagramCta')}
+            </a>
           </div>
         </div>
 
