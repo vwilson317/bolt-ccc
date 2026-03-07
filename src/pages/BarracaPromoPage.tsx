@@ -267,7 +267,7 @@ const BarracaPromoPage: React.FC = () => {
           href="https://www.instagram.com/reel/DVSC1xkjThB/?utm_source=ig_web_button_share_sheet"
           target="_blank"
           rel="noopener noreferrer"
-          className="block"
+          className="relative block"
           style={{ width: '100vw', height: '100vh', marginLeft: 'calc(50% - 50vw)' }}
           onClick={() =>
             trackEvent('thai82_promo_ad_flier_clicked', {
@@ -282,6 +282,10 @@ const BarracaPromoPage: React.FC = () => {
             className="w-full h-full"
             style={{ objectFit: 'contain', transform: 'scale(0.8)', transformOrigin: 'center center' }}
           />
+          <div className="absolute bottom-6 right-6 flex items-center gap-2 rounded-full bg-black/60 px-4 py-2 text-sm font-semibold text-white backdrop-blur-sm animate-pulse">
+            <Instagram className="h-4 w-4" strokeWidth={1.5} />
+            Tap to watch reel
+          </div>
         </a>
       )}
       <div className={`mx-auto max-w-2xl px-4 sm:px-6 lg:px-8 ${barraca.slug === 'thai82' ? 'pt-10' : 'pt-28'}`}>
