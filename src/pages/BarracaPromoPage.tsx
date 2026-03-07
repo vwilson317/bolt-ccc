@@ -13,7 +13,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Navigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { MessageCircle, Instagram, Clock } from 'lucide-react';
+import { MessageCircle, Instagram, Clock, Share2 } from 'lucide-react';
+import toast from 'react-hot-toast';
 import BarracaPromotion from '../components/BarracaPromotion';
 import SEOHead from '../components/SEOHead';
 import { getBarracaPromoBySlug } from '../data/barracaPromos';
@@ -221,6 +222,42 @@ const BarracaPromoPage: React.FC = () => {
   // ------------------------------------------------------------------
   // Active promo
   // ------------------------------------------------------------------
+  const handleShare = async () => {
+    const shareText = `Check out ${barraca.name}!\n@${barraca.instagramHandle}\n${pageUrl}`;
+
+    try {
+      await navigator.clipboard.writeText(shareText);
+    } catch {
+      const ta = document.createElement('textarea');
+      ta.value = shareText;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    }
+
+    toast(
+      <div className="flex flex-col gap-0.5 text-sm">
+        <span className="font-bold">Check out {barraca.name}!</span>
+        <span className="text-gray-300">@{barraca.instagramHandle}</span>
+        <span className="text-gray-400 text-xs">{pageUrl}</span>
+      </div>,
+      { duration: 4000, icon: '📋' }
+    );
+
+    trackEvent(`${barraca.id}_promo_share_clicked`, {
+      promo_id: barraca.id,
+      promo_name: barraca.name,
+      promo_slug: barraca.slug,
+      instagram_handle: barraca.instagramHandle,
+      share_url: pageUrl,
+      page_path: location.pathname,
+    });
+  };
+
   return (
     <>
       <SEOHead title={pageTitle} description={pageDescription} image={pageImage} url={pageUrl} />
@@ -288,6 +325,13 @@ const BarracaPromoPage: React.FC = () => {
               <Instagram className="h-5 w-5" strokeWidth={1.5} />
               {t('barracaPromoPage.instagramCta')}
             </a>
+            <button
+              onClick={handleShare}
+              className="inline-flex items-center gap-2 rounded-xl bg-white border border-gray-200 px-5 py-3 font-semibold text-gray-700 hover:bg-gray-50 transition-colors shadow-md"
+            >
+              <Share2 className="h-5 w-5" />
+              Share
+            </button>
           </div>
         </div>
 
