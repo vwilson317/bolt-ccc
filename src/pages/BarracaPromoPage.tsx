@@ -13,7 +13,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Navigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { MessageCircle, Instagram, Clock, Share2 } from 'lucide-react';
+import { MessageCircle, Instagram, Clock, Share2, ChevronDown } from 'lucide-react';
 import toast from 'react-hot-toast';
 import BarracaPromotion from '../components/BarracaPromotion';
 import SEOHead from '../components/SEOHead';
@@ -285,6 +285,19 @@ const BarracaPromoPage: React.FC = () => {
           <div className="absolute bottom-6 right-4 flex items-center gap-1.5 rounded-full bg-black/60 px-3 py-1.5 text-xs font-semibold text-white backdrop-blur-sm animate-pulse">
             <Instagram className="h-3.5 w-3.5" strokeWidth={1.5} />
             Tap to watch reel
+          </div>
+          {/* Scroll indicator */}
+          <div
+            className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 pointer-events-none"
+            aria-hidden="true"
+          >
+            <span className="text-xs font-semibold text-white/80 tracking-widest uppercase" style={{ textShadow: '0 1px 4px rgba(0,0,0,0.6)' }}>
+              Scroll
+            </span>
+            <ChevronDown
+              className="h-7 w-7 text-white animate-bounce drop-shadow-lg"
+              strokeWidth={2.5}
+            />
           </div>
         </a>
       )}
