@@ -5,6 +5,8 @@ export interface SEOProps {
   title?: string;
   description?: string;
   image?: string;
+  imageWidth?: number;
+  imageHeight?: number;
   url?: string;
   type?: 'website' | 'article' | 'profile';
   siteName?: string;
@@ -16,6 +18,8 @@ const SEOHead: React.FC<SEOProps> = ({
   title = 'Carioca Coastal Club - Beach Vendor Discovery',
   description = 'Discover the best beach vendors (barracas) in Rio de Janeiro. Real-time weather, status updates, and more.',
   image = '/logo_320x320.png',
+  imageWidth,
+  imageHeight,
   url,
   type = 'website',
   siteName = 'Carioca Coastal Club',
@@ -46,8 +50,8 @@ const SEOHead: React.FC<SEOProps> = ({
       <meta property="og:locale" content={locale} />
       
       {/* WhatsApp specific tags */}
-      <meta property="og:image:width" content="1200" />
-      <meta property="og:image:height" content="630" />
+      {imageWidth && <meta property="og:image:width" content={String(imageWidth)} />}
+      {imageHeight && <meta property="og:image:height" content={String(imageHeight)} />}
       <meta property="og:image:alt" content={title} />
       
       {/* Twitter Card Tags */}

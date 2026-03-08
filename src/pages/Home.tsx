@@ -136,7 +136,7 @@ const Home: React.FC = () => {
       <SEOHead
         title="Carioca Coastal Club Project - Loyalty Program & Beach Barraca Directory"
         description="Project #1: Carioca Coastal Club, a loyalty program and beach barraca directory in Rio de Janeiro with real-time weather and status updates."
-        image="https://cariocacoastalclub.com/group-v-1-logo.jpeg"
+        image="https://cariocacoastalclub.com/logo-sq.jpeg"
         url={projectUrl}
         type="website"
         siteName="Carioca Coastal Club"

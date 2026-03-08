@@ -118,7 +118,7 @@ const Photos: React.FC = () => {
       <SEOHead
         title="Photo Gallery - Carioca Coastal Club"
         description="Browse our collection of beautiful photos from Rio de Janeiro's beaches and beach vendors (barracas). Discover the vibrant beach culture of Carioca."
-        image="/logo_320x320.png"
+        image="/logo-sq.jpeg"
         type="website"
       />
       

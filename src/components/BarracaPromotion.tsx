@@ -15,7 +15,9 @@ import { Gift, Instagram, CheckCircle2, Sparkles, Wallet } from 'lucide-react';
 import { trackEvent } from '../services/posthogAnalyticsService';
 import { PromoClaimService } from '../services/promoClaimService';
 import { useBadgeContext } from '../contexts/BadgeContext';
+import { BARRACA_PROMOS } from '../data/barracaPromos';
 import type { BarracaPromoConfig } from '../data/barracaPromos';
+import { CCC_PASS_ID, CCC_PASS_IDENTIFIER_KEY } from '../data/cccPass';
 
 // ---------------------------------------------------------------------------
 // iOS detection helpers
@@ -139,11 +141,28 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
   // a lazy useState, so the value is already correct on the very first render.
   const hasBadge = unlockedIds.has(barraca.id);
 
+  // If the user has a badge for a different barraca (or the CCC pass), reuse
+  // their saved identifier so the input is hidden and they don't have to type again.
+  const existingBadgeIdentifier = useMemo(() => {
+    if (typeof window === 'undefined') return '';
+    // CCC all-access pass identifier takes priority
+    if (unlockedIds.has(CCC_PASS_ID)) {
+      const cccId = window.localStorage.getItem(CCC_PASS_IDENTIFIER_KEY);
+      if (cccId) return cccId;
+    }
+    for (const id of unlockedIds) {
+      if (id === barraca.id) continue;
+      const other = BARRACA_PROMOS.find((b) => b.id === id);
+      if (!other) continue;
+      const saved = window.localStorage.getItem(other.identifierStorageKey);
+      if (saved) return saved;
+    }
+    return '';
+  }, [unlockedIds, barraca.id]);
+
   const [hasClickedFollow, setHasClickedFollow] = useState(() => {
     if (typeof window === 'undefined') return false;
-    const followedThisSession =
-      window.sessionStorage.getItem(`ccc_follow_session_${barraca.id}`) === 'true';
-    return hasBadge || followedThisSession;
+    return hasBadge;
   });
   const [identifierInput, setIdentifierInput] = useState(() => {
     if (typeof window === 'undefined') return '';
@@ -184,7 +203,7 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
     const isUnlocked = window.localStorage.getItem(barraca.storageKey) === 'true';
     const savedId = window.localStorage.getItem(barraca.identifierStorageKey) || '';
 
-    trackEvent('barraca_promo_viewed', {
+    trackEvent(`${barraca.id}_promo_viewed`, {
       ...trackCtx,
       badge_previously_unlocked: isUnlocked,
       has_saved_identifier: !!savedId,
@@ -206,7 +225,7 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
       unlockBadge(barraca.id);
 
       await PromoClaimService.markLastClaimed(barraca.id, savedId);
-      trackEvent('barraca_promo_claim_restored', {
+      trackEvent(`${barraca.id}_promo_claim_restored`, {
         ...trackCtx,
         restore_source: 'auto_lookup',
         identifier_type: claim.identifier_type,
@@ -220,47 +239,54 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
   }, []);
 
   // ---------------------------------------------------------------------------
-  // Step 1: Follow Instagram
+  // Combined: Follow Instagram + Claim badge
+  // Validates the identifier first, then opens Instagram and submits the claim.
+  // On failure the button stays visible so the user can retry.
   // ---------------------------------------------------------------------------
-  const handleFollowClick = () => {
-    setHasClickedFollow(true);
-    window.sessionStorage.setItem(`ccc_follow_session_${barraca.id}`, 'true');
-    window.open(barraca.instagramUrl, '_blank', 'noopener,noreferrer');
-    trackEvent('barraca_promo_instagram_clicked', {
-      ...trackCtx,
-      badge_already_unlocked: hasBadge,
-    });
-  };
-
-  // ---------------------------------------------------------------------------
-  // Step 2: Claim / restore badge
-  // ---------------------------------------------------------------------------
-  const handleClaim = async () => {
+  const handleFollowAndClaim = async () => {
     setClaimError('');
     setClaimSuccess('');
 
-    const normalized = PromoClaimService.normalizeIdentifier(identifierInput);
+    const effectiveIdentifier = existingBadgeIdentifier || identifierInput;
+    const normalized = PromoClaimService.normalizeIdentifier(effectiveIdentifier);
     if (!normalized) {
       setClaimError(promoT('messages.invalidIdentifier'));
-      trackEvent('barraca_promo_invalid_identifier', trackCtx);
+      trackEvent(`${barraca.id}_promo_invalid_identifier`, trackCtx);
       return;
     }
 
+    // Open Instagram immediately so the browser doesn't block the popup.
+    // Use an anchor click instead of window.open() features string — the
+    // features-string form of noopener/noreferrer is unreliable across browsers
+    // and can produce a blank tab.
+    const a = document.createElement('a');
+    a.href = barraca.instagramUrl;
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setHasClickedFollow(true);
+    trackEvent(`${barraca.id}_promo_instagram_clicked`, {
+      ...trackCtx,
+      badge_already_unlocked: hasBadge,
+    });
+
     setIsSubmitting(true);
-    trackEvent('barraca_promo_identifier_submitted', {
+    trackEvent(`${barraca.id}_promo_identifier_submitted`, {
       ...trackCtx,
       identifier_type: normalized.type,
     });
 
     try {
-      const existing = await PromoClaimService.findByIdentifier(barraca.id, identifierInput);
+      const existing = await PromoClaimService.findByIdentifier(barraca.id, effectiveIdentifier);
 
       if (existing?.badge_unlocked) {
-        await PromoClaimService.markLastClaimed(barraca.id, identifierInput);
+        await PromoClaimService.markLastClaimed(barraca.id, effectiveIdentifier);
         _persistBadge(existing.identifier_value);
         setRestoredIdentifier(existing.identifier_value);
         setClaimSuccess(promoT('messages.restored'));
-        trackEvent('barraca_promo_claim_restored', {
+        trackEvent(`${barraca.id}_promo_claim_restored`, {
           ...trackCtx,
           restore_source: 'manual_lookup',
           identifier_type: existing.identifier_type,
@@ -268,18 +294,7 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
         return;
       }
 
-      if (!hasClickedFollow) {
-        setClaimError(
-          promoT('messages.followFirst', { instagramHandle: barraca.instagramHandle }),
-        );
-        trackEvent('barraca_promo_badge_blocked', {
-          ...trackCtx,
-          block_reason: 'follow_step_not_completed',
-        });
-        return;
-      }
-
-      const result = await PromoClaimService.claimOrRestore(barraca.id, identifierInput, {
+      const result = await PromoClaimService.claimOrRestore(barraca.id, effectiveIdentifier, {
         followConfirmed: true,
         unlockBadge: true,
         metadata: {
@@ -289,15 +304,15 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
       });
 
       if (!result.claim?.badge_unlocked) {
-        _persistBadge(identifierInput.trim());
+        _persistBadge(effectiveIdentifier.trim());
         setClaimSuccess(promoT('messages.claimedFallback'));
-        trackEvent('barraca_promo_claim_local_fallback', trackCtx);
+        trackEvent(`${barraca.id}_promo_claim_local_fallback`, trackCtx);
         return;
       }
 
       _persistBadge(result.claim.identifier_value);
       setClaimSuccess(promoT('messages.claimed'));
-      trackEvent('barraca_promo_badge_unlocked', {
+      trackEvent(`${barraca.id}_promo_badge_unlocked`, {
         ...trackCtx,
         identifier_type: result.claim.identifier_type,
         unlock_status: result.wasExisting ? 'existing_record_unlocked' : 'new_unlock',
@@ -305,7 +320,7 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
     } catch (err) {
       console.error('Error claiming barraca promo badge:', err);
       setClaimError(promoT('messages.genericError'));
-      trackEvent('barraca_promo_claim_error', {
+      trackEvent(`${barraca.id}_promo_claim_error`, {
         ...trackCtx,
         error_message: err instanceof Error ? err.message : String(err),
       });
@@ -328,7 +343,7 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
   //  • Others → Web Share API or clipboard copy
   // ---------------------------------------------------------------------------
   const handleAddToWallet = async () => {
-    trackEvent('barraca_promo_wallet_clicked', {
+    trackEvent(`${barraca.id}_promo_wallet_clicked`, {
       ...trackCtx,
       promo_code: barraca.discountCode,
       platform: isIOS ? 'ios' : 'other',
@@ -347,7 +362,7 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
         window.location.href = url;
       }
       setWalletMessage(promoT('messages.walletIOS'));
-      trackEvent('barraca_promo_wallet_ios_triggered', trackCtx);
+      trackEvent(`${barraca.id}_promo_wallet_ios_triggered`, trackCtx);
       setTimeout(() => setWalletMessage(''), 4000);
       return;
     }
@@ -361,7 +376,7 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
           text: shareText,
         });
         setWalletMessage(promoT('messages.walletAdded'));
-        trackEvent('barraca_promo_wallet_shared', trackCtx);
+        trackEvent(`${barraca.id}_promo_wallet_shared`, trackCtx);
         setTimeout(() => setWalletMessage(''), 3000);
         return;
       } catch {
@@ -372,7 +387,7 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
     try {
       await navigator.clipboard.writeText(barraca.discountCode);
       setWalletMessage(promoT('messages.walletCopied'));
-      trackEvent('barraca_promo_wallet_code_copied', trackCtx);
+      trackEvent(`${barraca.id}_promo_wallet_code_copied`, trackCtx);
     } catch {
       setWalletMessage(promoT('messages.walletCopied'));
     }
@@ -403,46 +418,43 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
         {promoT('card.descriptionSuffix')}
       </p>
 
-      {/* Instagram button — always visible */}
-      <div className="mt-5">
-        <button
-          onClick={handleFollowClick}
-          className="bg-gradient-to-r from-pink-500 to-purple-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-pink-600 hover:to-purple-700 transition-all duration-200 shadow-lg flex items-center justify-center"
-        >
-          <Instagram className="mr-2 h-5 w-5" strokeWidth={1.5} />
-          {promoT('card.step1Button')}
-        </button>
-      </div>
+      {/* Input + Instagram button — visible when badge not yet claimed */}
+      {!hasBadge && (
+        <div className="mt-5">
+          {!existingBadgeIdentifier && (
+            <>
+              <label className="mb-2 flex items-center gap-1 text-sm font-semibold text-gray-700">
+                {promoT('card.step2Label')}
+                <span className="text-pink-500" aria-hidden="true">*</span>
+              </label>
+              <input
+                type="text"
+                value={identifierInput}
+                onChange={(e) => setIdentifierInput(e.target.value)}
+                placeholder={promoT('card.identifierPlaceholder')}
+                className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-gray-800 placeholder:text-gray-400 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-100"
+              />
+              <p className="mt-2 text-xs text-gray-500">{promoT('card.note')}</p>
+            </>
+          )}
 
-      {/* Claim input — only rendered after follow click, when the user has no badge */}
-      {hasClickedFollow && !hasBadge && (
-        <div className="mt-4">
-          <label className="mb-2 block text-sm font-semibold text-gray-700">
-            {promoT('card.step2Label')}
-          </label>
-          <div className="flex flex-col gap-3 sm:flex-row">
-            <input
-              type="text"
-              value={identifierInput}
-              onChange={(e) => setIdentifierInput(e.target.value)}
-              placeholder={promoT('card.identifierPlaceholder')}
-              className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-gray-800 placeholder:text-gray-400 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-100"
-            />
+          <div className="mt-3">
             <button
-              onClick={handleClaim}
+              onClick={handleFollowAndClaim}
               disabled={isSubmitting}
-              className="bg-white text-gray-800 px-6 py-3 rounded-xl font-semibold border-2 border-gray-200 hover:bg-gray-50 transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-50"
+              className="bg-gradient-to-r from-pink-500 to-purple-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-pink-600 hover:to-purple-700 transition-all duration-200 shadow-lg flex items-center justify-center disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {isSubmitting ? promoT('card.saving') : promoT('card.claimButton')}
+              <Instagram className="mr-2 h-5 w-5" strokeWidth={1.5} />
+              {isSubmitting ? promoT('card.saving') : promoT('card.step1Button')}
             </button>
           </div>
+
           {claimError && (
-            <p className="mt-2 text-sm font-medium text-red-600">{claimError}</p>
+            <p className="mt-3 text-sm font-medium text-red-600">{claimError}</p>
           )}
           {claimSuccess && (
-            <p className="mt-2 text-sm font-medium text-emerald-700">{claimSuccess}</p>
+            <p className="mt-3 text-sm font-medium text-emerald-700">{claimSuccess}</p>
           )}
-          <p className="mt-3 text-xs text-gray-500">{promoT('card.note')}</p>
         </div>
       )}
 
