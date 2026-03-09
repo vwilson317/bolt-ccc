@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { X, ChevronLeft, ChevronRight, Download, Share2, Calendar, MapPin, ExternalLink, Image } from 'lucide-react';
 import { photoService, PhotoGalleryData, Location } from '../services/photoService';
+import { getFetchPriority } from '../utils/imageUtils';
 import { openInstagramLink } from '../utils/ctaButtonUtils';
 import BackNavigation from '../components/BackNavigation';
 import SEOHead from '../components/SEOHead';
@@ -49,19 +50,12 @@ const PhotoGallery: React.FC = () => {
   useEffect(() => {
     const loadGalleryData = async () => {
       if (!dateId) return;
-      
+
       try {
-        console.log('🖼️ Loading gallery data for dateId:', dateId);
         const data = await photoService.getPhotoGallery(dateId);
-        console.log('🖼️ Gallery data loaded:', data);
-        if (data) {
-          console.log('🖼️ Number of photos:', data.photos.length);
-          console.log('🖼️ First photo URL:', data.photos[0]?.url);
-          console.log('🖼️ All photo URLs:', data.photos.map(p => p.url));
-        }
         setGalleryData(data);
       } catch (error) {
-        console.error('❌ Error loading gallery data:', error);
+        console.error('Error loading gallery data:', error);
       } finally {
         setIsLoading(false);
       }
@@ -423,35 +417,13 @@ const PhotoGallery: React.FC = () => {
                   rel="noopener noreferrer"
                   className="flex items-center space-x-2 bg-beach-500 hover:bg-beach-600 text-white px-4 py-2 rounded-lg transition-colors duration-200 text-sm md:text-base w-full md:w-auto justify-center"
                   onClick={(e) => {
-                    try {
-                      // Track archive click
-                      if (dateId) {
-                        const archiveUrl = galleryData.archiveUrl || photoService.getGooglePhotosArchiveUrl();
-                        trackPhotoArchiveClick(archiveUrl, dateId);
-                      }
-                      
-                      // Add debugging
-                      const archiveUrl = galleryData.archiveUrl || photoService.getGooglePhotosArchiveUrl();
-                      console.log('🔗 Archive link clicked:', archiveUrl);
-                      console.log('📊 Gallery data:', galleryData);
-                      
-                      // Prevent default behavior and handle manually to ensure it works
-                      e.preventDefault();
-                      
-                      // Try to open the link in a new tab
-                      const newWindow = window.open(archiveUrl, '_blank', 'noopener,noreferrer');
-                      
-                      // If popup was blocked, show a message but don't navigate in same tab
-                      if (!newWindow) {
-                        console.warn('⚠️ Popup blocked');
-                        setShowPopupBlockedMessage(true);
-                        // Hide message after 5 seconds
-                        setTimeout(() => setShowPopupBlockedMessage(false), 5000);
-                        // Don't fallback to same window navigation - let user handle it manually
-                      }
-                    } catch (error) {
-                      console.error('❌ Error handling archive link click:', error);
-                      // Don't fallback to same window navigation - let user handle it manually
+                    e.preventDefault();
+                    const archiveUrl = galleryData.archiveUrl || photoService.getGooglePhotosArchiveUrl();
+                    if (dateId) trackPhotoArchiveClick(archiveUrl, dateId);
+                    const newWindow = window.open(archiveUrl, '_blank', 'noopener,noreferrer');
+                    if (!newWindow) {
+                      setShowPopupBlockedMessage(true);
+                      setTimeout(() => setShowPopupBlockedMessage(false), 5000);
                     }
                   }}
                 >
@@ -501,23 +473,14 @@ const PhotoGallery: React.FC = () => {
                 src={isMobile && photo.urlMobile ? photo.urlMobile : photo.url}
                 alt={photo.title || `Photo ${index + 1}`}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                loading="lazy"
-                onError={(e) => {
-                  console.error('❌ Image failed to load:', photo.url);
-                  console.error('❌ Image element:', e.target);
-                  // Track photo load error
-                  if (dateId) {
-                    trackPhotoLoadError(photo.url, dateId);
-                  }
-                  // You could set a fallback image here
-                  // e.target.src = '/fallback-image.jpg';
+                loading={index < 4 ? 'eager' : 'lazy'}
+                decoding="async"
+                fetchPriority={getFetchPriority(index, 4)}
+                onError={() => {
+                  if (dateId) trackPhotoLoadError(photo.url, dateId);
                 }}
                 onLoad={() => {
-                  console.log('✅ Image loaded successfully:', photo.url);
-                  // Track photo load success
-                  if (dateId) {
-                    trackPhotoLoadSuccess(photo.url, dateId);
-                  }
+                  if (dateId) trackPhotoLoadSuccess(photo.url, dateId);
                 }}
               />
               <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all duration-300 flex items-end">
