@@ -8,8 +8,11 @@
  * • 2+ badges        → stacked FAB with count chip → badge tray → individual lightbox
  *
  * The CCC All-Access Pass badge always appears first in the tray.
+ *
+ * The FAB is draggable horizontally along the bottom of the screen and
+ * defaults to the left side to avoid overlapping photo gallery save buttons.
  */
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { Award, CheckCircle2, Sparkles, Wallet, X } from 'lucide-react';
 import { BARRACA_PROMOS, type BarracaPromoConfig } from '../data/barracaPromos';
@@ -304,11 +307,44 @@ const BadgeTray: React.FC<BadgeTrayProps> = ({ barracas, onSelectBarraca, onClos
 // ---------------------------------------------------------------------------
 // Main export
 // ---------------------------------------------------------------------------
+const FAB_SIZE = 56; // h-14 w-14 = 56px
+const FAB_BOTTOM = 20;
+
 const UnlockedBadgesFab: React.FC = () => {
   const { unlockedIds } = useBadgeContext();
   const [trayOpen, setTrayOpen] = useState(false);
   const [activeLightbox, setActiveLightbox] = useState<BarracaPromoConfig | null>(null);
   const [cccPassOpen, setCCCPassOpen] = useState(false);
+
+  // Draggable position — defaults to left side to avoid overlapping save buttons
+  const [posX, setPosX] = useState(20);
+  const isDragging = useRef(false);
+  const hasDragged = useRef(false);
+  const dragStartX = useRef(0);
+  const posStartX = useRef(0);
+
+  const handlePointerDown = (e: React.PointerEvent<HTMLButtonElement>) => {
+    isDragging.current = true;
+    hasDragged.current = false;
+    dragStartX.current = e.clientX;
+    posStartX.current = posX;
+    (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+  };
+
+  const handlePointerMove = (e: React.PointerEvent<HTMLButtonElement>) => {
+    if (!isDragging.current) return;
+    const deltaX = e.clientX - dragStartX.current;
+    if (Math.abs(deltaX) > 4) {
+      hasDragged.current = true;
+    }
+    const maxX = window.innerWidth - FAB_SIZE - FAB_BOTTOM;
+    const newX = Math.max(FAB_BOTTOM, Math.min(maxX, posStartX.current + deltaX));
+    setPosX(newX);
+  };
+
+  const handlePointerUp = () => {
+    isDragging.current = false;
+  };
 
   const hasCCCPass = unlockedIds.has(CCC_PASS_ID);
   const unlockedBarracas = BARRACA_PROMOS.filter((b) => unlockedIds.has(b.id));
@@ -333,6 +369,10 @@ const UnlockedBadgesFab: React.FC = () => {
   };
 
   const handleFabClick = () => {
+    if (hasDragged.current) {
+      hasDragged.current = false;
+      return;
+    }
     if (allBadges.length === 1) {
       openBadge(allBadges[0]);
     } else {
@@ -345,10 +385,14 @@ const UnlockedBadgesFab: React.FC = () => {
 
   return createPortal(
     <>
-      {/* FAB */}
+      {/* FAB — draggable along the bottom, defaults to left side */}
       <button
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
         onClick={handleFabClick}
-        className={`fixed bottom-5 right-5 z-50 h-14 w-14 rounded-full bg-gradient-to-br from-${primary.badgeFromColor} to-${primary.badgeToColor} shadow-lg flex items-center justify-center hover:scale-110 transition-transform`}
+        style={{ left: posX, bottom: FAB_BOTTOM }}
+        className={`fixed z-50 h-14 w-14 rounded-full bg-gradient-to-br from-${primary.badgeFromColor} to-${primary.badgeToColor} shadow-lg flex items-center justify-center hover:scale-110 transition-transform cursor-grab active:cursor-grabbing select-none touch-none`}
         aria-label="Show your badges"
       >
         {primary.id === CCC_PASS_ID ? (
