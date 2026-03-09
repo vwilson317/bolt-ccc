@@ -2,6 +2,19 @@ import { PhotoDate, PhotoGalleryData } from '../services/photoService';
 
 export const mockPhotoDates: PhotoDate[] = [
   {
+    id: '2026-03-07',
+    date: '2026-03-07',
+    title: 'Promo Weekend',
+    photoCount: 0,
+    archiveCount: 0,
+    thumbnail: undefined,
+    description: 'Photos from our promotional weekend — Saturday March 7 & Sunday March 8, 2026 at Thai 82 and Jota 86x.',
+    location: [
+      { name: 'Barraca da Thai #82', barracaId: 'f86c49e6-6c44-4ce8-a455-a981042f4512' },
+      { name: "Jota's Tent #86x", instagram: 'https://www.instagram.com/barracadojota86x' }
+    ]
+  },
+  {
     id: '2025-08-24',
     date: '2025-08-24',
     title: 'Dia de Mídia Social com as Crianças das Favelas',
@@ -78,6 +91,18 @@ export const mockPhotoDates: PhotoDate[] = [
 ];
 
 export const mockPhotoGalleries: Record<string, PhotoGalleryData> = {
+  '2026-03-07': {
+    id: '2026-03-07',
+    date: '2026-03-07',
+    title: 'Promo Weekend',
+    description: 'Photos from our promotional weekend — Saturday March 7 & Sunday March 8, 2026 at Thai 82 and Jota 86x.',
+    location: [
+      { name: 'Barraca da Thai #82', barracaId: 'f86c49e6-6c44-4ce8-a455-a981042f4512' },
+      { name: "Jota's Tent #86x", instagram: 'https://www.instagram.com/barracadojota86x' }
+    ],
+    archiveUrl: 'https://drive.google.com/drive/folders/1UW8NjBoRMUg-PrkoVahaobbEt80GbrWe',
+    photos: []
+  },
   '2025-08-23': {
     id: '2025-08-23',
     date: '2025-08-23',

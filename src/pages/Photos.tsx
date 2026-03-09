@@ -137,6 +137,8 @@ const Photos: React.FC = () => {
                     src={photoDate.thumbnail}
                     alt={photoDate.title}
                     className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                    loading="lazy"
+                    decoding="async"
                   />
                 ) : (
                   <div className="w-full h-48 bg-gradient-to-br from-beach-200 to-beach-300 flex items-center justify-center">

@@ -44,6 +44,8 @@ class PhotoService {
   private mockPhotoDates: PhotoDate[] = mockPhotoDates;
   private mockPhotoGalleries: Record<string, PhotoGalleryData> = mockPhotoGalleries;
   private useCloudflare: boolean = false;
+  private photoDatesCache: PhotoDate[] | null = null;
+  private galleryCache: Map<string, PhotoGalleryData> = new Map();
 
   constructor() {
     // Check if Cloudflare is configured
@@ -51,22 +53,36 @@ class PhotoService {
   }
 
   async getPhotoDates(): Promise<PhotoDate[]> {
+    if (this.photoDatesCache) {
+      return this.photoDatesCache;
+    }
+
     // Use Cloudflare if configured, otherwise fallback to mock data
     if (this.useCloudflare) {
-      return this.getPhotoDatesFromCloudflare();
+      const result = await this.getPhotoDatesFromCloudflare();
+      this.photoDatesCache = result;
+      return result;
     }
-    
+
     // Fallback to mock data
     await new Promise(resolve => setTimeout(resolve, 1000));
     return this.mockPhotoDates;
   }
 
   async getPhotoGallery(dateId: string): Promise<PhotoGalleryData | null> {
+    if (this.galleryCache.has(dateId)) {
+      return this.galleryCache.get(dateId)!;
+    }
+
     // Use Cloudflare for individual photo galleries if configured
     if (this.useCloudflare) {
-      return this.getPhotoGalleryFromCloudflare(dateId);
+      const result = await this.getPhotoGalleryFromCloudflare(dateId);
+      if (result) {
+        this.galleryCache.set(dateId, result);
+      }
+      return result;
     }
-    
+
     // Fallback to mock data
     await new Promise(resolve => setTimeout(resolve, 1000));
     return this.mockPhotoGalleries[dateId] || null;
@@ -165,36 +181,22 @@ class PhotoService {
         return this.mockPhotoGalleries[dateId] || null;
       }
 
-      const photos: Photo[] = await Promise.all(
-        images.map(async (image, index) => {
-          // Try to get image dimensions
-          let width = 800;
-          let height = 600;
-          
-          try {
-            const dimensions = await cloudflareService.getImageDimensions(image.url);
-            width = dimensions.width;
-            height = dimensions.height;
-          } catch (error) {
-            console.warn('Could not get dimensions for image:', image.key);
-          }
+      const photos: Photo[] = images.map((image, index) => {
+        // Generate mobile-optimized URL
+        const urlMobile = cloudflareService.getMobileOptimizedUrl(image.url);
 
-          // Generate mobile-optimized URL
-          const urlMobile = cloudflareService.getMobileOptimizedUrl(image.url);
-
-          return {
-            id: image.key,
-            url: image.url,
-            urlMobile,
-            title: this.generatePhotoTitle(image.key, index),
-            description: `Photo taken on ${new Date(image.lastModified).toLocaleDateString()}`,
-            location: this.extractLocationFromKey(image.key),
-            timestamp: image.lastModified.toISOString(),
-            width,
-            height,
-          };
-        })
-      );
+        return {
+          id: image.key,
+          url: image.url,
+          urlMobile,
+          title: this.generatePhotoTitle(image.key, index),
+          description: `Photo taken on ${new Date(image.lastModified).toLocaleDateString()}`,
+          location: this.extractLocationFromKey(image.key),
+          timestamp: image.lastModified.toISOString(),
+          width: 800,
+          height: 600,
+        };
+      });
 
       // Extract date from folder name
       const dateMatch = dateId.match(/(\d{4})[-/](\d{1,2})[-/](\d{1,2})/);
