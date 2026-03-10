@@ -134,7 +134,7 @@ const About: React.FC = () => {
           <p className="text-lg text-gray-600 leading-relaxed mb-8">
             {t('about.missionDescription')}
           </p>
-          <div className="bg-gradient-to-r from-beach-50 to-beach-100 rounded-2xl p-8 border border-beach-100">
+          <div className="bg-gradient-to-r from-teal-50 to-teal-100 rounded-2xl p-8 border border-teal-200">
             <p className="text-xl font-semibold text-gray-900 mb-4">
               "{t('about.missionQuote')}"
             </p>
@@ -146,7 +146,7 @@ const About: React.FC = () => {
       </section>
 
       {/* Stats Section */}
-      <section ref={statsAnimation.ref} className={`py-16 bg-gradient-to-r from-beach-500 to-beach-600 ${statsAnimation.animationClasses}`}>
+      <section ref={statsAnimation.ref} className={`py-16 bg-gradient-to-r from-teal-500 to-teal-600 ${statsAnimation.animationClasses}`}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             {stats.map((stat, index) => (
@@ -154,7 +154,7 @@ const About: React.FC = () => {
                 <div className="text-4xl md:text-5xl font-bold text-white mb-2">
                   {stat.number}
                 </div>
-                <div className="text-beach-100 font-medium">
+                <div className="text-teal-100 font-medium">
                   {stat.label}
                 </div>
               </div>
