@@ -214,7 +214,9 @@
         "descriptionSuffix": "no Instagram para resgatar seu badge. Use o mesmo identificador para restaurar seu badge instantaneamente nas próximas visitas.",
         "step1Button": "Resgatar Badge — Siga no Instagram",
         "step2Label": "Seu telefone ou email (obrigatório para resgatar)",
+        "step2LabelBR": "Seu CPF, telefone ou email (obrigatório para resgatar)",
         "identifierPlaceholder": "voce@email.com ou +55 21 99999-0000",
+        "identifierPlaceholderBR": "000.000.000-00, email ou +55 21 99999-0000",
         "claimButton": "Resgatar Passe de Desconto",
         "saving": "Salvando...",
         "restoredUsing": "Restaurado usando:",
@@ -226,7 +228,7 @@
         "addToAppleWallet": "Adicionar à Carteira Apple"
       },
       "messages": {
-        "invalidIdentifier": "Digite um email válido ou número de WhatsApp válido.",
+        "invalidIdentifier": "Digite um CPF, email ou número de WhatsApp válido.",
         "restored": "Bem-vindo de volta. Seu badge de desconto foi restaurado.",
         "followFirst": "Siga @{{instagramHandle}} primeiro e depois resgate seu passe.",
         "claimedFallback": "Passe de desconto resgatado neste dispositivo. A sincronização completa será concluída quando a conexão estiver disponível.",
