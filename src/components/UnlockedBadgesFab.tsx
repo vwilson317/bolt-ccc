@@ -10,7 +10,7 @@
  * The CCC All-Access Pass badge always appears first in the tray.
  *
  * The FAB is draggable horizontally along the bottom of the screen and
- * defaults to the left side to avoid overlapping photo gallery save buttons.
+ * defaults to the right side. It pulses to indicate it is clickable.
  */
 import React, { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
@@ -173,7 +173,8 @@ const BadgeLightbox: React.FC<BadgeLightboxProps> = ({ barraca, onClose }) => {
       onClick={onClose}
     >
       <div
-        className={`relative mx-6 w-full max-w-sm rounded-3xl bg-gradient-to-br from-${barraca.badgeFromColor} to-${barraca.badgeToColor} p-8 text-white shadow-2xl text-center`}
+        className="relative mx-6 w-full max-w-sm rounded-3xl p-8 text-white shadow-2xl text-center"
+        style={{ backgroundColor: barraca.passBackgroundRgb }}
         onClick={(e) => e.stopPropagation()}
       >
         <button
@@ -268,7 +269,8 @@ const BadgeTray: React.FC<BadgeTrayProps> = ({ barracas, onSelectBarraca, onClos
               className="w-full flex items-center gap-4 px-6 py-4 hover:bg-gray-50 transition-colors text-left"
             >
               <span
-                className={`flex-shrink-0 h-10 w-10 rounded-full bg-gradient-to-br from-${b.badgeFromColor} to-${b.badgeToColor} flex items-center justify-center`}
+                className="flex-shrink-0 h-10 w-10 rounded-full flex items-center justify-center"
+                style={{ backgroundColor: b.passBackgroundRgb }}
               >
                 {b.id === CCC_PASS_ID ? (
                   <Award className="h-4 w-4 text-white" />
@@ -316,8 +318,10 @@ const UnlockedBadgesFab: React.FC = () => {
   const [activeLightbox, setActiveLightbox] = useState<BarracaPromoConfig | null>(null);
   const [cccPassOpen, setCCCPassOpen] = useState(false);
 
-  // Draggable position — defaults to left side to avoid overlapping save buttons
-  const [posX, setPosX] = useState(20);
+  // Draggable position — defaults to right side
+  const [posX, setPosX] = useState(() =>
+    typeof window !== 'undefined' ? window.innerWidth - FAB_SIZE - FAB_BOTTOM : 20
+  );
   const isDragging = useRef(false);
   const hasDragged = useRef(false);
   const dragStartX = useRef(0);
@@ -385,23 +389,29 @@ const UnlockedBadgesFab: React.FC = () => {
 
   return createPortal(
     <>
-      {/* FAB — draggable along the bottom, defaults to left side */}
+      {/* FAB — draggable along the bottom, defaults to right side */}
       <button
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
         onClick={handleFabClick}
-        style={{ left: posX, bottom: FAB_BOTTOM }}
-        className={`fixed z-50 h-14 w-14 rounded-full bg-gradient-to-br from-${primary.badgeFromColor} to-${primary.badgeToColor} shadow-lg flex items-center justify-center hover:scale-110 transition-transform cursor-grab active:cursor-grabbing select-none touch-none`}
+        style={{ left: posX, bottom: FAB_BOTTOM, backgroundColor: primary.passBackgroundRgb }}
+        className="fixed z-50 h-14 w-14 rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition-transform cursor-pointer active:cursor-grabbing select-none touch-none"
         aria-label="Show your badges"
+        title="Tap to view your badges"
       >
+        {/* Pulse ring animation */}
+        <span
+          className="absolute inset-0 rounded-full animate-ping opacity-40 pointer-events-none"
+          style={{ backgroundColor: primary.passBackgroundRgb }}
+        />
         {primary.id === CCC_PASS_ID ? (
-          <Award className="h-6 w-6 text-white" />
+          <Award className="h-6 w-6 text-white relative z-10" />
         ) : (
-          <Sparkles className="h-6 w-6 text-white" />
+          <Sparkles className="h-6 w-6 text-white relative z-10" />
         )}
         {allBadges.length > 1 && (
-          <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-white text-xs font-black text-gray-800 shadow">
+          <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-white text-xs font-black text-gray-800 shadow z-10">
             {allBadges.length}
           </span>
         )}
