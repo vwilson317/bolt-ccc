@@ -414,21 +414,25 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
   // Render
   // ---------------------------------------------------------------------------
   return (
-    <div id={`${barraca.slug}-promo-offer`} className="rounded-2xl border border-amber-200 bg-gradient-to-r from-amber-50 via-white to-rose-50 p-6 text-left shadow-sm">
-      <div className="mb-4 inline-flex items-center rounded-full bg-amber-100 px-3 py-1 text-sm font-semibold text-amber-800">
-        <Gift className="mr-2 h-4 w-4" />
-        {promoT('card.badge')}
-      </div>
+    <div id={`${barraca.slug}-promo-offer`} className={hasBadge ? 'text-left' : 'rounded-2xl border border-amber-200 bg-gradient-to-r from-amber-50 via-white to-rose-50 p-6 text-left shadow-sm'}>
+      {!hasBadge && (
+        <>
+          <div className="mb-4 inline-flex items-center rounded-full bg-amber-100 px-3 py-1 text-sm font-semibold text-amber-800">
+            <Gift className="mr-2 h-4 w-4" />
+            {promoT('card.badge')}
+          </div>
 
-      <h3 className="text-2xl font-bold text-gray-900">
-        {promoT('card.title', { name: barraca.name })}
-      </h3>
+          <h3 className="text-2xl font-bold text-gray-900">
+            {promoT('card.title', { name: barraca.name })}
+          </h3>
 
-      <p className="mt-2 text-gray-700">
-        {promoT('card.descriptionPrefix')}{' '}
-        <span className="font-semibold">@{barraca.instagramHandle}</span>{' '}
-        {promoT('card.descriptionSuffix')}
-      </p>
+          <p className="mt-2 text-gray-700">
+            {promoT('card.descriptionPrefix')}{' '}
+            <span className="font-semibold">@{barraca.instagramHandle}</span>{' '}
+            {promoT('card.descriptionSuffix')}
+          </p>
+        </>
+      )}
 
       {/* Input + Instagram button — visible when badge not yet claimed */}
       {!hasBadge && (
@@ -475,7 +479,7 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
         const pc = getPanelColors(barraca.badgeFromColor);
         return (
           <div
-            className="mt-5 relative overflow-hidden rounded-2xl border p-5 shadow-md"
+            className="relative overflow-hidden rounded-2xl border p-5 shadow-md"
             style={{ background: pc.bg, borderColor: pc.borderColor }}
           >
             <div
@@ -518,8 +522,8 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
             <div className="mt-4 flex flex-col gap-2 sm:flex-row">
               <button
                 onClick={handleAddToWallet}
-                className="flex items-center justify-center gap-2 rounded-xl border bg-white px-5 py-2.5 text-sm font-semibold shadow-sm hover:bg-gray-50 transition-colors"
-                style={{ borderColor: pc.btnBorder, color: pc.btnText }}
+                className="flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold text-white shadow-lg transition-opacity hover:opacity-90"
+                style={{ background: pc.handleGradient }}
               >
                 <Wallet className="h-4 w-4" />
                 {walletButtonLabel}
