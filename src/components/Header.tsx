@@ -160,7 +160,7 @@ const Header: React.FC = () => {
             <Link
               to="/photos"
               className={`font-medium transition-colors duration-200 ${
-                isActive('/photos') 
+                isActive('/photos')
                   ? useSolidHeader
                     ? 'text-teal-600 border-b-2 border-teal-500 pb-1'
                     : 'text-white border-b-2 border-white pb-1'
@@ -170,6 +170,20 @@ const Header: React.FC = () => {
               }`}
             >
               {t('nav.photos', 'Photos')}
+            </Link>
+            <Link
+              to="/loyalty/promos"
+              className={`font-medium transition-colors duration-200 ${
+                isActive('/loyalty/promos')
+                  ? useSolidHeader
+                    ? 'text-teal-600 border-b-2 border-teal-500 pb-1'
+                    : 'text-white border-b-2 border-white pb-1'
+                  : useSolidHeader
+                    ? 'text-gray-700 hover:text-teal-600'
+                    : 'text-white/90 hover:text-white'
+              }`}
+            >
+              Promos
             </Link>
 
           </nav>
@@ -311,15 +325,26 @@ const Header: React.FC = () => {
                 to="/photos"
                 onClick={() => setIsMenuOpen(false)}
                 className={`font-medium transition-colors duration-200 ${
-                  isActive('/photos') 
+                  isActive('/photos')
                     ? useSolidHeader ? 'text-teal-600' : 'text-white'
                     : useSolidHeader ? 'text-gray-700' : 'text-white/90'
                 }`}
               >
                 {t('nav.photos', 'Photos')}
               </Link>
+              <Link
+                to="/loyalty/promos"
+                onClick={() => setIsMenuOpen(false)}
+                className={`font-medium transition-colors duration-200 ${
+                  isActive('/loyalty/promos')
+                    ? useSolidHeader ? 'text-teal-600' : 'text-white'
+                    : useSolidHeader ? 'text-gray-700' : 'text-white/90'
+                }`}
+              >
+                Promos
+              </Link>
 
-              
+
               {/* Mobile Bolt Badge - Temporarily disabled */}
               {/* <div className={`pt-4 border-t transition-colors duration-300 ${
                 isScrolled || isAdminLoginPage || isBarracaDetailPage || isMenuOpen ? 'border-gray-200' : 'border-white/20'
