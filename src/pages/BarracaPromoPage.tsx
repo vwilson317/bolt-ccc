@@ -262,7 +262,7 @@ const BarracaPromoPage: React.FC = () => {
     <>
       <SEOHead title={pageTitle} description={pageDescription} image={pageImage} url={pageUrl} />
     <div className="min-h-screen bg-gradient-to-br from-amber-50 via-rose-50 to-white pb-16">
-      {barraca.slug === 'jota86' && (
+      {barraca.slug === 'jota86x' && (
         <a
           href="https://www.instagram.com/reel/DVSC1xkjThB/?utm_source=ig_web_button_share_sheet"
           target="_blank"
@@ -270,7 +270,7 @@ const BarracaPromoPage: React.FC = () => {
           className="relative block"
           style={{ width: '100vw', height: '100svh', marginLeft: 'calc(50% - 50vw)' }}
           onClick={() =>
-            trackEvent('jota86_promo_ad_flier_clicked', {
+            trackEvent('jota86x_promo_ad_flier_clicked', {
               promo_id: barraca.id,
               page_path: location.pathname,
             })
@@ -301,7 +301,7 @@ const BarracaPromoPage: React.FC = () => {
           </div>
         </a>
       )}
-      <div className={`mx-auto max-w-2xl px-4 sm:px-6 lg:px-8 ${barraca.slug === 'jota86' ? 'pt-10' : 'pt-28'}`}>
+      <div className={`mx-auto max-w-2xl px-4 sm:px-6 lg:px-8 ${barraca.slug === 'jota86x' ? 'pt-10' : 'pt-28'}`}>
         <div className="mb-8 text-center">
           {barraca.logoPath ? (
             barraca.logoFull ? (
