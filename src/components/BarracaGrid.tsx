@@ -143,7 +143,7 @@ const BarracaGrid: React.FC<BarracaGridProps> = ({ barracas }) => {
             <div className="mb-3 flex-shrink-0">
               <div className="flex items-start justify-between mb-2">
                 <h3 className={`text-lg md:text-xl font-bold leading-tight ${
-                  barraca.partnered ? 'text-gray-900' : 'text-gray-600'
+                  barraca.partnered ? 'text-teal-700' : 'text-gray-600'
                 }`}>
                   {barraca.name}
                 </h3>

@@ -154,7 +154,7 @@ const Home: React.FC = () => {
 
       {/* Weather Marquee - Temporarily disabled, keep pink separator */}
       {/* <WeatherMarquee colorScheme="white" useDefaultBorders={false} className="border-t-4 border-pink-500" /> */}
-      <div className="sticky top-16 z-30 border-t-4 border-teal-500" />
+      <div className="sticky top-16 z-30 border-t-4 border-pink-500" />
 
       {isJota86xPromoActive && (
         <section className="bg-gradient-to-r from-amber-100 via-rose-50 to-white border-y border-amber-200 relative z-10">
@@ -177,7 +177,7 @@ const Home: React.FC = () => {
       {/* Call to Action Section */}
       <section ref={ctaAnimation.ref} className={`py-16 bg-gradient-to-b from-beach-50 to-white relative z-10 ${ctaAnimation.animationClasses}`}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
+          <h2 className="text-3xl md:text-4xl font-bold text-teal-700 mb-6">
             {t('home.yourBarraca')}
           </h2>
           <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
@@ -231,7 +231,7 @@ const Home: React.FC = () => {
       <section ref={featuredAnimation.ref} className={`py-16 bg-white relative z-10 ${featuredAnimation.animationClasses}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-teal-700 mb-4">
               {t('home.popularBarracas')}
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-8">
@@ -253,7 +253,7 @@ const Home: React.FC = () => {
       <section ref={featuresAnimation.ref} className={`py-16 bg-gradient-to-b from-gray-50 to-white relative z-10 ${featuresAnimation.animationClasses}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-teal-700 mb-4">
               {t('home.whyJoin')}
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
@@ -287,7 +287,7 @@ const Home: React.FC = () => {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="bg-white rounded-2xl p-8 border border-sand-100 shadow-md">
             <Users className="h-16 w-16 text-beach-500 mx-auto mb-6" />
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-teal-700 mb-4">
               {t('home.exclusiveBenefits')}
             </h2>
             <p className="text-xl text-sand-600 mb-8 max-w-2xl mx-auto">
@@ -324,7 +324,7 @@ const Home: React.FC = () => {
                 <Jota86xPromotion promoSource="home_instagram_section" />
               </div>
             )}
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-teal-700 mb-4">
               {t('home.instagram.title')}
             </h2>
             <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">

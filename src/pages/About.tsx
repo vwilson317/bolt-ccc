@@ -128,7 +128,7 @@ const About: React.FC = () => {
       {/* Mission Section */}
       <section ref={missionAnimation.ref} className={`py-16 bg-white ${missionAnimation.animationClasses}`}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-8">
+          <h2 className="text-3xl md:text-4xl font-bold text-teal-700 mb-8">
             {t('about.mission')}
           </h2>
           <p className="text-lg text-gray-600 leading-relaxed mb-8">
@@ -167,7 +167,7 @@ const About: React.FC = () => {
       <section ref={valuesAnimation.ref} className={`py-16 bg-gray-50 ${valuesAnimation.animationClasses}`}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-teal-700 mb-4">
               {t('about.whatWeStandFor')}
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
@@ -200,7 +200,7 @@ const About: React.FC = () => {
       <section ref={teamAnimation.ref} className={`py-16 bg-white ${teamAnimation.animationClasses}`}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-teal-700 mb-4">
               {t('about.meetTeam')}
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
