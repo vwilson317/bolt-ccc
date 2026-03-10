@@ -9,13 +9,13 @@ import EmailSubscriptionSection from '../components/EmailSubscriptionSection';
 // import StoryCarousel from '../components/StoryCarousel';
 import UniqueVisitorCounter from '../components/UniqueVisitorCounter';
 import SEOHead from '../components/SEOHead';
-import ThaisPromotion from '../components/ThaisPromotion';
+import Jota86xPromotion from '../components/Jota86xPromotion';
 import { useApp } from '../contexts/AppContext';
 // import { useStory } from '../contexts/StoryContext';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 
-const THAIS_PROMO_QUERY_VALUE = 'thais-follow';
-const THAIS_INSTAGRAM_HANDLE = 'thai.82ipanema';
+const JOTA86X_PROMO_QUERY_VALUE = 'jota86x-follow';
+const JOTA86X_INSTAGRAM_HANDLE = 'barracadojota86x';
 
 const Home: React.FC = () => {
   const { t } = useTranslation();
@@ -27,9 +27,9 @@ const Home: React.FC = () => {
     typeof window !== 'undefined'
       ? `${window.location.origin}/projects/carioca-coastal-club`
       : 'https://cariocacoastalclub.com/projects/carioca-coastal-club';
-  const isThaisPromoActive = useMemo(() => {
+  const isJota86xPromoActive = useMemo(() => {
     const params = new URLSearchParams(location.search);
-    return params.get('promo') === THAIS_PROMO_QUERY_VALUE;
+    return params.get('promo') === JOTA86X_PROMO_QUERY_VALUE;
   }, [location.search]);
   const promoT = (key: string) => t(`home.promo.${key}`);
 
@@ -100,7 +100,7 @@ const Home: React.FC = () => {
   };
 
   useEffect(() => {
-    if (!isThaisPromoActive || typeof window === 'undefined') {
+    if (!isJota86xPromoActive || typeof window === 'undefined') {
       return;
     }
 
@@ -129,7 +129,7 @@ const Home: React.FC = () => {
       window.clearInterval(intervalId);
       window.removeEventListener('load', alignScrollToPromo);
     };
-  }, [isThaisPromoActive]);
+  }, [isJota86xPromoActive]);
 
   return (
     <div className="relative">
@@ -156,12 +156,12 @@ const Home: React.FC = () => {
       {/* <WeatherMarquee colorScheme="white" useDefaultBorders={false} className="border-t-4 border-pink-500" /> */}
       <div className="sticky top-16 z-30 border-t-4 border-pink-500" />
 
-      {isThaisPromoActive && (
+      {isJota86xPromoActive && (
         <section className="bg-gradient-to-r from-amber-100 via-rose-50 to-white border-y border-amber-200 relative z-10">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
               <p className="text-sm md:text-base text-gray-900 font-medium">
-                {promoT('banner.activeMessage')} <span className="font-bold">@{THAIS_INSTAGRAM_HANDLE}</span>.
+                {promoT('banner.activeMessage')} <span className="font-bold">@{JOTA86X_INSTAGRAM_HANDLE}</span>.
               </p>
               <button
                 onClick={scrollToInstagram}
@@ -319,9 +319,9 @@ const Home: React.FC = () => {
       <section id="instagram-cta" ref={instagramAnimation.ref} className={`py-16 bg-gradient-to-br from-pink-50 via-purple-50 to-orange-50 relative z-10 ${instagramAnimation.animationClasses}`}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 md:p-12 shadow-xl border border-pink-100">
-            {isThaisPromoActive && (
+            {isJota86xPromoActive && (
               <div className="mb-8">
-                <ThaisPromotion promoSource="home_instagram_section" />
+                <Jota86xPromotion promoSource="home_instagram_section" />
               </div>
             )}
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
