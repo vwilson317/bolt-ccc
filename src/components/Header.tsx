@@ -55,7 +55,7 @@ const Header: React.FC = () => {
   return (
     <header className={`fixed top-0 left-0 right-0 z-[999999] transition-all duration-300 ${
       useSolidHeader
-        ? 'bg-white/95 backdrop-blur-sm border-b border-beach-100 shadow-sm' 
+        ? 'bg-white/95 backdrop-blur-sm border-b border-teal-200 shadow-sm'
         : 'bg-transparent'
     }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -63,13 +63,6 @@ const Header: React.FC = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-3 group">
             <div className="flex items-center">
-              <img
-                src={
-                  useSolidHeader ? "/logo-icon-color.png" : "/logo-icon-white.png"
-                }
-                alt="Carioca Coastal Club Icon Logo"
-                className="h-12 w-12 min-w-12 max-w-12 object-contain transition-all duration-300"
-              />
               <img
                 src={useSolidHeader ? "/logo-text-pink.png" : "/logo-text.png"}
                 alt="Carioca Coastal Club"
@@ -85,10 +78,10 @@ const Header: React.FC = () => {
               className={`font-medium transition-colors duration-200 ${
                 isActive('/') 
                   ? useSolidHeader
-                    ? 'text-beach-600 border-b-2 border-beach-600 pb-1' 
+                    ? 'text-teal-600 border-b-2 border-teal-500 pb-1'
                     : 'text-white border-b-2 border-white pb-1'
                   : useSolidHeader
-                    ? 'text-gray-700 hover:text-beach-600'
+                    ? 'text-gray-700 hover:text-teal-600'
                     : 'text-white/90 hover:text-white'
               }`}
             >
@@ -99,10 +92,10 @@ const Header: React.FC = () => {
               className={`font-medium transition-colors duration-200 ${
                 isActive('/discover') 
                   ? useSolidHeader
-                    ? 'text-beach-600 border-b-2 border-beach-600 pb-1' 
+                    ? 'text-teal-600 border-b-2 border-teal-500 pb-1'
                     : 'text-white border-b-2 border-white pb-1'
                   : useSolidHeader
-                    ? 'text-gray-700 hover:text-beach-600'
+                    ? 'text-gray-700 hover:text-teal-600'
                     : 'text-white/90 hover:text-white'
               }`}
             >
@@ -141,10 +134,10 @@ const Header: React.FC = () => {
               className={`font-medium transition-colors duration-200 ${
                 isActive('/about') 
                   ? useSolidHeader
-                    ? 'text-beach-600 border-b-2 border-beach-600 pb-1' 
+                    ? 'text-teal-600 border-b-2 border-teal-500 pb-1'
                     : 'text-white border-b-2 border-white pb-1'
                   : useSolidHeader
-                    ? 'text-gray-700 hover:text-beach-600'
+                    ? 'text-gray-700 hover:text-teal-600'
                     : 'text-white/90 hover:text-white'
               }`}
             >
@@ -155,10 +148,10 @@ const Header: React.FC = () => {
               className={`font-medium transition-colors duration-200 ${
                 isActive('/register') 
                   ? useSolidHeader
-                    ? 'text-beach-600 border-b-2 border-beach-600 pb-1' 
+                    ? 'text-teal-600 border-b-2 border-teal-500 pb-1'
                     : 'text-white border-b-2 border-white pb-1'
                   : useSolidHeader
-                    ? 'text-gray-700 hover:text-beach-600'
+                    ? 'text-gray-700 hover:text-teal-600'
                     : 'text-white/90 hover:text-white'
               }`}
             >
@@ -169,10 +162,10 @@ const Header: React.FC = () => {
               className={`font-medium transition-colors duration-200 ${
                 isActive('/photos') 
                   ? useSolidHeader
-                    ? 'text-beach-600 border-b-2 border-beach-600 pb-1' 
+                    ? 'text-teal-600 border-b-2 border-teal-500 pb-1'
                     : 'text-white border-b-2 border-white pb-1'
                   : useSolidHeader
-                    ? 'text-gray-700 hover:text-beach-600'
+                    ? 'text-gray-700 hover:text-teal-600'
                     : 'text-white/90 hover:text-white'
               }`}
             >
@@ -209,7 +202,7 @@ const Header: React.FC = () => {
                       key={lang.code}
                       onClick={() => changeLanguage(lang.code)}
                       className={`w-full px-4 py-2 text-left flex items-center space-x-3 hover:bg-gray-50 transition-colors ${
-                        i18n.language === lang.code ? 'bg-beach-50 text-beach-600' : 'text-gray-700'
+                        i18n.language === lang.code ? 'bg-teal-50 text-teal-600' : 'text-gray-700'
                       }`}
                     >
                       <span className="text-lg">{lang.flag}</span>
@@ -253,7 +246,7 @@ const Header: React.FC = () => {
                 onClick={() => setIsMenuOpen(false)}
                 className={`font-medium transition-colors duration-200 ${
                   isActive('/') 
-                    ? useSolidHeader ? 'text-beach-600' : 'text-white'
+                    ? useSolidHeader ? 'text-teal-600' : 'text-white'
                     : useSolidHeader ? 'text-gray-700' : 'text-white/90'
                 }`}
               >
@@ -264,7 +257,7 @@ const Header: React.FC = () => {
                 onClick={() => setIsMenuOpen(false)}
                 className={`font-medium transition-colors duration-200 ${
                   isActive('/discover') 
-                    ? useSolidHeader ? 'text-beach-600' : 'text-white'
+                    ? useSolidHeader ? 'text-teal-600' : 'text-white'
                     : useSolidHeader ? 'text-gray-700' : 'text-white/90'
                 }`}
               >
@@ -275,7 +268,7 @@ const Header: React.FC = () => {
                 onClick={() => setIsMenuOpen(false)}
                 className={`font-medium transition-colors duration-200 ${
                   isActive('/jobs')
-                    ? useSolidHeader ? 'text-beach-600' : 'text-white'
+                    ? useSolidHeader ? 'text-teal-600' : 'text-white'
                     : useSolidHeader ? 'text-gray-700' : 'text-white/90'
                 }`}
               >
@@ -286,7 +279,7 @@ const Header: React.FC = () => {
                 onClick={() => setIsMenuOpen(false)}
                 className={`font-medium transition-colors duration-200 ${
                   isActive('/interview-process')
-                    ? useSolidHeader ? 'text-beach-600' : 'text-white'
+                    ? useSolidHeader ? 'text-teal-600' : 'text-white'
                     : useSolidHeader ? 'text-gray-700' : 'text-white/90'
                 }`}
               >
@@ -297,7 +290,7 @@ const Header: React.FC = () => {
                 onClick={() => setIsMenuOpen(false)}
                 className={`font-medium transition-colors duration-200 ${
                   isActive('/about') 
-                    ? useSolidHeader ? 'text-beach-600' : 'text-white'
+                    ? useSolidHeader ? 'text-teal-600' : 'text-white'
                     : useSolidHeader ? 'text-gray-700' : 'text-white/90'
                 }`}
               >
@@ -308,7 +301,7 @@ const Header: React.FC = () => {
                 onClick={() => setIsMenuOpen(false)}
                 className={`font-medium transition-colors duration-200 ${
                   isActive('/register') 
-                    ? useSolidHeader ? 'text-beach-600' : 'text-white'
+                    ? useSolidHeader ? 'text-teal-600' : 'text-white'
                     : useSolidHeader ? 'text-gray-700' : 'text-white/90'
                 }`}
               >
@@ -319,7 +312,7 @@ const Header: React.FC = () => {
                 onClick={() => setIsMenuOpen(false)}
                 className={`font-medium transition-colors duration-200 ${
                   isActive('/photos') 
-                    ? useSolidHeader ? 'text-beach-600' : 'text-white'
+                    ? useSolidHeader ? 'text-teal-600' : 'text-white'
                     : useSolidHeader ? 'text-gray-700' : 'text-white/90'
                 }`}
               >

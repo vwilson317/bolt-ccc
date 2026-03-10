@@ -154,7 +154,7 @@ const Home: React.FC = () => {
 
       {/* Weather Marquee - Temporarily disabled, keep pink separator */}
       {/* <WeatherMarquee colorScheme="white" useDefaultBorders={false} className="border-t-4 border-pink-500" /> */}
-      <div className="sticky top-16 z-30 border-t-4 border-pink-500" />
+      <div className="sticky top-16 z-30 border-t-4 border-teal-500" />
 
       {isJota86xPromoActive && (
         <section className="bg-gradient-to-r from-amber-100 via-rose-50 to-white border-y border-amber-200 relative z-10">
@@ -211,16 +211,16 @@ const Home: React.FC = () => {
           {/* Quick Stats with Unique Visitor Counter */}
           <div ref={statsAnimation.ref} className={`grid grid-cols-2 md:grid-cols-4 gap-6 mt-12 ${statsAnimation.animationClasses}`}>
             <div className="text-center">
-                              <div className="text-3xl font-bold text-beach-600 mb-2">{barracas.length}<span data-lingo-skip>+</span></div>
+                              <div className="text-3xl font-bold text-teal-600 mb-2">{barracas.length}<span data-lingo-skip>+</span></div>
               <div className="text-sm text-gray-600"><span data-lingo-skip>{t('home.stats.partnerBarracas') || 'Partner Barracas'}</span></div>
             </div>
             <UniqueVisitorCounter />
             <div className="text-center">
-                              <div className="text-3xl font-bold text-beach-600 mb-2" data-lingo-skip>24/7</div>
+                              <div className="text-3xl font-bold text-teal-600 mb-2" data-lingo-skip>24/7</div>
               <div className="text-sm text-gray-600" data-lingo-skip>{t('home.stats.availabilityUpdates') || 'Availability Updates'}</div>
             </div>
             <div className="text-center">
-                              <div className="text-3xl font-bold text-beach-600 mb-2" data-lingo-skip>12</div>
+                              <div className="text-3xl font-bold text-teal-600 mb-2" data-lingo-skip>12</div>
               <div className="text-sm text-gray-600" data-lingo-skip>{t('home.stats.neighborhoods') || 'Neighborhoods'}</div>
             </div>
           </div>
@@ -393,7 +393,7 @@ const Home: React.FC = () => {
             {/* Company Info */}
             <div className="md:col-span-2">
               <div className="mb-4">
-                <h3 className="text-xl font-bold text-beach-400" data-lingo-skip>Carioca Coastal Club</h3>
+                <h3 className="text-xl font-bold text-teal-400" data-lingo-skip>Carioca Coastal Club</h3>
                 <p className="text-gray-400 text-sm" data-lingo-skip>Barraca Loyalty Program</p>
               </div>
               <p className="text-gray-300 mb-4 max-w-md">
