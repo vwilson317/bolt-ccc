@@ -152,42 +152,50 @@ const BarracaPromoPage: React.FC = () => {
             {t('barracaPromoPage.comingSoonDescription', { instagramHandle: barraca.instagramHandle })}
           </p>
 
-          <div className="flex flex-wrap items-center justify-center gap-3">
+          <div className="flex items-end justify-center gap-6">
             {barraca.whatsappUrl && (
+              <div className="flex flex-col items-center gap-1.5">
+                <a
+                  href={barraca.whatsappUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() =>
+                    trackEvent(`${barraca.id}_promo_whatsapp_clicked`, {
+                      promo_id: barraca.id,
+                      page_path: location.pathname,
+                      full_path: `${location.pathname}${location.search}`,
+                    })
+                  }
+                  className="flex items-center justify-center rounded-2xl bg-green-500 w-14 h-14 text-white hover:bg-green-600 transition-colors shadow-md"
+                >
+                  <MessageCircle className="h-6 w-6" />
+                </a>
+                <span className="text-xs text-gray-600 font-medium text-center max-w-[72px] leading-tight">
+                  {t('barracaPromoPage.comingSoonWhatsappCta')}
+                </span>
+              </div>
+            )}
+            <div className="flex flex-col items-center gap-1.5">
               <a
-                href={barraca.whatsappUrl}
+                href="https://instagram.com/Carioca_Coastal_Club"
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() =>
-                  trackEvent(`${barraca.id}_promo_whatsapp_clicked`, {
+                  trackEvent(`${barraca.id}_promo_ccc_instagram_clicked`, {
                     promo_id: barraca.id,
                     page_path: location.pathname,
                     full_path: `${location.pathname}${location.search}`,
+                    context: 'coming_soon',
                   })
                 }
-                className="inline-flex items-center gap-2 rounded-xl bg-green-500 px-6 py-3 font-semibold text-white hover:bg-green-600 transition-colors shadow-md"
+                className="flex items-center justify-center rounded-2xl bg-gradient-to-r from-purple-500 to-pink-500 w-14 h-14 text-white hover:opacity-90 transition-opacity shadow-md"
               >
-                <MessageCircle className="h-5 w-5" />
-                {t('barracaPromoPage.comingSoonWhatsappCta')}
+                <Instagram className="h-6 w-6" strokeWidth={1.5} />
               </a>
-            )}
-            <a
-              href="https://instagram.com/Carioca_Coastal_Club"
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() =>
-                trackEvent(`${barraca.id}_promo_ccc_instagram_clicked`, {
-                  promo_id: barraca.id,
-                  page_path: location.pathname,
-                  full_path: `${location.pathname}${location.search}`,
-                  context: 'coming_soon',
-                })
-              }
-              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-3 font-semibold text-white hover:opacity-90 transition-opacity shadow-md"
-            >
-              <Instagram className="h-5 w-5" strokeWidth={1.5} />
-              {t('barracaPromoPage.comingSoonInstagramCta')}
-            </a>
+              <span className="text-xs text-gray-600 font-medium text-center max-w-[72px] leading-tight">
+                {t('barracaPromoPage.comingSoonInstagramCta')}
+              </span>
+            </div>
           </div>
 
           <div className="mt-4">
@@ -263,43 +271,67 @@ const BarracaPromoPage: React.FC = () => {
       <SEOHead title={pageTitle} description={pageDescription} image={pageImage} url={pageUrl} />
     <div className="min-h-screen bg-gradient-to-br from-amber-50 via-rose-50 to-white pb-16">
       {barraca.slug === 'jota86x' && (
-        <a
-          href="https://www.instagram.com/reel/DVSC1xkjThB/?utm_source=ig_web_button_share_sheet"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="relative block"
+        <div
+          className="relative"
           style={{ width: '100vw', height: '100svh', marginLeft: 'calc(50% - 50vw)' }}
-          onClick={() =>
-            trackEvent('jota86x_promo_ad_flier_clicked', {
-              promo_id: barraca.id,
-              page_path: location.pathname,
-            })
-          }
         >
-          <img
-            src="https://images.cariocacoastalclub.com/thai-promo/sat-meetup-v1.jpg"
-            alt="86 Jota event flier"
-            className="w-full h-full"
-            style={{ objectFit: 'cover' }}
-          />
-          <div className="absolute bottom-6 right-4 flex items-center gap-1.5 rounded-full bg-black/60 px-3 py-1.5 text-xs font-semibold text-white backdrop-blur-sm animate-pulse">
-            <Instagram className="h-3.5 w-3.5" strokeWidth={1.5} />
-            Tap to watch reel
-          </div>
-          {/* Scroll indicator */}
-          <div
-            className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 pointer-events-none"
-            aria-hidden="true"
+          <a
+            href="https://www.instagram.com/reel/DVSC1xkjThB/?utm_source=ig_web_button_share_sheet"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block w-full h-full"
+            onClick={() =>
+              trackEvent('jota86x_promo_ad_flier_clicked', {
+                promo_id: barraca.id,
+                page_path: location.pathname,
+              })
+            }
           >
-            <span className="text-xs font-semibold text-white/80 tracking-widest uppercase" style={{ textShadow: '0 1px 4px rgba(0,0,0,0.6)' }}>
-              Scroll
-            </span>
-            <ChevronDown
-              className="h-7 w-7 text-white animate-bounce drop-shadow-lg"
-              strokeWidth={2.5}
+            <img
+              src="https://images.cariocacoastalclub.com/thai-promo/sat-meetup-v1.jpg"
+              alt="86 Jota event flier"
+              className="w-full h-full"
+              style={{ objectFit: 'cover' }}
             />
-          </div>
-        </a>
+            <div className="absolute bottom-6 right-4 flex items-center gap-1.5 rounded-full bg-black/60 px-3 py-1.5 text-xs font-semibold text-white backdrop-blur-sm animate-pulse">
+              <Instagram className="h-3.5 w-3.5" strokeWidth={1.5} />
+              Tap to watch reel
+            </div>
+            {/* Scroll indicator */}
+            <div
+              className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 pointer-events-none"
+              aria-hidden="true"
+            >
+              <span className="text-xs font-semibold text-white/80 tracking-widest uppercase" style={{ textShadow: '0 1px 4px rgba(0,0,0,0.6)' }}>
+                Scroll
+              </span>
+              <ChevronDown
+                className="h-7 w-7 text-white animate-bounce drop-shadow-lg"
+                strokeWidth={2.5}
+              />
+            </div>
+          </a>
+          {/* WhatsApp community button — top overlay */}
+          {barraca.whatsappUrl && (
+            <a
+              href={barraca.whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() =>
+                trackEvent(`${barraca.id}_promo_whatsapp_clicked`, {
+                  promo_id: barraca.id,
+                  page_path: location.pathname,
+                  full_path: `${location.pathname}${location.search}`,
+                  context: 'photo_top',
+                })
+              }
+              className="absolute top-6 left-1/2 -translate-x-1/2 z-10 flex items-center gap-2 rounded-full bg-green-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg hover:bg-green-600 transition-colors"
+            >
+              <MessageCircle className="h-4 w-4" />
+              Join the WhatsApp Community
+            </a>
+          )}
+        </div>
       )}
       <div className={`mx-auto max-w-2xl px-4 sm:px-6 lg:px-8 ${barraca.slug === 'jota86x' ? 'pt-10' : 'pt-28'}`}>
         <div className="mb-8 text-center">
@@ -330,49 +362,61 @@ const BarracaPromoPage: React.FC = () => {
           </p>
 
           <div className="flex flex-col items-center gap-3">
-            <div className="flex w-full gap-3">
+            <div className="flex gap-6 justify-center">
               {barraca.whatsappUrl && (
+                <div className="flex flex-col items-center gap-1.5">
+                  <a
+                    href={barraca.whatsappUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() =>
+                      trackEvent(`${barraca.id}_promo_whatsapp_clicked`, {
+                        promo_id: barraca.id,
+                        page_path: location.pathname,
+                        full_path: `${location.pathname}${location.search}`,
+                      })
+                    }
+                    className="flex items-center justify-center rounded-2xl bg-green-500 w-14 h-14 text-white hover:bg-green-600 transition-colors shadow-md"
+                  >
+                    <MessageCircle className="h-6 w-6" />
+                  </a>
+                  <span className="text-xs text-gray-600 font-medium text-center max-w-[72px] leading-tight">
+                    {t('barracaPromoPage.whatsappCta')}
+                  </span>
+                </div>
+              )}
+              <div className="flex flex-col items-center gap-1.5">
                 <a
-                  href={barraca.whatsappUrl}
+                  href="https://instagram.com/Carioca_Coastal_Club"
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() =>
-                    trackEvent(`${barraca.id}_promo_whatsapp_clicked`, {
+                    trackEvent(`${barraca.id}_promo_ccc_instagram_clicked`, {
                       promo_id: barraca.id,
                       page_path: location.pathname,
                       full_path: `${location.pathname}${location.search}`,
                     })
                   }
-                  className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-xl bg-green-500 px-3 py-2 text-sm font-semibold text-white hover:bg-green-600 transition-colors shadow-md"
+                  className="flex items-center justify-center rounded-2xl bg-gradient-to-r from-purple-500 to-pink-500 w-14 h-14 text-white hover:opacity-90 transition-opacity shadow-md"
                 >
-                  <MessageCircle className="h-4 w-4" />
-                  {t('barracaPromoPage.whatsappCta')}
+                  <Instagram className="h-6 w-6" strokeWidth={1.5} />
                 </a>
-              )}
-              <a
-                href="https://instagram.com/Carioca_Coastal_Club"
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() =>
-                  trackEvent(`${barraca.id}_promo_ccc_instagram_clicked`, {
-                    promo_id: barraca.id,
-                    page_path: location.pathname,
-                    full_path: `${location.pathname}${location.search}`,
-                  })
-                }
-                className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 px-3 py-2 text-sm font-semibold text-white hover:opacity-90 transition-opacity shadow-md"
-              >
-                <Instagram className="h-4 w-4" strokeWidth={1.5} />
-                {t('barracaPromoPage.instagramCta')}
-              </a>
+                <span className="text-xs text-gray-600 font-medium text-center max-w-[72px] leading-tight">
+                  {t('barracaPromoPage.instagramCta')}
+                </span>
+              </div>
+              <div className="flex flex-col items-center gap-1.5">
+                <button
+                  onClick={handleShare}
+                  className="flex items-center justify-center rounded-2xl bg-white border border-gray-200 w-14 h-14 text-gray-700 hover:bg-gray-50 transition-colors shadow-md"
+                >
+                  <Share2 className="h-6 w-6" />
+                </button>
+                <span className="text-xs text-gray-600 font-medium text-center max-w-[72px] leading-tight">
+                  Share
+                </span>
+              </div>
             </div>
-            <button
-              onClick={handleShare}
-              className="inline-flex items-center gap-2 rounded-xl bg-white border border-gray-200 px-5 py-3 font-semibold text-gray-700 hover:bg-gray-50 transition-colors shadow-md"
-            >
-              <Share2 className="h-5 w-5" />
-              Share
-            </button>
           </div>
         </div>
 

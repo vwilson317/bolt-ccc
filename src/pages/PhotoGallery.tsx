@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { X, ChevronLeft, ChevronRight, Download, Share2, Calendar, MapPin, ExternalLink, Image } from 'lucide-react';
+import { X, ChevronLeft, ChevronRight, Download, Share2, Calendar, MapPin, ExternalLink, Image, MessageCircle } from 'lucide-react';
 import { photoService, PhotoGalleryData, Location } from '../services/photoService';
+import { CCC_WHATSAPP_URL } from '../data/barracaPromos';
 import { getFetchPriority } from '../utils/imageUtils';
 import { openInstagramLink } from '../utils/ctaButtonUtils';
 import BackNavigation from '../components/BackNavigation';
@@ -273,7 +274,17 @@ const PhotoGallery: React.FC = () => {
             variant="prominent"
             className="mb-4"
           />
-          
+
+          <a
+            href={CCC_WHATSAPP_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mb-4 flex items-center justify-center gap-2 rounded-2xl bg-green-500 px-5 py-3 text-sm font-semibold text-white shadow-md hover:bg-green-600 transition-colors w-full"
+          >
+            <MessageCircle className="h-5 w-5" />
+            Join the WhatsApp Community
+          </a>
+
           <div className="bg-gradient-to-br from-white via-beach-50 to-white rounded-2xl shadow-xl p-8 border border-beach-100">
             {/* Mobile Layout */}
             <div className="md:hidden mb-6">
