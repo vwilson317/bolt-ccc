@@ -30,6 +30,16 @@ function detectIOS(): boolean {
   );
 }
 
+// Detect whether the browser locale is Brazilian Portuguese.
+// This is used to surface CPF as the first identifier option.
+function detectBrazil(): boolean {
+  if (typeof navigator === 'undefined') return false;
+  const langs: readonly string[] = navigator.languages?.length
+    ? navigator.languages
+    : [navigator.language ?? ''];
+  return langs.some((l) => l === 'pt-BR' || l.startsWith('pt-BR'));
+}
+
 // Chrome on iOS uses a WKWebView that does NOT intercept .pkpass via
 // window.location.href navigation the way Safari does, so it ends up showing
 // a blank page. Detect it so we can open a new tab instead.
@@ -178,6 +188,7 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
   });
   const [walletMessage, setWalletMessage] = useState('');
   const [isIOS] = useState(detectIOS);
+  const [isBrazil] = useState(detectBrazil);
 
   const promoT = (key: string, vars?: Record<string, string>) =>
     t(`home.promo.${key}`, vars ?? {});
@@ -248,7 +259,7 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
     setClaimSuccess('');
 
     const effectiveIdentifier = existingBadgeIdentifier || identifierInput;
-    const normalized = PromoClaimService.normalizeIdentifier(effectiveIdentifier);
+    const normalized = PromoClaimService.normalizeIdentifier(effectiveIdentifier, { preferCpf: isBrazil });
     if (!normalized) {
       setClaimError(promoT('messages.invalidIdentifier'));
       trackEvent(`${barraca.id}_promo_invalid_identifier`, trackCtx);
@@ -279,7 +290,7 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
     });
 
     try {
-      const existing = await PromoClaimService.findByIdentifier(barraca.id, effectiveIdentifier);
+      const existing = await PromoClaimService.findByIdentifier(barraca.id, effectiveIdentifier, { preferCpf: isBrazil });
 
       if (existing?.badge_unlocked) {
         await PromoClaimService.markLastClaimed(barraca.id, effectiveIdentifier);
@@ -297,6 +308,7 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
       const result = await PromoClaimService.claimOrRestore(barraca.id, effectiveIdentifier, {
         followConfirmed: true,
         unlockBadge: true,
+        preferCpf: isBrazil,
         metadata: {
           promo_source: promoSource,
           instagram_handle: barraca.instagramHandle,
@@ -424,14 +436,14 @@ const BarracaPromotion: React.FC<BarracaPromotionProps> = ({
           {!existingBadgeIdentifier && (
             <>
               <label className="mb-2 flex items-center gap-1 text-sm font-semibold text-gray-700">
-                {promoT('card.step2Label')}
+                {promoT(isBrazil ? 'card.step2LabelBR' : 'card.step2Label')}
                 <span className="text-pink-500" aria-hidden="true">*</span>
               </label>
               <input
                 type="text"
                 value={identifierInput}
                 onChange={(e) => setIdentifierInput(e.target.value)}
-                placeholder={promoT('card.identifierPlaceholder')}
+                placeholder={promoT(isBrazil ? 'card.identifierPlaceholderBR' : 'card.identifierPlaceholder')}
                 className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-gray-800 placeholder:text-gray-400 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-100"
               />
               <p className="mt-2 text-xs text-gray-500">{promoT('card.note')}</p>

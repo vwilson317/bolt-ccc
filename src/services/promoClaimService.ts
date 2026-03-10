@@ -5,7 +5,7 @@ type PromoClaimRow = Database['public']['Tables']['promo_claims']['Row'];
 type PromoClaimInsert = Database['public']['Tables']['promo_claims']['Insert'];
 type PromoClaimUpdate = Database['public']['Tables']['promo_claims']['Update'];
 
-export type PromoIdentifierType = 'email' | 'phone';
+export type PromoIdentifierType = 'email' | 'phone' | 'cpf';
 
 export interface NormalizedIdentifier {
   type: PromoIdentifierType;
@@ -15,10 +15,16 @@ export interface NormalizedIdentifier {
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+// CPF strictly formatted: XXX.XXX.XXX-XX
+const cpfFormattedRegex = /^\d{3}\.\d{3}\.\d{3}-\d{2}$/;
+
 const normalizePhone = (value: string): string => value.replace(/[^\d+]/g, '').replace(/(?!^)\+/g, '');
 
 export class PromoClaimService {
-  static normalizeIdentifier(rawInput: string): NormalizedIdentifier | null {
+  static normalizeIdentifier(
+    rawInput: string,
+    options?: { preferCpf?: boolean }
+  ): NormalizedIdentifier | null {
     const trimmed = rawInput.trim();
     if (!trimmed) {
       return null;
@@ -37,10 +43,25 @@ export class PromoClaimService {
       };
     }
 
-    const normalizedPhone = normalizePhone(trimmed);
-    const digitsOnly = normalizedPhone.replace(/\D/g, '');
+    const digitsOnly = trimmed.replace(/\D/g, '');
+    const hasPlusPrefix = trimmed.startsWith('+');
 
-    if (digitsOnly.length < 8) {
+    // CPF: exactly 11 digits, either strictly formatted (XXX.XXX.XXX-XX)
+    // or bare digits when the caller signals Brazil context via preferCpf.
+    if (!hasPlusPrefix && digitsOnly.length === 11) {
+      if (cpfFormattedRegex.test(trimmed) || options?.preferCpf) {
+        return {
+          type: 'cpf',
+          inputValue: trimmed,
+          normalizedValue: digitsOnly
+        };
+      }
+    }
+
+    const normalizedPhone = normalizePhone(trimmed);
+    const phoneDigits = normalizedPhone.replace(/\D/g, '');
+
+    if (phoneDigits.length < 8) {
       return null;
     }
 
@@ -51,8 +72,12 @@ export class PromoClaimService {
     };
   }
 
-  static async findByIdentifier(promoId: string, rawInput: string): Promise<PromoClaimRow | null> {
-    const normalized = this.normalizeIdentifier(rawInput);
+  static async findByIdentifier(
+    promoId: string,
+    rawInput: string,
+    options?: { preferCpf?: boolean }
+  ): Promise<PromoClaimRow | null> {
+    const normalized = this.normalizeIdentifier(rawInput, options);
     if (!normalized) {
       return null;
     }
@@ -86,14 +111,15 @@ export class PromoClaimService {
       followConfirmed: boolean;
       unlockBadge: boolean;
       metadata?: Record<string, unknown>;
+      preferCpf?: boolean;
     }
   ): Promise<{ claim: PromoClaimRow | null; wasExisting: boolean }> {
-    const normalized = this.normalizeIdentifier(rawInput);
+    const normalized = this.normalizeIdentifier(rawInput, { preferCpf: options.preferCpf });
     if (!normalized) {
       return { claim: null, wasExisting: false };
     }
 
-    const existing = await this.findByIdentifier(promoId, rawInput);
+    const existing = await this.findByIdentifier(promoId, rawInput, { preferCpf: options.preferCpf });
 
     const upsertPayload: PromoClaimInsert = {
       promo_id: promoId,
