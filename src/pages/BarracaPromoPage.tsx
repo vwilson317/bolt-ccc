@@ -276,7 +276,7 @@ const BarracaPromoPage: React.FC = () => {
           style={{ width: '100vw', height: '100svh', marginLeft: 'calc(50% - 50vw)' }}
         >
           <a
-            href="https://www.instagram.com/reel/DVSC1xkjThB/?utm_source=ig_web_button_share_sheet"
+            href="https://www.instagram.com/reel/DTNWG6ujUPC/?igsh=MW9mNzBpcGRoYTlmMg=="
             target="_blank"
             rel="noopener noreferrer"
             className="block w-full h-full"
@@ -311,26 +311,6 @@ const BarracaPromoPage: React.FC = () => {
               />
             </div>
           </a>
-          {/* WhatsApp community button — top overlay */}
-          {barraca.whatsappUrl && (
-            <a
-              href={barraca.whatsappUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() =>
-                trackEvent(`${barraca.id}_promo_whatsapp_clicked`, {
-                  promo_id: barraca.id,
-                  page_path: location.pathname,
-                  full_path: `${location.pathname}${location.search}`,
-                  context: 'photo_top',
-                })
-              }
-              className="absolute top-6 left-1/2 -translate-x-1/2 z-10 flex items-center gap-2 rounded-full bg-green-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg hover:bg-green-600 transition-colors"
-            >
-              <MessageCircle className="h-4 w-4" />
-              Join the WhatsApp Community
-            </a>
-          )}
         </div>
       )}
       <div className={`mx-auto max-w-2xl px-4 sm:px-6 lg:px-8 ${barraca.slug === 'jota86x' ? 'pt-10' : 'pt-28'}`}>
