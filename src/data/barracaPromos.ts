@@ -83,7 +83,7 @@ export const BARRACA_PROMOS: BarracaPromoConfig[] = [
     slug: 'miriam53',
     name: 'Miriam 53',
     instagramHandle: 'barraca_rj_53',
-    instagramUrl: 'https://instagram.com/barraca_rj_53',
+    instagramUrl: 'https://www.instagram.com/barraca_rj_53?igsh=NXp6dzU3OHk5bWls',
     discountCode: 'RJ53',
     barracaLocation: 'Rio de Janeiro',
     whatsappUrl: CCC_WHATSAPP_URL,
