@@ -64,7 +64,7 @@ const ActivePromosPage: React.FC = () => {
       {/* List */}
       <div className="bg-gradient-to-b from-amber-50 via-white to-white min-h-screen pb-20">
         <div className="mx-auto max-w-lg px-4 -mt-6">
-          <div className="flex flex-col items-center mb-6 mt-2">
+          <div className="flex flex-col items-center mb-6 mt-8">
             <a
               href={CCC_WHATSAPP_URL}
               target="_blank"
