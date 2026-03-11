@@ -369,7 +369,9 @@ const isValidPhone = (phone: string): boolean => {
 };
 
 /**
- * Opens Instagram links with mobile app support
+ * Opens Instagram links with mobile app support.
+ * Inside Instagram's in-app browser, window.open() is blocked and pages fail to
+ * load silently. In that context we fall back to window.location.href.
  */
 export const openInstagramLink = (instagramUrl: string): void => {
   // Format the URL if it's just a username
@@ -381,7 +383,12 @@ export const openInstagramLink = (instagramUrl: string): void => {
   } else if (!instagramUrl.startsWith('http')) {
     formattedUrl = `https://${instagramUrl}`;
   }
-  
-  // Always open a single tab. Deep-link fallbacks can spawn blank/extra tabs in mobile browsers.
-  window.open(formattedUrl, '_blank', 'noopener,noreferrer');
+
+  // Instagram's in-app WebView blocks window.open(); navigate in-place instead.
+  const isInstagramBrowser = /Instagram/.test(navigator.userAgent);
+  if (isInstagramBrowser) {
+    window.location.href = formattedUrl;
+  } else {
+    window.open(formattedUrl, '_blank', 'noopener,noreferrer');
+  }
 };
