@@ -369,9 +369,12 @@ const isValidPhone = (phone: string): boolean => {
 };
 
 /**
- * Opens Instagram links with mobile app support.
- * Inside Instagram's in-app browser, window.open() is blocked and pages fail to
- * load silently. In that context we fall back to window.location.href.
+ * Opens an Instagram link in a new tab while keeping the user on the current page.
+ *
+ * window.open() is blocked in Instagram's in-app WebView, so we use a programmatic
+ * anchor click instead. Because this runs inside a user-gesture call stack (button
+ * click), the WebView treats it like a real link click and opens it externally,
+ * preserving the current page. This approach also works correctly in Chrome.
  */
 export const openInstagramLink = (instagramUrl: string): void => {
   // Format the URL if it's just a username
@@ -384,11 +387,11 @@ export const openInstagramLink = (instagramUrl: string): void => {
     formattedUrl = `https://${instagramUrl}`;
   }
 
-  // Instagram's in-app WebView blocks window.open(); navigate in-place instead.
-  const isInstagramBrowser = /Instagram/.test(navigator.userAgent);
-  if (isInstagramBrowser) {
-    window.location.href = formattedUrl;
-  } else {
-    window.open(formattedUrl, '_blank', 'noopener,noreferrer');
-  }
+  const a = document.createElement('a');
+  a.href = formattedUrl;
+  a.target = '_blank';
+  a.rel = 'noopener noreferrer';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
 };
