@@ -9,13 +9,13 @@ import EmailSubscriptionSection from '../components/EmailSubscriptionSection';
 // import StoryCarousel from '../components/StoryCarousel';
 import UniqueVisitorCounter from '../components/UniqueVisitorCounter';
 import SEOHead from '../components/SEOHead';
-import ThaisPromotion from '../components/ThaisPromotion';
+import Jota86xPromotion from '../components/Jota86xPromotion';
 import { useApp } from '../contexts/AppContext';
 // import { useStory } from '../contexts/StoryContext';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 
-const THAIS_PROMO_QUERY_VALUE = 'thais-follow';
-const THAIS_INSTAGRAM_HANDLE = 'thai.82ipanema';
+const JOTA86X_PROMO_QUERY_VALUE = 'jota86x-follow';
+const JOTA86X_INSTAGRAM_HANDLE = 'barracadojota86x';
 
 const Home: React.FC = () => {
   const { t } = useTranslation();
@@ -27,9 +27,9 @@ const Home: React.FC = () => {
     typeof window !== 'undefined'
       ? `${window.location.origin}/projects/carioca-coastal-club`
       : 'https://cariocacoastalclub.com/projects/carioca-coastal-club';
-  const isThaisPromoActive = useMemo(() => {
+  const isJota86xPromoActive = useMemo(() => {
     const params = new URLSearchParams(location.search);
-    return params.get('promo') === THAIS_PROMO_QUERY_VALUE;
+    return params.get('promo') === JOTA86X_PROMO_QUERY_VALUE;
   }, [location.search]);
   const promoT = (key: string) => t(`home.promo.${key}`);
 
@@ -100,7 +100,7 @@ const Home: React.FC = () => {
   };
 
   useEffect(() => {
-    if (!isThaisPromoActive || typeof window === 'undefined') {
+    if (!isJota86xPromoActive || typeof window === 'undefined') {
       return;
     }
 
@@ -129,7 +129,7 @@ const Home: React.FC = () => {
       window.clearInterval(intervalId);
       window.removeEventListener('load', alignScrollToPromo);
     };
-  }, [isThaisPromoActive]);
+  }, [isJota86xPromoActive]);
 
   return (
     <div className="relative">
@@ -156,12 +156,12 @@ const Home: React.FC = () => {
       {/* <WeatherMarquee colorScheme="white" useDefaultBorders={false} className="border-t-4 border-pink-500" /> */}
       <div className="sticky top-16 z-30 border-t-4 border-pink-500" />
 
-      {isThaisPromoActive && (
+      {isJota86xPromoActive && (
         <section className="bg-gradient-to-r from-amber-100 via-rose-50 to-white border-y border-amber-200 relative z-10">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
               <p className="text-sm md:text-base text-gray-900 font-medium">
-                {promoT('banner.activeMessage')} <span className="font-bold">@{THAIS_INSTAGRAM_HANDLE}</span>.
+                {promoT('banner.activeMessage')} <span className="font-bold">@{JOTA86X_INSTAGRAM_HANDLE}</span>.
               </p>
               <button
                 onClick={scrollToInstagram}
@@ -177,7 +177,7 @@ const Home: React.FC = () => {
       {/* Call to Action Section */}
       <section ref={ctaAnimation.ref} className={`py-16 bg-gradient-to-b from-beach-50 to-white relative z-10 ${ctaAnimation.animationClasses}`}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
+          <h2 className="text-3xl md:text-4xl font-bold text-teal-700 mb-6">
             {t('home.yourBarraca')}
           </h2>
           <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
@@ -211,16 +211,16 @@ const Home: React.FC = () => {
           {/* Quick Stats with Unique Visitor Counter */}
           <div ref={statsAnimation.ref} className={`grid grid-cols-2 md:grid-cols-4 gap-6 mt-12 ${statsAnimation.animationClasses}`}>
             <div className="text-center">
-                              <div className="text-3xl font-bold text-beach-600 mb-2">{barracas.length}<span data-lingo-skip>+</span></div>
+                              <div className="text-3xl font-bold text-teal-600 mb-2">{barracas.length}<span data-lingo-skip>+</span></div>
               <div className="text-sm text-gray-600"><span data-lingo-skip>{t('home.stats.partnerBarracas') || 'Partner Barracas'}</span></div>
             </div>
             <UniqueVisitorCounter />
             <div className="text-center">
-                              <div className="text-3xl font-bold text-beach-600 mb-2" data-lingo-skip>24/7</div>
+                              <div className="text-3xl font-bold text-teal-600 mb-2" data-lingo-skip>24/7</div>
               <div className="text-sm text-gray-600" data-lingo-skip>{t('home.stats.availabilityUpdates') || 'Availability Updates'}</div>
             </div>
             <div className="text-center">
-                              <div className="text-3xl font-bold text-beach-600 mb-2" data-lingo-skip>12</div>
+                              <div className="text-3xl font-bold text-teal-600 mb-2" data-lingo-skip>12</div>
               <div className="text-sm text-gray-600" data-lingo-skip>{t('home.stats.neighborhoods') || 'Neighborhoods'}</div>
             </div>
           </div>
@@ -231,7 +231,7 @@ const Home: React.FC = () => {
       <section ref={featuredAnimation.ref} className={`py-16 bg-white relative z-10 ${featuredAnimation.animationClasses}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-teal-700 mb-4">
               {t('home.popularBarracas')}
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-8">
@@ -253,7 +253,7 @@ const Home: React.FC = () => {
       <section ref={featuresAnimation.ref} className={`py-16 bg-gradient-to-b from-gray-50 to-white relative z-10 ${featuresAnimation.animationClasses}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-teal-700 mb-4">
               {t('home.whyJoin')}
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
@@ -287,7 +287,7 @@ const Home: React.FC = () => {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="bg-white rounded-2xl p-8 border border-sand-100 shadow-md">
             <Users className="h-16 w-16 text-beach-500 mx-auto mb-6" />
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-teal-700 mb-4">
               {t('home.exclusiveBenefits')}
             </h2>
             <p className="text-xl text-sand-600 mb-8 max-w-2xl mx-auto">
@@ -319,12 +319,12 @@ const Home: React.FC = () => {
       <section id="instagram-cta" ref={instagramAnimation.ref} className={`py-16 bg-gradient-to-br from-pink-50 via-purple-50 to-orange-50 relative z-10 ${instagramAnimation.animationClasses}`}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 md:p-12 shadow-xl border border-pink-100">
-            {isThaisPromoActive && (
+            {isJota86xPromoActive && (
               <div className="mb-8">
-                <ThaisPromotion promoSource="home_instagram_section" />
+                <Jota86xPromotion promoSource="home_instagram_section" />
               </div>
             )}
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-teal-700 mb-4">
               {t('home.instagram.title')}
             </h2>
             <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
@@ -393,7 +393,7 @@ const Home: React.FC = () => {
             {/* Company Info */}
             <div className="md:col-span-2">
               <div className="mb-4">
-                <h3 className="text-xl font-bold text-beach-400" data-lingo-skip>Carioca Coastal Club</h3>
+                <h3 className="text-xl font-bold text-teal-400" data-lingo-skip>Carioca Coastal Club</h3>
                 <p className="text-gray-400 text-sm" data-lingo-skip>Barraca Loyalty Program</p>
               </div>
               <p className="text-gray-300 mb-4 max-w-md">

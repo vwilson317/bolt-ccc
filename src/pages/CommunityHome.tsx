@@ -58,7 +58,7 @@ const projects = [
   },
 ] satisfies Project[];
 
-const THAIS_PROMO_URL = '/projects/carioca-coastal-club?promo=thais-follow';
+const JOTA86X_PROMO_URL = '/projects/carioca-coastal-club?promo=jota86x-follow';
 
 const statusStyles: Record<string, string> = {
   live: 'bg-emerald-100 text-emerald-700',
@@ -140,25 +140,25 @@ const CommunityHome: React.FC = () => {
                   <Gift className="h-3.5 w-3.5 mr-1.5" />
                   Featured Member Discount
                 </div>
-                <h2 className="mt-3 text-2xl font-bold text-gray-900">Thais&apos; Barraca Discount Pass</h2>
+                <h2 className="mt-3 text-2xl font-bold text-gray-900">Jota&apos;s Barraca Discount Pass</h2>
                 <p className="mt-1 text-gray-700">
-                  Follow <span className="font-semibold">@thai.82ipanema</span> and claim your reusable supporter badge.
+                  Follow <span className="font-semibold">@barracadojota86x</span> and claim your reusable supporter badge.
                 </p>
               </div>
               <Link
-                to={THAIS_PROMO_URL}
+                to={JOTA86X_PROMO_URL}
                 onClick={() =>
                   trackEvent('community_promo_open_clicked', {
-                    promo_id: 'thais-follow',
+                    promo_id: 'jota86x-follow',
                     page: 'community_home',
-                    target_path: THAIS_PROMO_URL,
+                    target_path: JOTA86X_PROMO_URL,
                     category: 'Community Home',
                   })
                 }
                 className="inline-flex items-center justify-center px-5 py-3 rounded-xl bg-gradient-to-r from-pink-500 to-purple-600 text-white font-semibold hover:from-pink-600 hover:to-purple-700 transition-all"
               >
                 <Instagram className="h-4 w-4 mr-2" />
-                Open Thais Promo
+                Open Jota Promo
               </Link>
             </div>
           </div>

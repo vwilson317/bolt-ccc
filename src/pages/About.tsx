@@ -128,13 +128,13 @@ const About: React.FC = () => {
       {/* Mission Section */}
       <section ref={missionAnimation.ref} className={`py-16 bg-white ${missionAnimation.animationClasses}`}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-8">
+          <h2 className="text-3xl md:text-4xl font-bold text-teal-700 mb-8">
             {t('about.mission')}
           </h2>
           <p className="text-lg text-gray-600 leading-relaxed mb-8">
             {t('about.missionDescription')}
           </p>
-          <div className="bg-gradient-to-r from-beach-50 to-beach-100 rounded-2xl p-8 border border-beach-100">
+          <div className="bg-gradient-to-r from-teal-50 to-teal-100 rounded-2xl p-8 border border-teal-200">
             <p className="text-xl font-semibold text-gray-900 mb-4">
               "{t('about.missionQuote')}"
             </p>
@@ -146,7 +146,7 @@ const About: React.FC = () => {
       </section>
 
       {/* Stats Section */}
-      <section ref={statsAnimation.ref} className={`py-16 bg-gradient-to-r from-beach-500 to-beach-600 ${statsAnimation.animationClasses}`}>
+      <section ref={statsAnimation.ref} className={`py-16 bg-gradient-to-r from-teal-500 to-teal-600 ${statsAnimation.animationClasses}`}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             {stats.map((stat, index) => (
@@ -154,7 +154,7 @@ const About: React.FC = () => {
                 <div className="text-4xl md:text-5xl font-bold text-white mb-2">
                   {stat.number}
                 </div>
-                <div className="text-beach-100 font-medium">
+                <div className="text-teal-100 font-medium">
                   {stat.label}
                 </div>
               </div>
@@ -167,7 +167,7 @@ const About: React.FC = () => {
       <section ref={valuesAnimation.ref} className={`py-16 bg-gray-50 ${valuesAnimation.animationClasses}`}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-teal-700 mb-4">
               {t('about.whatWeStandFor')}
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
@@ -200,7 +200,7 @@ const About: React.FC = () => {
       <section ref={teamAnimation.ref} className={`py-16 bg-white ${teamAnimation.animationClasses}`}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-teal-700 mb-4">
               {t('about.meetTeam')}
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">

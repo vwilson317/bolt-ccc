@@ -215,7 +215,9 @@
         "descriptionSuffix": "on Instagram to claim your badge. Use the same identifier to restore your badge instantly on future visits.",
         "step1Button": "Claim Badge — Follow on Instagram",
         "step2Label": "Your phone or email (required to claim)",
+        "step2LabelBR": "Your CPF, phone, or email (required to claim)",
         "identifierPlaceholder": "you@email.com or +55 21 99999-0000",
+        "identifierPlaceholderBR": "000.000.000-00, email, or +55 21 99999-0000",
         "claimButton": "Claim Discount Pass",
         "saving": "Saving...",
         "restoredUsing": "Restored using:",
@@ -227,7 +229,7 @@
         "addToAppleWallet": "Add to Apple Wallet"
       },
       "messages": {
-        "invalidIdentifier": "Enter a valid email or WhatsApp phone number.",
+        "invalidIdentifier": "Enter a valid CPF, email, or WhatsApp phone number.",
         "restored": "Welcome back. Your discount badge has been restored.",
         "followFirst": "Follow @{{instagramHandle}} first, then claim your pass.",
         "claimedFallback": "Discount pass claimed on this device. Full sync will complete when connection is available.",

@@ -222,7 +222,7 @@ const Discover: React.FC = () => {
           </div>
           {/* Results Header & Controls Row BELOW the widgets */}
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mt-6">
-            <h2 className="text-2xl font-bold text-gray-900">
+            <h2 className="text-2xl font-bold text-teal-700">
               {barracas.length} of {totalBarracas} {t('discover.resultsFound')} {totalBarracas === 1 ? t('discover.barraca') : t('discover.barracas')} {t('discover.found')}
             </h2>
             <div className="flex items-center gap-3">
