@@ -4,8 +4,8 @@
  */
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Gift, MapPin, Sparkles } from 'lucide-react';
-import { BARRACA_PROMOS } from '../data/barracaPromos';
+import { Gift, MapPin, MessageCircle, Sparkles } from 'lucide-react';
+import { BARRACA_PROMOS, CCC_WHATSAPP_URL } from '../data/barracaPromos';
 import SEOHead from '../components/SEOHead';
 
 function barracaGradientStyle(from: string, to: string): React.CSSProperties {
@@ -64,6 +64,18 @@ const ActivePromosPage: React.FC = () => {
       {/* List */}
       <div className="bg-gradient-to-b from-amber-50 via-white to-white min-h-screen pb-20">
         <div className="mx-auto max-w-lg px-4 -mt-6">
+          <div className="flex flex-col items-center mb-6 mt-2">
+            <a
+              href={CCC_WHATSAPP_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 rounded-2xl bg-green-500 px-5 py-3 text-white font-bold text-sm hover:bg-green-600 transition-colors shadow-md"
+            >
+              <MessageCircle className="h-5 w-5" />
+              Join the WhatsApp community
+            </a>
+          </div>
+
           {activePromos.length === 0 ? (
             <div className="rounded-3xl bg-white shadow-sm border border-gray-100 p-10 text-center text-gray-400 mt-6">
               <Sparkles className="h-10 w-10 mx-auto mb-3 opacity-30" />
