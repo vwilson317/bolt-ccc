@@ -111,6 +111,7 @@ export const mockPhotoGalleries: Record<string, PhotoGalleryData> = {
     location: [
       { name: "Jota's Tent #86x", instagram: 'https://www.instagram.com/barracadojota86x' }
     ],
+    archiveUrl: 'https://photos.app.goo.gl/vSA4P1Dm5wCPYpdQA',
     photos: []
   },
   '2026-03-07': {
