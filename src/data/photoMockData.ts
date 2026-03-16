@@ -2,6 +2,18 @@ import { PhotoDate, PhotoGalleryData } from '../services/photoService';
 
 export const mockPhotoDates: PhotoDate[] = [
   {
+    id: '2026-03-15',
+    date: '2026-03-15',
+    title: 'Dia na Jota 86x',
+    photoCount: 0,
+    archiveCount: 0,
+    thumbnail: undefined,
+    description: 'Fotos do dia 15 de março de 2026 na Jota 86x.',
+    location: [
+      { name: "Jota's Tent #86x", instagram: 'https://www.instagram.com/barracadojota86x' }
+    ]
+  },
+  {
     id: '2026-03-14',
     date: '2026-03-14',
     title: 'Dia na Jota 86x',
@@ -103,6 +115,17 @@ export const mockPhotoDates: PhotoDate[] = [
 ];
 
 export const mockPhotoGalleries: Record<string, PhotoGalleryData> = {
+  '2026-03-15': {
+    id: '2026-03-15',
+    date: '2026-03-15',
+    title: 'Dia na Jota 86x',
+    description: 'Fotos do dia 15 de março de 2026 na Jota 86x.',
+    location: [
+      { name: "Jota's Tent #86x", instagram: 'https://www.instagram.com/barracadojota86x' }
+    ],
+    archiveUrl: 'https://photos.app.goo.gl/ar9byrKQZ2D17vsg6',
+    photos: []
+  },
   '2026-03-14': {
     id: '2026-03-14',
     date: '2026-03-14',
