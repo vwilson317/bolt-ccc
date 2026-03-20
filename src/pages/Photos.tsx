@@ -6,6 +6,7 @@ import { photoService, PhotoDate, Location } from '../services/photoService';
 import { openInstagramLink } from '../utils/ctaButtonUtils';
 import EmailSubscriptionSection from '../components/EmailSubscriptionSection';
 import SEOHead from '../components/SEOHead';
+import { trackPhotosListingView, trackPhotoGalleryCardClick } from '../services/posthogAnalyticsService';
 
 const Photos: React.FC = () => {
   const { t } = useTranslation();
@@ -18,6 +19,7 @@ const Photos: React.FC = () => {
       try {
         const dates = await photoService.getPhotoDates();
         setPhotoDates(dates);
+        trackPhotosListingView(dates.length);
       } catch (error) {
         console.error('Error loading photo dates:', error);
       } finally {
@@ -130,6 +132,7 @@ const Photos: React.FC = () => {
               key={photoDate.id}
               to={`/photos/${photoDate.id}`}
               className="group bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+              onClick={() => trackPhotoGalleryCardClick(photoDate.id, photoDate.title, photoDate.photoCount)}
             >
               <div className="relative">
                 {photoDate.thumbnail ? (
