@@ -2,6 +2,18 @@ import { PhotoDate, PhotoGalleryData } from '../services/photoService';
 
 export const mockPhotoDates: PhotoDate[] = [
   {
+    id: '2026-03-19',
+    date: '2026-03-19',
+    title: 'Boat Party com Yacht Bliss Rio',
+    photoCount: 0,
+    archiveCount: 0,
+    thumbnail: undefined,
+    description: 'Festa no barco com Yacht Bliss Rio.',
+    location: [
+      { name: 'Yacht Bliss Rio', instagram: 'https://www.instagram.com/yachtblissrio' }
+    ]
+  },
+  {
     id: '2026-03-15',
     date: '2026-03-15',
     title: 'Dia na Jota 86x',
@@ -115,6 +127,17 @@ export const mockPhotoDates: PhotoDate[] = [
 ];
 
 export const mockPhotoGalleries: Record<string, PhotoGalleryData> = {
+  '2026-03-19': {
+    id: '2026-03-19',
+    date: '2026-03-19',
+    title: 'Boat Party com Yacht Bliss Rio',
+    description: 'Festa no barco com Yacht Bliss Rio.',
+    location: [
+      { name: 'Yacht Bliss Rio', instagram: 'https://www.instagram.com/yachtblissrio' }
+    ],
+    archiveUrl: 'https://photos.app.goo.gl/xMMjm55Pq2ps82B87',
+    photos: []
+  },
   '2026-03-15': {
     id: '2026-03-15',
     date: '2026-03-15',
