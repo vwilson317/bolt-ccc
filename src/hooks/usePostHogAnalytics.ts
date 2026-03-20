@@ -14,6 +14,8 @@ import {
   trackCTAClick,
   trackPhotoGalleryView,
   trackPhotoView,
+  trackPhotosListingView,
+  trackPhotoGalleryCardClick,
   trackBarracaRegistrationView,
   trackBarracaRegistrationSubmit,
   getPostHogAnalyticsStatus
@@ -73,6 +75,14 @@ export const usePostHogAnalytics = () => {
     trackPhotoView(photoId, photoTitle, galleryId, viewMode);
   }, []);
 
+  const trackPhotosListingViewEvent = useCallback((galleryCount: number) => {
+    trackPhotosListingView(galleryCount);
+  }, []);
+
+  const trackPhotoGalleryCardClickEvent = useCallback((galleryId: string, galleryTitle: string, photoCount: number) => {
+    trackPhotoGalleryCardClick(galleryId, galleryTitle, photoCount);
+  }, []);
+
   const trackBarracaRegistrationViewEvent = useCallback(() => {
     trackBarracaRegistrationView();
   }, []);
@@ -117,7 +127,9 @@ export const usePostHogAnalytics = () => {
     // Photo gallery tracking
     trackPhotoGalleryView: trackPhotoGalleryViewEvent,
     trackPhotoView: trackPhotoViewEvent,
-    
+    trackPhotosListingView: trackPhotosListingViewEvent,
+    trackPhotoGalleryCardClick: trackPhotoGalleryCardClickEvent,
+
     // Barraca registration tracking
     trackBarracaRegistrationView: trackBarracaRegistrationViewEvent,
     trackBarracaRegistrationSubmit: trackBarracaRegistrationSubmitEvent,
