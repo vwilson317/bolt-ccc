@@ -2,6 +2,18 @@ import { PhotoDate, PhotoGalleryData } from '../services/photoService';
 
 export const mockPhotoDates: PhotoDate[] = [
   {
+    id: '2026-03-21',
+    date: '2026-03-21',
+    title: 'Dia no Escrito #120',
+    photoCount: 0,
+    archiveCount: 0,
+    thumbnail: undefined,
+    description: 'Fotos do dia 21 de março de 2026 no Escrito #120.',
+    location: [
+      { name: 'Escrito #120', instagram: 'https://www.instagram.com/escritoriocarioca' }
+    ]
+  },
+  {
     id: '2026-03-19',
     date: '2026-03-19',
     title: 'Boat Party com Yacht Bliss Rio',
@@ -127,6 +139,17 @@ export const mockPhotoDates: PhotoDate[] = [
 ];
 
 export const mockPhotoGalleries: Record<string, PhotoGalleryData> = {
+  '2026-03-21': {
+    id: '2026-03-21',
+    date: '2026-03-21',
+    title: 'Dia no Escrito #120',
+    description: 'Fotos do dia 21 de março de 2026 no Escrito #120.',
+    location: [
+      { name: 'Escrito #120', instagram: 'https://www.instagram.com/escritoriocarioca' }
+    ],
+    archiveUrl: 'https://photos.app.goo.gl/AJHcgRtbYMMtEo5j6',
+    photos: []
+  },
   '2026-03-19': {
     id: '2026-03-19',
     date: '2026-03-19',
