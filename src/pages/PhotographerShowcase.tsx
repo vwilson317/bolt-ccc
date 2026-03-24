@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
 import { Instagram, Camera, Film, ExternalLink, User } from 'lucide-react';
-import { photographers, Photographer, InstagramReel } from '../data/photographerData';
+import { photographers, Photographer, InstagramEmbed } from '../data/photographerData';
 import { openInstagramLink } from '../utils/ctaButtonUtils';
 import SEOHead from '../components/SEOHead';
 
-// ─── Placeholder reel card shown when a shortcode hasn't been set yet ────────
+// ─── Placeholder reel card shown when shortcode is clearly unset ─────────────
 
-const PlaceholderReelCard: React.FC<{ caption?: string; handle: string }> = ({ caption, handle }) => (
+const PLACEHOLDER_PATTERN = /^REEL_SHORTCODE_\d+$/;
+
+const PlaceholderCard: React.FC<{ handle: string }> = ({ handle }) => (
   <div className="flex-shrink-0 w-64 h-[455px] rounded-2xl bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-700 flex flex-col items-center justify-center text-center p-6 gap-3">
     <div className="w-14 h-14 rounded-full bg-gray-700 flex items-center justify-center">
       <Film className="w-7 h-7 text-gray-400" />
     </div>
-    <p className="text-gray-400 text-sm leading-snug">{caption || 'Coming soon'}</p>
+    <p className="text-gray-400 text-sm">Coming soon</p>
     <button
       onClick={() => openInstagramLink(handle)}
       className="mt-2 text-xs text-beach-400 hover:text-beach-300 flex items-center gap-1 transition-colors"
@@ -22,30 +24,37 @@ const PlaceholderReelCard: React.FC<{ caption?: string; handle: string }> = ({ c
   </div>
 );
 
-// ─── Single reel embed (iframe or placeholder) ───────────────────────────────
+// ─── Single embed (post or reel, portrait or landscape) ──────────────────────
 
-const PLACEHOLDER_SHORTCODE_PATTERN = /^REEL_SHORTCODE_\d+$/;
-
-const ReelEmbed: React.FC<{ reel: InstagramReel; handle: string }> = ({ reel, handle }) => {
+const EmbedCard: React.FC<{ item: InstagramEmbed; handle: string }> = ({ item, handle }) => {
   const [loadError, setLoadError] = useState(false);
 
-  const isPlaceholder = PLACEHOLDER_SHORTCODE_PATTERN.test(reel.shortcode) || !reel.shortcode;
-
-  if (isPlaceholder || loadError) {
-    return <PlaceholderReelCard caption={reel.caption} handle={handle} />;
+  if (PLACEHOLDER_PATTERN.test(item.shortcode) || !item.shortcode || loadError) {
+    return <PlaceholderCard handle={handle} />;
   }
 
+  const basePath = item.type === 'post' ? 'p' : 'reel';
+  const src = `https://www.instagram.com/${basePath}/${item.shortcode}/embed/`;
+
+  // Landscape reels get a wider frame; posts and portrait reels use standard portrait sizing.
+  const isLandscape = item.orientation === 'landscape';
+  const frameWidth = isLandscape ? 480 : 320;
+  const frameHeight = isLandscape ? 270 : 455;
+  const containerClass = isLandscape
+    ? 'flex-shrink-0 w-[480px] rounded-2xl overflow-hidden shadow-lg border border-gray-700 bg-black'
+    : 'flex-shrink-0 w-80 rounded-2xl overflow-hidden shadow-lg border border-gray-700 bg-black';
+
   return (
-    <div className="flex-shrink-0 w-64 rounded-2xl overflow-hidden shadow-lg border border-gray-700 bg-black">
+    <div className={containerClass}>
       <iframe
-        src={`https://www.instagram.com/reel/${reel.shortcode}/embed/`}
-        width="256"
-        height="455"
+        src={src}
+        width={frameWidth}
+        height={frameHeight}
         frameBorder="0"
         scrolling="no"
         allowTransparency
         allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
-        title={reel.caption || `Instagram Reel by @${handle}`}
+        title={item.caption || `Instagram ${item.type} by @${handle}`}
         onError={() => setLoadError(true)}
         className="w-full"
       />
@@ -73,7 +82,7 @@ const PhotographerSection: React.FC<{ photographer: Photographer; index: number 
             isEven ? 'md:flex-row' : 'md:flex-row-reverse'
           } items-start`}
         >
-          {/* Avatar / profile image */}
+          {/* Avatar */}
           <div className="flex-shrink-0">
             {photographer.profileImage ? (
               <img
@@ -90,7 +99,6 @@ const PhotographerSection: React.FC<{ photographer: Photographer; index: number 
 
           {/* Bio + CTA */}
           <div className="flex-1">
-            {/* Role chip */}
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-beach-900/60 text-beach-300 text-xs font-semibold tracking-wide uppercase mb-3 border border-beach-700/40">
               {photographer.role.includes('Video') ? (
                 <Film className="w-3 h-3" />
@@ -108,7 +116,6 @@ const PhotographerSection: React.FC<{ photographer: Photographer; index: number 
               {photographer.bio}
             </p>
 
-            {/* Instagram CTA */}
             <button
               onClick={() => openInstagramLink(photographer.instagramHandle)}
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-beach-500 to-beach-600 hover:from-beach-400 hover:to-beach-500 text-white font-semibold text-sm transition-all duration-200 shadow-lg shadow-beach-900/40 active:scale-95"
@@ -120,15 +127,15 @@ const PhotographerSection: React.FC<{ photographer: Photographer; index: number 
           </div>
         </div>
 
-        {/* Reel row — horizontal scroll on mobile, flex-wrap on desktop */}
-        <div className="relative">
+        {/* Work grid — horizontal scroll on mobile */}
+        <div>
           <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-widest mb-5">
             Featured Work
           </h3>
           <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide md:flex-wrap md:overflow-x-visible md:pb-0">
-            {photographer.featuredReels.map((reel) => (
-              <div key={reel.shortcode} className="snap-start">
-                <ReelEmbed reel={reel} handle={photographer.instagramHandle} />
+            {photographer.featuredWork.map((item) => (
+              <div key={item.shortcode} className="snap-start">
+                <EmbedCard item={item} handle={photographer.instagramHandle} />
               </div>
             ))}
           </div>
@@ -152,7 +159,6 @@ const PhotographerShowcase: React.FC = () => {
 
       {/* ── Hero ── */}
       <div className="relative pt-16 overflow-hidden">
-        {/* Ambient gradient blobs */}
         <div
           aria-hidden
           className="absolute -top-32 -left-32 w-96 h-96 bg-beach-600/20 rounded-full blur-3xl pointer-events-none"
@@ -183,7 +189,7 @@ const PhotographerShowcase: React.FC = () => {
             beach culture, one frame at a time.
           </p>
 
-          {/* Photographer quick-nav chips */}
+          {/* Quick-nav chips */}
           <div className="flex flex-wrap justify-center gap-3 mt-10">
             {photographers.map((p) => (
               <a

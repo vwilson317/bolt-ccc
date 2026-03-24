@@ -1,6 +1,10 @@
-export interface InstagramReel {
-  /** The shortcode from the Instagram reel URL, e.g. https://www.instagram.com/reel/ABC123/ → "ABC123" */
+export interface InstagramEmbed {
+  /** Shortcode from the URL: instagram.com/p/ABC123/ or instagram.com/reel/ABC123/ → "ABC123" */
   shortcode: string;
+  /** "post" for /p/ URLs, "reel" for /reel/ URLs */
+  type: 'post' | 'reel';
+  /** "landscape" for horizontal reels — renders the embed wider */
+  orientation?: 'portrait' | 'landscape';
   caption?: string;
 }
 
@@ -12,19 +16,18 @@ export interface Photographer {
   instagramHandle: string;
   /** Optional URL to a profile/headshot image */
   profileImage?: string;
-  /** 2–3 featured Instagram Reels to embed on the page */
-  featuredReels: InstagramReel[];
+  featuredWork: InstagramEmbed[];
 }
 
 /**
  * Photographer & videographer profiles for the /videography showcase page.
  *
- * To update a reel: grab the shortcode from the Instagram reel URL.
- *   Example URL: https://www.instagram.com/reel/DGzAbCdEfGh/
- *   Shortcode:   DGzAbCdEfGh
- *
- * To update an Instagram handle: change `instagramHandle` (without the @).
- * To add a profile photo: set `profileImage` to a Cloudflare R2 URL or `/public` path.
+ * To add/swap content:
+ *   - instagramHandle: handle without @
+ *   - shortcode: the path segment after /p/ or /reel/ in the Instagram URL
+ *   - type: "post" for /p/ links, "reel" for /reel/ links
+ *   - orientation: add "landscape" for horizontal reels (renders wider iframe)
+ *   - profileImage: Cloudflare R2 URL or /public path for a headshot
  */
 export const photographers: Photographer[] = [
   {
@@ -33,11 +36,12 @@ export const photographers: Photographer[] = [
     role: 'Photographer & Videographer',
     bio: 'Vincent captures the raw, sun-soaked energy of Rio\'s beach scene — from lazy afternoons at the barracas to golden-hour sessions on the sand. His lens finds the moments that make the Carioca coast unforgettable.',
     instagramHandle: 'vincentwilsonvisuals', // ← update with real handle
-    profileImage: undefined, // ← add a Cloudflare R2 URL or /public path
-    featuredReels: [
-      { shortcode: 'REEL_SHORTCODE_1', caption: 'Beach vibes' },   // ← replace with real shortcode
-      { shortcode: 'REEL_SHORTCODE_2', caption: 'Sunset session' }, // ← replace with real shortcode
-      { shortcode: 'REEL_SHORTCODE_3', caption: 'Ocean views' },    // ← replace with real shortcode
+    profileImage: undefined,
+    featuredWork: [
+      { shortcode: 'DSvfzr1jsvu', type: 'post' },
+      { shortcode: 'C_3vEjwJZ1S', type: 'post' },
+      { shortcode: 'C-5-0FtsgRI', type: 'post' },
+      { shortcode: 'C2THVQApwX8', type: 'post' },
     ],
   },
   {
@@ -47,23 +51,25 @@ export const photographers: Photographer[] = [
     bio: 'Marty\'s work is all about movement and mood. His videos bring the rhythm of Rio to life — the waves, the crowd, the music, the heat. Every frame tells a story you can almost feel.',
     instagramHandle: 'marty', // ← update with real handle
     profileImage: undefined,
-    featuredReels: [
-      { shortcode: 'REEL_SHORTCODE_4', caption: 'Rio rhythm' },
-      { shortcode: 'REEL_SHORTCODE_5', caption: 'Wave series' },
-      { shortcode: 'REEL_SHORTCODE_6', caption: 'Night vibes' },
+    featuredWork: [
+      { shortcode: 'DWOf53SjeEi', type: 'reel' },
+      { shortcode: 'DWRJU7UDW5v', type: 'reel', orientation: 'landscape' },
+      { shortcode: 'DWGwCv-BtlZ', type: 'reel', orientation: 'landscape' },
+      { shortcode: 'DVlRu0jjarF', type: 'reel' },
     ],
   },
   {
     id: 'sean',
     name: 'Sean',
-    role: 'Photographer',
-    bio: 'Sean has a gift for stillness within motion — finding the decisive moment where light, subject, and emotion align perfectly. His photography from the Rio beach scene is striking, intimate, and real.',
+    role: 'Videographer',
+    bio: 'Sean has a gift for stillness within motion — finding the decisive moment where light, subject, and emotion align perfectly. His videography from the Rio beach scene is striking, intimate, and real.',
     instagramHandle: 'sean', // ← update with real handle
     profileImage: undefined,
-    featuredReels: [
-      { shortcode: 'REEL_SHORTCODE_7', caption: 'Golden hour' },
-      { shortcode: 'REEL_SHORTCODE_8', caption: 'Beach portraits' },
-      { shortcode: 'REEL_SHORTCODE_9', caption: 'Coastline' },
+    featuredWork: [
+      { shortcode: 'DSsX4xlkdK1', type: 'reel' },
+      { shortcode: 'C1mOX8Zu5ya', type: 'reel' },
+      { shortcode: 'CopcC4uoJ9v', type: 'reel' },
+      { shortcode: 'DTikgNFgIvi', type: 'reel' },
     ],
   },
 ];
