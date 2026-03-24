@@ -185,6 +185,20 @@ const Header: React.FC = () => {
             >
               Promos
             </Link>
+            <Link
+              to="/videography"
+              className={`font-medium transition-colors duration-200 ${
+                isActive('/videography')
+                  ? useSolidHeader
+                    ? 'text-beach-600 border-b-2 border-beach-600 pb-1'
+                    : 'text-white border-b-2 border-white pb-1'
+                  : useSolidHeader
+                    ? 'text-gray-700 hover:text-beach-600'
+                    : 'text-white/90 hover:text-white'
+              }`}
+            >
+              Videography
+            </Link>
 
           </nav>
 
@@ -342,6 +356,17 @@ const Header: React.FC = () => {
                 }`}
               >
                 Promos
+              </Link>
+              <Link
+                to="/videography"
+                onClick={() => setIsMenuOpen(false)}
+                className={`font-medium transition-colors duration-200 ${
+                  isActive('/videography')
+                    ? useSolidHeader ? 'text-beach-600' : 'text-white'
+                    : useSolidHeader ? 'text-gray-700' : 'text-white/90'
+                }`}
+              >
+                Videography
               </Link>
 
 
