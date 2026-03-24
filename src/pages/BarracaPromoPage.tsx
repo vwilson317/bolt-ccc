@@ -288,7 +288,7 @@ const BarracaPromoPage: React.FC = () => {
             }
           >
             <img
-              src="https://images.cariocacoastalclub.com/thai-promo/sat-meetup-v1.jpg"
+              src="https://images.cariocacoastalclub.com/E11B7CE8-964A-404E-AA66-D88DC7C0E9B5.jpeg"
               alt="86 Jota event flier"
               className="w-full h-full"
               style={{ objectFit: 'cover' }}

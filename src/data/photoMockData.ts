@@ -2,6 +2,54 @@ import { PhotoDate, PhotoGalleryData } from '../services/photoService';
 
 export const mockPhotoDates: PhotoDate[] = [
   {
+    id: '2026-03-21',
+    date: '2026-03-21',
+    title: 'Dia no Escrito #120',
+    photoCount: 0,
+    archiveCount: 0,
+    thumbnail: undefined,
+    description: 'Fotos do dia 21 de março de 2026 no Escrito #120.',
+    location: [
+      { name: 'Escrito #120', instagram: 'https://www.instagram.com/escritoriocarioca' }
+    ]
+  },
+  {
+    id: '2026-03-19',
+    date: '2026-03-19',
+    title: 'Boat Party com Yacht Bliss Rio',
+    photoCount: 0,
+    archiveCount: 0,
+    thumbnail: undefined,
+    description: 'Festa no barco com Yacht Bliss Rio.',
+    location: [
+      { name: 'Yacht Bliss Rio', instagram: 'https://www.instagram.com/yachtblissrio' }
+    ]
+  },
+  {
+    id: '2026-03-15',
+    date: '2026-03-15',
+    title: 'Dia na Jota 86x',
+    photoCount: 0,
+    archiveCount: 0,
+    thumbnail: undefined,
+    description: 'Fotos do dia 15 de março de 2026 na Jota 86x.',
+    location: [
+      { name: "Jota's Tent #86x", instagram: 'https://www.instagram.com/barracadojota86x' }
+    ]
+  },
+  {
+    id: '2026-03-14',
+    date: '2026-03-14',
+    title: 'Dia na Jota 86x',
+    photoCount: 0,
+    archiveCount: 0,
+    thumbnail: undefined,
+    description: 'Fotos do dia 14 de março de 2026 na Jota 86x.',
+    location: [
+      { name: "Jota's Tent #86x", instagram: 'https://www.instagram.com/barracadojota86x' }
+    ]
+  },
+  {
     id: '2026-03-07',
     date: '2026-03-07',
     title: 'Promo Weekend',
@@ -91,6 +139,50 @@ export const mockPhotoDates: PhotoDate[] = [
 ];
 
 export const mockPhotoGalleries: Record<string, PhotoGalleryData> = {
+  '2026-03-21': {
+    id: '2026-03-21',
+    date: '2026-03-21',
+    title: 'Dia no Escrito #120',
+    description: 'Fotos do dia 21 de março de 2026 no Escrito #120.',
+    location: [
+      { name: 'Escrito #120', instagram: 'https://www.instagram.com/escritoriocarioca' }
+    ],
+    archiveUrl: 'https://photos.app.goo.gl/AJHcgRtbYMMtEo5j6',
+    photos: []
+  },
+  '2026-03-19': {
+    id: '2026-03-19',
+    date: '2026-03-19',
+    title: 'Boat Party com Yacht Bliss Rio',
+    description: 'Festa no barco com Yacht Bliss Rio.',
+    location: [
+      { name: 'Yacht Bliss Rio', instagram: 'https://www.instagram.com/yachtblissrio' }
+    ],
+    archiveUrl: 'https://photos.app.goo.gl/xMMjm55Pq2ps82B87',
+    photos: []
+  },
+  '2026-03-15': {
+    id: '2026-03-15',
+    date: '2026-03-15',
+    title: 'Dia na Jota 86x',
+    description: 'Fotos do dia 15 de março de 2026 na Jota 86x.',
+    location: [
+      { name: "Jota's Tent #86x", instagram: 'https://www.instagram.com/barracadojota86x' }
+    ],
+    archiveUrl: 'https://photos.app.goo.gl/ar9byrKQZ2D17vsg6',
+    photos: []
+  },
+  '2026-03-14': {
+    id: '2026-03-14',
+    date: '2026-03-14',
+    title: 'Dia na Jota 86x',
+    description: 'Fotos do dia 14 de março de 2026 na Jota 86x.',
+    location: [
+      { name: "Jota's Tent #86x", instagram: 'https://www.instagram.com/barracadojota86x' }
+    ],
+    archiveUrl: 'https://photos.app.goo.gl/vSA4P1Dm5wCPYpdQA',
+    photos: []
+  },
   '2026-03-07': {
     id: '2026-03-07',
     date: '2026-03-07',

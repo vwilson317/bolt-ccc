@@ -340,6 +340,22 @@ class PostHogAnalyticsService {
     });
   }
 
+  trackPhotosListingView(galleryCount: number) {
+    this.trackEvent('photos_listing_viewed', {
+      gallery_count: galleryCount,
+      category: 'Photo Gallery'
+    });
+  }
+
+  trackPhotoGalleryCardClick(galleryId: string, galleryTitle: string, photoCount: number) {
+    this.trackEvent('photo_gallery_card_clicked', {
+      gallery_id: galleryId,
+      gallery_title: galleryTitle,
+      photo_count: photoCount,
+      category: 'Photo Gallery'
+    });
+  }
+
   // Track barraca registration interactions
   trackBarracaRegistrationView() {
     this.trackEvent('barraca_registration_viewed', {
@@ -591,6 +607,22 @@ export const trackPhotoLoadSuccess = (photoUrl: string, galleryId: string) => {
     return posthogAnalytics?.trackPhotoLoadSuccess?.(photoUrl, galleryId);
   } catch (error) {
     console.warn('⚠️ Photo load success tracking failed:', error);
+  }
+};
+
+export const trackPhotosListingView = (galleryCount: number) => {
+  try {
+    return posthogAnalytics?.trackPhotosListingView?.(galleryCount);
+  } catch (error) {
+    console.warn('⚠️ Photos listing view tracking failed:', error);
+  }
+};
+
+export const trackPhotoGalleryCardClick = (galleryId: string, galleryTitle: string, photoCount: number) => {
+  try {
+    return posthogAnalytics?.trackPhotoGalleryCardClick?.(galleryId, galleryTitle, photoCount);
+  } catch (error) {
+    console.warn('⚠️ Photo gallery card click tracking failed:', error);
   }
 };
 

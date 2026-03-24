@@ -27,6 +27,7 @@ const LanguageExchangeFunnel = lazy(() => import('./pages/LanguageExchangeFunnel
 const BarracaPromoPage = lazy(() => import('./pages/BarracaPromoPage'));
 const CoastalClubPassPage = lazy(() => import('./pages/CoastalClubPassPage'));
 const ActivePromosPage = lazy(() => import('./pages/ActivePromosPage'));
+const PhotographerShowcase = lazy(() => import('./pages/PhotographerShowcase'));
 
 // Lazy-load heavy overlay components that are not needed at initial paint
 // StoryViewer removed: StoryProvider is disabled and StoryViewer would throw without it
@@ -85,6 +86,7 @@ function AppContent() {
             <Route path="/loyalty/promos" element={<ActivePromosPage />} />
             {/* Loyalty promo pages at /loyalty/:slug for SEO-friendly URLs */}
             <Route path="/loyalty/:slug" element={<BarracaPromoPage />} />
+            <Route path="/videography" element={<PhotographerShowcase />} />
             {/* <Route path="/translation-demo" element={<TranslationDemo />} /> */}
           </Routes>
         </Suspense>
