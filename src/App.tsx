@@ -88,7 +88,8 @@ function AppContent() {
             <Route path="/loyalty/promos" element={<ActivePromosPage />} />
             {/* Loyalty promo pages at /loyalty/:slug for SEO-friendly URLs */}
             <Route path="/loyalty/:slug" element={<BarracaPromoPage />} />
-            <Route path="/videography" element={<PhotographerShowcase />} />
+            <Route path="/content-professionals" element={<PhotographerShowcase />} />
+            <Route path="/videography" element={<Navigate to="/content-professionals" replace />} />
             <Route path="/hosting-guidelines" element={<HostingGuidelines />} />
             {/* <Route path="/translation-demo" element={<TranslationDemo />} /> */}
           </Routes>
