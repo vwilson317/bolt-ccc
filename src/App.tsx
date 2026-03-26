@@ -11,6 +11,7 @@ import Header from './components/Header';
 import LoadingPage from './components/LoadingPage';
 import ErrorBoundary from './components/ErrorBoundary';
 import UnlockedBadgesFab from './components/UnlockedBadgesFab';
+import FeedbackFab from './components/FeedbackFab';
 
 // Lazy-load page components so only the current route's code is fetched on initial load
 const Home = lazy(() => import('./pages/Home'));
@@ -155,6 +156,8 @@ function App() {
                 <AppContent />
                 {/* Global multi-badge FAB — shown whenever any badge is unlocked */}
                 <UnlockedBadgesFab />
+                {/* Global feedback FAB — always visible on every page */}
+                <FeedbackFab />
               </Router>
             </BadgeProvider>
           </WeatherProvider>
