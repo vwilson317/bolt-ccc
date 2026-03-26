@@ -1,7 +1,7 @@
 name: Notify Feedback Submitter on Merge
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Fires when a feedback fix PR is merged into main.
+# Fires when a feedback fix PR is merged into master.
 # Extracts the submitter's email from the linked GitHub issue and sends a
 # "your fix is live" notification via Resend.
 #
@@ -16,7 +16,7 @@ name: Notify Feedback Submitter on Merge
 on:
   pull_request:
     types: [closed]
-    branches: [main]
+    branches: [master]
 
 permissions:
   issues: read
