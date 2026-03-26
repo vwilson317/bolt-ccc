@@ -223,7 +223,7 @@ const FeedbackModal: React.FC<FeedbackModalProps> = ({ onClose }) => {
                 onClick={() => handleTypeChange(id)}
                 className={`flex-1 flex flex-col items-center gap-1 py-2.5 rounded-xl text-xs font-semibold transition-all ${
                   type === id
-                    ? 'bg-indigo-600 text-white shadow-sm'
+                    ? 'bg-pink-500 text-white shadow-sm'
                     : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
                 }`}
               >
@@ -246,7 +246,7 @@ const FeedbackModal: React.FC<FeedbackModalProps> = ({ onClose }) => {
               disabled={isRateLimited || isSubmitting}
               maxLength={120}
               placeholder={selectedType.placeholder}
-              className="w-full rounded-xl border border-gray-200 px-3 py-2.5 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400 disabled:opacity-50 disabled:bg-gray-50"
+              className="w-full rounded-xl border border-gray-200 px-3 py-2.5 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:border-pink-400 focus:ring-1 focus:ring-pink-400 disabled:opacity-50 disabled:bg-gray-50"
             />
           </div>
 
@@ -263,7 +263,7 @@ const FeedbackModal: React.FC<FeedbackModalProps> = ({ onClose }) => {
               maxLength={2000}
               rows={4}
               placeholder="Describe the issue or idea in as much detail as possible. What did you expect? What happened instead?"
-              className="w-full rounded-xl border border-gray-200 px-3 py-2.5 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400 resize-none disabled:opacity-50 disabled:bg-gray-50"
+              className="w-full rounded-xl border border-gray-200 px-3 py-2.5 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:border-pink-400 focus:ring-1 focus:ring-pink-400 resize-none disabled:opacity-50 disabled:bg-gray-50"
             />
             <p className="text-right text-xs text-gray-300 mt-1">{description.length}/2000</p>
           </div>
@@ -284,7 +284,7 @@ const FeedbackModal: React.FC<FeedbackModalProps> = ({ onClose }) => {
               disabled={isRateLimited || isSubmitting}
               maxLength={200}
               placeholder="you@example.com"
-              className="w-full rounded-xl border border-gray-200 px-3 py-2.5 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400 disabled:opacity-50 disabled:bg-gray-50"
+              className="w-full rounded-xl border border-gray-200 px-3 py-2.5 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:border-pink-400 focus:ring-1 focus:ring-pink-400 disabled:opacity-50 disabled:bg-gray-50"
             />
           </div>
 
@@ -305,7 +305,7 @@ const FeedbackModal: React.FC<FeedbackModalProps> = ({ onClose }) => {
           <button
             type="submit"
             disabled={isRateLimited || isSubmitting || !title.trim() || !description.trim()}
-            className="w-full flex items-center justify-center gap-2 py-3 rounded-2xl bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+            className="w-full flex items-center justify-center gap-2 py-3 rounded-2xl bg-pink-500 text-white text-sm font-semibold hover:bg-pink-600 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
           >
             {isSubmitting ? (
               <>
@@ -343,13 +343,14 @@ const FeedbackFab: React.FC = () => {
       {/* Floating button — bottom-left, stays above most UI */}
       <button
         onClick={handleOpen}
-        className="fixed bottom-5 left-5 z-[100000] h-12 w-12 rounded-full bg-indigo-600 text-white shadow-lg flex items-center justify-center hover:bg-indigo-700 hover:scale-110 active:scale-95 transition-all select-none"
+        className="fixed bottom-5 left-5 z-[100000] h-12 rounded-full bg-pink-500 text-white shadow-lg flex items-center gap-2 pl-4 pr-5 hover:bg-pink-600 hover:scale-[1.02] active:scale-95 transition-all select-none"
         aria-label="Send feedback"
         title="Send feedback"
       >
         {/* Subtle pulse ring */}
-        <span className="absolute inset-0 rounded-full bg-indigo-600 animate-ping opacity-20 pointer-events-none" />
-        <MessageSquarePlus className="h-5 w-5 relative z-10" />
+        <span className="absolute inset-0 rounded-full bg-pink-500 animate-ping opacity-20 pointer-events-none" />
+        <MessageSquarePlus className="h-5 w-5 relative z-10 flex-shrink-0" />
+        <span className="relative z-10 text-xs font-semibold whitespace-nowrap">Submit Feedback</span>
       </button>
 
       {isOpen && <FeedbackModal onClose={handleClose} />}
