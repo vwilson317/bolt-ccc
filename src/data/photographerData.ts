@@ -20,7 +20,7 @@ export interface Photographer {
 }
 
 /**
- * Photographer & videographer profiles for the /videography showcase page.
+ * Photographer & videographer profiles for the /content-professionals showcase page.
  *
  * To add/swap content:
  *   - instagramHandle: handle without @
@@ -30,20 +30,6 @@ export interface Photographer {
  *   - profileImage: Cloudflare R2 URL or /public path for a headshot
  */
 export const photographers: Photographer[] = [
-  {
-    id: 'vincent-wilson',
-    name: 'Vincent Wilson',
-    role: 'Photographer & Videographer',
-    bio: 'Vincent captures the raw, sun-soaked energy of Rio\'s beach scene — from lazy afternoons at the barracas to golden-hour sessions on the sand. His lens finds the moments that make the Carioca coast unforgettable.',
-    instagramHandle: 'vincentwilsonvisuals', // ← update with real handle
-    profileImage: undefined,
-    featuredWork: [
-      { shortcode: 'DSvfzr1jsvu', type: 'post' },
-      { shortcode: 'C_3vEjwJZ1S', type: 'post' },
-      { shortcode: 'C-5-0FtsgRI', type: 'post' },
-      { shortcode: 'C2THVQApwX8', type: 'post' },
-    ],
-  },
   {
     id: 'marty',
     name: 'Marty',
@@ -59,6 +45,20 @@ export const photographers: Photographer[] = [
     ],
   },
   {
+    id: 'gabriel-verissimo',
+    name: 'Gabriel Veríssimo',
+    role: 'Photographer',
+    bio: 'Gabriel is a humble visual storyteller with a calm, observant style. His photography captures authentic beach moments with warmth, detail, and natural light.',
+    instagramHandle: 'gabrielverissimo_',
+    profileImage: undefined,
+    featuredWork: [
+      { shortcode: 'REEL_SHORTCODE_1', type: 'reel' },
+      { shortcode: 'REEL_SHORTCODE_2', type: 'reel' },
+      { shortcode: 'REEL_SHORTCODE_3', type: 'reel' },
+      { shortcode: 'REEL_SHORTCODE_4', type: 'reel' },
+    ],
+  },
+  {
     id: 'sean',
     name: 'Sean',
     role: 'Videographer',
@@ -70,6 +70,20 @@ export const photographers: Photographer[] = [
       { shortcode: 'C1mOX8Zu5ya', type: 'reel' },
       { shortcode: 'CopcC4uoJ9v', type: 'reel' },
       { shortcode: 'DTikgNFgIvi', type: 'reel' },
+    ],
+  },
+  {
+    id: 'vincent-wilson',
+    name: 'Vincent Wilson',
+    role: 'Photographer & Videographer',
+    bio: 'Vincent captures the raw, sun-soaked energy of Rio\'s beach scene — from lazy afternoons at the barracas to golden-hour sessions on the sand. His lens finds the moments that make the Carioca coast unforgettable.',
+    instagramHandle: 'vincentwilsonvisuals', // ← update with real handle
+    profileImage: undefined,
+    featuredWork: [
+      { shortcode: 'DSvfzr1jsvu', type: 'post' },
+      { shortcode: 'C_3vEjwJZ1S', type: 'post' },
+      { shortcode: 'C-5-0FtsgRI', type: 'post' },
+      { shortcode: 'C2THVQApwX8', type: 'post' },
     ],
   },
 ];
