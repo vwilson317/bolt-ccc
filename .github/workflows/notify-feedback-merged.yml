@@ -1,0 +1,64 @@
+name: Notify Feedback Submitter on Merge
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Fires when a feedback fix PR is merged into main.
+# Extracts the submitter's email from the linked GitHub issue and sends a
+# "your fix is live" notification via Resend.
+#
+# Required GitHub Secrets:
+#   RESEND_API_KEY  — API key from resend.com (free tier is fine)
+#
+# Optional GitHub Secrets:
+#   NOTIFY_FROM_EMAIL  — sender address (default: feedback@cariocacoastalclub.com)
+#                        Must be a verified domain in Resend.
+# ─────────────────────────────────────────────────────────────────────────────
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+
+permissions:
+  issues: read
+  pull-requests: read
+
+jobs:
+  notify:
+    name: Email submitter
+    runs-on: ubuntu-latest
+
+    # Only run for merged PRs whose branch matches the AI fix pattern
+    if: |
+      github.event.pull_request.merged == true &&
+      startsWith(github.event.pull_request.head.ref, 'fix/issue-') &&
+      endsWith(github.event.pull_request.head.ref, '-ai')
+
+    steps:
+      - name: Checkout scripts
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: .github/scripts
+          sparse-checkout-cone-mode: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install script dependencies
+        run: npm install
+        working-directory: .github/scripts
+
+      - name: Send merge notification
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          NOTIFY_FROM_EMAIL: ${{ secrets.NOTIFY_FROM_EMAIL }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_BODY: ${{ github.event.pull_request.body }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          PR_BRANCH: ${{ github.event.pull_request.head.ref }}
+          MERGED_AT: ${{ github.event.pull_request.merged_at }}
+        run: node .github/scripts/notify-merged.mjs

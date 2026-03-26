@@ -271,7 +271,10 @@ const FeedbackModal: React.FC<FeedbackModalProps> = ({ onClose }) => {
           {/* Email (optional) */}
           <div>
             <label htmlFor="feedback-email" className="block text-xs font-semibold text-gray-600 mb-1.5">
-              Email <span className="text-gray-400 font-normal">(optional — if you want a reply)</span>
+              Email{' '}
+              <span className="text-gray-400 font-normal">
+                (optional — we'll notify you when the fix ships)
+              </span>
             </label>
             <input
               id="feedback-email"
