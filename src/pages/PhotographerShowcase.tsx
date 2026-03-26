@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Instagram, Camera, Film, ExternalLink, User } from 'lucide-react';
+import { Instagram, Camera, Film, ExternalLink, User, MessageCircle } from 'lucide-react';
 import { photographers, Photographer, InstagramEmbed } from '../data/photographerData';
 import { openInstagramLink } from '../utils/ctaButtonUtils';
 import SEOHead from '../components/SEOHead';
@@ -7,6 +7,13 @@ import SEOHead from '../components/SEOHead';
 // ─── Placeholder reel card shown when shortcode is clearly unset ─────────────
 
 const PLACEHOLDER_PATTERN = /^REEL_SHORTCODE_\d+$/;
+
+const openWhatsAppLead = (phone?: string, message?: string) => {
+  if (!phone) return;
+  const cleanPhone = phone.replace(/\D/g, '');
+  const url = `https://wa.me/${cleanPhone}${message ? `?text=${encodeURIComponent(message)}` : ''}`;
+  window.open(url, '_blank', 'noopener,noreferrer');
+};
 
 const PlaceholderCard: React.FC<{ handle: string }> = ({ handle }) => (
   <div className="flex-shrink-0 w-64 h-[455px] rounded-2xl bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-700 flex flex-col items-center justify-center text-center p-6 gap-3">
@@ -116,14 +123,26 @@ const PhotographerSection: React.FC<{ photographer: Photographer; index: number 
               {photographer.bio}
             </p>
 
-            <button
-              onClick={() => openInstagramLink(photographer.instagramHandle)}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-beach-500 to-beach-600 hover:from-beach-400 hover:to-beach-500 text-white font-semibold text-sm transition-all duration-200 shadow-lg shadow-beach-900/40 active:scale-95"
-            >
-              <Instagram className="w-4 h-4" />
-              @{photographer.instagramHandle}
-              <ExternalLink className="w-3 h-3 opacity-70" />
-            </button>
+            <div className="flex flex-wrap items-center gap-3">
+              <button
+                onClick={() => openInstagramLink(photographer.instagramHandle)}
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-beach-500 to-beach-600 hover:from-beach-400 hover:to-beach-500 text-white font-semibold text-sm transition-all duration-200 shadow-lg shadow-beach-900/40 active:scale-95"
+              >
+                <Instagram className="w-4 h-4" />
+                @{photographer.instagramHandle}
+                <ExternalLink className="w-3 h-3 opacity-70" />
+              </button>
+
+              {photographer.whatsappPhone && (
+                <button
+                  onClick={() => openWhatsAppLead(photographer.whatsappPhone, photographer.whatsappMessage)}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-green-500/60 text-green-300 hover:bg-green-500/10 font-semibold text-sm transition-all duration-200"
+                >
+                  <MessageCircle className="w-4 h-4" />
+                  WhatsApp
+                </button>
+              )}
+            </div>
           </div>
         </div>
 
@@ -151,8 +170,8 @@ const PhotographerShowcase: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-950 text-white">
       <SEOHead
-        title="Videography & Photography – Carioca Coastal Club"
-        description="Meet the photographers and videographers behind Carioca Coastal Club. Discover the creators capturing Rio's vibrant beach culture through stunning reels and photography."
+        title="Content Professionals – Carioca Coastal Club"
+        description="Meet the content professionals behind Carioca Coastal Club. Discover the creators capturing Rio's vibrant beach culture through stunning reels and photography."
         image="/logo-sq.jpeg"
         type="website"
       />
@@ -178,9 +197,9 @@ const PhotographerShowcase: React.FC = () => {
           </div>
 
           <h1 className="text-4xl md:text-6xl font-bold text-white text-center font-display leading-tight mb-4">
-            Videography &amp;{' '}
+            Content{' '}
             <span className="bg-gradient-to-r from-beach-400 to-beach-300 bg-clip-text text-transparent">
-              Photography
+              Professionals
             </span>
           </h1>
 
