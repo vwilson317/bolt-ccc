@@ -764,5 +764,113 @@
     "statusComingSoon": "Em breve",
     "seoTitle": "Carioca Coastal Club Pass — Passe All-Access · R$30/mês",
     "seoDescription": "Acesso ilimitado a {{count}} barracas parceiras no Rio de Janeiro por apenas R$30 por mês. Badge exclusivo do Carioca Coastal Club."
+  },
+  "hostingGuidelines": {
+    "seoTitle": "Diretrizes para Anfitriões | Carioca Coastal Club",
+    "seoDescription": "Diretrizes para anfitriões do CC Club — pontualidade, pagamentos, facilitação e parcerias com barracas.",
+    "hero": {
+      "title": "Diretrizes para Anfitriões do Carioca Coastal Club",
+      "subtitle": "Seu trabalho é simples: criar uma experiência confiável e acolhedora."
+    },
+    "g1": {
+      "title": "Seja Pontual (Inegociável)",
+      "intro": "Se você disse que vai estar lá num horário, esteja lá.",
+      "lateOk": "5–10 minutos de atraso = tudo bem",
+      "lateBad": "Qualquer coisa além disso = inaceitável",
+      "noEta": "Sem ETAs vagos",
+      "rule": "Uma vez que você marcou um horário, você é responsável por aparecer."
+    },
+    "g2": {
+      "title": "Fique \"Online\" — Sinalize que Está ao Vivo",
+      "intro": "Assim que chegar:",
+      "dropPin": "Mande sua localização em tempo real",
+      "takePhoto": "Tire uma foto da montagem",
+      "sendToMe": "Me mande → eu posto",
+      "signal": "Use: \"Carioca Coastal Club está online\"",
+      "noPin": "Sem pin = não aconteceu."
+    },
+    "g3": {
+      "title": "Regras de Comunicação — Seja Direto",
+      "before": "Antes → horário e local claros",
+      "after": "Após a chegada → pare de mandar mensagem",
+      "rule1": "Você não está lá para ficar no celular.",
+      "rule2": "Você está lá para ser anfitrião."
+    },
+    "g4": {
+      "title": "Sem Cultura de RSVP",
+      "doNot": "NÃO peça para as pessoas confirmar presença, reagir ou dar RSVP.",
+      "why": "Por quê:",
+      "reason1": "As pessoas não interagem a menos que outras já tenham interagido",
+      "reason2": "Isso cria a aparência de que nada está acontecendo",
+      "reason3": "Gera ruído desnecessário no grupo",
+      "reality": "Realidade:",
+      "ifComing": "Se alguém vai aparecer, vai te mandar mensagem diretamente.",
+      "job1": "Seu trabalho não é correr atrás de presença.",
+      "job2": "Seu trabalho é estar lá de forma confiável."
+    },
+    "g5": {
+      "title": "Energia de Anfitrião — Facilitação",
+      "youAre": "Você é o conector.",
+      "greet": "Cumprimente as pessoas",
+      "pull": "Chame quem parecer perdido",
+      "introduce": "Apresente as pessoas",
+      "invite": "Convide quem está de fora",
+      "phrase": "\"Ei, este é o Carioca Coastal Club — vem junto!\""
+    },
+    "g6": {
+      "title": "Cadeiras e Montagem",
+      "chairs": "8 cadeiras do CC Club = gratuitas",
+      "firstCome": "Primeiro a chegar, primeiro a ser atendido",
+      "notResponsible": "Você não é responsável pelos preços",
+      "ifOff": "Se algo estiver errado → me manda mensagem"
+    },
+    "g7": {
+      "title": "Pagamentos",
+      "ownTab": "Cada um paga a sua conta",
+      "noGroup": "Sem conta coletiva",
+      "noSplit": "Sem dividir depois",
+      "order": "Diga às pessoas: Pedir → esperar → pagar → voltar",
+      "warning": "Se você não fizer isso → você vai ficar com a conta"
+    },
+    "g8": {
+      "title": "Atividades = Eventos Melhores",
+      "energy": "Traga energia:",
+      "music": "Música (ideal)",
+      "games": "Jogos / cartas",
+      "speaker": "Caixinha / violão",
+      "icebreakers": "Quebra-gelos",
+      "optional": "Opcional:",
+      "potluck": "Potluck",
+      "themes": "Temas (pôr do sol, social, etc.)"
+    },
+    "g9": {
+      "title": "Estrutura de Anfitrionato",
+      "primary": "Anfitrião principal = conduz",
+      "secondary": "Secundário = apoia",
+      "mustBePhysical": "Pelo menos um anfitrião deve estar fisicamente presente",
+      "noIndirect": "Sem coordenação indireta"
+    },
+    "g10": {
+      "title": "Mantenha o Grupo Limpo",
+      "assigning": "Estou designando Gerentes de Parceria de Barraca para cada localidade.",
+      "responsible": "Cada pessoa é responsável por:",
+      "dayToDay": "Comunicação do dia a dia com a barraca",
+      "negotiate": "Negociar preços e acordos",
+      "manage": "Gerenciar o relacionamento geral",
+      "ideally": "De preferência, escolha uma barraca perto de onde você mora — você também vai se beneficiar pessoalmente da parceria.",
+      "commission": "Qualquer parceria ou acordo que você fechar = 100% de comissão para você. Não fico com nada.",
+      "bigGoal": "O grande objetivo: expandir o CC Club por todas as principais áreas de praia — Copa, Leblon, vários em Ipanema, Arpoador e outras zonas de alto tráfego. É assim que construímos presença e consistência.",
+      "suggestions": "Sugestões atuais de barracas por área",
+      "onePerBarraca": "Uma pessoa por barraca por enquanto. Se você tiver um amigo que seria perfeito, adicione ao grupo e vamos resolver juntos."
+    },
+    "areas": {
+      "leme": "Leme",
+      "copa": "Copa",
+      "arpoador": "Arpoador",
+      "ipanema": "Ipanema",
+      "leblon": "Leblon",
+      "saoConrado": "São Conrado"
+    },
+    "critical": "CRÍTICO"
   }
 }
