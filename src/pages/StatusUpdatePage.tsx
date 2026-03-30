@@ -1,5 +1,5 @@
 import React from 'react';
-import { TrendingUp, TrendingDown, BarChart2, CalendarDays, Tag, Minus } from 'lucide-react';
+import { TrendingUp, TrendingDown, BarChart2, CalendarDays, Minus } from 'lucide-react';
 import { statusUpdates, StatusUpdate, PostMetric } from '../data/statusUpdateData';
 import SEOHead from '../components/SEOHead';
 
@@ -7,11 +7,7 @@ import SEOHead from '../components/SEOHead';
 
 const MetricCard: React.FC<{ metric: PostMetric }> = ({ metric }) => {
   const DeltaIcon =
-    metric.delta === undefined
-      ? Minus
-      : metric.positive
-      ? TrendingUp
-      : TrendingDown;
+    metric.delta === undefined ? Minus : metric.positive ? TrendingUp : TrendingDown;
 
   const deltaColor =
     metric.delta === undefined
@@ -36,13 +32,11 @@ const MetricCard: React.FC<{ metric: PostMetric }> = ({ metric }) => {
   );
 };
 
-// ─── Single update section ────────────────────────────────────────────────────
+// ─── Single update card ───────────────────────────────────────────────────────
 
-const UpdateSection: React.FC<{ update: StatusUpdate; index: number }> = ({ update, index }) => {
+const UpdateCard: React.FC<{ update: StatusUpdate; index: number }> = ({ update, index }) => {
   const isEven = index % 2 === 0;
   const hasMetrics = update.metrics && update.metrics.length > 0;
-  const hasHighlights = update.highlights && update.highlights.length > 0;
-  const hasTags = update.tags && update.tags.length > 0;
 
   return (
     <section
@@ -50,9 +44,9 @@ const UpdateSection: React.FC<{ update: StatusUpdate; index: number }> = ({ upda
       className="py-16 md:py-24 border-b border-gray-800 last:border-b-0"
     >
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header row — alternates alignment on desktop */}
+        {/* Header row — alternates on desktop */}
         <div
-          className={`flex flex-col gap-6 mb-10 ${
+          className={`flex flex-col gap-6 mb-12 ${
             isEven ? 'md:flex-row' : 'md:flex-row-reverse'
           } items-start`}
         >
@@ -63,66 +57,48 @@ const UpdateSection: React.FC<{ update: StatusUpdate; index: number }> = ({ upda
             </div>
           </div>
 
-          {/* Title + meta */}
+          {/* Title */}
           <div className="flex-1">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-beach-900/60 text-beach-300 text-xs font-semibold tracking-wide uppercase mb-3 border border-beach-700/40">
               <CalendarDays className="w-3 h-3" />
               {update.weekLabel}
             </span>
-
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4 font-display">
+            <h2 className="text-3xl md:text-4xl font-bold text-white font-display">
               {update.headline}
             </h2>
-
-            <p className="text-gray-300 text-base md:text-lg leading-relaxed max-w-2xl whitespace-pre-line">
-              {update.body}
-            </p>
           </div>
         </div>
 
-        {/* Highlights */}
-        {hasHighlights && (
-          <div className="mb-8">
-            <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-widest mb-4">
-              Highlights
-            </h3>
-            <ul className="space-y-3">
-              {update.highlights!.map((item, i) => (
-                <li key={i} className="flex items-start gap-3 text-gray-300 text-base">
-                  <span className="mt-1 w-1.5 h-1.5 rounded-full bg-beach-400 flex-shrink-0" />
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+        {/* Categorized sections */}
+        <div className="space-y-8 mb-12">
+          {update.sections.map((section) => (
+            <div key={section.category}>
+              <h3 className="text-sm font-semibold text-beach-400 uppercase tracking-widest mb-3">
+                {section.category}
+              </h3>
+              <ul className="space-y-2">
+                {section.items.map((item, i) => (
+                  <li key={i} className="flex items-start gap-3 text-gray-300 text-base md:text-lg leading-relaxed">
+                    <span className="mt-2 w-1.5 h-1.5 rounded-full bg-beach-500 flex-shrink-0" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
 
-        {/* Metrics grid */}
+        {/* Metrics */}
         {hasMetrics && (
           <div>
             <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-widest mb-4">
-              Post Metrics
+              By the Numbers
             </h3>
             <div className="flex flex-wrap gap-3">
               {update.metrics!.map((m, i) => (
                 <MetricCard key={i} metric={m} />
               ))}
             </div>
-          </div>
-        )}
-
-        {/* Tags */}
-        {hasTags && (
-          <div className="flex flex-wrap gap-2 mt-8">
-            {update.tags!.map((tag, i) => (
-              <span
-                key={i}
-                className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-gray-800 text-gray-400 text-xs font-medium border border-gray-700"
-              >
-                <Tag className="w-3 h-3" />
-                {tag}
-              </span>
-            ))}
           </div>
         )}
       </div>
@@ -137,7 +113,7 @@ const StatusUpdatePage: React.FC = () => {
     <div className="min-h-screen bg-gray-950 text-white">
       <SEOHead
         title="Status Updates – Carioca Coastal Club"
-        description="Weekly status updates and post metrics from Carioca Coastal Club."
+        description="Weekly status updates from Carioca Coastal Club — badges, meetups, hosts, and what's coming next."
         image="/logo-sq.jpeg"
         type="website"
       />
@@ -170,10 +146,10 @@ const StatusUpdatePage: React.FC = () => {
           </h1>
 
           <p className="text-center text-gray-400 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">
-            Weekly recaps and metrics — what's happening, what's working, and where we're headed.
+            Weekly recaps — what's happening, what's working, and where we're headed.
           </p>
 
-          {/* Quick-nav chips */}
+          {/* Quick-nav chips — only shown when there are multiple updates */}
           {statusUpdates.length > 1 && (
             <div className="flex flex-wrap justify-center gap-3 mt-10">
               {statusUpdates.map((u) => (
@@ -193,7 +169,7 @@ const StatusUpdatePage: React.FC = () => {
       {/* ── Update sections ── */}
       <div className="border-t border-gray-800">
         {statusUpdates.map((update, index) => (
-          <UpdateSection key={update.id} update={update} index={index} />
+          <UpdateCard key={update.id} update={update} index={index} />
         ))}
       </div>
 
