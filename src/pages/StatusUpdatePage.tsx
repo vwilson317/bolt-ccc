@@ -59,13 +59,13 @@ const UpdateCard: React.FC<{ update: StatusUpdate; index: number }> = ({ update,
 
           {/* Title */}
           <div className="flex-1">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-beach-900/60 text-beach-300 text-xs font-semibold tracking-wide uppercase mb-3 border border-beach-700/40">
-              <CalendarDays className="w-3 h-3" />
-              {update.weekLabel}
-            </span>
-            <h2 className="text-3xl md:text-4xl font-bold text-white font-display">
+            <h2 className="text-3xl md:text-4xl font-bold text-white font-display mb-2">
               {update.headline}
             </h2>
+            <p className="flex items-center gap-2 text-beach-300 text-lg font-semibold">
+              <CalendarDays className="w-4 h-4" />
+              {update.weekLabel}
+            </p>
           </div>
         </div>
 

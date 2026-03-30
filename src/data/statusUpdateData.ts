@@ -22,9 +22,9 @@ export interface StatusUpdate {
 export const statusUpdates: StatusUpdate[] = [
   {
     id: 'march-30-2026',
-    weekLabel: 'March 30',
+    weekLabel: 'March 30 (Monday)',
     date: '2026-03-30',
-    headline: 'Carioca Coastal Club — Update',
+    headline: '🌴 Carioca Coastal Club — Update',
     sections: [
       {
         category: 'Badges',
