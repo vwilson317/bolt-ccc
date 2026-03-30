@@ -28,6 +28,7 @@ const BarracaPromoPage = lazy(() => import('./pages/BarracaPromoPage'));
 const CoastalClubPassPage = lazy(() => import('./pages/CoastalClubPassPage'));
 const ActivePromosPage = lazy(() => import('./pages/ActivePromosPage'));
 const PhotographerShowcase = lazy(() => import('./pages/PhotographerShowcase'));
+const RyanFarewellParty = lazy(() => import('./pages/RyanFarewellParty'));
 
 // Lazy-load heavy overlay components that are not needed at initial paint
 // StoryViewer removed: StoryProvider is disabled and StoryViewer would throw without it
@@ -53,7 +54,7 @@ const isBarracaSubdomain =
 function AppContent() {
   const { selectedBarraca, closeBarracaModal, weatherOverride, isInitialLoading } = useApp();
   const location = useLocation();
-  const isMinimalRoute = location.pathname === '/language-exchange';
+  const isMinimalRoute = location.pathname === '/language-exchange' || location.pathname === '/ryans-farewell-party';
   
   // Initialize PostHog analytics
   usePostHogAnalytics();
@@ -87,6 +88,7 @@ function AppContent() {
             {/* Loyalty promo pages at /loyalty/:slug for SEO-friendly URLs */}
             <Route path="/loyalty/:slug" element={<BarracaPromoPage />} />
             <Route path="/videography" element={<PhotographerShowcase />} />
+            <Route path="/ryans-farewell-party" element={<RyanFarewellParty />} />
             {/* <Route path="/translation-demo" element={<TranslationDemo />} /> */}
           </Routes>
         </Suspense>

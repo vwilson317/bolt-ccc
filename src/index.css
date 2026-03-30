@@ -2,6 +2,76 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Sakura / Farewell Party animations ─────────────────────────── */
+@keyframes sakura-fall {
+  0%   { transform: translateY(-40px) rotate(0deg)   translateX(0px);   opacity: 0.9; }
+  20%  { transform: translateY(20vh)  rotate(72deg)  translateX(18px);  opacity: 0.85; }
+  40%  { transform: translateY(40vh)  rotate(144deg) translateX(-12px); opacity: 0.7; }
+  60%  { transform: translateY(60vh)  rotate(216deg) translateX(22px);  opacity: 0.55; }
+  80%  { transform: translateY(80vh)  rotate(288deg) translateX(-8px);  opacity: 0.35; }
+  100% { transform: translateY(110vh) rotate(360deg) translateX(10px);  opacity: 0; }
+}
+
+@keyframes sakura-sway {
+  0%, 100% { transform: rotate(-8deg) scale(1);    }
+  50%       { transform: rotate(8deg)  scale(1.05); }
+}
+
+@keyframes float-up-down {
+  0%, 100% { transform: translateY(0px);    }
+  50%       { transform: translateY(-12px); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(196, 30, 58, 0.4), 0 0 40px rgba(196, 30, 58, 0.2); }
+  50%       { box-shadow: 0 0 35px rgba(196, 30, 58, 0.7), 0 0 70px rgba(196, 30, 58, 0.3); }
+}
+
+@keyframes gradient-shift {
+  0%   { background-position: 0%   50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0%   50%; }
+}
+
+@keyframes slide-up-fade {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.sakura-petal {
+  position: fixed;
+  pointer-events: none;
+  user-select: none;
+  z-index: 1;
+  animation: sakura-fall linear infinite;
+}
+
+.animate-float {
+  animation: float-up-down 3s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2.5s ease-in-out infinite;
+}
+
+.animate-gradient-shift {
+  background-size: 200% 200%;
+  animation: gradient-shift 5s ease infinite;
+}
+
+.animate-slide-up-fade {
+  animation: slide-up-fade 0.8s ease forwards;
+}
+
+.animate-fade-in {
+  animation: fade-in 1s ease forwards;
+}
+
 /* Hide scrollbar for story carousel */
 .scrollbar-hide {
   -ms-overflow-style: none;
