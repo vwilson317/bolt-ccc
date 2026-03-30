@@ -5,26 +5,59 @@ export interface PostMetric {
   positive?: boolean;
 }
 
+export interface UpdateSection {
+  category: string;
+  items: string[];
+}
+
 export interface StatusUpdate {
   id: string;
-  weekLabel: string; // e.g. "Week of March 24"
-  date: string; // ISO date string
+  weekLabel: string;
+  date: string;
   headline: string;
-  body: string;
-  highlights?: string[]; // bullet point highlights
+  sections: UpdateSection[];
   metrics?: PostMetric[];
-  tags?: string[];
 }
 
 export const statusUpdates: StatusUpdate[] = [
   {
-    id: 'week-march-24-2026',
-    weekLabel: 'Week of March 24',
+    id: 'march-30-2026',
+    weekLabel: 'March 30 (Monday)',
     date: '2026-03-30',
-    headline: 'Status Update – March 24',
-    body: 'Update text coming soon. Check back here for the latest on what\'s happening with Carioca Coastal Club.',
-    highlights: [],
-    metrics: [],
-    tags: [],
+    headline: '🌴 Carioca Coastal Club — Update',
+    sections: [
+      {
+        category: 'Badges',
+        items: [
+          '50+ loyalty badges claimed — great to see people actually using them and getting value.',
+        ],
+      },
+      {
+        category: 'Meetups',
+        items: [
+          "First meetup run by a new host went really well. This is something we'll keep building on.",
+        ],
+      },
+      {
+        category: 'Hosts',
+        items: [
+          '10+ new hosts currently being onboarded. Goal is to have more consistent meetups across different days.',
+        ],
+      },
+      {
+        category: 'Community Talent',
+        items: [
+          'Launched photography and videography support from within the community. If you need content, we now have people in-house you can work with.',
+        ],
+      },
+      {
+        category: 'Coming Up',
+        items: ["Ryan's going-away party — planned for early May. More details soon."],
+      },
+    ],
+    metrics: [
+      { label: 'Badges Claimed', value: '50+', positive: true },
+      { label: 'New Hosts', value: '10+', positive: true },
+    ],
   },
 ];

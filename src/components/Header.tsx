@@ -199,6 +199,20 @@ const Header: React.FC = () => {
             >
               Content Professionals
             </Link>
+            <Link
+              to="/status"
+              className={`font-medium transition-colors duration-200 ${
+                isActive('/status')
+                  ? useSolidHeader
+                    ? 'text-beach-600 border-b-2 border-beach-600 pb-1'
+                    : 'text-white border-b-2 border-white pb-1'
+                  : useSolidHeader
+                    ? 'text-gray-700 hover:text-beach-600'
+                    : 'text-white/90 hover:text-white'
+              }`}
+            >
+              Updates
+            </Link>
 
           </nav>
 
@@ -368,7 +382,17 @@ const Header: React.FC = () => {
               >
                 Content Professionals
               </Link>
-
+              <Link
+                to="/status"
+                onClick={() => setIsMenuOpen(false)}
+                className={`font-medium transition-colors duration-200 ${
+                  isActive('/status')
+                    ? useSolidHeader ? 'text-beach-600' : 'text-white'
+                    : useSolidHeader ? 'text-gray-700' : 'text-white/90'
+                }`}
+              >
+                Updates
+              </Link>
 
               {/* Mobile Bolt Badge - Temporarily disabled */}
               {/* <div className={`pt-4 border-t transition-colors duration-300 ${
