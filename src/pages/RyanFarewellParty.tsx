@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { MapPin, Calendar, Clock, Ticket, Gift, Waves, Star, Music, ChevronDown, ArrowRight } from 'lucide-react';
+import { MapPin, Calendar, Clock, Ticket, Waves, Star, Music, ChevronDown, ArrowRight, Copy, CheckCircle2, MessageCircle } from 'lucide-react';
+import { QRCodeSVG } from 'qrcode.react';
 import { trackEvent, trackPageView, trackCTAClick } from '../services/posthogAnalyticsService';
 import SEOHead from '../components/SEOHead';
 
@@ -59,8 +60,51 @@ const WaveDivider = ({ flip = false }: { flip?: boolean }) => (
 );
 
 export default function RyanFarewellParty() {
-  const [loading, setLoading]   = useState(false);
-  const [error, setError]       = useState<string | null>(null);
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+  useEffect(() => {
+    const target = new Date('2026-05-03T14:00:00-03:00').getTime();
+    const tick = () => {
+      const diff = target - Date.now();
+      if (diff <= 0) { setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 }); return; }
+      setTimeLeft({
+        days:    Math.floor(diff / 86400000),
+        hours:   Math.floor((diff % 86400000) / 3600000),
+        minutes: Math.floor((diff % 3600000) / 60000),
+        seconds: Math.floor((diff % 60000) / 1000),
+      });
+    };
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  const [loading, setLoading]     = useState(false);
+  const [error, setError]         = useState<string | null>(null);
+  const [payTab, setPayTab]       = useState<'pix' | 'card'>('pix');
+  const [pixCopied, setPixCopied] = useState(false);
+
+  const PIX_KEY     = '+5521990532728';
+  const PIX_DISPLAY = '(21) 99053-2728';
+  const WA_NUMBER   = '5521990532728';
+  const WA_MSG      = encodeURIComponent(
+    'Oi! Acabei de pagar R$100 via PIX para o Farewell Party do Ryan (3 de maio). Segue o comprovante 👇'
+  );
+
+  const handleCopyPix = () => {
+    navigator.clipboard.writeText(PIX_KEY).then(() => {
+      setPixCopied(true);
+      setTimeout(() => setPixCopied(false), 2000);
+    });
+    trackEvent('pix_key_copied', { event_name: 'ryans_farewell_party', category: 'Event' });
+  };
+
+  const handleWhatsAppReceipt = () => {
+    trackEvent('whatsapp_receipt_clicked', { event_name: 'ryans_farewell_party', category: 'Event' });
+    const url = `https://wa.me/${WA_NUMBER}?text=${WA_MSG}`;
+    const isInstagram = /Instagram/.test(navigator.userAgent);
+    if (isInstagram) { window.location.href = url; }
+    else { window.open(url, '_blank', 'noopener,noreferrer'); }
+  };
 
   const params  = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '');
   const success   = params.get('success') === 'true';
@@ -253,33 +297,46 @@ export default function RyanFarewellParty() {
             </span>
           </div>
 
+          {/* Countdown */}
+          <div className="flex gap-4 sm:gap-6 mb-8">
+            {[
+              { val: timeLeft.days,    label: 'Days' },
+              { val: timeLeft.hours,   label: 'Hours' },
+              { val: timeLeft.minutes, label: 'Min' },
+              { val: timeLeft.seconds, label: 'Sec' },
+            ].map(({ val, label }) => (
+              <div key={label} className="flex flex-col items-center">
+                <span
+                  className="font-display font-black text-3xl sm:text-4xl tabular-nums"
+                  style={{ background: 'linear-gradient(135deg,#ffd700,#ff9f43)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}
+                >
+                  {String(val).padStart(2, '0')}
+                </span>
+                <span className="text-xs tracking-widest uppercase opacity-40 mt-1">{label}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* Social proof */}
+          <div className="mb-6 px-4 py-2 rounded-full text-sm font-semibold" style={{ background: 'rgba(255,107,53,0.15)', color: '#ff9f43' }}>
+            🔥 38 people are going
+          </div>
+
           {/* CTA */}
           {!success && (
-            <button
-              onClick={handleCheckout}
-              disabled={loading}
-              className="group relative px-10 py-4 rounded-2xl font-display font-black text-lg sm:text-xl text-white transition-all duration-300 hover:scale-105 active:scale-95 animate-pulse-glow animate-slide-up-fade disabled:opacity-60 disabled:cursor-not-allowed"
+            <a
+              href="#rsvp"
+              className="group relative px-10 py-4 rounded-2xl font-display font-black text-lg sm:text-xl text-white transition-all duration-300 hover:scale-105 active:scale-95 animate-pulse-glow animate-slide-up-fade inline-flex items-center gap-2"
               style={{
                 background: 'linear-gradient(135deg, #c41e3a 0%, #ff6b35 100%)',
                 animationDelay: '0.8s',
                 opacity: 0,
               }}
             >
-              <span className="flex items-center gap-2">
-                {loading ? (
-                  <>
-                    <span className="inline-block w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    Redirecting…
-                  </>
-                ) : (
-                  <>
-                    <Ticket className="w-5 h-5" />
-                    Get Your Ticket &nbsp;·&nbsp; チケットを取得
-                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                  </>
-                )}
-              </span>
-            </button>
+              <Ticket className="w-5 h-5" />
+              Get Your Ticket &nbsp;·&nbsp; チケットを取得
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </a>
           )}
 
           {error && (
@@ -383,9 +440,10 @@ export default function RyanFarewellParty() {
                 {
                   icon: <MapPin className="w-7 h-7" />,
                   label: '場所 · Location',
-                  value: 'Ipanema Beach',
-                  sub: 'Rio de Janeiro',
+                  value: 'Ipanema — Posto 10',
+                  sub: '📍 Open in Maps',
                   color: '#ff69b4',
+                  href: 'https://maps.google.com/?q=Posto+10+Ipanema+Rio+de+Janeiro',
                 },
                 {
                   icon: <Music className="w-7 h-7" />,
@@ -394,13 +452,20 @@ export default function RyanFarewellParty() {
                   sub: 'your best look',
                   color: '#ffd700',
                 },
-              ].map((card, i) => (
+              ].map((card: any, i) => (
                 <div
                   key={i}
                   className="flex flex-col items-center text-center p-6 rounded-2xl border transition-transform hover:-translate-y-1 duration-300"
                   style={{
                     background: 'rgba(255,255,255,0.03)',
                     borderColor: `${card.color}33`,
+                    cursor: card.href ? 'pointer' : 'default',
+                  }}
+                  onClick={() => {
+                    if (!card.href) return;
+                    const isIG = /Instagram/.test(navigator.userAgent);
+                    if (isIG) window.location.href = card.href;
+                    else window.open(card.href, '_blank', 'noopener,noreferrer');
                   }}
                 >
                   <div
@@ -528,6 +593,7 @@ export default function RyanFarewellParty() {
 
         {/* ══════════════ TICKET / RSVP ═════════════════════ */}
         <section
+          id="rsvp"
           className="relative z-10 py-24 px-4"
           style={{ background: 'linear-gradient(180deg, transparent 0%, rgba(196,30,58,0.08) 50%, transparent 100%)' }}
         >
@@ -595,38 +661,120 @@ export default function RyanFarewellParty() {
                 ))}
               </div>
 
-              {/* CTA */}
+              {/* Payment tabs */}
               {!success ? (
-                <button
-                  onClick={handleCheckout}
-                  disabled={loading}
-                  className="w-full py-4 rounded-2xl font-display font-black text-lg text-white transition-all duration-300 hover:scale-[1.02] active:scale-95 animate-pulse-glow disabled:opacity-60 disabled:cursor-not-allowed"
-                  style={{ background: 'linear-gradient(135deg, #c41e3a 0%, #ff6b35 100%)' }}
-                >
-                  {loading ? (
-                    <span className="flex items-center justify-center gap-2">
-                      <span className="inline-block w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                      Processing…
-                    </span>
-                  ) : (
-                    'Get My Ticket — チケットを購入'
+                <>
+                  {/* Tab switcher */}
+                  <div className="flex rounded-xl overflow-hidden border mb-6" style={{ borderColor: 'rgba(255,255,255,0.1)' }}>
+                    {(['pix', 'card'] as const).map((t) => (
+                      <button
+                        key={t}
+                        onClick={() => setPayTab(t)}
+                        className="flex-1 py-2.5 text-sm font-bold transition-colors"
+                        style={{
+                          background: payTab === t ? 'rgba(196,30,58,0.4)' : 'transparent',
+                          color: payTab === t ? '#fff' : 'rgba(255,255,255,0.4)',
+                        }}
+                      >
+                        {t === 'pix' ? '⚡ PIX (BR)' : '💳 Credit Card'}
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* PIX tab */}
+                  {payTab === 'pix' && (
+                    <div className="space-y-4">
+                      <div className="flex justify-center">
+                        <div className="rounded-2xl p-4 bg-white">
+                          <QRCodeSVG value={PIX_KEY} size={160} fgColor="#c41e3a" bgColor="#ffffff" level="M" />
+                        </div>
+                      </div>
+                      <button
+                        onClick={handleCopyPix}
+                        className="w-full flex items-center justify-between px-4 py-3 rounded-xl border transition-colors"
+                        style={{ background: 'rgba(255,255,255,0.05)', borderColor: 'rgba(255,255,255,0.1)' }}
+                      >
+                        <span className="font-mono text-sm text-white/80">{PIX_DISPLAY}</span>
+                        <span className="flex items-center gap-1.5 text-xs font-semibold" style={{ color: '#ff69b4' }}>
+                          {pixCopied
+                            ? <><CheckCircle2 className="w-4 h-4" /> Copied!</>
+                            : <><Copy className="w-4 h-4" /> Copy PIX key</>}
+                        </span>
+                      </button>
+                      <button
+                        onClick={handleWhatsAppReceipt}
+                        className="w-full py-3.5 rounded-2xl font-bold text-white flex items-center justify-center gap-2 transition-all hover:scale-[1.02] active:scale-95"
+                        style={{ background: 'linear-gradient(135deg, #25d366, #128c7e)' }}
+                      >
+                        <MessageCircle className="w-5 h-5" />
+                        Send Receipt on WhatsApp
+                      </button>
+                      <p className="text-xs text-center" style={{ color: 'rgba(255,255,255,0.3)' }}>
+                        Pay R$100 → screenshot receipt → tap button above
+                      </p>
+                    </div>
                   )}
-                </button>
+
+                  {/* Card / Stripe tab */}
+                  {payTab === 'card' && (
+                    <div className="space-y-4">
+                      <button
+                        onClick={handleCheckout}
+                        disabled={loading}
+                        className="w-full py-4 rounded-2xl font-display font-black text-lg text-white transition-all hover:scale-[1.02] active:scale-95 animate-pulse-glow disabled:opacity-60"
+                        style={{ background: 'linear-gradient(135deg, #c41e3a 0%, #ff6b35 100%)' }}
+                      >
+                        {loading ? (
+                          <span className="flex items-center justify-center gap-2">
+                            <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin inline-block" />
+                            Redirecting…
+                          </span>
+                        ) : 'Pay R$100 by Card — チケットを購入'}
+                      </button>
+                      {error && <p className="text-red-400 text-sm text-center">{error}</p>}
+                      <p className="text-xs text-center" style={{ color: 'rgba(255,255,255,0.25)' }}>
+                        Secure checkout via Stripe · 安全なお支払い
+                      </p>
+                    </div>
+                  )}
+                </>
               ) : (
                 <div className="py-4 rounded-2xl text-center" style={{ background: 'rgba(34,197,94,0.12)', border: '1px solid rgba(34,197,94,0.3)' }}>
-                  <p className="text-green-400 font-display font-bold text-lg">✓ Ticket Confirmed!</p>
+                  <p className="text-green-400 font-display font-bold text-lg">🎉 You're in!</p>
                   <p className="text-white/50 text-sm mt-1">See you May 3 🌸</p>
                 </div>
               )}
-
-              {error && (
-                <p className="mt-4 text-red-400 text-sm">{error}</p>
-              )}
-
-              <p className="mt-4 text-xs" style={{ color: 'rgba(255,255,255,0.25)' }}>
-                Secure payment via Stripe · 安全なお支払い
-              </p>
             </div>
+          </div>
+        </section>
+
+        {/* ══════════════ SHARE + CALENDAR ════════════════ */}
+        <section className="relative z-10 pb-12 px-4">
+          <div className="max-w-lg mx-auto flex flex-col sm:flex-row gap-3">
+            <button
+              onClick={() => {
+                const msg = encodeURIComponent(`🌸 Ryan's Farewell Party — May 3, Ipanema Beach! Get your ticket: ${window.location.origin}/ryans-farewell-party`);
+                const url = `https://wa.me/?text=${msg}`;
+                const isIG = /Instagram/.test(navigator.userAgent);
+                if (isIG) window.location.href = url;
+                else window.open(url, '_blank', 'noopener,noreferrer');
+                trackEvent('event_shared', { method: 'whatsapp', category: 'Event' });
+              }}
+              className="flex-1 flex items-center justify-center gap-2 py-3 rounded-2xl font-semibold text-sm border transition-all hover:scale-[1.02]"
+              style={{ borderColor: 'rgba(37,211,102,0.4)', color: '#25d366', background: 'rgba(37,211,102,0.08)' }}
+            >
+              <MessageCircle className="w-4 h-4" /> Tell a friend on WhatsApp
+            </button>
+            <a
+              href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Ryan%27s+Farewell+Party&dates=20260503T170000Z/20260503T230000Z&details=Farewell+party+at+Ipanema+Beach+-+R%24100+includes+chair%2C+umbrella+%26+welcome+drink&location=Posto+10+Ipanema+Rio+de+Janeiro"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => trackEvent('add_to_calendar_clicked', { category: 'Event' })}
+              className="flex-1 flex items-center justify-center gap-2 py-3 rounded-2xl font-semibold text-sm border transition-all hover:scale-[1.02]"
+              style={{ borderColor: 'rgba(255,105,180,0.3)', color: '#ff69b4', background: 'rgba(255,105,180,0.06)' }}
+            >
+              <Calendar className="w-4 h-4" /> Add to Google Calendar
+            </a>
           </div>
         </section>
 
