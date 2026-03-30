@@ -54,7 +54,7 @@ const isBarracaSubdomain =
 function AppContent() {
   const { selectedBarraca, closeBarracaModal, weatherOverride, isInitialLoading } = useApp();
   const location = useLocation();
-  const isMinimalRoute = location.pathname === '/language-exchange' || location.pathname === '/ryans-farewell-party';
+  const isMinimalRoute = location.pathname === '/language-exchange' || location.pathname === '/ryans-farewell-party' || (location.pathname === '/' && !isBarracaSubdomain);
   
   // Initialize PostHog analytics
   usePostHogAnalytics();
@@ -70,7 +70,7 @@ function AppContent() {
       <main>
         <Suspense fallback={<LoadingPage />}>
           <Routes>
-            <Route path="/" element={isBarracaSubdomain ? <Home /> : <CommunityHome />} />
+            <Route path="/" element={isBarracaSubdomain ? <Home /> : <RyanFarewellParty />} />
             <Route path="/projects/carioca-coastal-club" element={<Home />} />
             <Route path="/discover" element={<Discover />} />
             <Route path="/about" element={<About />} />
