@@ -1,66 +1,39 @@
 import React, { useEffect, useState } from 'react';
-import { MapPin, Calendar, Clock, Ticket, Waves, Star, Music, ChevronDown, ArrowRight, Copy, CheckCircle2, MessageCircle } from 'lucide-react';
+import { MapPin, Calendar, Clock, Ticket, Waves, Star, Music, ChevronDown, Copy, CheckCircle2, MessageCircle, ExternalLink, Instagram } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import { trackEvent, trackPageView, trackCTAClick } from '../services/posthogAnalyticsService';
 import SEOHead from '../components/SEOHead';
 
-// ── Hardcoded sakura petals (stable across renders) ──────────────
+// ── Sakura petals (subtle on white) ───────────────────────────────
 const PETALS = [
-  { left: '5%',  dur: '7s',  delay: '0s',   size: 18, opacity: 0.75 },
-  { left: '12%', dur: '9s',  delay: '1.5s', size: 14, opacity: 0.6  },
-  { left: '22%', dur: '6s',  delay: '3s',   size: 22, opacity: 0.8  },
-  { left: '31%', dur: '8s',  delay: '0.8s', size: 16, opacity: 0.65 },
-  { left: '40%', dur: '7.5s',delay: '4.2s', size: 20, opacity: 0.7  },
-  { left: '52%', dur: '9.5s',delay: '2.1s', size: 13, opacity: 0.55 },
-  { left: '61%', dur: '6.5s',delay: '5s',   size: 18, opacity: 0.72 },
-  { left: '70%', dur: '8.5s',delay: '1.1s', size: 24, opacity: 0.8  },
-  { left: '78%', dur: '7s',  delay: '3.6s', size: 15, opacity: 0.6  },
-  { left: '87%', dur: '9s',  delay: '0.4s', size: 19, opacity: 0.75 },
-  { left: '93%', dur: '6s',  delay: '6s',   size: 12, opacity: 0.5  },
-  { left: '8%',  dur: '8s',  delay: '7s',   size: 16, opacity: 0.65 },
-  { left: '47%', dur: '7.5s',delay: '8.5s', size: 21, opacity: 0.7  },
-  { left: '66%', dur: '9.5s',delay: '2.8s', size: 14, opacity: 0.58 },
-  { left: '84%', dur: '6.8s',delay: '4.5s', size: 17, opacity: 0.68 },
+  { left: '5%',  dur: '7s',  delay: '0s',   size: 16, opacity: 0.35 },
+  { left: '14%', dur: '9s',  delay: '1.5s', size: 12, opacity: 0.25 },
+  { left: '23%', dur: '6s',  delay: '3s',   size: 18, opacity: 0.3  },
+  { left: '33%', dur: '8s',  delay: '0.8s', size: 14, opacity: 0.28 },
+  { left: '44%', dur: '7.5s',delay: '4.2s', size: 16, opacity: 0.3  },
+  { left: '55%', dur: '9.5s',delay: '2.1s', size: 11, opacity: 0.22 },
+  { left: '64%', dur: '6.5s',delay: '5s',   size: 15, opacity: 0.3  },
+  { left: '73%', dur: '8.5s',delay: '1.1s', size: 20, opacity: 0.32 },
+  { left: '82%', dur: '7s',  delay: '3.6s', size: 13, opacity: 0.25 },
+  { left: '91%', dur: '9s',  delay: '0.4s', size: 16, opacity: 0.28 },
 ];
 
-// ── Torii gate SVG ────────────────────────────────────────────────
-const ToriiGate = ({ className }: { className?: string }) => (
-  <svg viewBox="0 0 200 160" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-    {/* Top kasagi beam */}
-    <rect x="5"  y="20" width="190" height="14" rx="2" fill="currentColor" />
-    {/* Second nuki beam */}
-    <rect x="20" y="46" width="160" height="10" rx="2" fill="currentColor" />
-    {/* Left pillar */}
-    <rect x="32" y="46" width="16" height="114" rx="3" fill="currentColor" />
-    {/* Right pillar */}
-    <rect x="152" y="46" width="16" height="114" rx="3" fill="currentColor" />
-    {/* Kasagi curved ends (left) */}
-    <path d="M5 20 Q0 20 0 26 L0 34 Q0 40 8 40 L20 40" stroke="currentColor" strokeWidth="3" fill="none" />
-    {/* Kasagi curved ends (right) */}
-    <path d="M195 20 Q200 20 200 26 L200 34 Q200 40 192 40 L180 40" stroke="currentColor" strokeWidth="3" fill="none" />
-    {/* Shimagi (small decorative top) */}
-    <rect x="90" y="8" width="20" height="14" rx="1" fill="currentColor" opacity="0.6" />
-  </svg>
-);
-
-// ── Wave divider ──────────────────────────────────────────────────
-const WaveDivider = ({ flip = false }: { flip?: boolean }) => (
-  <div className={`w-full overflow-hidden leading-none ${flip ? 'rotate-180' : ''}`}>
-    <svg viewBox="0 0 1440 60" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" className="w-full h-12">
-      <path
-        d="M0,30 C180,60 360,0 540,30 C720,60 900,0 1080,30 C1260,60 1350,15 1440,30 L1440,60 L0,60 Z"
-        fill="rgba(196,30,58,0.08)"
-      />
-      <path
-        d="M0,40 C240,10 480,60 720,40 C960,20 1200,55 1440,40 L1440,60 L0,60 Z"
-        fill="rgba(255,107,53,0.06)"
-      />
-    </svg>
-  </div>
-);
+const PIX_KEY     = '+5521990532728';
+const PIX_DISPLAY = '(21) 99053-2728';
+const WA_NUMBER   = '5521990532728';
 
 export default function RyanFarewellParty() {
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+  const [loading, setLoading]   = useState(false);
+  const [error, setError]       = useState<string | null>(null);
+  const [payTab, setPayTab]     = useState<'pix' | 'card'>('pix');
+  const [pixCopied, setPixCopied] = useState(false);
+
+  const params    = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '');
+  const success   = params.get('success') === 'true';
+  const cancelled = params.get('cancelled') === 'true';
+
+  // Countdown to May 3 2026 2PM BRT
   useEffect(() => {
     const target = new Date('2026-05-03T14:00:00-03:00').getTime();
     const tick = () => {
@@ -78,17 +51,13 @@ export default function RyanFarewellParty() {
     return () => clearInterval(id);
   }, []);
 
-  const [loading, setLoading]     = useState(false);
-  const [error, setError]         = useState<string | null>(null);
-  const [payTab, setPayTab]       = useState<'pix' | 'card'>('pix');
-  const [pixCopied, setPixCopied] = useState(false);
-
-  const PIX_KEY     = '+5521990532728';
-  const PIX_DISPLAY = '(21) 99053-2728';
-  const WA_NUMBER   = '5521990532728';
-  const WA_MSG      = encodeURIComponent(
-    'Oi! Acabei de pagar R$100 via PIX para o Farewell Party do Ryan (3 de maio). Segue o comprovante 👇'
-  );
+  // PostHog
+  useEffect(() => {
+    trackPageView('/ryans-farewell-party', "Ryan's Farewell Party");
+    trackEvent('event_landing_page_viewed', { event_name: 'ryans_farewell_party', event_date: '2026-05-03', category: 'Event' });
+    if (success)   trackEvent('ticket_purchase_success',   { event_name: 'ryans_farewell_party', category: 'Event' });
+    if (cancelled) trackEvent('ticket_purchase_cancelled', { event_name: 'ryans_farewell_party', category: 'Event' });
+  }, []);
 
   const handleCopyPix = () => {
     navigator.clipboard.writeText(PIX_KEY).then(() => {
@@ -98,70 +67,27 @@ export default function RyanFarewellParty() {
     trackEvent('pix_key_copied', { event_name: 'ryans_farewell_party', category: 'Event' });
   };
 
-  const handleWhatsAppReceipt = () => {
-    trackEvent('whatsapp_receipt_clicked', { event_name: 'ryans_farewell_party', category: 'Event' });
-    const url = `https://wa.me/${WA_NUMBER}?text=${WA_MSG}`;
-    const isInstagram = /Instagram/.test(navigator.userAgent);
-    if (isInstagram) { window.location.href = url; }
-    else { window.open(url, '_blank', 'noopener,noreferrer'); }
+  const openLink = (url: string) => {
+    const isIG = /Instagram/.test(navigator.userAgent);
+    if (isIG) window.location.href = url;
+    else window.open(url, '_blank', 'noopener,noreferrer');
   };
 
-  const params  = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '');
-  const success   = params.get('success') === 'true';
-  const cancelled = params.get('cancelled') === 'true';
+  const handleWhatsAppReceipt = () => {
+    trackEvent('whatsapp_receipt_clicked', { event_name: 'ryans_farewell_party', category: 'Event' });
+    const msg = encodeURIComponent('Oi! Acabei de pagar R$100 via PIX para o Farewell Party do Ryan (3 de maio). Segue o comprovante 👇');
+    openLink(`https://wa.me/${WA_NUMBER}?text=${msg}`);
+  };
 
-  // ── PostHog: page view ────────────────────────────────────────
-  useEffect(() => {
-    trackPageView('/ryans-farewell-party', "Ryan's Farewell Party — さようなら、ライアン！");
-    trackEvent('event_landing_page_viewed', {
-      event_name: 'ryans_farewell_party',
-      event_date: '2026-05-03',
-      category: 'Event',
-    });
-
-    if (success) {
-      trackEvent('ticket_purchase_success', {
-        event_name: 'ryans_farewell_party',
-        category: 'Event',
-      });
-    }
-    if (cancelled) {
-      trackEvent('ticket_purchase_cancelled', {
-        event_name: 'ryans_farewell_party',
-        category: 'Event',
-      });
-    }
-  }, []);
-
-  // ── Stripe checkout ───────────────────────────────────────────
-  const handleCheckout = async () => {
+  const handleStripeCheckout = async () => {
     setLoading(true);
     setError(null);
-
-    trackCTAClick('ticket_purchase', 'Get Your Ticket', '/ryans-farewell-party');
-    trackEvent('ticket_purchase_clicked', {
-      event_name: 'ryans_farewell_party',
-      category: 'Event',
-    });
-
+    trackCTAClick('ticket_purchase', 'Pay by Card', '/ryans-farewell-party');
     try {
-      const res = await fetch('/.netlify/functions/create-stripe-checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-      });
-
+      const res  = await fetch('/.netlify/functions/create-stripe-checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' } });
       const data = await res.json();
-
-      if (!res.ok || !data.url) {
-        throw new Error(data.error || 'Could not create checkout session');
-      }
-
-      trackEvent('ticket_purchase_started', {
-        event_name: 'ryans_farewell_party',
-        category: 'Event',
-      });
-
-      // Instagram WebView safe navigation (see CLAUDE.md)
+      if (!res.ok || !data.url) throw new Error(data.error || 'Could not start checkout');
+      trackEvent('ticket_purchase_started', { event_name: 'ryans_farewell_party', category: 'Event' });
       window.location.href = data.url;
     } catch (err: any) {
       setError(err.message || 'Something went wrong. Please try again.');
@@ -172,654 +98,370 @@ export default function RyanFarewellParty() {
   return (
     <>
       <SEOHead
-        title="Sayonara Ryan — Beach Farewell Party · May 3, 2026"
-        description="Join us at Ipanema Beach for Ryan's farewell party before he heads to Tokyo! Sunday May 3, 2026. R$100 includes chair, umbrella & welcome drink."
+        title="Sayonara Ryan: Beach Farewell Party · May 3, 2026"
+        description="Join us at Ipanema Beach (Posto 10) for Ryan's farewell party before he heads to Tokyo! Sunday May 3, 2026. R$100 includes chair, umbrella & welcome drink."
       />
 
-      {/* ── Falling sakura petals ───────────────────────────── */}
+      {/* Subtle sakura petals */}
       {PETALS.map((p, i) => (
-        <div
-          key={i}
-          className="sakura-petal"
-          style={{
-            left: p.left,
-            fontSize: `${p.size}px`,
-            opacity: p.opacity,
-            animationDuration: p.dur,
-            animationDelay: p.delay,
-          }}
-        >
+        <div key={i} className="sakura-petal" style={{ left: p.left, fontSize: `${p.size}px`, opacity: p.opacity, animationDuration: p.dur, animationDelay: p.delay }}>
           🌸
         </div>
       ))}
 
-      <div className="min-h-screen text-white relative overflow-x-hidden" style={{ background: '#05050f' }}>
+      <div className="min-h-screen bg-white text-gray-900">
 
-        {/* ── Background colour blobs ─────────────────────── */}
-        <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-          {/* Sunset glow — bottom */}
-          <div
-            className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[900px] h-[400px] rounded-full blur-[120px]"
-            style={{ background: 'radial-gradient(ellipse, rgba(255,107,53,0.18) 0%, transparent 70%)' }}
-          />
-          {/* Cherry blossom — top right */}
-          <div
-            className="absolute -top-40 right-0 w-[600px] h-[600px] rounded-full blur-[100px]"
-            style={{ background: 'radial-gradient(ellipse, rgba(255,105,180,0.12) 0%, transparent 70%)' }}
-          />
-          {/* Torii crimson — left centre */}
-          <div
-            className="absolute top-1/3 -left-20 w-[500px] h-[500px] rounded-full blur-[120px]"
-            style={{ background: 'radial-gradient(ellipse, rgba(196,30,58,0.1) 0%, transparent 70%)' }}
-          />
-        </div>
-
-        {/* ══════════════ HERO ══════════════════════════════ */}
-        <section className="relative z-10 min-h-screen flex flex-col items-center justify-center px-4 pt-8 pb-16">
-
-          {/* Torii gate background silhouette */}
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-5">
-            <ToriiGate className="w-full max-w-3xl text-red-600" />
-          </div>
-
-          {/* Japanese subtitle */}
-          <div
-            className="mb-3 animate-fade-in"
-            style={{ animationDelay: '0.1s', opacity: 0 }}
-          >
-            <span
-              className="text-xs font-bold tracking-[0.35em] uppercase px-4 py-1.5 rounded-full border"
-              style={{ color: '#ff69b4', borderColor: 'rgba(255,105,180,0.35)', background: 'rgba(255,105,180,0.08)' }}
-            >
-              さようなら ✈ 東京へ
-            </span>
-          </div>
-
-          {/* Main headline */}
-          <h1
-            className="text-center font-display font-black leading-none mb-4 animate-slide-up-fade"
-            style={{ animationDelay: '0.25s', opacity: 0 }}
-          >
-            <span
-              className="block text-5xl sm:text-7xl md:text-8xl lg:text-9xl"
-              style={{
-                background: 'linear-gradient(135deg, #ff6b35 0%, #ff69b4 40%, #c41e3a 80%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-              }}
-            >
-              Sayonara,
-            </span>
-            <span
-              className="block text-6xl sm:text-8xl md:text-9xl lg:text-[10rem]"
-              style={{
-                background: 'linear-gradient(135deg, #ffffff 0%, #ffd700 60%, #ff9f43 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-              }}
-            >
-              Ryan!
-            </span>
-          </h1>
-
-          {/* Japanese main title */}
-          <p
-            className="text-2xl sm:text-3xl md:text-4xl font-display font-bold mb-6 text-center animate-slide-up-fade"
-            style={{ color: 'rgba(255,105,180,0.85)', animationDelay: '0.4s', opacity: 0 }}
-          >
-            さようなら、ライアン！🌸
-          </p>
-
-          {/* Tagline */}
-          <p
-            className="text-base sm:text-lg md:text-xl text-center max-w-2xl mb-10 animate-slide-up-fade"
-            style={{ color: 'rgba(255,255,255,0.6)', animationDelay: '0.55s', opacity: 0 }}
-          >
-            Before you conquer Tokyo, we send you off in true Rio style —<br className="hidden sm:block" />
-            sun, sand, and way too many caipirinhas. 🍹
-          </p>
-
-          {/* Date pill */}
-          <div
-            className="flex items-center gap-3 mb-10 px-6 py-3 rounded-2xl border animate-slide-up-fade"
-            style={{
-              background: 'rgba(196,30,58,0.12)',
-              borderColor: 'rgba(196,30,58,0.4)',
-              animationDelay: '0.65s',
-              opacity: 0,
-            }}
-          >
-            <Calendar className="w-5 h-5 flex-shrink-0" style={{ color: '#c41e3a' }} />
-            <span className="text-sm sm:text-base font-semibold tracking-wide">
-              Sunday, May 3, 2026 &nbsp;·&nbsp; Ipanema Beach, Rio de Janeiro
-            </span>
-          </div>
-
-          {/* Countdown */}
-          <div className="flex gap-4 sm:gap-6 mb-8">
-            {[
-              { val: timeLeft.days,    label: 'Days' },
-              { val: timeLeft.hours,   label: 'Hours' },
-              { val: timeLeft.minutes, label: 'Min' },
-              { val: timeLeft.seconds, label: 'Sec' },
-            ].map(({ val, label }) => (
-              <div key={label} className="flex flex-col items-center">
-                <span
-                  className="font-display font-black text-3xl sm:text-4xl tabular-nums"
-                  style={{ background: 'linear-gradient(135deg,#ffd700,#ff9f43)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}
-                >
-                  {String(val).padStart(2, '0')}
-                </span>
-                <span className="text-xs tracking-widest uppercase opacity-40 mt-1">{label}</span>
-              </div>
-            ))}
-          </div>
-
-          {/* Social proof */}
-          <div className="mb-6 px-4 py-2 rounded-full text-sm font-semibold" style={{ background: 'rgba(255,107,53,0.15)', color: '#ff9f43' }}>
-            🔥 38 people are going
-          </div>
-
-          {/* CTA */}
-          {!success && (
-            <a
-              href="#rsvp"
-              className="group relative px-10 py-4 rounded-2xl font-display font-black text-lg sm:text-xl text-white transition-all duration-300 hover:scale-105 active:scale-95 animate-pulse-glow animate-slide-up-fade inline-flex items-center gap-2"
-              style={{
-                background: 'linear-gradient(135deg, #c41e3a 0%, #ff6b35 100%)',
-                animationDelay: '0.8s',
-                opacity: 0,
-              }}
-            >
-              <Ticket className="w-5 h-5" />
-              Get Your Ticket &nbsp;·&nbsp; チケットを取得
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </a>
-          )}
-
-          {error && (
-            <p className="mt-4 text-red-400 text-sm text-center max-w-sm">{error}</p>
-          )}
-
-          {/* Success state */}
-          {success && (
-            <div
-              className="mt-4 px-8 py-5 rounded-2xl border text-center max-w-md"
-              style={{ background: 'rgba(34,197,94,0.1)', borderColor: 'rgba(34,197,94,0.35)' }}
-            >
-              <p className="text-green-400 font-display font-bold text-xl mb-1">🎉 You're in! お疲れ様！</p>
-              <p className="text-white/70 text-sm">
-                Ticket confirmed! See you at Ipanema on May 3. 🌸🏖️
-              </p>
-            </div>
-          )}
-
-          {/* Cancelled state */}
-          {cancelled && (
-            <div
-              className="mt-4 px-8 py-5 rounded-2xl border text-center max-w-md"
-              style={{ background: 'rgba(239,68,68,0.08)', borderColor: 'rgba(239,68,68,0.3)' }}
-            >
-              <p className="text-red-400 font-display font-bold text-lg mb-1">Payment cancelled</p>
-              <p className="text-white/60 text-sm">No worries — click above whenever you're ready!</p>
-            </div>
-          )}
-
-          {/* Scroll hint */}
-          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-float opacity-50">
-            <ChevronDown className="w-6 h-6" />
-          </div>
-        </section>
-
-        {/* ══════════════ RIO → TOKYO BANNER ═══════════════ */}
-        <WaveDivider />
+        {/* ══════════════ HERO ════════════════════════════════════ */}
         <section
-          className="relative z-10 py-12 px-4"
-          style={{ background: 'rgba(196,30,58,0.06)' }}
+          className="relative pt-24 pb-16 px-4 overflow-hidden"
+          style={{ background: 'linear-gradient(135deg, #ec4899 0%, #be185d 60%, #9d174d 100%)' }}
         >
-          <div className="max-w-4xl mx-auto">
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-10">
+          {/* Decorative blobs */}
+          <div className="absolute -top-20 -right-20 w-72 h-72 rounded-full bg-white/10 blur-3xl pointer-events-none" />
+          <div className="absolute -bottom-20 -left-20 w-56 h-56 rounded-full bg-white/10 blur-3xl pointer-events-none" />
 
-              {/* Rio side */}
-              <div className="flex flex-col items-center gap-2 text-center">
-                <span className="text-5xl sm:text-6xl animate-float" style={{ animationDelay: '0s' }}>🌊</span>
-                <p className="font-display font-black text-2xl sm:text-3xl" style={{ color: '#ff6b35' }}>Rio</p>
-                <p className="text-xs tracking-widest uppercase opacity-50">de Janeiro</p>
-              </div>
-
-              {/* Arrow with plane */}
-              <div className="flex items-center gap-2 sm:gap-4">
-                <div className="h-px w-8 sm:w-16" style={{ background: 'rgba(255,105,180,0.3)' }} />
-                <span className="text-3xl sm:text-4xl animate-float" style={{ animationDelay: '0.4s' }}>✈️</span>
-                <div className="h-px w-8 sm:w-16" style={{ background: 'rgba(255,105,180,0.3)' }} />
-              </div>
-
-              {/* Tokyo side */}
-              <div className="flex flex-col items-center gap-2 text-center">
-                <span className="text-5xl sm:text-6xl animate-float" style={{ animationDelay: '0.8s' }}>⛩️</span>
-                <p className="font-display font-black text-2xl sm:text-3xl" style={{ color: '#ff69b4' }}>Tokyo</p>
-                <p className="text-xs tracking-widest uppercase opacity-50">東京</p>
-              </div>
+          <div className="relative max-w-3xl mx-auto text-center text-white">
+            {/* Eyebrow */}
+            <div className="inline-flex items-center gap-2 rounded-full bg-white/20 px-4 py-1.5 text-xs font-bold uppercase tracking-widest mb-5">
+              <span>さようなら</span>
+              <span>✈</span>
+              <span>Tokyo</span>
             </div>
 
-            <p className="text-center mt-8 text-base sm:text-lg max-w-xl mx-auto" style={{ color: 'rgba(255,255,255,0.55)' }}>
-              Ryan is trading beach sunsets for neon skylines — so we're throwing him the best sendoff the Zona Sul has ever seen.
+            <h1 className="font-display font-black text-5xl sm:text-6xl md:text-7xl leading-tight mb-4">
+              Sayonara, Ryan! 🌸
+            </h1>
+
+            <p className="text-lg sm:text-xl opacity-90 mb-6 max-w-xl mx-auto">
+              Before you conquer Tokyo, we send you off in true Rio style:
+              sun, sand, and way too many caipirinhas.
             </p>
+
+            {/* Date pill */}
+            <div className="inline-flex items-center gap-2 bg-white/20 rounded-full px-5 py-2 text-sm font-semibold mb-8">
+              <Calendar className="w-4 h-4" />
+              Sunday, May 3, 2026 · Ipanema Beach, Posto 10
+            </div>
+
+            {/* Countdown */}
+            <div className="flex justify-center gap-6 sm:gap-10 mb-8">
+              {[
+                { val: timeLeft.days,    label: 'Days' },
+                { val: timeLeft.hours,   label: 'Hours' },
+                { val: timeLeft.minutes, label: 'Min' },
+                { val: timeLeft.seconds, label: 'Sec' },
+              ].map(({ val, label }) => (
+                <div key={label} className="flex flex-col items-center">
+                  <span className="font-display font-black text-3xl sm:text-4xl tabular-nums text-white">
+                    {String(val).padStart(2, '0')}
+                  </span>
+                  <span className="text-xs uppercase tracking-widest text-white/60 mt-1">{label}</span>
+                </div>
+              ))}
+            </div>
+
+            {/* Social proof */}
+            <div className="inline-flex items-center gap-2 bg-white/15 rounded-full px-4 py-1.5 text-sm font-semibold mb-8 text-white/90">
+              🔥 38 people are going
+            </div>
+
+            <div>
+              <a
+                href="#rsvp"
+                className="inline-flex items-center gap-2 bg-white text-beach-700 font-display font-black px-8 py-4 rounded-2xl text-lg shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200 active:scale-95"
+              >
+                <Ticket className="w-5 h-5" />
+                Get Your Ticket · チケット
+              </a>
+            </div>
           </div>
         </section>
-        <WaveDivider flip />
 
-        {/* ══════════════ EVENT DETAILS ═════════════════════ */}
-        <section className="relative z-10 py-20 px-4">
-          <div className="max-w-5xl mx-auto">
-            <div className="text-center mb-12">
-              <p className="text-xs font-bold tracking-[0.3em] uppercase mb-3" style={{ color: '#ff69b4' }}>
-                イベント詳細 · Event Details
-              </p>
-              <h2 className="font-display font-black text-4xl sm:text-5xl text-white">The Big Night</h2>
-            </div>
+        {/* ══════════════ EVENT DETAILS ════════════════════════ */}
+        <section className="py-16 px-4 bg-gray-50">
+          <div className="max-w-4xl mx-auto">
+            <p className="text-xs font-bold tracking-[0.3em] uppercase text-beach-500 text-center mb-2">イベント詳細</p>
+            <h2 className="font-display font-black text-3xl sm:text-4xl text-center text-gray-900 mb-10">The Big Day</h2>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {[
+                { icon: <Calendar className="w-6 h-6" />, label: 'Date', value: 'Sunday, May 3', sub: '2026', color: 'beach' },
+                { icon: <Clock className="w-6 h-6" />,    label: 'Time', value: '2:00 PM', sub: 'until sunset 🌅', color: 'sunset' },
                 {
-                  icon: <Calendar className="w-7 h-7" />,
-                  label: '日付 · Date',
-                  value: 'Sunday, May 3',
-                  sub: '2026',
-                  color: '#c41e3a',
-                },
-                {
-                  icon: <Clock className="w-7 h-7" />,
-                  label: '時間 · Time',
-                  value: '2:00 PM',
-                  sub: 'until sunset 🌅',
-                  color: '#ff6b35',
-                },
-                {
-                  icon: <MapPin className="w-7 h-7" />,
-                  label: '場所 · Location',
-                  value: 'Ipanema — Posto 10',
-                  sub: '📍 Open in Maps',
-                  color: '#ff69b4',
+                  icon: <MapPin className="w-6 h-6" />,
+                  label: 'Location',
+                  value: 'Posto 10',
+                  sub: 'Tap for directions 📍',
+                  color: 'ocean',
                   href: 'https://maps.google.com/?q=Posto+10+Ipanema+Rio+de+Janeiro',
                 },
-                {
-                  icon: <Music className="w-7 h-7" />,
-                  label: 'ドレスコード · Vibe',
-                  value: 'Beach + Tokyo',
-                  sub: 'your best look',
-                  color: '#ffd700',
-                },
+                { icon: <Music className="w-6 h-6" />,    label: 'Vibe', value: 'Beach + Tokyo', sub: 'your best look ✨', color: 'beach' },
               ].map((card: any, i) => (
                 <div
                   key={i}
-                  className="flex flex-col items-center text-center p-6 rounded-2xl border transition-transform hover:-translate-y-1 duration-300"
-                  style={{
-                    background: 'rgba(255,255,255,0.03)',
-                    borderColor: `${card.color}33`,
-                    cursor: card.href ? 'pointer' : 'default',
-                  }}
-                  onClick={() => {
-                    if (!card.href) return;
-                    const isIG = /Instagram/.test(navigator.userAgent);
-                    if (isIG) window.location.href = card.href;
-                    else window.open(card.href, '_blank', 'noopener,noreferrer');
-                  }}
+                  onClick={() => card.href && openLink(card.href)}
+                  className={`bg-white rounded-2xl border border-gray-100 shadow-sm p-6 flex flex-col items-center text-center transition-all duration-200 hover:-translate-y-1 hover:shadow-md ${card.href ? 'cursor-pointer' : ''}`}
                 >
-                  <div
-                    className="mb-4 p-3 rounded-xl"
-                    style={{ background: `${card.color}18`, color: card.color }}
-                  >
+                  <div className={`mb-3 p-2.5 rounded-xl bg-${card.color}-50 text-${card.color}-500`}>
                     {card.icon}
                   </div>
-                  <p className="text-xs font-semibold tracking-widest uppercase opacity-50 mb-1">{card.label}</p>
-                  <p className="font-display font-black text-xl text-white">{card.value}</p>
-                  <p className="text-sm mt-1" style={{ color: 'rgba(255,255,255,0.45)' }}>{card.sub}</p>
+                  <p className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">{card.label}</p>
+                  <p className="font-display font-black text-gray-900 text-lg">{card.value}</p>
+                  <p className="text-sm text-gray-500 mt-0.5">{card.sub}</p>
                 </div>
               ))}
             </div>
           </div>
         </section>
 
-        {/* ══════════════ WHAT'S INCLUDED ══════════════════ */}
-        <section
-          className="relative z-10 py-20 px-4"
-          style={{ background: 'rgba(255,105,180,0.04)' }}
-        >
+        {/* ══════════════ VENUE + DJ ════════════════════════════ */}
+        <section className="py-16 px-4 bg-white">
           <div className="max-w-4xl mx-auto">
-            <div className="text-center mb-12">
-              <p className="text-xs font-bold tracking-[0.3em] uppercase mb-3" style={{ color: '#ff6b35' }}>
-                含まれるもの · What's Included
-              </p>
-              <h2 className="font-display font-black text-4xl sm:text-5xl text-white">Your ticket covers</h2>
+            <p className="text-xs font-bold tracking-[0.3em] uppercase text-beach-500 text-center mb-2">場所とエンタメ</p>
+            <h2 className="font-display font-black text-3xl sm:text-4xl text-center text-gray-900 mb-10">Venue & Entertainment</h2>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              {/* Venue */}
+              <div className="bg-gray-50 rounded-2xl border border-gray-100 p-6">
+                <p className="text-xs font-bold uppercase tracking-widest text-beach-500 mb-3">📍 Venue</p>
+                <h3 className="font-display font-black text-xl text-gray-900 mb-1">Barraca 120</h3>
+                <p className="text-beach-600 font-semibold text-sm mb-3">Escritório Carioca</p>
+                <p className="text-sm text-gray-600 mb-4 leading-relaxed">
+                  Ipanema Beach, Posto 10. Our favourite barraca and the perfect backdrop for the best sendoff in Zona Sul history.
+                </p>
+                <button
+                  onClick={() => {
+                    trackEvent('venue_instagram_clicked', { category: 'Event' });
+                    openLink('https://www.instagram.com/escritoriocarioca');
+                  }}
+                  className="inline-flex items-center gap-2 text-sm font-semibold text-beach-600 hover:text-beach-700 transition-colors"
+                >
+                  <Instagram className="w-4 h-4" />
+                  @escritoriocarioca
+                  <ExternalLink className="w-3 h-3" />
+                </button>
+              </div>
+
+              {/* DJ */}
+              <div className="bg-gray-50 rounded-2xl border border-gray-100 p-6">
+                <p className="text-xs font-bold uppercase tracking-widest text-sunset-500 mb-3">🎧 Live DJ</p>
+                <h3 className="font-display font-black text-xl text-gray-900 mb-1">Lavinia Aune</h3>
+                <p className="text-sunset-600 font-semibold text-sm mb-3">Live set · Sunset session</p>
+                <p className="text-sm text-gray-600 mb-4 leading-relaxed">
+                  She'll be spinning from the afternoon into sunset. The perfect soundtrack for a legendary farewell on the sand.
+                </p>
+                <button
+                  onClick={() => {
+                    trackEvent('dj_instagram_clicked', { category: 'Event' });
+                    openLink('https://www.instagram.com/laviniaaune');
+                  }}
+                  className="inline-flex items-center gap-2 text-sm font-semibold text-sunset-600 hover:text-sunset-700 transition-colors"
+                >
+                  <Instagram className="w-4 h-4" />
+                  @laviniaaune
+                  <ExternalLink className="w-3 h-3" />
+                </button>
+              </div>
             </div>
+          </div>
+        </section>
+
+        {/* ══════════════ WHAT'S INCLUDED ══════════════════════ */}
+        <section className="py-16 px-4 bg-gray-50">
+          <div className="max-w-4xl mx-auto">
+            <p className="text-xs font-bold tracking-[0.3em] uppercase text-beach-500 text-center mb-2">含まれるもの</p>
+            <h2 className="font-display font-black text-3xl sm:text-4xl text-center text-gray-900 mb-10">Your ticket covers</h2>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
               {[
-                {
-                  emoji: '🏖️',
-                  title: 'Beach Chair + Umbrella',
-                  titleJP: 'ビーチチェア＋パラソル',
-                  desc: 'Reserved beach chair and umbrella rental for the whole afternoon. Your spot is waiting.',
-                  color: '#ff6b35',
-                },
-                {
-                  emoji: '🍹',
-                  title: 'Welcome Drink',
-                  titleJP: 'ウェルカムドリンク',
-                  desc: 'One welcome drink of your choice — caipirinha, cerveja, or whatever calls your name.',
-                  color: '#ff69b4',
-                },
-                {
-                  emoji: '🌸',
-                  title: 'Epic Send-Off Vibes',
-                  titleJP: '最高の雰囲気',
-                  desc: "Sun, music, friends, and the warmth of a community cheering Ryan on to his next adventure.",
-                  color: '#ffd700',
-                },
+                { emoji: '🏖️', title: 'Beach Chair + Umbrella', sub: 'ビーチチェア＋パラソル', desc: 'Reserved spot for the whole afternoon. Your seat is waiting.' },
+                { emoji: '🍹', title: 'Welcome Drink',          sub: 'ウェルカムドリンク',    desc: 'One drink of your choice: caipirinha, cerveja, whatever calls your name.' },
+                { emoji: '🌸', title: 'Epic Send-Off Vibes',    sub: '最高の雰囲気',          desc: 'Sun, music, friends, and a community cheering Ryan on to his next adventure.' },
               ].map((item, i) => (
-                <div
-                  key={i}
-                  className="relative p-7 rounded-2xl border overflow-hidden group transition-transform hover:-translate-y-2 duration-300"
-                  style={{
-                    background: 'rgba(255,255,255,0.03)',
-                    borderColor: `${item.color}30`,
-                  }}
-                >
-                  {/* Glow on hover */}
-                  <div
-                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                    style={{ background: `radial-gradient(ellipse at 50% 0%, ${item.color}14, transparent 70%)` }}
-                  />
-
-                  <span className="text-5xl mb-5 block animate-float" style={{ animationDelay: `${i * 0.3}s` }}>
-                    {item.emoji}
-                  </span>
-                  <h3 className="font-display font-black text-xl text-white mb-1">{item.title}</h3>
-                  <p className="text-xs mb-3 font-medium" style={{ color: item.color }}>{item.titleJP}</p>
-                  <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.5)' }}>{item.desc}</p>
+                <div key={i} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 text-center hover:-translate-y-1 hover:shadow-md transition-all duration-200">
+                  <span className="text-4xl block mb-4 animate-float" style={{ animationDelay: `${i * 0.3}s` }}>{item.emoji}</span>
+                  <h3 className="font-display font-black text-gray-900 text-lg mb-1">{item.title}</h3>
+                  <p className="text-xs text-beach-500 font-semibold mb-2">{item.sub}</p>
+                  <p className="text-sm text-gray-500 leading-relaxed">{item.desc}</p>
                 </div>
               ))}
             </div>
           </div>
         </section>
 
-        {/* ══════════════ ABOUT RYAN ════════════════════════ */}
-        <section className="relative z-10 py-20 px-4">
-          <div className="max-w-3xl mx-auto text-center">
-
-            {/* Decorative torii */}
-            <div className="flex justify-center mb-8 opacity-30">
-              <ToriiGate className="w-24 text-red-500" />
-            </div>
-
-            <p className="text-xs font-bold tracking-[0.3em] uppercase mb-4" style={{ color: '#c41e3a' }}>
-              ライアンへ · For Ryan
-            </p>
-
-            <blockquote
-              className="font-display font-black text-2xl sm:text-3xl md:text-4xl leading-snug mb-8"
-              style={{
-                background: 'linear-gradient(135deg, #ffffff, rgba(255,255,255,0.7))',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-              }}
-            >
-              "You came for the beach. You stayed for the people.<br />
-              Now you take both with you to Tokyo."
+        {/* ══════════════ FOR RYAN ══════════════════════════════ */}
+        <section className="py-16 px-4 bg-white">
+          <div className="max-w-2xl mx-auto text-center">
+            <p className="text-xs font-bold tracking-[0.3em] uppercase text-beach-500 mb-4">ライアンへ · For Ryan</p>
+            <blockquote className="font-display font-black text-2xl sm:text-3xl text-gray-900 leading-snug mb-6">
+              "You came for the beach.<br />You stayed for the people.<br />
+              <span className="text-beach-500">Now you take both to Tokyo."</span>
             </blockquote>
-
-            {/* Japanese haiku-style */}
-            <div
-              className="inline-block px-8 py-5 rounded-2xl border mb-8"
-              style={{ background: 'rgba(196,30,58,0.08)', borderColor: 'rgba(196,30,58,0.25)' }}
-            >
-              <p className="font-display text-lg sm:text-xl leading-relaxed" style={{ color: 'rgba(255,105,180,0.9)' }}>
-                波の音、覚えてね<br />
-                <span className="text-sm opacity-70 font-normal">remember the sound of the waves</span>
+            <div className="inline-block bg-beach-50 border border-beach-100 rounded-2xl px-8 py-5 mb-6">
+              <p className="text-beach-700 font-display text-lg leading-relaxed">
+                波の音、覚えてね
+                <span className="block text-sm text-beach-400 font-normal mt-1">remember the sound of the waves</span>
               </p>
             </div>
-
-            <p className="text-base leading-relaxed max-w-2xl mx-auto" style={{ color: 'rgba(255,255,255,0.5)' }}>
-              Ryan has been a part of the Carioca Coastal Club family, living the true carioca life —
-              surf, sun, and saudade. As he heads to Japan for his next chapter, we celebrate the
-              friendships, memories, and yes, the legendary beach days.
+            <p className="text-gray-500 text-base leading-relaxed">
+              Ryan has been part of the Carioca Coastal Club family, living the true carioca life of surf, sun, and saudade.
+              As he heads to Japan, we celebrate the friendships, memories, and legendary beach days.
             </p>
           </div>
         </section>
 
-        {/* ══════════════ TICKET / RSVP ═════════════════════ */}
-        <section
-          id="rsvp"
-          className="relative z-10 py-24 px-4"
-          style={{ background: 'linear-gradient(180deg, transparent 0%, rgba(196,30,58,0.08) 50%, transparent 100%)' }}
-        >
-          <div className="max-w-lg mx-auto">
+        {/* ══════════════ TICKET / RSVP ═════════════════════════ */}
+        <section id="rsvp" className="py-16 px-4 bg-gray-50">
+          <div className="max-w-md mx-auto">
+            <p className="text-xs font-bold tracking-[0.3em] uppercase text-beach-500 text-center mb-2">🎫 RSVP · チケット</p>
+            <h2 className="font-display font-black text-3xl sm:text-4xl text-center text-gray-900 mb-2">Secure Your Spot</h2>
+            <p className="text-center text-gray-500 text-sm mb-8">席を確保する · Limited spots available</p>
 
-            {/* Card */}
-            <div
-              className="relative rounded-3xl overflow-hidden border p-8 sm:p-10 text-center"
-              style={{
-                background: 'rgba(255,255,255,0.03)',
-                borderColor: 'rgba(196,30,58,0.4)',
-                boxShadow: '0 0 60px rgba(196,30,58,0.15), 0 0 120px rgba(255,105,180,0.08)',
-              }}
-            >
-              {/* Top gradient stripe */}
-              <div
-                className="absolute top-0 left-0 right-0 h-1 animate-gradient-shift"
-                style={{ background: 'linear-gradient(90deg, #c41e3a, #ff6b35, #ff69b4, #c41e3a)' }}
-              />
+            {/* Ticket card */}
+            <div className="bg-white rounded-3xl border border-gray-100 shadow-lg overflow-hidden">
+              {/* Top stripe */}
+              <div className="h-1.5 animate-gradient-shift" style={{ background: 'linear-gradient(90deg, #ec4899, #eab308, #0ea5e9, #ec4899)' }} />
 
-              <div className="mb-2">
-                <span
-                  className="text-xs font-bold tracking-[0.3em] uppercase px-3 py-1 rounded-full"
-                  style={{ background: 'rgba(196,30,58,0.2)', color: '#ff69b4' }}
-                >
-                  🎫 RSVP · チケット
-                </span>
-              </div>
-
-              <h2 className="font-display font-black text-3xl sm:text-4xl text-white mt-4 mb-2">
-                Secure Your Spot
-              </h2>
-              <p className="text-sm mb-6" style={{ color: 'rgba(255,255,255,0.45)' }}>
-                席を確保する · Limited spots available
-              </p>
-
-              {/* Price */}
-              <div className="flex items-center justify-center gap-4 mb-3">
-                <div>
-                  <span
-                    className="font-display font-black text-6xl sm:text-7xl"
-                    style={{
-                      background: 'linear-gradient(135deg, #ffd700, #ff9f43)',
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
-                      backgroundClip: 'text',
-                    }}
-                  >
-                    R$100
-                  </span>
-                  <p className="text-sm mt-1" style={{ color: 'rgba(255,255,255,0.4)' }}>≈ $20 USD</p>
+              <div className="p-8">
+                {/* Price */}
+                <div className="text-center mb-6 pb-6 border-b border-gray-100">
+                  <div className="flex items-baseline justify-center gap-1">
+                    <span className="text-2xl font-bold text-gray-400">R$</span>
+                    <span className="font-display font-black text-7xl text-gray-900 leading-none">100</span>
+                  </div>
+                  <p className="text-sm text-gray-400 mt-1">≈ $20 USD · per person</p>
                 </div>
-              </div>
 
-              {/* Includes list */}
-              <div className="space-y-2 mb-8 text-sm">
-                {[
-                  '🏖️  Beach chair + umbrella rental',
-                  '🍹  Welcome drink of your choice',
-                  '🌸  A Rio farewell for the ages',
-                ].map((item, i) => (
-                  <div key={i} className="flex items-center justify-center gap-2" style={{ color: 'rgba(255,255,255,0.65)' }}>
-                    <span>{item}</span>
-                  </div>
-                ))}
-              </div>
+                {/* Includes */}
+                <ul className="space-y-2 mb-6 text-sm text-gray-600">
+                  {['🏖️  Beach chair + umbrella rental', '🍹  Welcome drink of your choice', '🌸  A Rio farewell for the ages'].map((item) => (
+                    <li key={item} className="flex items-center gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-beach-400 flex-shrink-0" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
 
-              {/* Payment tabs */}
-              {!success ? (
-                <>
-                  {/* Tab switcher */}
-                  <div className="flex rounded-xl overflow-hidden border mb-6" style={{ borderColor: 'rgba(255,255,255,0.1)' }}>
-                    {(['pix', 'card'] as const).map((t) => (
-                      <button
-                        key={t}
-                        onClick={() => setPayTab(t)}
-                        className="flex-1 py-2.5 text-sm font-bold transition-colors"
-                        style={{
-                          background: payTab === t ? 'rgba(196,30,58,0.4)' : 'transparent',
-                          color: payTab === t ? '#fff' : 'rgba(255,255,255,0.4)',
-                        }}
-                      >
-                        {t === 'pix' ? '⚡ PIX (BR)' : '💳 Credit Card'}
-                      </button>
-                    ))}
-                  </div>
+                {!success ? (
+                  <>
+                    {/* Tab switcher */}
+                    <div className="flex rounded-xl overflow-hidden border border-gray-200 mb-5">
+                      {(['pix', 'card'] as const).map((t) => (
+                        <button
+                          key={t}
+                          onClick={() => setPayTab(t)}
+                          className={`flex-1 py-2.5 text-sm font-bold transition-colors ${payTab === t ? 'bg-beach-500 text-white' : 'bg-white text-gray-500 hover:bg-gray-50'}`}
+                        >
+                          {t === 'pix' ? '⚡ PIX (BR)' : '💳 Credit Card'}
+                        </button>
+                      ))}
+                    </div>
 
-                  {/* PIX tab */}
-                  {payTab === 'pix' && (
-                    <div className="space-y-4">
-                      <div className="flex justify-center">
-                        <div className="rounded-2xl p-4 bg-white">
-                          <QRCodeSVG value={PIX_KEY} size={160} fgColor="#c41e3a" bgColor="#ffffff" level="M" />
+                    {/* PIX tab */}
+                    {payTab === 'pix' && (
+                      <div className="space-y-3">
+                        <div className="flex justify-center">
+                          <div className="rounded-2xl border-2 border-beach-100 p-4 bg-white shadow-inner">
+                            <QRCodeSVG value={PIX_KEY} size={160} fgColor="#be185d" bgColor="#ffffff" level="M" />
+                          </div>
                         </div>
-                      </div>
-                      <button
-                        onClick={handleCopyPix}
-                        className="w-full flex items-center justify-between px-4 py-3 rounded-xl border transition-colors"
-                        style={{ background: 'rgba(255,255,255,0.05)', borderColor: 'rgba(255,255,255,0.1)' }}
-                      >
-                        <span className="font-mono text-sm text-white/80">{PIX_DISPLAY}</span>
-                        <span className="flex items-center gap-1.5 text-xs font-semibold" style={{ color: '#ff69b4' }}>
-                          {pixCopied
-                            ? <><CheckCircle2 className="w-4 h-4" /> Copied!</>
-                            : <><Copy className="w-4 h-4" /> Copy PIX key</>}
-                        </span>
-                      </button>
-                      <button
-                        onClick={handleWhatsAppReceipt}
-                        className="w-full py-3.5 rounded-2xl font-bold text-white flex items-center justify-center gap-2 transition-all hover:scale-[1.02] active:scale-95"
-                        style={{ background: 'linear-gradient(135deg, #25d366, #128c7e)' }}
-                      >
-                        <MessageCircle className="w-5 h-5" />
-                        Send Receipt on WhatsApp
-                      </button>
-                      <p className="text-xs text-center" style={{ color: 'rgba(255,255,255,0.3)' }}>
-                        Pay R$100 → screenshot receipt → tap button above
-                      </p>
-                    </div>
-                  )}
-
-                  {/* Card / Stripe tab */}
-                  {payTab === 'card' && (
-                    <div className="space-y-4">
-                      <button
-                        onClick={handleCheckout}
-                        disabled={loading}
-                        className="w-full py-4 rounded-2xl font-display font-black text-lg text-white transition-all hover:scale-[1.02] active:scale-95 animate-pulse-glow disabled:opacity-60"
-                        style={{ background: 'linear-gradient(135deg, #c41e3a 0%, #ff6b35 100%)' }}
-                      >
-                        {loading ? (
-                          <span className="flex items-center justify-center gap-2">
-                            <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin inline-block" />
-                            Redirecting…
+                        <button
+                          onClick={handleCopyPix}
+                          className="w-full flex items-center justify-between px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 hover:bg-beach-50 hover:border-beach-200 transition-colors text-sm"
+                        >
+                          <span className="font-mono text-gray-700 tracking-wide">{PIX_DISPLAY}</span>
+                          <span className="flex items-center gap-1.5 font-semibold text-beach-600">
+                            {pixCopied ? <><CheckCircle2 className="w-4 h-4" />Copied!</> : <><Copy className="w-4 h-4" />Copy key</>}
                           </span>
-                        ) : 'Pay R$100 by Card — チケットを購入'}
-                      </button>
-                      {error && <p className="text-red-400 text-sm text-center">{error}</p>}
-                      <p className="text-xs text-center" style={{ color: 'rgba(255,255,255,0.25)' }}>
-                        Secure checkout via Stripe · 安全なお支払い
-                      </p>
-                    </div>
-                  )}
-                </>
-              ) : (
-                <div className="py-4 rounded-2xl text-center" style={{ background: 'rgba(34,197,94,0.12)', border: '1px solid rgba(34,197,94,0.3)' }}>
-                  <p className="text-green-400 font-display font-bold text-lg">🎉 You're in!</p>
-                  <p className="text-white/50 text-sm mt-1">See you May 3 🌸</p>
-                </div>
-              )}
+                        </button>
+                        <button
+                          onClick={handleWhatsAppReceipt}
+                          className="w-full py-3.5 rounded-2xl font-bold text-white flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-95 transition-all"
+                          style={{ background: 'linear-gradient(135deg, #25d366, #128c7e)' }}
+                        >
+                          <MessageCircle className="w-5 h-5" />
+                          Send Receipt on WhatsApp
+                        </button>
+                        <p className="text-xs text-center text-gray-400">Pay R$100 PIX → screenshot receipt → tap button above</p>
+                      </div>
+                    )}
+
+                    {/* Card tab */}
+                    {payTab === 'card' && (
+                      <div className="space-y-3">
+                        <button
+                          onClick={handleStripeCheckout}
+                          disabled={loading}
+                          className="w-full py-4 rounded-2xl font-display font-black text-lg text-white bg-beach-500 hover:bg-beach-600 transition-all hover:scale-[1.02] active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed shadow-sm"
+                        >
+                          {loading ? (
+                            <span className="flex items-center justify-center gap-2">
+                              <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin inline-block" />
+                              Redirecting…
+                            </span>
+                          ) : 'Pay R$100 by Card'}
+                        </button>
+                        {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+                        <p className="text-xs text-center text-gray-400">Secure checkout via Stripe</p>
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <div className="py-4 rounded-2xl text-center bg-green-50 border border-green-200">
+                    <p className="text-green-700 font-display font-bold text-lg">🎉 You're in!</p>
+                    <p className="text-green-600 text-sm mt-1">See you at Ipanema on May 3 🌸</p>
+                  </div>
+                )}
+
+                {cancelled && !success && (
+                  <p className="mt-3 text-sm text-center text-gray-400">Payment cancelled. Tap above whenever you're ready.</p>
+                )}
+              </div>
             </div>
           </div>
         </section>
 
-        {/* ══════════════ SHARE + CALENDAR ════════════════ */}
-        <section className="relative z-10 pb-12 px-4">
-          <div className="max-w-lg mx-auto flex flex-col sm:flex-row gap-3">
+        {/* ══════════════ SHARE + CALENDAR ══════════════════════ */}
+        <section className="py-8 px-4 bg-gray-50">
+          <div className="max-w-md mx-auto flex flex-col sm:flex-row gap-3">
             <button
               onClick={() => {
-                const msg = encodeURIComponent(`🌸 Ryan's Farewell Party — May 3, Ipanema Beach! Get your ticket: ${window.location.origin}/ryans-farewell-party`);
-                const url = `https://wa.me/?text=${msg}`;
-                const isIG = /Instagram/.test(navigator.userAgent);
-                if (isIG) window.location.href = url;
-                else window.open(url, '_blank', 'noopener,noreferrer');
+                const msg = encodeURIComponent(`🌸 Ryan's Farewell Party, May 3, Ipanema Posto 10! Tickets: ${window.location.origin}/ryans-farewell-party`);
+                openLink(`https://wa.me/?text=${msg}`);
                 trackEvent('event_shared', { method: 'whatsapp', category: 'Event' });
               }}
-              className="flex-1 flex items-center justify-center gap-2 py-3 rounded-2xl font-semibold text-sm border transition-all hover:scale-[1.02]"
-              style={{ borderColor: 'rgba(37,211,102,0.4)', color: '#25d366', background: 'rgba(37,211,102,0.08)' }}
+              className="flex-1 flex items-center justify-center gap-2 py-3 rounded-2xl font-semibold text-sm border border-green-200 text-green-700 bg-green-50 hover:bg-green-100 transition-colors"
             >
-              <MessageCircle className="w-4 h-4" /> Tell a friend on WhatsApp
+              <MessageCircle className="w-4 h-4" /> Tell a friend
             </button>
             <a
-              href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Ryan%27s+Farewell+Party&dates=20260503T170000Z/20260503T230000Z&details=Farewell+party+at+Ipanema+Beach+-+R%24100+includes+chair%2C+umbrella+%26+welcome+drink&location=Posto+10+Ipanema+Rio+de+Janeiro"
+              href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Ryan%27s+Farewell+Party&dates=20260503T170000Z/20260503T230000Z&details=Farewell+party+at+Ipanema+Beach+Posto+10+-+R%24100+includes+chair%2C+umbrella+%26+welcome+drink&location=Posto+10+Ipanema+Rio+de+Janeiro"
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => trackEvent('add_to_calendar_clicked', { category: 'Event' })}
-              className="flex-1 flex items-center justify-center gap-2 py-3 rounded-2xl font-semibold text-sm border transition-all hover:scale-[1.02]"
-              style={{ borderColor: 'rgba(255,105,180,0.3)', color: '#ff69b4', background: 'rgba(255,105,180,0.06)' }}
+              className="flex-1 flex items-center justify-center gap-2 py-3 rounded-2xl font-semibold text-sm border border-beach-200 text-beach-600 bg-beach-50 hover:bg-beach-100 transition-colors"
             >
-              <Calendar className="w-4 h-4" /> Add to Google Calendar
+              <Calendar className="w-4 h-4" /> Add to Calendar
             </a>
           </div>
         </section>
 
-        {/* ══════════════ STAR RATING / HYPE ══════════════ */}
-        <section className="relative z-10 py-12 px-4">
-          <div className="max-w-2xl mx-auto text-center">
-            <div className="flex justify-center gap-1 mb-4">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <Star key={i} className="w-6 h-6 fill-current" style={{ color: '#ffd700' }} />
-              ))}
-            </div>
-            <p className="text-lg sm:text-xl font-display font-bold text-white mb-2">
-              "This is going to be legendary." 伝説になる。
-            </p>
-            <p className="text-sm" style={{ color: 'rgba(255,255,255,0.35)' }}>— Everyone who knows Ryan</p>
-          </div>
-        </section>
-
-        {/* ══════════════ FOOTER ════════════════════════════ */}
-        <footer
-          className="relative z-10 py-12 px-4 text-center border-t"
-          style={{ borderColor: 'rgba(255,255,255,0.06)' }}
-        >
+        {/* ══════════════ FOOTER ════════════════════════════════ */}
+        <footer className="py-12 px-4 text-center border-t border-gray-100 bg-white">
           <div className="flex justify-center gap-3 mb-4 text-3xl">
             <span className="animate-float" style={{ animationDelay: '0s' }}>🌊</span>
             <span className="animate-float" style={{ animationDelay: '0.3s' }}>🌸</span>
             <span className="animate-float" style={{ animationDelay: '0.6s' }}>⛩️</span>
             <span className="animate-float" style={{ animationDelay: '0.9s' }}>🌊</span>
           </div>
-          <p className="font-display font-black text-xl text-white mb-2">
-            またね、ライアン！
-          </p>
-          <p className="text-sm mb-6" style={{ color: 'rgba(255,255,255,0.4)' }}>
-            See you at the beach before Tokyo calls. 🍹
-          </p>
-          <div className="flex items-center justify-center gap-3">
-            <Waves className="w-4 h-4" style={{ color: '#ff6b35' }} />
-            <span className="text-xs tracking-widest uppercase" style={{ color: 'rgba(255,255,255,0.25)' }}>
-              Carioca Coastal Club · Rio de Janeiro
-            </span>
-            <Waves className="w-4 h-4" style={{ color: '#ff69b4' }} />
+          <p className="font-display font-black text-xl text-gray-900 mb-1">またね、ライアン！</p>
+          <p className="text-sm text-gray-400 mb-6">See you at the beach before Tokyo calls. 🍹</p>
+          <div className="flex items-center justify-center gap-2 text-xs text-gray-300">
+            <Waves className="w-4 h-4 text-beach-300" />
+            <span>Carioca Coastal Club · Rio de Janeiro</span>
+            <Waves className="w-4 h-4 text-beach-300" />
           </div>
-          <p className="mt-4 text-xs" style={{ color: 'rgba(255,255,255,0.15)' }}>
-            © 2026 Carioca Coastal Club. All rights reserved.
-          </p>
+          <p className="mt-3 text-xs text-gray-300">© 2026 Carioca Coastal Club. All rights reserved.</p>
         </footer>
 
       </div>
