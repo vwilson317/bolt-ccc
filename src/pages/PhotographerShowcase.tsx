@@ -151,8 +151,8 @@ const PhotographerShowcase: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-950 text-white">
       <SEOHead
-        title="Videography & Photography – Carioca Coastal Club"
-        description="Meet the photographers and videographers behind Carioca Coastal Club. Discover the creators capturing Rio's vibrant beach culture through stunning reels and photography."
+        title="Content Professionals – Carioca Coastal Club"
+        description="Meet the content professionals behind Carioca Coastal Club. Discover the creators capturing Rio's vibrant beach culture through stunning reels and photography."
         image="/logo-sq.jpeg"
         type="website"
       />
@@ -178,9 +178,9 @@ const PhotographerShowcase: React.FC = () => {
           </div>
 
           <h1 className="text-4xl md:text-6xl font-bold text-white text-center font-display leading-tight mb-4">
-            Videography &amp;{' '}
+            Content{' '}
             <span className="bg-gradient-to-r from-beach-400 to-beach-300 bg-clip-text text-transparent">
-              Photography
+              Professionals
             </span>
           </h1>
 

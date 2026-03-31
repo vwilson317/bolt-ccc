@@ -54,6 +54,7 @@
     "react-hot-toast": "^2.6.0",
     "react-i18next": "^13.5.0",
     "react-router-dom": "^6.8.1",
+    "stripe": "^14.25.0",
     "uuid": "^11.1.0"
   },
   "devDependencies": {

@@ -1,0 +1,453 @@
+{
+  "nav": {
+    "home": "ホーム",
+    "discover": "バラッカを探す",
+    "jobs": "求人",
+    "interviewProcess": "面接プロセス",
+    "about": "私たちについて",
+    "photos": "フォト",
+    "registerBarraca": "バラッカを登録"
+  },
+  "hero": {
+    "title": "お気に入りのバラッカが待っています",
+    "subtitle": "いつものスポットが開いているか確認して、チェアを予約し、会員限定の更新情報を受け取りましょう",
+    "cta": "バラッカを探す",
+    "earlyAccess": "ロイヤルティプログラムに参加"
+  },
+  "weather": {
+    "current": "現在の天気",
+    "feelsLike": "体感温度",
+    "humidity": "湿度",
+    "wind": "風",
+    "barracaConditions": "バラッカのコンディション",
+    "beachConditions": "ビーチのコンディション",
+    "conditions": {
+      "excellent": "バラッカ活動に最適",
+      "good": "良いバラッカコンディション",
+      "fair": "まあまあのコンディション、一部制限あり",
+      "poor": "悪いコンディション、室内活動をご検討ください"
+    }
+  },
+  "search": {
+    "placeholder": "名前、番号、または地区で検索...",
+    "filters": "フィルター",
+    "openNow": "今すぐ営業中",
+    "location": "場所",
+    "clear": "フィルターをクリア"
+  },
+  "barraca": {
+    "open": "営業中",
+    "closed": "閉店",
+    "typicalHours": "営業時間",
+    "location": "場所",
+    "menuPreview": "専門料理",
+    "comingSoon": "近日公開",
+    "weatherDependent": "天候依存",
+    "viewDetails": "詳細を見る",
+    "reserveChairs": "チェアを予約",
+    "loyaltyPerks": "メンバー特典あり",
+    "partner": "パートナー",
+    "showMore": "もっと見る",
+    "showLess": "閉じる",
+    "moreItems": "他{count}件",
+    "about": "概要",
+    "menu": "メニュー",
+    "amenities": "設備",
+    "contact": "お問い合わせ",
+    "website": "ウェブサイト",
+    "whatsapp": "WhatsApp",
+    "call": "電話",
+    "share": "シェア",
+    "notPartnered": "未提携",
+    "notPartneredMessage": "このバラッカは私たちと提携していません。基本情報のみ表示されます。",
+    "limitedInfo": "限定情報",
+    "undetermined": "未定"
+  },
+  "login": {
+    "title": "サインイン",
+    "email": "メール",
+    "password": "パスワード",
+    "signIn": "サインイン"
+  },
+  "photos": {
+    "title": "フォトギャラリー",
+    "description": "イベントのベストショットを厳選したフォトギャラリーをご覧ください。",
+    "subtitle": "ビーチイベントの最高の瞬間を振り返る",
+    "googlePhotosArchive": "Googleフォトアーカイブ",
+    "googlePhotosDescription": "Googleフォトで完全な写真コレクションにアクセス",
+    "viewArchive": "アーカイブを見る",
+    "photos": "枚の写真",
+    "noPhotos": "まだ写真はありません",
+    "noPhotosDescription": "新しいフォトギャラリーをお楽しみに",
+    "backToPhotos": "フォトに戻る",
+    "galleryNotFound": "ギャラリーが見つかりません",
+    "downloadPhoto": "写真をダウンロード",
+    "downloadAllPhotos": "すべての写真をダウンロード",
+    "instagramTag": "Instagramでタグ付け",
+    "instagramTagDescription": "Instagramでシェアする際は @Carioca_Coastal_Club をタグ付けしてください",
+    "gallery": "ギャラリー",
+    "archive": "アーカイブ",
+    "galleryDescription": "ギャラリーにはベストショットを掲載しています。すべての写真はアーカイブからご覧いただけます。",
+    "allLocations": "すべての場所",
+    "galleryInfo": "ギャラリー情報",
+    "galleryInfoDescription": "このギャラリーにはイベントのベストショットを掲載しています。",
+    "galleryTitles": {
+      "2025-09-20": "ビールポン：真実か罰か",
+      "2025-09-05": "バラッカ82でのビールポン",
+      "2025-08-24": "ファベーラの子供たちとのSNSの日",
+      "2025-08-23": "外国人ビーチデー",
+      "2025-07-27": "ローンチパーティー",
+      "2025-09-30": "デジタルノマドネットワーキングイベント"
+    },
+    "galleryDescriptions": {
+      "2025-09-20": "ビーチでの楽しいゲームナイト",
+      "2025-09-05": "バラッカ82でのビールポン。とても楽しかった！",
+      "2025-08-24": "広告キャンペーン2日目",
+      "2025-08-23": "2025年8月23日の広告キャンペーン",
+      "2025-07-27": "公式ローンチパーティー",
+      "2025-09-30": "デジタルノマドネットワーキングイベント"
+    }
+  },
+  "email": {
+    "subscribe": "ロイヤルティプログラムに参加",
+    "placeholder": "メールアドレスを入力",
+    "submit": "今すぐ参加",
+    "joining": "参加中...",
+    "welcome": "ようこそ！",
+    "success": "Carioca Coastal Clubへようこそ！",
+    "error": "有効なメールアドレスを入力してください",
+    "failed": "登録に失敗しました。もう一度お試しください。",
+    "benefits": "チェア予約、ステータス更新、会員限定オファーを受け取る"
+  },
+  "loyalty": {
+    "benefits": "会員特典",
+    "chairReservation": "チェア予約",
+    "exclusiveOffers": "限定オファー",
+    "newBarracas": "新しいバラッカ情報"
+  },
+  "share": {
+    "title": "このバラッカをシェア",
+    "message": "{location}にある{name}をチェックしてみてください！",
+    "copied": "リンクをコピーしました！",
+    "sharing": "シェア中...",
+    "error": "シェアエラー。もう一度お試しください。",
+    "shared_successfully": "シェアしました！",
+    "share_error": "シェアエラー。もう一度お試しください。",
+    "platforms": {
+      "whatsapp": "WhatsAppでシェア",
+      "facebook": "Facebookでシェア",
+      "twitter": "Twitterでシェア",
+      "instagram": "Instagramでシェア",
+      "copy": "リンクをコピー"
+    }
+  },
+  "home": {
+    "yourBarraca": "あなたのバラッカ、あなたらしく",
+    "joinThousands": "お気に入りのバラッカとつながるCarioca Coastal Clubを利用する数千人の常連客に加わりましょう",
+    "popularBarracas": "人気のバラッカ",
+    "popularDescription": "コミュニティから愛されているバラッカ。お気に入りが空いているか確認してスポットを予約しましょう",
+    "viewAllPartners": "すべてのバラッカを見る",
+    "whyJoin": "Carioca Coastal Clubに参加する理由",
+    "whyJoinDescription": "バラッカを探すだけでなく、リオのバラッカ文化へのつながり",
+    "exclusiveBenefits": "限定会員特典",
+    "exclusiveDescription": "チェア予約、空き状況更新、新スポット発見、お気に入りのバラッカからの特別オファー",
+    "joinToday": "今日クラブに参加",
+    "joinDescription": "お気に入りのバラッカで会員特典をお楽しみください。",
+    "stats": {
+      "availabilityUpdates": "空き状況更新",
+      "neighborhoods": "地区",
+      "partnerBarracas": "パートナーバラッカ"
+    },
+    "features": {
+      "chairReservations": {
+        "title": "チェア予約",
+        "description": "参加バラッカでお気に入りのスポットを予約 — もうチェアを探す心配なし"
+      },
+      "realTimeUpdates": {
+        "title": "リアルタイム更新",
+        "description": "お気に入りのバラッカが開店・閉店・特別オファーがある時に即座に通知"
+      },
+      "exclusivePerks": {
+        "title": "限定会員特典",
+        "description": "パートナーバラッカで特別割引、優先サービス、会員限定イベントにアクセス"
+      },
+      "personalizedRecommendations": {
+        "title": "パーソナライズドおすすめ",
+        "description": "好みに基づいて新しいバラッカを発見し、地元のインサイダーヒントを取得"
+      }
+    },
+    "memberBenefits": {
+      "chair": "チェア",
+      "reservations": "予約",
+      "priority": "優先",
+      "service": "サービス",
+      "availability": "空き状況",
+      "updates": "更新",
+      "special": "特別",
+      "offers": "オファー"
+    },
+    "instagram": {
+      "title": "Instagramでフォロー",
+      "description": "お気に入りのバラッカの最新機能、割引、イベント情報を取得。",
+      "ctaButton": "フォローする",
+      "followButton": "@carioca_costal_clubをフォロー",
+      "benefits": {
+        "photos": "機能更新",
+        "updates": "リアルタイム更新",
+        "exclusive": "限定コンテンツ"
+      }
+    },
+    "promo": {
+      "banner": {
+        "activeMessage": "このご訪問のプロモーションが有効です。フォロー",
+        "openOffer": "プロモーションオファーを開く"
+      },
+      "sticky": {
+        "badgeLabel": "サポーターバッジ",
+        "activeTitle": "割引バッジが有効",
+        "activeDescription": "プロモーション特典のためバラッカでこれを見せてください。",
+        "openDetails": "プロモーション詳細を開く"
+      },
+      "card": {
+        "badge": "フォローオファー",
+        "title": "無料割引バッジを取得 — {{name}}のバラッカをInstagramでフォロー",
+        "descriptionPrefix": "以下に電話またはメールを入力し、",
+        "descriptionSuffix": "をInstagramでフォローしてバッジを取得。同じIDで次回即座にバッジを復元。",
+        "step1Button": "バッジを取得 — Instagramでフォロー",
+        "step2Label": "電話またはメール（必須）",
+        "step2LabelBR": "CPF、電話、またはメール（必須）",
+        "identifierPlaceholder": "you@email.com または +55 21 99999-0000",
+        "identifierPlaceholderBR": "000.000.000-00、メール、または +55 21 99999-0000",
+        "claimButton": "割引パスを取得",
+        "saving": "保存中...",
+        "restoredUsing": "復元に使用：",
+        "note": "電話またはメールは必須です。次回即座にバッジを復元できます。",
+        "verifiedLabel": "認証済みサポーター",
+        "unlockedTitle": "サポーターバッジ解除",
+        "unlockedDescription": "バラッカでこのバッジを見せてコードを伝えてください",
+        "addToWallet": "コードをコピー/シェア",
+        "addToAppleWallet": "Apple Walletに追加"
+      },
+      "messages": {
+        "invalidIdentifier": "有効なCPF、メール、またはWhatsApp番号を入力してください。",
+        "restored": "おかえりなさい。割引バッジが復元されました。",
+        "followFirst": "まず @{{instagramHandle}} をフォローし、パスを取得してください。",
+        "claimedFallback": "このデバイスで割引パスを取得しました。",
+        "claimed": "割引パスを取得しました。次回このIDで即座に復元できます。",
+        "genericError": "今は割引パスを取得できません。もう一度お試しください。",
+        "walletAdded": "保存しました！バラッカでこのコードを見せてください。",
+        "walletCopied": "コードをクリップボードにコピーしました！",
+        "walletIOS": "Apple Walletを開いています…"
+      }
+    },
+    "footer": {
+      "description": "チェア予約、リアルタイム更新、限定会員特典でリオのバラッカ愛好家とお気に入りのスポットをつなぐ。",
+      "quickLinks": "クイックリンク",
+      "contact": "お問い合わせ",
+      "copyright": "© 2024 Carioca Coastal Club. 全著作権所有。",
+      "companyName": "Carioca Coastal Club",
+      "loyaltyProgram": "バラッカロイヤルティプログラム",
+      "location": "リオデジャネイロ、RJ"
+    }
+  },
+  "about": {
+    "title": "Carioca Coastal Clubについて",
+    "subtitle": "リオのバラッカ愛好家とお気に入りのスポットをつなぐロイヤルティプラットフォームです。",
+    "mission": "私たちのミッション",
+    "missionDescription": "リオのバラッカコミュニティとお気に入りのスポットの絆を強化すること。",
+    "missionQuote": "すべてのバラッカには常連客がいます — 私たちはその関係を強化します。",
+    "missionDetails": "チェア予約、リアルタイム更新、限定会員特典を通じて、お気に入りのバラッカスポットを楽しみやすくします。",
+    "whatWeStandFor": "私たちの価値観",
+    "valuesDescription": "ロイヤルティプラットフォームとコミュニティを推進する価値観",
+    "values": {
+      "passion": {
+        "title": "リオへの情熱",
+        "description": "私たちはリオデジャネイロを愛し、バラッカ愛好家とお気に入りのスポットをつなぎたいと思っています。"
+      },
+      "community": {
+        "title": "コミュニティファースト",
+        "description": "より良いコミュニケーションとサービスを通じて、顧客とバラッカの間のロイヤルティを構築します。"
+      },
+      "convenience": {
+        "title": "利便性",
+        "description": "参加バラッカでチェアを予約し、更新情報を受け取り、限定特典をお楽しみください。"
+      },
+      "benefits": {
+        "title": "会員特典",
+        "description": "常連客向けの限定オファー、優先サービス、特別イベント。"
+      }
+    },
+    "stats": {
+      "partnerBarracas": "パートナーバラッカ",
+      "activeMembers": "アクティブメンバー",
+      "statusUpdates": "ステータス更新",
+      "neighborhoods": "地区"
+    },
+    "meetTeam": "チームを紹介",
+    "teamDescription": "リオのバラッカコミュニティを強化するために取り組むバラッカ愛好家とテクノロジーの専門家",
+    "team": {
+      "vincent": { "name": "Vincent Wilson", "role": "創設者兼CEO", "bio": "国際的なビジネス開発と関係構築に5年以上の経験を持つ。" },
+      "hans":    { "name": "Hans Yadav",     "role": "CTO",        "bio": "顧客サービスシステムとデジタルプラットフォーム開発の専門家。" },
+      "simon":   { "name": "Simon Paul",     "role": "運営部長",   "bio": "シームレスなユーザーエクスペリエンスの創出に注力。" },
+      "jordi":   { "name": "Jordi De Avila", "role": "ビジネス運営マネージャー", "bio": "ビジネスプロセス最適化の専門家。" },
+      "ricardo": { "name": "Ricardo Del Razo", "role": "特別パートナーシップ部長", "bio": "主要なビジネス関係の開発と維持の専門家。" },
+      "janeese": { "name": "Janeesa Hollingshead", "role": "CFO", "bio": "戦略的財務計画と事業成長管理の専門家。" },
+      "leticia": { "name": "Leticia Castilhos", "role": "ソーシャルメディア部長", "bio": "オンラインコミュニティ構築とブランド認知向上に注力するデジタルマーケティングの専門家。" }
+    },
+    "getInTouch": "お問い合わせ",
+    "getInTouchDescription": "会員資格についてご質問がありますか？パートナーシップをご希望ですか？",
+    "whatsapp": "WhatsApp",
+    "whatsappDescription": "WhatsAppで迅速な対応",
+    "instagram": "Instagram",
+    "instagramDescription": "毎日の更新情報をフォロー",
+    "joinCommunity": "コミュニティに参加",
+    "joinCommunityDescription": "会員更新、チェア予約アラート、パートナーバラッカからの限定オファーを受け取る"
+  },
+  "discover": {
+    "title": "バラッカを探す",
+    "subtitle": "お気に入りのスポットが開いているか確認し、チェアを予約し、新しい会員特典を発見しましょう",
+    "searchPlaceholder": "# または名前",
+    "resultsFound": "パートナー",
+    "barracas": "バラッカ",
+    "barraca": "バラッカ",
+    "found": "見つかりました",
+    "noResults": "バラッカが見つかりません",
+    "noResultsMessage": "「{query}」の結果はありません。",
+    "adjustCriteria": "検索条件またはフィルターを変更してみてください。",
+    "clearAllFilters": "すべてのフィルターをクリア",
+    "filters": {
+      "all": "すべて",
+      "open": "営業中",
+      "closed": "閉店",
+      "allRatings": "すべての評価",
+      "excellent": "優秀",
+      "great": "とても良い",
+      "good": "良い"
+    }
+  },
+  "common": {
+    "loading": "読み込み中...",
+    "error": "エラー",
+    "success": "成功",
+    "cancel": "キャンセル",
+    "save": "保存",
+    "delete": "削除",
+    "edit": "編集",
+    "add": "追加",
+    "remove": "削除",
+    "close": "閉じる",
+    "back": "戻る",
+    "more": "もっと",
+    "less": "少なく",
+    "showMore": "もっと見る",
+    "showLess": "閉じる",
+    "required": "必須",
+    "optional": "任意"
+  },
+  "cta": {
+    "reserve": "予約",
+    "details": "詳細",
+    "contact": "お問い合わせ",
+    "menu": "メニュー",
+    "whatsapp": "WhatsApp",
+    "instagram": "Instagram"
+  },
+  "languages": {
+    "english": "英語",
+    "portuguese": "ポルトガル語",
+    "spanish": "スペイン語",
+    "french": "フランス語"
+  },
+  "communityHome": {
+    "seo": {
+      "title": "Carioca Coastal Club - パブリックビルダーコミュニティ",
+      "description": "プロジェクト、実験、進捗を公開で共有するコミュニティハブ。"
+    },
+    "eyebrow": "コミュニティ + パブリックビルド",
+    "title": "Carioca Coastal Clubはパブリックビルダーの旅となりました。",
+    "description": "このサイトでは公開でビルドしている内容を追跡しています。",
+    "whatsappCta": "WhatsAppグループに参加",
+    "projectsTitle": "プロジェクト",
+    "projectsDescription": "公開で発送しているものの増え続けるリスト。",
+    "status": {
+      "live": "公開中",
+      "building": "開発中",
+      "idea": "アイデア"
+    },
+    "projects": {
+      "carioca-coastal-club": {
+        "description": "オリジナルのビーチバラッカ発見とロイヤルティ体験。",
+        "cta": "プロジェクトを見る"
+      }
+    }
+  },
+  "languageExchangeFunnel": {
+    "seo": {
+      "title": "国際語学交換 | リオの土曜日",
+      "description": "毎週土曜日の国際語学交換に参加してWhatsAppグループで週次更新を受け取りましょう。"
+    },
+    "eyebrow": "リオの土曜日",
+    "title": "国際語学交換",
+    "description": "言語を練習し、新しい人々と出会い、コミュニティを構築するシンプルな週次ミートアップ。",
+    "cta": "WhatsAppグループに参加"
+  },
+  "emailSubscription": {
+    "title": "つながり続ける",
+    "description": "新しいイベントやプロモーションの通知を受け取る"
+  },
+  "cccPassPage": {
+    "activePass": "パス有効",
+    "activePassDescription": "オールアクセスパスが有効です！すべてのパートナーバラッカで割引をお楽しみください。",
+    "includedBarracas": "含まれるバラッカ",
+    "badgeHint": "バッジは右下の浮動ボタンに表示されます ↘",
+    "pixTitle": "PIXで支払う",
+    "pixDescription": "バンキングアプリでQRコードをスキャンするか、PIXキー（電話）をコピーしてください。",
+    "copyKey": "キーをコピー",
+    "copied": "コピーしました！",
+    "pixNote": "支払い後、WhatsAppでレシートを送信してパスを有効化してください。",
+    "passBadgeLabel": "オールアクセスパス",
+    "heroSubtitle": "すべてのパートナーバラッカへのフルアクセス",
+    "activeCount": "{{count}}のアクティブなバラッカ · リオデジャネイロ",
+    "priceSubtitle": "オールインクルーシブパス · いつでもキャンセル可能",
+    "benefit1": "バラッカ特典 — パートナーでの限定割引",
+    "benefit2": "WhatsAppビーチ情報 — リアルタイムのヒントとコンディション",
+    "benefit3": "ミートアップ — コミュニティ集会",
+    "benefit4": "イベント — CCCイベントへの優先アクセス",
+    "benefit5": "インサイダースポット — 秘密のおすすめ場所",
+    "identifierLabel": "メールまたは電話",
+    "identifierPlaceholder": "email@example.com または (21) 99999-9999",
+    "identifierError": "続行するにはメールまたは電話を入力してください。",
+    "ctaSubscribe": "R$30/月で登録",
+    "ctaDunno": "わからない",
+    "ctaActivating": "有効化中…",
+    "noCommitment": "コミットメント不要のトライアル · 今すぐ請求されません",
+    "testimonial": "\"カリオカの夏を楽しむ最高の方法。\"",
+    "community": "CCCコミュニティ",
+    "includedInPass": "パスに含まれるバラッカ",
+    "statusActive": "アクティブ",
+    "statusComingSoon": "近日公開",
+    "seoTitle": "Carioca Coastal Clubパス — オールアクセスパス · R$30/月",
+    "seoDescription": "リオデジャネイロの{{count}}のパートナーバラッカへの無制限アクセス、月わずかR$30。"
+  },
+  "marquee": {
+    "title": "登録ありがとうございます",
+    "loading": "登録済みバラッカを読み込み中..."
+  },
+  "toast": {
+    "success": "登録が正常に送信されました！",
+    "error": "登録の送信エラー。もう一度お試しください。",
+    "loading": "登録を送信中..."
+  },
+  "stories": {
+    "title": "ストーリー",
+    "new": "新着",
+    "viewStories": "{name}のストーリーを見る"
+  },
+  "visitor": {
+    "totalUnique": "ローンチ以来のユニーク訪問者総数",
+    "totalUsers": "総ユーザー数（30日間）",
+    "realTime": "リアルタイムカウンター",
+    "activeNow": "現在アクティブ",
+    "fromGA4": "Google Analyticsより"
+  }
+}

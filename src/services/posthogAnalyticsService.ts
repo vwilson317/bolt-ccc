@@ -363,6 +363,32 @@ class PostHogAnalyticsService {
     });
   }
 
+  // Track hosting guidelines interactions
+  trackHostingGuidelinesView() {
+    this.trackEvent('hosting_guidelines_viewed', {
+      page_path: '/hosting-guidelines',
+      category: 'Hosting'
+    });
+  }
+
+  trackHostingGuidelinesSectionRead(sectionNumber: number, sectionTitle: string) {
+    this.trackEvent('hosting_guidelines_section_read', {
+      section_number: sectionNumber,
+      section_title: sectionTitle,
+      page_path: '/hosting-guidelines',
+      category: 'Hosting'
+    });
+  }
+
+  trackHostingBarracaPartnerClick(handle: string, area: string) {
+    this.trackEvent('hosting_barraca_partner_clicked', {
+      instagram_handle: handle,
+      beach_area: area,
+      page_path: '/hosting-guidelines',
+      category: 'Hosting'
+    });
+  }
+
   trackBarracaRegistrationSubmit(success: boolean, formData?: any) {
     const amenitiesCount = formData?.amenities?.length || 0;
     const partnershipsCount = [
@@ -623,6 +649,30 @@ export const trackPhotoGalleryCardClick = (galleryId: string, galleryTitle: stri
     return posthogAnalytics?.trackPhotoGalleryCardClick?.(galleryId, galleryTitle, photoCount);
   } catch (error) {
     console.warn('⚠️ Photo gallery card click tracking failed:', error);
+  }
+};
+
+export const trackHostingGuidelinesView = () => {
+  try {
+    return posthogAnalytics?.trackHostingGuidelinesView?.();
+  } catch (error) {
+    console.warn('⚠️ Hosting guidelines view tracking failed:', error);
+  }
+};
+
+export const trackHostingGuidelinesSectionRead = (sectionNumber: number, sectionTitle: string) => {
+  try {
+    return posthogAnalytics?.trackHostingGuidelinesSectionRead?.(sectionNumber, sectionTitle);
+  } catch (error) {
+    console.warn('⚠️ Hosting guidelines section read tracking failed:', error);
+  }
+};
+
+export const trackHostingBarracaPartnerClick = (handle: string, area: string) => {
+  try {
+    return posthogAnalytics?.trackHostingBarracaPartnerClick?.(handle, area);
+  } catch (error) {
+    console.warn('⚠️ Hosting barraca partner click tracking failed:', error);
   }
 };
 
