@@ -109,18 +109,20 @@ export default function RyanFarewellParty() {
         </div>
       ))}
 
-      <div className="min-h-screen bg-white text-gray-900">
+      <div className="min-h-screen bg-white text-gray-900 pt-16">
 
         {/* ══════════════ HERO ════════════════════════════════════ */}
-        <section className="relative overflow-hidden pt-16" style={{ minHeight: '85vh' }}>
-          {/* Hero photo */}
+        <section className="relative overflow-hidden" style={{ minHeight: '85vh' }}>
+          {/* Desktop: pink gradient background */}
+          <div className="hidden md:block absolute inset-0 bg-gradient-to-br from-pink-400 via-rose-400 to-pink-600" />
+          {/* Mobile: hero photo */}
           <img
             src="/ryan-farewell-hero.jpg"
             alt="Sayonara Ryan — Beach Farewell Party"
-            className="absolute inset-0 w-full h-full object-cover object-top"
+            className="md:hidden absolute inset-0 w-full h-full object-cover object-top"
           />
-          {/* Bottom gradient for text readability */}
-          <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.15) 40%, rgba(0,0,0,0.72) 75%, rgba(0,0,0,0.88) 100%)' }} />
+          {/* Bottom gradient for text readability (mobile only) */}
+          <div className="md:hidden absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.15) 40%, rgba(0,0,0,0.72) 75%, rgba(0,0,0,0.88) 100%)' }} />
 
           {/* Content pinned to bottom */}
           <div className="relative flex flex-col justify-end h-full px-4 pb-12 pt-24" style={{ minHeight: '85vh' }}>
