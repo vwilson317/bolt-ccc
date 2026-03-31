@@ -27,6 +27,7 @@ const Header: React.FC = () => {
     }
     isSlowScrollingRef.current = false;
     setIsSlowScrolling(false);
+    document.documentElement.style.scrollBehavior = '';
   };
 
   const startSlowScroll = () => {
@@ -35,6 +36,9 @@ const Header: React.FC = () => {
     }
     isSlowScrollingRef.current = true;
     setIsSlowScrolling(true);
+
+    // Disable CSS smooth-scroll so our RAF loop drives the scroll directly
+    document.documentElement.style.scrollBehavior = 'auto';
 
     let lastTimestamp: number | null = null;
 
@@ -54,6 +58,7 @@ const Header: React.FC = () => {
         scrollAnimRef.current = null;
         isSlowScrollingRef.current = false;
         setIsSlowScrolling(false);
+        document.documentElement.style.scrollBehavior = '';
       }
     };
 
