@@ -39,10 +39,11 @@ const Header: React.FC = () => {
   const useSolidHeader = isMenuOpen || !isTransparentHeroPage || scrollY + headerHeight > heroHeight;
 
   const languages = [
-    { code: 'en', name: 'English', flag: '🇺🇸' },
-    { code: 'pt', name: 'Português', flag: '🇧🇷' },
-    { code: 'es', name: 'Español', flag: '🇪🇸' },
-    { code: 'fr', name: 'Français', flag: '🇫🇷' }
+    { code: 'en', name: 'English',    flag: '🇺🇸' },
+    { code: 'pt', name: 'Português',  flag: '🇧🇷' },
+    { code: 'es', name: 'Español',    flag: '🇪🇸' },
+    { code: 'fr', name: 'Français',   flag: '🇫🇷' },
+    { code: 'ja', name: '日本語',      flag: '🇯🇵' },
   ];
 
   const changeLanguage = (lang: string) => {
