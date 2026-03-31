@@ -112,7 +112,7 @@ export default function RyanFarewellParty() {
       <div className="min-h-screen bg-white text-gray-900">
 
         {/* ══════════════ HERO ════════════════════════════════════ */}
-        <section className="relative overflow-hidden" style={{ minHeight: '85vh' }}>
+        <section className="relative overflow-hidden pt-16" style={{ minHeight: '85vh' }}>
           {/* Hero photo */}
           <img
             src="/ryan-farewell-hero.jpg"
