@@ -761,5 +761,113 @@
     "statusComingSoon": "Coming soon",
     "seoTitle": "Carioca Coastal Club Pass — All-Access Pass · R$30/month",
     "seoDescription": "Unlimited access to {{count}} partner barracas in Rio de Janeiro for just R$30 per month. Exclusive Carioca Coastal Club badge."
+  },
+  "hostingGuidelines": {
+    "seoTitle": "Hosting Guidelines | Carioca Coastal Club",
+    "seoDescription": "Guidelines for CC Club hosts — punctuality, payments, facilitation, and barraca partnerships.",
+    "hero": {
+      "title": "Carioca Coastal Club Hosting Guidelines",
+      "subtitle": "Your job is simple: create a reliable, welcoming experience."
+    },
+    "g1": {
+      "title": "Be On Time (Non-Negotiable)",
+      "intro": "If you say you'll be there at a certain time, be there.",
+      "lateOk": "5–10 minutes late = fine",
+      "lateBad": "Anything beyond that = not acceptable",
+      "noEta": "No vague ETAs",
+      "rule": "Once you set a time, you are responsible for showing up."
+    },
+    "g2": {
+      "title": "Go \"Online\" — Signal You're Live",
+      "intro": "Once you arrive:",
+      "dropPin": "Drop a live location pin",
+      "takePhoto": "Take a photo of the setup",
+      "sendToMe": "Send it to me → I'll post it",
+      "signal": "Use: \"Carioca Coastal Club is online\"",
+      "noPin": "No pin = it didn't happen."
+    },
+    "g3": {
+      "title": "Communication Rules — Keep It Tight",
+      "before": "Before → clear time + place",
+      "after": "After arrival → stop messaging",
+      "rule1": "You are not there to text.",
+      "rule2": "You are there to host."
+    },
+    "g4": {
+      "title": "No RSVP Culture",
+      "doNot": "Do NOT ask people to RSVP, react, or confirm attendance.",
+      "why": "Why:",
+      "reason1": "People don't engage unless others already have",
+      "reason2": "It creates the appearance that nothing is happening",
+      "reason3": "It adds unnecessary noise to the group",
+      "reality": "Reality:",
+      "ifComing": "If someone is coming, they will message you directly.",
+      "job1": "Your job is not to chase attendance.",
+      "job2": "Your job is to be there reliably."
+    },
+    "g5": {
+      "title": "Host Energy — Facilitation",
+      "youAre": "You are the connector.",
+      "greet": "Greet people",
+      "pull": "Pull in anyone who looks lost",
+      "introduce": "Introduce people",
+      "invite": "Invite outsiders",
+      "phrase": "\"Hey, this is Carioca Coastal Club — come join us.\""
+    },
+    "g6": {
+      "title": "Chairs & Setup",
+      "chairs": "8 CC Club chairs = free",
+      "firstCome": "First come, first served",
+      "notResponsible": "You are not responsible for pricing",
+      "ifOff": "If anything is off → message me"
+    },
+    "g7": {
+      "title": "Payments",
+      "ownTab": "Everyone pays their own tab",
+      "noGroup": "No group tab",
+      "noSplit": "No splitting later",
+      "order": "Tell people: Order → wait → pay → return",
+      "warning": "If you don't enforce this → you will be stuck with the bill"
+    },
+    "g8": {
+      "title": "Activities = Better Events",
+      "energy": "Bring energy:",
+      "music": "Music (ideal)",
+      "games": "Games / cards",
+      "speaker": "Speaker / guitar",
+      "icebreakers": "Icebreakers",
+      "optional": "Optional:",
+      "potluck": "Potluck",
+      "themes": "Themes (sunset, social, etc.)"
+    },
+    "g9": {
+      "title": "Hosting Structure",
+      "primary": "Primary host = runs it",
+      "secondary": "Secondary = supports",
+      "mustBePhysical": "At least one host must be physically there",
+      "noIndirect": "No indirect coordination"
+    },
+    "g10": {
+      "title": "Keep the Group Clean",
+      "assigning": "I'm assigning Barraca Partnership Managers for each location.",
+      "responsible": "Each person is responsible for:",
+      "dayToDay": "Day-to-day communication with the barraca",
+      "negotiate": "Negotiating prices and agreements",
+      "manage": "Managing the relationship overall",
+      "ideally": "Ideally pick a barraca near where you live — you'll personally benefit from the partnership too.",
+      "commission": "Any partnership or deal you broker = 100% commission to you. I won't take a dime.",
+      "bigGoal": "The bigger goal: expand CC Club across all key beach areas — Copa, Leblon, multiple in Ipanema, Arpoador, and other high-traffic zones. This is how we build real presence and consistency.",
+      "suggestions": "Current barraca suggestions by area",
+      "onePerBarraca": "One person per barraca for now. If you have a friend who'd be a great fit, add them to the group and we'll sort it out together."
+    },
+    "areas": {
+      "leme": "Leme",
+      "copa": "Copa",
+      "arpoador": "Arpoador",
+      "ipanema": "Ipanema",
+      "leblon": "Leblon",
+      "saoConrado": "São Conrado"
+    },
+    "critical": "CRITICAL"
   }
 }

@@ -11,6 +11,7 @@ import Header from './components/Header';
 import LoadingPage from './components/LoadingPage';
 import ErrorBoundary from './components/ErrorBoundary';
 import UnlockedBadgesFab from './components/UnlockedBadgesFab';
+import FeedbackFab from './components/FeedbackFab';
 
 // Lazy-load page components so only the current route's code is fetched on initial load
 const Home = lazy(() => import('./pages/Home'));
@@ -29,6 +30,8 @@ const CoastalClubPassPage = lazy(() => import('./pages/CoastalClubPassPage'));
 const ActivePromosPage = lazy(() => import('./pages/ActivePromosPage'));
 const PhotographerShowcase = lazy(() => import('./pages/PhotographerShowcase'));
 const RyanFarewellParty = lazy(() => import('./pages/RyanFarewellParty'));
+const HostingGuidelines = lazy(() => import('./pages/HostingGuidelines'));
+const StatusUpdatePage = lazy(() => import('./pages/StatusUpdatePage'));
 
 // Lazy-load heavy overlay components that are not needed at initial paint
 // StoryViewer removed: StoryProvider is disabled and StoryViewer would throw without it
@@ -89,6 +92,10 @@ function AppContent() {
             <Route path="/loyalty/:slug" element={<BarracaPromoPage />} />
             <Route path="/videography" element={<PhotographerShowcase />} />
             <Route path="/ryans-farewell-party" element={<RyanFarewellParty />} />
+            <Route path="/content-professionals" element={<PhotographerShowcase />} />
+            <Route path="/videography" element={<Navigate to="/content-professionals" replace />} />
+            <Route path="/hosting-guidelines" element={<HostingGuidelines />} />
+            <Route path="/status" element={<StatusUpdatePage />} />
             {/* <Route path="/translation-demo" element={<TranslationDemo />} /> */}
           </Routes>
         </Suspense>
@@ -155,6 +162,8 @@ function App() {
                 <AppContent />
                 {/* Global multi-badge FAB — shown whenever any badge is unlocked */}
                 <UnlockedBadgesFab />
+                {/* Global feedback FAB — always visible on every page */}
+                <FeedbackFab />
               </Router>
             </BadgeProvider>
           </WeatherProvider>

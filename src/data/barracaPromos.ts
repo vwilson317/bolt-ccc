@@ -45,6 +45,24 @@ export const CCC_WHATSAPP_URL = 'https://chat.whatsapp.com/FVLJK8eqKzUKY7oUfnymD
 
 export const BARRACA_PROMOS: BarracaPromoConfig[] = [
   {
+    id: 'barraca155-follow',
+    slug: 'barraca155',
+    name: 'Barraca 100%',
+    instagramHandle: 'barraca155',
+    instagramUrl: 'https://www.instagram.com/barraca155?igsh=MWdoaWJzNGtrMjNnbw==',
+    discountCode: 'B155',
+    barracaLocation: 'Posto 5, Copacabana',
+    whatsappUrl: CCC_WHATSAPP_URL,
+    logoPath: '/barraca155-logo.png',
+    logoFull: true,
+    badgeFromColor: 'orange-500',
+    badgeToColor: 'teal-500',
+    passBackgroundRgb: 'rgb(249,115,22)',
+    active: true,
+    storageKey: 'ccc_badge_barraca155-follow',
+    identifierStorageKey: 'ccc_identifier_barraca155-follow',
+  },
+  {
     id: 'thais-follow',
     slug: 'thai82',
     name: 'Thais',
