@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Menu, X, Globe } from 'lucide-react';
 import { useScrollPosition } from '../hooks/useScrollAnimation';
 
-const SLOW_SCROLL_SPEED = 80; // px per second — slow enough to read during a screen recording
+const SLOW_SCROLL_SPEED = 108; // px per second — slow enough to read during a screen recording
 const TRIPLE_TAP_WINDOW_MS = 600; // ms window to detect 3 taps
 
 const Header: React.FC = () => {
