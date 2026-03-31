@@ -76,6 +76,26 @@ interface FeedbackModalProps {
   onClose: () => void;
 }
 
+const FALLBACK_EMAIL = 'vincent.j.wilson317@gmail.com';
+
+function feedbackTypeLabel(type: FeedbackType): string {
+  return type === 'bug' ? 'Bug Report' : type === 'feature' ? 'Feature Request' : 'General Feedback';
+}
+
+function openMailtoFallback(type: FeedbackType, title: string, description: string, email: string, page: string): void {
+  const subject = encodeURIComponent(`[${feedbackTypeLabel(type)}] ${title}`);
+  const bodyParts = [`Type: ${feedbackTypeLabel(type)}`, `Page: ${page}`, '', description];
+  if (email) bodyParts.push('', `Contact: ${email}`);
+  const body = encodeURIComponent(bodyParts.join('\n'));
+  const mailtoUrl = `mailto:${FALLBACK_EMAIL}?subject=${subject}&body=${body}`;
+  const isInstagram = /Instagram/.test(navigator.userAgent);
+  if (isInstagram) {
+    window.location.href = mailtoUrl;
+  } else {
+    window.open(mailtoUrl, '_self');
+  }
+}
+
 const FeedbackModal: React.FC<FeedbackModalProps> = ({ onClose }) => {
   const [type, setType] = useState<FeedbackType>('bug');
   const [title, setTitle] = useState('');
@@ -83,6 +103,7 @@ const FeedbackModal: React.FC<FeedbackModalProps> = ({ onClose }) => {
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [issueUrl, setIssueUrl] = useState('');
+  const [emailFallbackTriggered, setEmailFallbackTriggered] = useState(false);
   const [error, setError] = useState('');
 
   const recentSubmissions = getRecentSubmissions();
@@ -148,13 +169,43 @@ const FeedbackModal: React.FC<FeedbackModalProps> = ({ onClose }) => {
         title_length: title.length,
       });
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Something went wrong. Please try again.';
-      setError(message);
+      const message = err instanceof Error ? err.message : 'Something went wrong.';
       trackEvent('feedback_submit_error', { type, page: currentPage, error: message });
+      openMailtoFallback(type, title.trim(), description.trim(), email.trim(), currentPage);
+      setEmailFallbackTriggered(true);
     } finally {
       setIsSubmitting(false);
     }
   }, [type, title, description, email, currentPage, isRateLimited]);
+
+  // Email fallback state
+  if (emailFallbackTriggered) {
+    return (
+      <div
+        className="fixed inset-0 z-[200000] flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm px-4 pb-6 sm:pb-0"
+        onClick={onClose}
+      >
+        <div
+          className="w-full max-w-md bg-white rounded-3xl shadow-2xl p-8 text-center"
+          onClick={e => e.stopPropagation()}
+        >
+          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-yellow-100">
+            <Send className="h-9 w-9 text-yellow-600" />
+          </div>
+          <h2 className="text-xl font-bold text-gray-900 mb-2">Email client opened</h2>
+          <p className="text-gray-500 text-sm mb-6">
+            Our feedback system is temporarily unavailable. Your feedback has been pre-filled in your email client — just hit send.
+          </p>
+          <button
+            onClick={onClose}
+            className="w-full py-3 rounded-2xl bg-gray-900 text-white font-semibold text-sm hover:bg-gray-700 transition-colors"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   // Success state
   if (issueUrl) {
@@ -347,10 +398,8 @@ const FeedbackFab: React.FC = () => {
         aria-label="Send feedback"
         title="Send feedback"
       >
-        {/* Subtle pulse ring */}
-        <span className="absolute inset-0 rounded-full bg-pink-500 animate-ping opacity-20 pointer-events-none" />
-        <MessageSquarePlus className="h-5 w-5 relative z-10 flex-shrink-0" />
-        <span className="relative z-10 text-xs font-semibold whitespace-nowrap">Submit Feedback</span>
+        <MessageSquarePlus className="h-5 w-5 flex-shrink-0" />
+        <span className="text-xs font-semibold whitespace-nowrap">Submit Feedback</span>
       </button>
 
       {isOpen && <FeedbackModal onClose={handleClose} />}
