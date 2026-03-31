@@ -112,67 +112,57 @@ export default function RyanFarewellParty() {
       <div className="min-h-screen bg-white text-gray-900">
 
         {/* ══════════════ HERO ════════════════════════════════════ */}
-        <section
-          className="relative pt-24 pb-16 px-4 overflow-hidden"
-          style={{ background: 'linear-gradient(135deg, #ec4899 0%, #be185d 60%, #9d174d 100%)' }}
-        >
-          {/* Decorative blobs */}
-          <div className="absolute -top-20 -right-20 w-72 h-72 rounded-full bg-white/10 blur-3xl pointer-events-none" />
-          <div className="absolute -bottom-20 -left-20 w-56 h-56 rounded-full bg-white/10 blur-3xl pointer-events-none" />
+        <section className="relative overflow-hidden" style={{ minHeight: '85vh' }}>
+          {/* Hero photo */}
+          <img
+            src="/ryan-farewell-hero.jpg"
+            alt="Sayonara Ryan — Beach Farewell Party"
+            className="absolute inset-0 w-full h-full object-cover object-top"
+          />
+          {/* Bottom gradient for text readability */}
+          <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.15) 40%, rgba(0,0,0,0.72) 75%, rgba(0,0,0,0.88) 100%)' }} />
 
-          <div className="relative max-w-3xl mx-auto text-center text-white">
-            {/* Eyebrow */}
-            <div className="inline-flex items-center gap-2 rounded-full bg-white/20 px-4 py-1.5 text-xs font-bold uppercase tracking-widest mb-5">
-              <span>さようなら</span>
-              <span>✈</span>
-              <span>Tokyo</span>
-            </div>
+          {/* Content pinned to bottom */}
+          <div className="relative flex flex-col justify-end h-full px-4 pb-12 pt-24" style={{ minHeight: '85vh' }}>
+            <div className="max-w-2xl mx-auto w-full text-center text-white">
 
-            <h1 className="font-display font-black text-5xl sm:text-6xl md:text-7xl leading-tight mb-4">
-              Sayonara, Ryan! 🌸
-            </h1>
+              {/* Date pill */}
+              <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-5 py-2 text-sm font-semibold mb-6 border border-white/30">
+                <Calendar className="w-4 h-4" />
+                Sunday, May 3, 2026 · Ipanema Beach, Posto 10
+              </div>
 
-            <p className="text-lg sm:text-xl opacity-90 mb-6 max-w-xl mx-auto">
-              Before you conquer Tokyo, we send you off in true Rio style:
-              sun, sand, and way too many caipirinhas.
-            </p>
+              {/* Countdown */}
+              <div className="flex justify-center gap-6 sm:gap-10 mb-6">
+                {[
+                  { val: timeLeft.days,    label: 'Days' },
+                  { val: timeLeft.hours,   label: 'Hours' },
+                  { val: timeLeft.minutes, label: 'Min' },
+                  { val: timeLeft.seconds, label: 'Sec' },
+                ].map(({ val, label }) => (
+                  <div key={label} className="flex flex-col items-center">
+                    <span className="font-display font-black text-3xl sm:text-4xl tabular-nums drop-shadow-lg">
+                      {String(val).padStart(2, '0')}
+                    </span>
+                    <span className="text-xs uppercase tracking-widest text-white/70 mt-1">{label}</span>
+                  </div>
+                ))}
+              </div>
 
-            {/* Date pill */}
-            <div className="inline-flex items-center gap-2 bg-white/20 rounded-full px-5 py-2 text-sm font-semibold mb-8">
-              <Calendar className="w-4 h-4" />
-              Sunday, May 3, 2026 · Ipanema Beach, Posto 10
-            </div>
+              {/* Social proof */}
+              <div className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm rounded-full px-4 py-1.5 text-sm font-semibold mb-8 border border-white/20">
+                🔥 38 people are going
+              </div>
 
-            {/* Countdown */}
-            <div className="flex justify-center gap-6 sm:gap-10 mb-8">
-              {[
-                { val: timeLeft.days,    label: 'Days' },
-                { val: timeLeft.hours,   label: 'Hours' },
-                { val: timeLeft.minutes, label: 'Min' },
-                { val: timeLeft.seconds, label: 'Sec' },
-              ].map(({ val, label }) => (
-                <div key={label} className="flex flex-col items-center">
-                  <span className="font-display font-black text-3xl sm:text-4xl tabular-nums text-white">
-                    {String(val).padStart(2, '0')}
-                  </span>
-                  <span className="text-xs uppercase tracking-widest text-white/60 mt-1">{label}</span>
-                </div>
-              ))}
-            </div>
-
-            {/* Social proof */}
-            <div className="inline-flex items-center gap-2 bg-white/15 rounded-full px-4 py-1.5 text-sm font-semibold mb-8 text-white/90">
-              🔥 38 people are going
-            </div>
-
-            <div>
-              <a
-                href="#rsvp"
-                className="inline-flex items-center gap-2 bg-white text-beach-700 font-display font-black px-8 py-4 rounded-2xl text-lg shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200 active:scale-95"
-              >
-                <Ticket className="w-5 h-5" />
-                Get Your Ticket · チケット
-              </a>
+              <div>
+                <a
+                  href="#rsvp"
+                  className="inline-flex items-center gap-2 bg-white text-beach-700 font-display font-black px-8 py-4 rounded-2xl text-lg shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-200 active:scale-95"
+                >
+                  <Ticket className="w-5 h-5" />
+                  Get Your Ticket · チケット
+                </a>
+              </div>
             </div>
           </div>
         </section>
