@@ -1,12 +1,6 @@
 import React, { useState } from 'react';
-import { createClient } from '@supabase/supabase-js';
 import { Ticket, MapPin, Calendar, Search, Loader2, AlertCircle, CheckCircle2, Music } from 'lucide-react';
 import SEOHead from '../components/SEOHead';
-
-// Use anon key — only confirmed tickets are public (see RLS policy)
-const supabaseUrl  = import.meta.env.VITE_SUPABASE_URL || import.meta.env.VITE_SUPABASE_URL_PROD || '';
-const supabaseAnon = import.meta.env.VITE_SUPABASE_ANON_KEY || import.meta.env.VITE_SUPABASE_ANON_KEY_PROD || '';
-const supabase     = supabaseUrl ? createClient(supabaseUrl, supabaseAnon) : null;
 
 interface TicketData {
   id: string;
@@ -15,10 +9,8 @@ interface TicketData {
   quantity: number;
   payment_status: string;
   promo_code: string | null;
-  promoter_id: string | null;
+  promoter_name: string | null;
 }
-
-interface PromoterName { id: string; name: string; }
 
 const TIER_LABEL: Record<string, string> = {
   general:  'General Public',
@@ -32,7 +24,7 @@ const TIER_COLOR: Record<string, string> = {
   vip:      'from-rose-500 to-pink-400',
   promoter: 'from-sky-500 to-blue-400',
 };
-const TIER_BADGE_BG: Record<string, string> = {
+const TIER_BADGE: Record<string, string> = {
   general:  'bg-amber-400/15 text-amber-300 border-amber-400/30',
   guest:    'bg-emerald-400/15 text-emerald-300 border-emerald-400/30',
   vip:      'bg-rose-400/15 text-rose-300 border-rose-400/30',
@@ -42,51 +34,19 @@ const TIER_BADGE_BG: Record<string, string> = {
 export default function RyanPartyTicket() {
   const [identifier, setIdentifier] = useState('');
   const [tickets,    setTickets]    = useState<TicketData[]>([]);
-  const [promoters,  setPromoters]  = useState<PromoterName[]>([]);
   const [loading,    setLoading]    = useState(false);
   const [searched,   setSearched]   = useState(false);
   const [error,      setError]      = useState<string | null>(null);
 
   const handleLookup = async () => {
     const raw = identifier.trim();
-    if (!raw || !supabase) return;
+    if (!raw) return;
     setLoading(true); setError(null); setSearched(false);
-
     try {
-      // Normalize: remove non-digits for CPF/phone search
-      const digits = raw.replace(/\D/g, '');
-      const isEmail = raw.includes('@');
-
-      let query = supabase
-        .from('event_tickets')
-        .select('id, full_name, tier, quantity, payment_status, promo_code, promoter_id')
-        .eq('payment_status', 'confirmed');
-
-      if (isEmail) {
-        query = query.eq('email', raw.toLowerCase());
-      } else if (digits.length === 11) {
-        // CPF
-        query = query.eq('cpf', digits);
-      } else {
-        // WhatsApp — try both raw and digits
-        query = query.or(`whatsapp.eq.${raw},whatsapp.eq.${digits},whatsapp.eq.+${digits}`);
-      }
-
-      const { data, error: dbErr } = await query;
-      if (dbErr) throw dbErr;
-
-      const found = (data || []) as TicketData[];
-      setTickets(found);
-
-      // Fetch promoter names if needed
-      const pIds = [...new Set(found.filter(t => t.promoter_id).map(t => t.promoter_id!))];
-      if (pIds.length > 0) {
-        const { data: pData } = await supabase
-          .from('event_promoters')
-          .select('id, name')
-          .in('id', pIds);
-        setPromoters((pData || []) as PromoterName[]);
-      }
+      const res  = await fetch(`/.netlify/functions/lookup-event-ticket?id=${encodeURIComponent(raw)}`);
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Lookup failed');
+      setTickets(data.tickets || []);
     } catch (e: any) {
       setError(e.message || 'Lookup failed');
     } finally {
@@ -94,9 +54,6 @@ export default function RyanPartyTicket() {
       setSearched(true);
     }
   };
-
-  const promoterName = (id: string | null) =>
-    id ? (promoters.find(p => p.id === id)?.name ?? null) : null;
 
   return (
     <>
@@ -147,7 +104,7 @@ export default function RyanPartyTicket() {
           {searched && tickets.length === 0 && !error && (
             <div className="text-center py-8">
               <p className="text-white/40 text-sm">No confirmed ticket found for that identifier.</p>
-              <p className="text-white/25 text-xs mt-2">Check the CPF/WhatsApp/email you used at checkout, or contact Ryan.</p>
+              <p className="text-white/25 text-xs mt-2">Check the CPF / WhatsApp / email used at checkout, or contact Ryan.</p>
             </div>
           )}
 
@@ -155,20 +112,17 @@ export default function RyanPartyTicket() {
           <div className="space-y-5">
             {tickets.map(ticket => {
               const tier      = ticket.tier || 'general';
-              const pName     = promoterName(ticket.promoter_id);
               const gradClass = TIER_COLOR[tier] || TIER_COLOR.general;
-              const badgeClass = TIER_BADGE_BG[tier] || TIER_BADGE_BG.general;
+              const badgeClass = TIER_BADGE[tier] || TIER_BADGE.general;
 
               return (
                 <div key={ticket.id} className="rounded-3xl overflow-hidden shadow-2xl"
                   style={{ border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(15,23,42,0.9)', backdropFilter: 'blur(16px)' }}>
 
-                  {/* Gradient header stripe */}
+                  {/* Gradient header */}
                   <div className={`bg-gradient-to-r ${gradClass} p-5 relative overflow-hidden`}>
-                    {/* Decorative circles */}
                     <div className="absolute -top-8 -right-8 w-32 h-32 rounded-full bg-white/10" />
                     <div className="absolute -bottom-6 -left-4 w-20 h-20 rounded-full bg-white/8" />
-
                     <div className="relative">
                       <p className="text-black/60 text-xs font-bold uppercase tracking-[0.2em] mb-1">Entry Badge</p>
                       <p className="text-black font-display font-black text-2xl leading-tight">
@@ -178,14 +132,14 @@ export default function RyanPartyTicket() {
                     </div>
                   </div>
 
-                  {/* Dashed divider (ticket tear line) */}
+                  {/* Tear line */}
                   <div className="relative flex items-center px-5 py-0">
                     <div className="absolute -left-3 w-6 h-6 rounded-full" style={{ background: '#0f172a' }} />
                     <div className="flex-1 border-t-2 border-dashed border-white/10 mx-3" />
                     <div className="absolute -right-3 w-6 h-6 rounded-full" style={{ background: '#0f172a' }} />
                   </div>
 
-                  {/* Ticket body */}
+                  {/* Body */}
                   <div className="px-5 py-5 space-y-4">
 
                     {/* Name + tier */}
@@ -211,7 +165,7 @@ export default function RyanPartyTicket() {
                       ))}
                     </div>
 
-                    {/* Event info */}
+                    {/* Event details */}
                     <div className="grid grid-cols-2 gap-3">
                       <div className="flex items-start gap-2">
                         <Calendar className="w-4 h-4 text-amber-400 flex-shrink-0 mt-0.5" />
@@ -239,15 +193,13 @@ export default function RyanPartyTicket() {
                       </div>
                     </div>
 
-                    {/* Promoter attribution */}
-                    {pName && (
+                    {ticket.promoter_name && (
                       <div className="flex items-center justify-between rounded-lg px-3 py-2" style={{ background: 'rgba(251,191,36,0.06)', border: '1px solid rgba(251,191,36,0.15)' }}>
                         <p className="text-white/40 text-xs">Referred by</p>
-                        <p className="text-amber-400 text-xs font-semibold">{pName}</p>
+                        <p className="text-amber-400 text-xs font-semibold">{ticket.promoter_name}</p>
                       </div>
                     )}
 
-                    {/* Ticket ID (small) */}
                     <p className="text-white/15 text-xs text-center font-mono">{ticket.id.slice(0, 8).toUpperCase()}</p>
                   </div>
                 </div>
@@ -256,9 +208,7 @@ export default function RyanPartyTicket() {
           </div>
 
           {tickets.length > 0 && (
-            <p className="text-center text-white/20 text-xs mt-8">
-              Show this badge at the door on May 3 · またね！🌴
-            </p>
+            <p className="text-center text-white/20 text-xs mt-8">Show this badge at the door on May 3 · またね！🌴</p>
           )}
         </div>
       </div>

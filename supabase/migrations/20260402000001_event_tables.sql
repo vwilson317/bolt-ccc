@@ -77,32 +77,8 @@ INSERT INTO event_config (key, value) VALUES
   ('promoter_commission_brl',       '2500')
 ON CONFLICT (key) DO NOTHING;
 
--- ── Row Level Security ────────────────────────────────────────────────────────
-ALTER TABLE event_promoters   ENABLE ROW LEVEL SECURITY;
-ALTER TABLE event_promo_codes ENABLE ROW LEVEL SECURITY;
-ALTER TABLE event_tickets     ENABLE ROW LEVEL SECURITY;
-ALTER TABLE event_config      ENABLE ROW LEVEL SECURITY;
-
--- event_config: public read (needed by frontend + functions)
-CREATE POLICY "Public can read event_config"
-  ON event_config FOR SELECT USING (true);
-
--- event_promoters: public read of active promoters (for promo code validation)
-CREATE POLICY "Public can read active promoters"
-  ON event_promoters FOR SELECT USING (is_active = true);
-
--- event_promo_codes: public read of active codes (for promo code validation)
-CREATE POLICY "Public can read active promo codes"
-  ON event_promo_codes FOR SELECT USING (is_active = true);
-
--- event_tickets: public insert (attendees create their own ticket)
-CREATE POLICY "Anyone can insert tickets"
-  ON event_tickets FOR INSERT WITH CHECK (true);
-
--- event_tickets: read own ticket by stripe_session_id or identifier fields
--- (service role used by functions bypasses RLS for admin operations)
-CREATE POLICY "Public can read confirmed tickets"
-  ON event_tickets FOR SELECT USING (payment_status = 'confirmed');
+-- ── Access: all DB access goes through Netlify functions (service role key)
+-- No RLS needed — functions handle all reads and writes directly.
 
 -- ── Updated-at trigger ────────────────────────────────────────────────────────
 CREATE OR REPLACE FUNCTION update_event_updated_at()
