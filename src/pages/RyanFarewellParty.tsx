@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { MapPin, Calendar, Clock, Ticket, Waves, Music, Copy, CheckCircle2, MessageCircle, ExternalLink, Instagram, Tag, User, Phone, Mail, CreditCard, AlertCircle, ChevronRight, Loader2, Users } from 'lucide-react';
+import { MapPin, Calendar, Clock, Ticket, Waves, Music, Copy, CheckCircle2, MessageCircle, ExternalLink, Instagram, Tag, User, Phone, CreditCard, AlertCircle, ChevronRight, Loader2, Users } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import { trackEvent, trackPageView, trackCTAClick } from '../services/posthogAnalyticsService';
 import SEOHead from '../components/SEOHead';
@@ -51,9 +51,7 @@ export default function RyanFarewellParty() {
   const params   = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '');
   const urlPromo = params.get('promo') || '';
   const [fullName,  setFullName]   = useState('');
-  const [cpf,       setCpf]        = useState('');
-  const [whatsapp,  setWhatsapp]   = useState('');
-  const [email,     setEmail]      = useState('');
+  const [whatsapp,  setWhatsapp]   = useState(''); // accepts CPF / phone / email
   const [quantity,  setQuantity]   = useState(1);
   const [promoCode, setPromoCode]  = useState(urlPromo.toUpperCase());
   const [tierInfo,  setTierInfo]   = useState<TierInfo>(DEFAULT_TIER);
@@ -186,7 +184,7 @@ export default function RyanFarewellParty() {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           paymentMethod: 'free',
-          fullName, cpf: cpf.replace(/\D/g, '') || null, whatsapp, email: email || null,
+          fullName, whatsapp,
           tier: tierInfo.tier, priceBrl: 0, quantity,
           promoCode: promoCode.trim().toUpperCase() || null,
           promoterId: tierInfo.promoterId || null,
@@ -208,7 +206,7 @@ export default function RyanFarewellParty() {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           paymentMethod: 'pix',
-          fullName, cpf: cpf.replace(/\D/g, '') || null, whatsapp, email: email || null,
+          fullName, whatsapp,
           tier: tierInfo.tier, priceBrl: tierInfo.priceBrl, quantity,
           promoCode: promoCode.trim().toUpperCase() || null,
           promoterId: tierInfo.promoterId || null,
@@ -230,7 +228,7 @@ export default function RyanFarewellParty() {
       const res  = await fetch('/.netlify/functions/create-stripe-checkout', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          fullName, cpf: cpf.replace(/\D/g, ''), whatsapp, email,
+          fullName, whatsapp,
           tier: tierInfo.tier, priceBrl: tierInfo.priceBrl, quantity,
           promoCode: promoCode.trim().toUpperCase() || '',
         }),
@@ -462,22 +460,6 @@ export default function RyanFarewellParty() {
             <h2 className="font-display font-black text-3xl sm:text-4xl text-center text-white mb-2">Secure Your Spot</h2>
             <p className="text-center text-amber-200/60 text-sm mb-8">席を確保する · Limited to 100 tickets</p>
 
-            {/* Ticket tiers legend */}
-            {step === 'form' && (
-              <div className="grid grid-cols-3 gap-2 mb-6">
-                {[
-                  { tier: 'General', price: 'R$200', note: 'Public', color: 'border-amber-400/40 bg-amber-400/5' },
-                  { tier: "Ryan's Guest", price: 'R$150', note: 'Code required', color: 'border-emerald-400/40 bg-emerald-400/5' },
-                  { tier: "Ryan's VIP", price: 'FREE', note: 'Code required', color: 'border-rose-400/40 bg-rose-400/5' },
-                ].map(t => (
-                  <div key={t.tier} className={`rounded-xl border p-3 text-center ${t.color}`}>
-                    <p className="text-white font-bold text-sm leading-tight">{t.tier}</p>
-                    <p className="text-amber-300 font-black text-lg">{t.price}</p>
-                    <p className="text-white/40 text-xs mt-0.5">{t.note}</p>
-                  </div>
-                ))}
-              </div>
-            )}
 
             {/* Main checkout card */}
             <div className="rounded-3xl overflow-hidden shadow-2xl" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(251,191,36,0.2)', backdropFilter: 'blur(12px)' }}>
@@ -535,43 +517,18 @@ export default function RyanFarewellParty() {
                       />
                     </div>
 
-                    {/* CPF */}
+                    {/* Contact — CPF / WhatsApp / Email — single identifier field */}
                     <div>
                       <label className="block text-amber-200/70 text-xs font-semibold uppercase tracking-widest mb-2">
-                        CPF <span className="normal-case text-white/30 font-normal">(Brazilian nationals)</span>
+                        <Phone className="w-3 h-3 inline mr-1" />CPF, WhatsApp or Email *
                       </label>
                       <input
-                        type="text" value={cpf} onChange={e => setCpf(e.target.value)}
-                        placeholder="000.000.000-00"
+                        type="text" value={whatsapp} onChange={e => setWhatsapp(e.target.value)}
+                        placeholder="000.000.000-00 · +55 21 99999 · email"
                         className="w-full rounded-xl px-4 py-3 text-white placeholder-white/30 text-sm font-medium outline-none focus:ring-2 focus:ring-amber-400/50 transition-all"
                         style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)' }}
                       />
-                    </div>
-
-                    {/* WhatsApp */}
-                    <div>
-                      <label className="block text-amber-200/70 text-xs font-semibold uppercase tracking-widest mb-2">
-                        <Phone className="w-3 h-3 inline mr-1" />WhatsApp *
-                      </label>
-                      <input
-                        type="tel" value={whatsapp} onChange={e => setWhatsapp(e.target.value)}
-                        placeholder="+55 21 99999-9999"
-                        className="w-full rounded-xl px-4 py-3 text-white placeholder-white/30 text-sm font-medium outline-none focus:ring-2 focus:ring-amber-400/50 transition-all"
-                        style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)' }}
-                      />
-                    </div>
-
-                    {/* Email */}
-                    <div>
-                      <label className="block text-amber-200/70 text-xs font-semibold uppercase tracking-widest mb-2">
-                        <Mail className="w-3 h-3 inline mr-1" />Email
-                      </label>
-                      <input
-                        type="email" value={email} onChange={e => setEmail(e.target.value)}
-                        placeholder="your@email.com"
-                        className="w-full rounded-xl px-4 py-3 text-white placeholder-white/30 text-sm font-medium outline-none focus:ring-2 focus:ring-amber-400/50 transition-all"
-                        style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)' }}
-                      />
+                      <p className="text-white/25 text-xs mt-1.5">Used to look up your badge at the door</p>
                     </div>
 
                     {/* Promo code */}
