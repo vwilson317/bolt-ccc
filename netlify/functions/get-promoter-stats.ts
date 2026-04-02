@@ -66,7 +66,7 @@ export const handler: Handler = async (event) => {
     const totalCommission = ticketsSold * promoter.commission_rate_brl;
 
     const origin = event.headers.origin || event.headers.referer?.replace(/\/$/, '') || 'https://cariocacoastalclub.com';
-    const eventUrl = `${origin}/ryans-farewell-party?promo=${encodeURIComponent(code)}`;
+    const eventUrl = `${origin}/?promo=${encodeURIComponent(code)}`;
     const shareMessage =
       `🌴 Ryan's Going Away Party — May 3, Ipanema!\n` +
       `Get your ticket here 👇\n${eventUrl}\n` +

@@ -18,8 +18,9 @@ const PETALS = [
   { left: '91%', dur: '9s',  delay: '0.4s', size: 16, opacity: 0.28 },
 ];
 
-const PIX_KEY     = '+5521990532728';
-const PIX_DISPLAY = '(21) 99053-2728';
+const PIX_KEY     = '155.438.587-36';
+const PIX_DISPLAY = '155.438.587-36';
+const PIX_NAME    = 'Ryan Ferrari de Castro Pires';
 const WA_NUMBER   = '5521990532728';
 
 // ── Tier config ────────────────────────────────────────────────────
@@ -641,8 +642,11 @@ export default function RyanFarewellParty() {
                         <button onClick={handleCopyPix}
                           className="w-full flex items-center justify-between px-4 py-3 rounded-xl transition-colors text-sm"
                           style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)' }}>
-                          <span className="font-mono text-white/70 tracking-wide">{PIX_DISPLAY}</span>
-                          <span className="flex items-center gap-1.5 font-semibold text-amber-400">
+                          <div className="text-left">
+                            <span className="font-mono text-white/70 tracking-wide block">{PIX_DISPLAY}</span>
+                            <span className="text-white/35 text-xs">{PIX_NAME}</span>
+                          </div>
+                          <span className="flex items-center gap-1.5 font-semibold text-amber-400 flex-shrink-0 ml-3">
                             {pixCopied ? <><CheckCircle2 className="w-4 h-4" />Copied!</> : <><Copy className="w-4 h-4" />Copy</>}
                           </span>
                         </button>
