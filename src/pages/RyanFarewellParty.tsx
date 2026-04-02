@@ -385,25 +385,38 @@ export default function RyanFarewellParty() {
                 </button>
               </div>
 
-              {/* DJ */}
+              {/* Live music */}
               <div className="bg-gray-50 rounded-2xl border border-gray-100 p-6">
                 <p className="text-xs font-bold uppercase tracking-widest text-sunset-500 mb-3">🎵 Live Music</p>
-                <h3 className="font-display font-black text-xl text-gray-900 mb-1">Jazz Band + DJ</h3>
-                <p className="text-sunset-600 font-semibold text-sm mb-3">Live jazz band (3 hrs) · DJ Lavinia Aune</p>
+                <h3 className="font-display font-black text-xl text-gray-900 mb-1">Sunset Jazz Session</h3>
+                <p className="text-sunset-600 font-semibold text-sm mb-3">Live jazz (3 hrs) · DJ sunset set</p>
                 <p className="text-sm text-gray-600 mb-4 leading-relaxed">
-                  Live jazz sets the mood for the afternoon, then DJ Lavinia Aune takes over into sunset. The perfect soundtrack for a legendary farewell on the sand.
+                  Quartetinho Jazz sets the mood for the afternoon — a rare live jazz experience right on Ipanema. Then DJ Lavinia Aune takes over into sunset.
                 </p>
-                <button
-                  onClick={() => {
-                    trackEvent('dj_instagram_clicked', { category: 'Event' });
-                    openLink('https://www.instagram.com/laviniaaune');
-                  }}
-                  className="inline-flex items-center gap-2 text-sm font-semibold text-sunset-600 hover:text-sunset-700 transition-colors"
-                >
-                  <Instagram className="w-4 h-4" />
-                  @laviniaaune
-                  <ExternalLink className="w-3 h-3" />
-                </button>
+                <div className="flex flex-col gap-2">
+                  <button
+                    onClick={() => {
+                      trackEvent('band_instagram_clicked', { category: 'Event' });
+                      openLink('https://www.instagram.com/quartetinhojazz?igsh=dHlia2I4ZGRqZ2x3');
+                    }}
+                    className="inline-flex items-center gap-2 text-sm font-semibold text-sunset-600 hover:text-sunset-700 transition-colors"
+                  >
+                    <Instagram className="w-4 h-4" />
+                    @quartetinhojazz
+                    <ExternalLink className="w-3 h-3" />
+                  </button>
+                  <button
+                    onClick={() => {
+                      trackEvent('dj_instagram_clicked', { category: 'Event' });
+                      openLink('https://www.instagram.com/laviniaaune');
+                    }}
+                    className="inline-flex items-center gap-2 text-sm font-semibold text-sunset-600 hover:text-sunset-700 transition-colors"
+                  >
+                    <Instagram className="w-4 h-4" />
+                    @laviniaaune
+                    <ExternalLink className="w-3 h-3" />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -531,7 +544,16 @@ export default function RyanFarewellParty() {
                       <p className="text-white/25 text-xs mt-1.5">Used to look up your badge at the door</p>
                     </div>
 
-                    {/* Promo code */}
+                    {/* Promo code — hidden when pre-filled from URL */}
+                    {urlPromo && promoMsg?.ok ? (
+                      <div className="flex items-center gap-3 rounded-xl px-4 py-3" style={{ background: 'rgba(52,211,153,0.08)', border: '1px solid rgba(52,211,153,0.25)' }}>
+                        <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+                        <div>
+                          <p className="text-emerald-300 text-sm font-semibold">{promoMsg.text}</p>
+                          <p className="text-emerald-400/50 text-xs font-mono">{promoCode}</p>
+                        </div>
+                      </div>
+                    ) : (
                     <div>
                       <label className="block text-amber-200/70 text-xs font-semibold uppercase tracking-widest mb-2">
                         <Tag className="w-3 h-3 inline mr-1" />Promo / Invite Code <span className="normal-case text-white/30 font-normal">(optional)</span>
@@ -541,7 +563,7 @@ export default function RyanFarewellParty() {
                           type="text" value={promoCode}
                           onChange={e => { setPromoCode(e.target.value.toUpperCase()); setPromoMsg(null); setTierInfo(DEFAULT_TIER); }}
                           onBlur={handlePromoBlur}
-                          placeholder="e.g. JOÃO10"
+                          placeholder="e.g. AMIGO"
                           className="w-full rounded-xl px-4 py-3 text-white placeholder-white/30 text-sm font-medium outline-none focus:ring-2 focus:ring-amber-400/50 transition-all pr-12 uppercase"
                           style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)' }}
                         />
@@ -556,6 +578,7 @@ export default function RyanFarewellParty() {
                         </p>
                       )}
                     </div>
+                    )}
 
                     {/* Continue button */}
                     <button
