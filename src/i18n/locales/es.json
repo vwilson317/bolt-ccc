@@ -60,7 +60,8 @@
     "share": "Compartir",
     "notPartnered": "No Socia",
     "notPartneredMessage": "Esta barraca no es socia nuestra. Solo hay información básica disponible.",
-    "limitedInfo": "Info limitada"
+    "limitedInfo": "Info limitada",
+    "undetermined": "Indeterminado"
   },
   "login": {
     "title": "Iniciar Sesión",
@@ -236,7 +237,9 @@
         "unlockedTitle": "Insignia de Apoyo Desbloqueada",
         "unlockedDescription": "Muestra esta insignia en la barraca y menciona el código",
         "addToWallet": "Copiar / Compartir Código",
-        "addToAppleWallet": "Añadir a Apple Wallet"
+        "addToAppleWallet": "Añadir a Apple Wallet",
+        "step2LabelBR": "Tu CPF, teléfono o email (requerido para reclamar)",
+        "identifierPlaceholderBR": "000.000.000-00, email o +55 21 99999-0000"
       },
       "messages": {
         "invalidIdentifier": "Ingresa un email válido o un número de WhatsApp válido.",
@@ -860,5 +863,15 @@
       "saoConrado": "São Conrado"
     },
     "critical": "CRÍTICO"
+  },
+  "languageExchangeFunnel": {
+    "seo": {
+      "title": "Intercambio Internacional de Idiomas | Sábados en Río",
+      "description": "Únete a nuestro intercambio de idiomas internacional todos los sábados y recibe actualizaciones semanales en el grupo de WhatsApp."
+    },
+    "eyebrow": "Sábados en Río",
+    "title": "Intercambio Internacional de Idiomas",
+    "description": "Un encuentro semanal simple para practicar idiomas, conocer gente nueva y construir comunidad. Únete al grupo de WhatsApp para conocer la ubicación exacta y las actualizaciones semanales.",
+    "cta": "Unirse al grupo de WhatsApp"
   }
 }
