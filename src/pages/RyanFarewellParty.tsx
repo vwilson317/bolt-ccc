@@ -34,7 +34,7 @@ interface TierInfo {
   promoterId?: string;
   promoType?: 'promoter' | 'guest' | 'vip';
 }
-const DEFAULT_TIER: TierInfo = { tier: 'general', priceBrl: 20000, label: 'General Public', badge: 'R$200' };
+const DEFAULT_TIER: TierInfo = { tier: 'general', priceBrl: 10000, label: 'General Public', badge: 'R$100' };
 
 type CheckoutStep = 'form' | 'payment' | 'confirming' | 'success';
 
@@ -251,7 +251,7 @@ export default function RyanFarewellParty() {
     <>
       <SEOHead
         title="Ryan's Going Away Party · May 3, 2026 · Ipanema"
-        description="Join us at 120 Escritócarioca, Ipanema for Ryan's going away party! Sunday May 3, 2026. R$200 includes beach chair, umbrella & welcome drink. Live jazz band + DJ."
+        description="Join us at 120 Escritócarioca, Ipanema for Ryan's going away party! Sunday May 3, 2026. R$100 includes entry + welcome drink. Live jazz band + DJ."
       />
 
       {/* Subtle sakura petals */}
@@ -431,9 +431,9 @@ export default function RyanFarewellParty() {
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
               {[
-                { emoji: '🏖️', title: 'Beach Chair + Umbrella', sub: 'ビーチチェア＋パラソル', desc: 'Reserved spot for the whole afternoon. Your seat is waiting.' },
-                { emoji: '🍹', title: 'Welcome Drink',          sub: 'ウェルカムドリンク',    desc: 'One drink of your choice: caipirinha, cerveja, whatever calls your name.' },
-                { emoji: '🌸', title: 'Epic Send-Off Vibes',    sub: '最高の雰囲気',          desc: 'Sun, music, friends, and a community cheering Ryan on to his next adventure.' },
+                { emoji: '🎟️', title: 'Event Entry',         sub: 'イベント入場',          desc: 'Your ticket in to the party — come as you are and enjoy the afternoon.' },
+                { emoji: '🍹', title: 'Welcome Drink',        sub: 'ウェルカムドリンク',    desc: 'One drink of your choice: caipirinha, cerveja, whatever calls your name.' },
+                { emoji: '🌸', title: 'Epic Send-Off Vibes',  sub: '最高の雰囲気',          desc: 'Sun, music, friends, and a community cheering Ryan on to his next adventure.' },
               ].map((item, i) => (
                 <div key={i} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 text-center hover:-translate-y-1 hover:shadow-md transition-all duration-200">
                   <span className="text-4xl block mb-4 animate-float" style={{ animationDelay: `${i * 0.3}s` }}>{item.emoji}</span>
@@ -723,7 +723,7 @@ export default function RyanFarewellParty() {
           <div className="max-w-md mx-auto flex flex-col sm:flex-row gap-3">
             <button
               onClick={() => {
-                const msg = encodeURIComponent(`🌴 Ryan's Going Away Party, May 3, Ipanema! Tickets from R$200: ${window.location.origin}/ryans-farewell-party`);
+                const msg = encodeURIComponent(`🌴 Ryan's Going Away Party, May 3, Ipanema! Tickets from R$100: ${window.location.origin}/ryans-farewell-party`);
                 openLink(`https://wa.me/?text=${msg}`);
                 trackEvent('event_shared', { method: 'whatsapp', category: 'Event' });
               }}
@@ -732,7 +732,7 @@ export default function RyanFarewellParty() {
               <MessageCircle className="w-4 h-4" /> Tell a friend
             </button>
             <a
-              href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Ryan%27s+Farewell+Party&dates=20260503T170000Z/20260503T230000Z&details=Farewell+party+at+Ipanema+Beach+Posto+10+-+R%24100+includes+chair%2C+umbrella+%26+welcome+drink&location=Posto+10+Ipanema+Rio+de+Janeiro"
+              href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Ryan%27s+Farewell+Party&dates=20260503T170000Z/20260503T230000Z&details=Farewell+party+at+Ipanema+Beach+Posto+10+-+R%24100+includes+entry+%26+welcome+drink&location=Posto+10+Ipanema+Rio+de+Janeiro"
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => trackEvent('add_to_calendar_clicked', { category: 'Event' })}

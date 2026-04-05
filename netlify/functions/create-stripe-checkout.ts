@@ -40,7 +40,7 @@ export const handler: Handler = async (event) => {
   let email = '';
   let promoCode = '';
   let tier = 'general';
-  let priceBrl = 20000; // R$200.00 default
+  let priceBrl = 10000; // R$100.00 default
   let quantity = 1;
 
   try {
@@ -51,7 +51,7 @@ export const handler: Handler = async (event) => {
     email      = (body.email     || '').trim();
     promoCode  = (body.promoCode || '').trim().toUpperCase();
     tier       = body.tier       || 'general';
-    priceBrl   = typeof body.priceBrl === 'number' ? body.priceBrl : 20000;
+    priceBrl   = typeof body.priceBrl === 'number' ? body.priceBrl : 10000;
     quantity   = Math.min(Math.max(parseInt(body.quantity) || 1, 1), 10);
   } catch {
     // use defaults if body is missing / malformed
@@ -84,7 +84,7 @@ export const handler: Handler = async (event) => {
             product_data: {
               name: `Ryan's Going Away Party — ${tierLabel} Ticket`,
               description:
-                'Includes: beach chair + umbrella + welcome drink · Sunday, May 3, 2026 · 120 Escritócarioca, Ipanema',
+                'Includes: entry + welcome drink · Sunday, May 3, 2026 · 120 Escritócarioca, Ipanema',
             },
             unit_amount: priceBrl,
           },

@@ -71,8 +71,8 @@ INSERT INTO event_config (key, value) VALUES
   ('cost_bundle_per_person_brl',    '100'),
   ('cost_promo_local_brl',          '500'),
   ('cost_promo_instagram_brl',      '530'),
-  ('price_general_brl',             '20000'),
-  ('price_guest_brl',               '15000'),
+  ('price_general_brl',             '10000'),
+  ('price_guest_brl',               '5000'),
   ('price_vip_brl',                 '0'),
   ('promoter_commission_brl',       '2500')
 ON CONFLICT (key) DO NOTHING;

@@ -63,7 +63,7 @@ export const handler: Handler = async (event) => {
           valid: true,
           type: 'promoter',
           tier: 'general',       // promoters still sell general tickets
-          priceBrl: 20000,       // R$200 — full price, promoter earns commission
+          priceBrl: 10000,       // R$100 — full price, promoter earns commission
           promoterName: promoter.name,
           promoterId: promoter.id,
           message: `Code attributed to promoter ${promoter.name}`,
@@ -89,8 +89,8 @@ export const handler: Handler = async (event) => {
           valid:    true,
           type:     promoCode.type,
           tier:     isVip ? 'vip' : 'guest',
-          priceBrl: isVip ? 0 : 15000,  // R$0 or R$150
-          message:  isVip ? "VIP code — free entry!" : "Guest code — R$150 ticket",
+          priceBrl: isVip ? 0 : 5000,   // R$0 or R$50
+          message:  isVip ? "VIP code — free entry!" : "Guest code — R$50 ticket",
         }),
       };
     }
