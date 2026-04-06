@@ -429,19 +429,13 @@ export default function RyanFarewellParty() {
             <p className="text-xs font-bold tracking-[0.3em] uppercase text-beach-500 text-center mb-2">含まれるもの</p>
             <h2 className="font-display font-black text-3xl sm:text-4xl text-center text-gray-900 mb-10">Your ticket covers</h2>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-              {[
-                { emoji: '🎟️', title: 'Event Entry',         sub: 'イベント入場',          desc: 'Your ticket in to the party — come as you are and enjoy the afternoon.' },
-                { emoji: '🍹', title: 'Welcome Drink',        sub: 'ウェルカムドリンク',    desc: 'One drink of your choice: caipirinha, cerveja, whatever calls your name.' },
-                { emoji: '🌸', title: 'Epic Send-Off Vibes',  sub: '最高の雰囲気',          desc: 'Sun, music, friends, and a community cheering Ryan on to his next adventure.' },
-              ].map((item, i) => (
-                <div key={i} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 text-center hover:-translate-y-1 hover:shadow-md transition-all duration-200">
-                  <span className="text-4xl block mb-4 animate-float" style={{ animationDelay: `${i * 0.3}s` }}>{item.emoji}</span>
-                  <h3 className="font-display font-black text-gray-900 text-lg mb-1">{item.title}</h3>
-                  <p className="text-xs text-beach-500 font-semibold mb-2">{item.sub}</p>
-                  <p className="text-sm text-gray-500 leading-relaxed">{item.desc}</p>
-                </div>
-              ))}
+            <div className="flex justify-center">
+              <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-8 text-center hover:-translate-y-1 hover:shadow-md transition-all duration-200 max-w-xs w-full">
+                <span className="text-5xl block mb-4 animate-float">🍹</span>
+                <h3 className="font-display font-black text-gray-900 text-xl mb-1">Welcome Drink</h3>
+                <p className="text-xs text-beach-500 font-semibold mb-2">ウェルカムドリンク</p>
+                <p className="text-sm text-gray-500 leading-relaxed">One drink of your choice: caipirinha, cerveja, whatever calls your name.</p>
+              </div>
             </div>
           </div>
         </section>
