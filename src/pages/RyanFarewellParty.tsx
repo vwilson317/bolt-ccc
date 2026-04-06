@@ -28,6 +28,7 @@ export default function RyanFarewellParty() {
   const [error, setError]       = useState<string | null>(null);
   const [payTab, setPayTab]     = useState<'pix' | 'card'>('pix');
   const [pixCopied, setPixCopied] = useState(false);
+  const [ticketTier, setTicketTier] = useState<'normal' | 'vip'>('normal');
 
   const params    = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '');
   const success   = params.get('success') === 'true';
@@ -74,8 +75,10 @@ export default function RyanFarewellParty() {
   };
 
   const handleWhatsAppReceipt = () => {
-    trackEvent('whatsapp_receipt_clicked', { event_name: 'ryans_farewell_party', category: 'Event' });
-    const msg = encodeURIComponent('Oi! Acabei de pagar R$100 via PIX para o Farewell Party do Ryan (3 de maio). Segue o comprovante 👇');
+    trackEvent('whatsapp_receipt_clicked', { event_name: 'ryans_farewell_party', ticket_tier: ticketTier, category: 'Event' });
+    const amount = ticketTier === 'vip' ? 'R$200' : 'R$100';
+    const tierLabel = ticketTier === 'vip' ? 'VIP Premium' : '';
+    const msg = encodeURIComponent(`Oi! Acabei de pagar ${amount} via PIX para o Farewell Party do Ryan (3 de maio)${tierLabel ? ` — ingresso ${tierLabel}` : ''}. Segue o comprovante 👇`);
     openLink(`https://wa.me/${WA_NUMBER}?text=${msg}`);
   };
 
@@ -84,7 +87,7 @@ export default function RyanFarewellParty() {
     setError(null);
     trackCTAClick('ticket_purchase', 'Pay by Card', '/ryans-farewell-party');
     try {
-      const res  = await fetch('/.netlify/functions/create-stripe-checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' } });
+      const res  = await fetch('/.netlify/functions/create-stripe-checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ticketTier }) });
       const data = await res.json();
       if (!res.ok || !data.url) throw new Error(data.error || 'Could not start checkout');
       trackEvent('ticket_purchase_started', { event_name: 'ryans_farewell_party', category: 'Event' });
@@ -313,18 +316,42 @@ export default function RyanFarewellParty() {
               <div className="h-1.5 animate-gradient-shift" style={{ background: 'linear-gradient(90deg, #ec4899, #eab308, #0ea5e9, #ec4899)' }} />
 
               <div className="p-8">
+                {/* Tier selector */}
+                <div className="flex rounded-xl overflow-hidden border border-gray-200 mb-6">
+                  <button
+                    onClick={() => setTicketTier('normal')}
+                    className={`flex-1 py-3 text-sm font-bold transition-colors ${ticketTier === 'normal' ? 'bg-beach-500 text-white' : 'bg-white text-gray-500 hover:bg-gray-50'}`}
+                  >
+                    🎫 General
+                  </button>
+                  <button
+                    onClick={() => setTicketTier('vip')}
+                    className={`flex-1 py-3 text-sm font-bold transition-colors ${ticketTier === 'vip' ? 'bg-beach-500 text-white' : 'bg-white text-gray-500 hover:bg-gray-50'}`}
+                  >
+                    ⭐ VIP Premium
+                  </button>
+                </div>
+
                 {/* Price */}
                 <div className="text-center mb-6 pb-6 border-b border-gray-100">
                   <div className="flex items-baseline justify-center gap-1">
                     <span className="text-2xl font-bold text-gray-400">R$</span>
-                    <span className="font-display font-black text-7xl text-gray-900 leading-none">100</span>
+                    <span className="font-display font-black text-7xl text-gray-900 leading-none">{ticketTier === 'vip' ? '200' : '100'}</span>
                   </div>
-                  <p className="text-sm text-gray-400 mt-1">≈ $20 USD · per person</p>
+                  <p className="text-sm text-gray-400 mt-1">
+                    {ticketTier === 'vip' ? '≈ $40 USD · per person' : '≈ $20 USD · per person'}
+                  </p>
+                  {ticketTier === 'vip' && (
+                    <p className="text-xs font-semibold text-beach-500 mt-1 uppercase tracking-wide">Preferred seating · closer to the music</p>
+                  )}
                 </div>
 
                 {/* Includes */}
                 <ul className="space-y-2 mb-6 text-sm text-gray-600">
-                  {['🏖️  Beach chair + umbrella rental', '🍹  Welcome drink of your choice', '🌸  A Rio farewell for the ages'].map((item) => (
+                  {(ticketTier === 'vip'
+                    ? ['🏖️  Beach chair + umbrella', '🎶  Preferred seating — closest to the stage', '🍹  Welcome drink of your choice', '🌸  A Rio farewell for the ages']
+                    : ['🏖️  Beach chair + umbrella rental', '🍹  Welcome drink of your choice', '🌸  A Rio farewell for the ages']
+                  ).map((item) => (
                     <li key={item} className="flex items-center gap-2">
                       <CheckCircle2 className="w-4 h-4 text-beach-400 flex-shrink-0" />
                       {item}
@@ -372,7 +399,7 @@ export default function RyanFarewellParty() {
                           <MessageCircle className="w-5 h-5" />
                           Send Receipt on WhatsApp
                         </button>
-                        <p className="text-xs text-center text-gray-400">Pay R$100 PIX → screenshot receipt → tap button above</p>
+                        <p className="text-xs text-center text-gray-400">Pay {ticketTier === 'vip' ? 'R$200' : 'R$100'} PIX → screenshot receipt → tap button above</p>
                       </div>
                     )}
 
@@ -389,7 +416,7 @@ export default function RyanFarewellParty() {
                               <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin inline-block" />
                               Redirecting…
                             </span>
-                          ) : 'Pay R$100 by Card'}
+                          ) : `Pay R$${ticketTier === 'vip' ? '200' : '100'} by Card`}
                         </button>
                         {error && <p className="text-red-500 text-sm text-center">{error}</p>}
                         <p className="text-xs text-center text-gray-400">Secure checkout via Stripe</p>

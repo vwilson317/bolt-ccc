@@ -33,6 +33,9 @@ export const handler: Handler = async (event) => {
     event.headers.referer?.replace(/\/$/, '') ||
     'https://cariocacoastalclub.com';
 
+  const body = JSON.parse(event.body || '{}');
+  const isVip = body.ticketTier === 'vip';
+
   try {
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
@@ -41,11 +44,14 @@ export const handler: Handler = async (event) => {
           price_data: {
             currency: 'brl',
             product_data: {
-              name: "Ryan's Farewell Party — Beach Day RSVP",
-              description:
-                'Includes beach chair + umbrella rental and a welcome drink of your choice · Sunday, May 3, 2026 · Ipanema Beach, Rio de Janeiro',
+              name: isVip
+                ? "Ryan's Farewell Party — VIP Premium Ticket"
+                : "Ryan's Farewell Party — General Ticket",
+              description: isVip
+                ? 'Includes beach chair + umbrella, preferred seating closest to the stage, and a welcome drink · Sunday, May 3, 2026 · Ipanema Beach, Rio de Janeiro'
+                : 'Includes beach chair + umbrella rental and a welcome drink of your choice · Sunday, May 3, 2026 · Ipanema Beach, Rio de Janeiro',
             },
-            unit_amount: 10000, // R$100.00 in centavos
+            unit_amount: isVip ? 20000 : 10000, // R$200 or R$100 in centavos
           },
           quantity: 1,
         },
@@ -56,6 +62,7 @@ export const handler: Handler = async (event) => {
       metadata: {
         event: 'ryans_farewell_party',
         event_date: '2026-05-03',
+        ticket_tier: isVip ? 'vip' : 'normal',
       },
       custom_text: {
         submit: {
