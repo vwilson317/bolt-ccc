@@ -33,36 +33,80 @@ export const handler: Handler = async (event) => {
     event.headers.referer?.replace(/\/$/, '') ||
     'https://cariocacoastalclub.com';
 
-  const body = JSON.parse(event.body || '{}');
-  const isVip = body.ticketTier === 'vip';
+  // Parse attendee info from request body
+  let fullName = '';
+  let cpf = '';
+  let whatsapp = '';
+  let email = '';
+  let promoCode = '';
+  let tier = 'general';
+  let priceBrl = 10000; // R$100.00 default
+  let quantity = 1;
+
+  try {
+    const body = JSON.parse(event.body || '{}');
+    fullName   = (body.fullName  || '').trim();
+    cpf        = (body.cpf       || '').replace(/\D/g, '');
+    whatsapp   = (body.whatsapp  || '').trim();
+    email      = (body.email     || '').trim();
+    promoCode  = (body.promoCode || '').trim().toUpperCase();
+    tier       = body.tier       || 'general';
+    priceBrl   = typeof body.priceBrl === 'number' ? body.priceBrl : 10000;
+    quantity   = Math.min(Math.max(parseInt(body.quantity) || 1, 1), 10);
+  } catch {
+    // use defaults if body is missing / malformed
+  }
+
+  if (!fullName || !whatsapp) {
+    return {
+      statusCode: 400,
+      headers,
+      body: JSON.stringify({ error: 'Full name and WhatsApp are required' }),
+    };
+  }
+
+  // Tier label and description for Stripe product
+  const tierLabels: Record<string, string> = {
+    general: 'General Public',
+    guest:   "Ryan's Guest",
+    vip:     "Ryan's VIP",
+    premium: 'VIP Premium',
+  };
+  const tierDescriptions: Record<string, string> = {
+    premium: 'Includes beach chair + umbrella, preferred seating right by the DJ, and a welcome drink · Sunday, May 3, 2026 · 120 Escritócarioca, Ipanema',
+  };
+  const tierLabel = tierLabels[tier] || 'General Public';
+  const tierDescription = tierDescriptions[tier] || 'Includes: entry + welcome drink · Sunday, May 3, 2026 · 120 Escritócarioca, Ipanema';
 
   try {
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
+      customer_email: email || undefined,
       line_items: [
         {
           price_data: {
             currency: 'brl',
             product_data: {
-              name: isVip
-                ? "Ryan's Farewell Party — VIP Premium Ticket"
-                : "Ryan's Farewell Party — General Ticket",
-              description: isVip
-                ? 'Includes beach chair + umbrella, preferred seating right by the DJ, and a welcome drink · Sunday, May 3, 2026 · Ipanema Beach, Rio de Janeiro'
-                : 'Includes beach chair + umbrella rental and a welcome drink of your choice · Sunday, May 3, 2026 · Ipanema Beach, Rio de Janeiro',
+              name: `Ryan's Going Away Party — ${tierLabel} Ticket`,
+              description: tierDescription,
             },
-            unit_amount: isVip ? 20000 : 10000, // R$200 or R$100 in centavos
+            unit_amount: priceBrl,
           },
-          quantity: 1,
+          quantity,
         },
       ],
       mode: 'payment',
       success_url: `${origin}/ryans-farewell-party?success=true&session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${origin}/ryans-farewell-party?cancelled=true`,
+      cancel_url:  `${origin}/ryans-farewell-party?cancelled=true`,
       metadata: {
-        event: 'ryans_farewell_party',
+        event:      'ryans_going_away_party',
         event_date: '2026-05-03',
-        ticket_tier: isVip ? 'vip' : 'normal',
+        full_name:  fullName.substring(0, 500),
+        cpf:        cpf.substring(0, 11),
+        whatsapp:   whatsapp.substring(0, 20),
+        tier,
+        promo_code: promoCode.substring(0, 50),
+        quantity:   String(quantity),
       },
       custom_text: {
         submit: {

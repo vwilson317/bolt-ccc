@@ -1,16 +1,98 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Menu, X, Globe } from 'lucide-react';
 import { useScrollPosition } from '../hooks/useScrollAnimation';
 
+const SLOW_SCROLL_SPEED = 108; // px per second — slow enough to read during a screen recording
+const TRIPLE_TAP_WINDOW_MS = 600; // ms window to detect 3 taps
+
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLanguageOpen, setIsLanguageOpen] = useState(false);
   const [heroHeight, setHeroHeight] = useState(0);
+  const [isSlowScrolling, setIsSlowScrolling] = useState(false);
   const { t, i18n } = useTranslation();
   const location = useLocation();
   const { scrollY } = useScrollPosition();
+
+  const tapTimestampsRef = useRef<number[]>([]);
+  const scrollAnimRef = useRef<number | null>(null);
+  const isSlowScrollingRef = useRef(false);
+
+  const stopSlowScroll = () => {
+    if (scrollAnimRef.current !== null) {
+      cancelAnimationFrame(scrollAnimRef.current);
+      scrollAnimRef.current = null;
+    }
+    isSlowScrollingRef.current = false;
+    setIsSlowScrolling(false);
+    document.documentElement.style.scrollBehavior = '';
+  };
+
+  const startSlowScroll = () => {
+    if (scrollAnimRef.current !== null) {
+      cancelAnimationFrame(scrollAnimRef.current);
+    }
+    isSlowScrollingRef.current = true;
+    setIsSlowScrolling(true);
+
+    // Disable CSS smooth-scroll so our RAF loop drives the scroll directly
+    document.documentElement.style.scrollBehavior = 'auto';
+
+    let lastTimestamp: number | null = null;
+
+    const step = (timestamp: number) => {
+      if (!isSlowScrollingRef.current) return;
+
+      if (lastTimestamp === null) lastTimestamp = timestamp;
+      const delta = (timestamp - lastTimestamp) / 1000;
+      lastTimestamp = timestamp;
+
+      window.scrollBy(0, SLOW_SCROLL_SPEED * delta);
+
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      if (window.scrollY < maxScroll - 1) {
+        scrollAnimRef.current = requestAnimationFrame(step);
+      } else {
+        scrollAnimRef.current = null;
+        isSlowScrollingRef.current = false;
+        setIsSlowScrolling(false);
+        document.documentElement.style.scrollBehavior = '';
+      }
+    };
+
+    scrollAnimRef.current = requestAnimationFrame(step);
+  };
+
+  const handleHeaderClick = (e: React.MouseEvent) => {
+    // Don't intercept clicks on interactive elements
+    if ((e.target as HTMLElement).closest('a, button')) return;
+
+    if (isSlowScrollingRef.current) {
+      stopSlowScroll();
+      return;
+    }
+
+    const now = Date.now();
+    const recent = tapTimestampsRef.current.filter(t => now - t < TRIPLE_TAP_WINDOW_MS);
+    recent.push(now);
+    tapTimestampsRef.current = recent;
+
+    if (recent.length >= 3) {
+      tapTimestampsRef.current = [];
+      startSlowScroll();
+    }
+  };
+
+  // Cleanup RAF on unmount
+  useEffect(() => {
+    return () => {
+      if (scrollAnimRef.current !== null) {
+        cancelAnimationFrame(scrollAnimRef.current);
+      }
+    };
+  }, []);
 
   // Calculate hero height on mount and resize
   useEffect(() => {
@@ -54,11 +136,18 @@ const Header: React.FC = () => {
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <header className={`fixed top-0 left-0 right-0 z-[999999] transition-all duration-300 ${
-      useSolidHeader
-        ? 'bg-white/95 backdrop-blur-sm border-b border-teal-200 shadow-sm'
-        : 'bg-transparent'
-    }`}>
+    <header
+      onClick={handleHeaderClick}
+      className={`fixed top-0 left-0 right-0 z-[999999] transition-all duration-300 ${
+        useSolidHeader
+          ? 'bg-white/95 backdrop-blur-sm border-b border-teal-200 shadow-sm'
+          : 'bg-transparent'
+      }`}
+    >
+      {/* Slow-scroll recording indicator */}
+      {isSlowScrolling && (
+        <div className="absolute inset-x-0 bottom-0 h-0.5 bg-teal-400 animate-pulse" />
+      )}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}

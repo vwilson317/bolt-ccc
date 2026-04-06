@@ -237,7 +237,9 @@
         "unlockedTitle": "Badge Supporter Débloqué",
         "unlockedDescription": "Montrez ce badge à la barraca et mentionnez le code",
         "addToWallet": "Copier / Partager le Code",
-        "addToAppleWallet": "Ajouter à Apple Wallet"
+        "addToAppleWallet": "Ajouter à Apple Wallet",
+        "step2LabelBR": "Votre CPF, téléphone ou email (requis pour obtenir le badge)",
+        "identifierPlaceholderBR": "000.000.000-00, email ou +55 21 99999-0000"
       },
       "messages": {
         "invalidIdentifier": "Entrez un email valide ou un numéro WhatsApp valide.",
