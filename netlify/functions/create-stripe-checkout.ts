@@ -65,13 +65,18 @@ export const handler: Handler = async (event) => {
     };
   }
 
-  // Tier label for product description
+  // Tier label and description for Stripe product
   const tierLabels: Record<string, string> = {
     general: 'General Public',
     guest:   "Ryan's Guest",
     vip:     "Ryan's VIP",
+    premium: 'VIP Premium',
+  };
+  const tierDescriptions: Record<string, string> = {
+    premium: 'Includes beach chair + umbrella, preferred seating right by the DJ, and a welcome drink · Sunday, May 3, 2026 · 120 Escritócarioca, Ipanema',
   };
   const tierLabel = tierLabels[tier] || 'General Public';
+  const tierDescription = tierDescriptions[tier] || 'Includes: entry + welcome drink · Sunday, May 3, 2026 · 120 Escritócarioca, Ipanema';
 
   try {
     const session = await stripe.checkout.sessions.create({
@@ -83,8 +88,7 @@ export const handler: Handler = async (event) => {
             currency: 'brl',
             product_data: {
               name: `Ryan's Going Away Party — ${tierLabel} Ticket`,
-              description:
-                'Includes: entry + welcome drink · Sunday, May 3, 2026 · 120 Escritócarioca, Ipanema',
+              description: tierDescription,
             },
             unit_amount: priceBrl,
           },

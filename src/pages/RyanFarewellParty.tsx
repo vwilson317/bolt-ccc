@@ -24,7 +24,7 @@ const PIX_NAME    = 'Ryan Ferrari de Castro Pires';
 const WA_NUMBER   = '5521990532728';
 
 // ── Tier config ────────────────────────────────────────────────────
-type Tier = 'general' | 'guest' | 'vip';
+type Tier = 'general' | 'guest' | 'vip' | 'premium';
 interface TierInfo {
   tier: Tier;
   priceBrl: number;    // centavos
@@ -479,6 +479,33 @@ export default function RyanFarewellParty() {
                 {/* ── STEP: FORM ─────────────────────────────────────── */}
                 {step === 'form' && (
                   <div className="space-y-5">
+
+                    {/* Tier picker — only when no promo code is locked in */}
+                    {!promoMsg?.ok && (
+                      <div>
+                        <label className="block text-amber-200/70 text-xs font-semibold uppercase tracking-widest mb-2">Choose Your Ticket</label>
+                        <div className="flex rounded-xl overflow-hidden" style={{ border: '1px solid rgba(255,255,255,0.1)' }}>
+                          <button
+                            onClick={() => setTierInfo(DEFAULT_TIER)}
+                            className={`flex-1 py-3 text-sm font-bold transition-colors ${tierInfo.tier !== 'premium' ? 'text-slate-900' : 'text-white/50 hover:text-white/70'}`}
+                            style={tierInfo.tier !== 'premium' ? { background: 'linear-gradient(135deg, #f59e0b, #d97706)' } : { background: 'transparent' }}
+                          >
+                            🎫 General · R$100
+                          </button>
+                          <button
+                            onClick={() => setTierInfo({ tier: 'premium', priceBrl: 20000, label: 'VIP Premium', badge: 'R$200' })}
+                            className={`flex-1 py-3 text-sm font-bold transition-colors ${tierInfo.tier === 'premium' ? 'text-slate-900' : 'text-white/50 hover:text-white/70'}`}
+                            style={tierInfo.tier === 'premium' ? { background: 'linear-gradient(135deg, #f59e0b, #d97706)' } : { background: 'transparent' }}
+                          >
+                            ⭐ VIP Premium · R$200
+                          </button>
+                        </div>
+                        {tierInfo.tier === 'premium' && (
+                          <p className="text-amber-300/60 text-xs mt-1.5">Chair + umbrella · preferred seating right by the DJ · welcome drink</p>
+                        )}
+                      </div>
+                    )}
+
                     {/* Active tier display */}
                     <div className="flex items-center justify-between rounded-2xl px-5 py-4" style={{ background: 'rgba(251,191,36,0.08)', border: '1px solid rgba(251,191,36,0.25)' }}>
                       <div>
@@ -664,7 +691,7 @@ export default function RyanFarewellParty() {
                         <button onClick={handleStripeCheckout} disabled={loading}
                           className="w-full py-4 rounded-2xl font-display font-black text-lg flex items-center justify-center gap-2 disabled:opacity-50 transition-all hover:scale-[1.02] active:scale-95"
                           style={{ background: 'linear-gradient(135deg, #f59e0b, #d97706)', color: '#0f172a' }}>
-                          {loading ? <Loader2 className="w-5 h-5 animate-spin text-slate-900" /> : <><CreditCard className="w-5 h-5" />Pay R${totalPriceBrl} by Card</>}
+                          {loading ? <Loader2 className="w-5 h-5 animate-spin text-slate-900" /> : <><CreditCard className="w-5 h-5" />Pay R${totalPriceBrl} by Card</>
                         </button>
                         <p className="text-xs text-center text-white/30">Secure checkout via Stripe</p>
                       </div>
