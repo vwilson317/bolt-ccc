@@ -84,6 +84,27 @@ const UpdateCard: React.FC<{ update: StatusUpdate; index: number }> = ({ update,
                   </li>
                 ))}
               </ul>
+              {section.links && section.links.length > 0 && (
+                <div className="flex flex-wrap gap-2 mt-3">
+                  {section.links.map((link, i) => (
+                    <a
+                      key={i}
+                      href={link.url}
+                      onClick={(e) => {
+                        if (/Instagram/.test(navigator.userAgent)) {
+                          e.preventDefault();
+                          window.location.href = link.url;
+                        }
+                      }}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gray-800 border border-gray-700 text-beach-300 text-sm font-medium hover:border-beach-500 hover:text-beach-200 transition-colors duration-200"
+                    >
+                      {link.label}
+                    </a>
+                  ))}
+                </div>
+              )}
             </div>
           ))}
         </div>

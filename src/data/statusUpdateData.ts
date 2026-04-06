@@ -5,9 +5,15 @@ export interface PostMetric {
   positive?: boolean;
 }
 
+export interface SectionLink {
+  label: string;
+  url: string;
+}
+
 export interface UpdateSection {
   category: string;
   items: string[];
+  links?: SectionLink[];
 }
 
 export interface StatusUpdate {
@@ -31,6 +37,11 @@ export const statusUpdates: StatusUpdate[] = [
         items: [
           'A community member put together a mini varial video that went up on Twitter — exactly the kind of organic content we love to see.',
           'Two Instagram reels have crossed 5k views each, showing solid traction on the content side.',
+        ],
+        links: [
+          { label: 'Varial video on Twitter', url: 'https://x.com/chrislaubai/status/2040849901475779052?s=46' },
+          { label: 'Instagram Reel #1', url: 'https://www.instagram.com/reel/DWhgzOLCXCQ/?igsh=MWw3ZXNqZGNweDZlZg==' },
+          { label: 'Instagram Reel #2', url: 'https://www.instagram.com/reel/DWvfgi6D0pO/?igsh=MWd2cXRzMDVpaWR6dQ==' },
         ],
       },
       {
