@@ -48,7 +48,7 @@ export const handler: Handler = async (event) => {
                 ? "Ryan's Farewell Party — VIP Premium Ticket"
                 : "Ryan's Farewell Party — General Ticket",
               description: isVip
-                ? 'Includes beach chair + umbrella, preferred seating closest to the stage, and a welcome drink · Sunday, May 3, 2026 · Ipanema Beach, Rio de Janeiro'
+                ? 'Includes beach chair + umbrella, preferred seating right by the DJ, and a welcome drink · Sunday, May 3, 2026 · Ipanema Beach, Rio de Janeiro'
                 : 'Includes beach chair + umbrella rental and a welcome drink of your choice · Sunday, May 3, 2026 · Ipanema Beach, Rio de Janeiro',
             },
             unit_amount: isVip ? 20000 : 10000, // R$200 or R$100 in centavos

@@ -342,14 +342,14 @@ export default function RyanFarewellParty() {
                     {ticketTier === 'vip' ? '≈ $40 USD · per person' : '≈ $20 USD · per person'}
                   </p>
                   {ticketTier === 'vip' && (
-                    <p className="text-xs font-semibold text-beach-500 mt-1 uppercase tracking-wide">Preferred seating · closer to the music</p>
+                    <p className="text-xs font-semibold text-beach-500 mt-1 uppercase tracking-wide">Preferred seating · right by the DJ</p>
                   )}
                 </div>
 
                 {/* Includes */}
                 <ul className="space-y-2 mb-6 text-sm text-gray-600">
                   {(ticketTier === 'vip'
-                    ? ['🏖️  Beach chair + umbrella', '🎶  Preferred seating — closest to the stage', '🍹  Welcome drink of your choice', '🌸  A Rio farewell for the ages']
+                    ? ['🏖️  Beach chair + umbrella', '🎶  Preferred seating — right by the DJ', '🍹  Welcome drink of your choice', '🌸  A Rio farewell for the ages']
                     : ['🏖️  Beach chair + umbrella rental', '🍹  Welcome drink of your choice', '🌸  A Rio farewell for the ages']
                   ).map((item) => (
                     <li key={item} className="flex items-center gap-2">
