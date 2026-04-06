@@ -32,6 +32,9 @@ const PhotographerShowcase = lazy(() => import('./pages/PhotographerShowcase'));
 const RyanFarewellParty = lazy(() => import('./pages/RyanFarewellParty'));
 const HostingGuidelines = lazy(() => import('./pages/HostingGuidelines'));
 const StatusUpdatePage = lazy(() => import('./pages/StatusUpdatePage'));
+const PromoterDashboard = lazy(() => import('./pages/PromoterDashboard'));
+const EventAdminDashboard = lazy(() => import('./pages/EventAdminDashboard'));
+const RyanPartyTicket = lazy(() => import('./pages/RyanPartyTicket'));
 
 // Lazy-load heavy overlay components that are not needed at initial paint
 // StoryViewer removed: StoryProvider is disabled and StoryViewer would throw without it
@@ -92,6 +95,10 @@ function AppContent() {
             <Route path="/loyalty/:slug" element={<BarracaPromoPage />} />
             <Route path="/videography" element={<PhotographerShowcase />} />
             <Route path="/ryans-farewell-party" element={<RyanFarewellParty />} />
+            <Route path="/promoter/:code" element={<PromoterDashboard />} />
+            <Route path="/promoter" element={<PromoterDashboard />} />
+            <Route path="/event-admin" element={<EventAdminDashboard />} />
+            <Route path="/ryans-party-ticket" element={<RyanPartyTicket />} />
             <Route path="/content-professionals" element={<PhotographerShowcase />} />
             <Route path="/videography" element={<Navigate to="/content-professionals" replace />} />
             <Route path="/hosting-guidelines" element={<HostingGuidelines />} />

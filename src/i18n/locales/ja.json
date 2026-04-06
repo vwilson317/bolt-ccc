@@ -286,13 +286,41 @@
     "meetTeam": "チームを紹介",
     "teamDescription": "リオのバラッカコミュニティを強化するために取り組むバラッカ愛好家とテクノロジーの専門家",
     "team": {
-      "vincent": { "name": "Vincent Wilson", "role": "創設者兼CEO", "bio": "国際的なビジネス開発と関係構築に5年以上の経験を持つ。" },
-      "hans":    { "name": "Hans Yadav",     "role": "CTO",        "bio": "顧客サービスシステムとデジタルプラットフォーム開発の専門家。" },
-      "simon":   { "name": "Simon Paul",     "role": "運営部長",   "bio": "シームレスなユーザーエクスペリエンスの創出に注力。" },
-      "jordi":   { "name": "Jordi De Avila", "role": "ビジネス運営マネージャー", "bio": "ビジネスプロセス最適化の専門家。" },
-      "ricardo": { "name": "Ricardo Del Razo", "role": "特別パートナーシップ部長", "bio": "主要なビジネス関係の開発と維持の専門家。" },
-      "janeese": { "name": "Janeesa Hollingshead", "role": "CFO", "bio": "戦略的財務計画と事業成長管理の専門家。" },
-      "leticia": { "name": "Leticia Castilhos", "role": "ソーシャルメディア部長", "bio": "オンラインコミュニティ構築とブランド認知向上に注力するデジタルマーケティングの専門家。" }
+      "vincent": {
+        "name": "Vincent Wilson",
+        "role": "創設者兼CEO",
+        "bio": "国際的なビジネス開発と関係構築に5年以上の経験を持つ。"
+      },
+      "hans": {
+        "name": "Hans Yadav",
+        "role": "CTO",
+        "bio": "顧客サービスシステムとデジタルプラットフォーム開発の専門家。"
+      },
+      "simon": {
+        "name": "Simon Paul",
+        "role": "運営部長",
+        "bio": "シームレスなユーザーエクスペリエンスの創出に注力。"
+      },
+      "jordi": {
+        "name": "Jordi De Avila",
+        "role": "ビジネス運営マネージャー",
+        "bio": "ビジネスプロセス最適化の専門家。"
+      },
+      "ricardo": {
+        "name": "Ricardo Del Razo",
+        "role": "特別パートナーシップ部長",
+        "bio": "主要なビジネス関係の開発と維持の専門家。"
+      },
+      "janeese": {
+        "name": "Janeesa Hollingshead",
+        "role": "CFO",
+        "bio": "戦略的財務計画と事業成長管理の専門家。"
+      },
+      "leticia": {
+        "name": "Leticia Castilhos",
+        "role": "ソーシャルメディア部長",
+        "bio": "オンラインコミュニティ構築とブランド認知向上に注力するデジタルマーケティングの専門家。"
+      }
     },
     "getInTouch": "お問い合わせ",
     "getInTouchDescription": "会員資格についてご質問がありますか？パートナーシップをご希望ですか？",
@@ -449,5 +477,397 @@
     "realTime": "リアルタイムカウンター",
     "activeNow": "現在アクティブ",
     "fromGA4": "Google Analyticsより"
+  },
+  "barracaPromoPage": {
+    "loading": "プロモーションを読み込み中…",
+    "title": "{{name}}のバラカプロモ",
+    "intro": "@{{instagramHandle}}をフォローして、{{location}}でのサポーター割引をゲットしよう。",
+    "whatsappCta": "WhatsAppコミュニティに参加する",
+    "instagramCta": "Instagramでフォローする",
+    "comingSoon": "近日公開",
+    "comingSoonTitle": "{{name}}のバラカパス",
+    "comingSoonDescription": "Carioca Coastal Clubメンバー向けに@{{instagramHandle}}と限定フォロワー割引を準備中です。今すぐフォローして、プロモ開始をお見逃しなく。",
+    "comingSoonFollowButton": "@{{instagramHandle}}をフォロー",
+    "comingSoonWhatsappCta": "CC ClubのWhatsAppに参加",
+    "comingSoonInstagramCta": "Instagramでフォローする",
+    "comingSoonNote": "割引コードはローンチ時に公開されます。お楽しみに！"
+  },
+  "thaisPromoPage": {
+    "heading": "Thai 82 バラカプロモ",
+    "intro": "イパネマのタイスのバラカでサポーター割引を解除するまであと一歩。すでにコミュニティのメンバーですか？",
+    "whatsappCta": "WhatsAppコミュニティに参加する"
+  },
+  "registration": {
+    "title": "バラカを登録する",
+    "subtitle": "バラカを登録して一緒に取り組みましょう。以下のフォームに記入してください。",
+    "form": {
+      "basicInfo": "基本情報",
+      "name": "バラカ名",
+      "namePlaceholder": "バラカ名を入力してください",
+      "ownerName": "オーナー名",
+      "ownerNamePlaceholder": "オーナーのフルネームを入力してください",
+      "barracaNumber": "バラカ番号",
+      "barracaNumberPlaceholder": "例：1、2",
+      "nearestPosto": "最寄りのポスト",
+      "selectPosto": "ポストを選択してください",
+      "location": "場所",
+      "locationPlaceholder": "場所または地区を入力してください",
+      "description": "説明",
+      "descriptionPlaceholder": "バラカの特徴や専門、独自の魅力をご紹介ください",
+      "contactInfo": "連絡先情報",
+      "phone": "電話番号",
+      "phonePlaceholder": "電話番号を入力してください",
+      "email": "メールアドレス",
+      "emailPlaceholder": "メールアドレスを入力してください",
+      "instagram": "Instagram",
+      "instagramPlaceholder": "@yourbarraca",
+      "website": "ウェブサイト",
+      "websitePlaceholder": "https://yourwebsite.com",
+      "hours": "営業時間",
+      "typicalHours": "通常営業時間",
+      "typicalHoursPlaceholder": "例：9:00 - 18:00",
+      "weekendHoursEnabled": "週末の営業時間が異なる",
+      "weekendHours": "週末の営業時間",
+      "friday": "金曜日",
+      "saturday": "土曜日",
+      "sunday": "日曜日",
+      "open": "開店",
+      "close": "閉店",
+      "menu": "メニューと専門料理",
+      "menuPreview": "メニュープレビュー",
+      "menuPreviewPlaceholder": "人気メニューを追加してください",
+      "addMenuItem": "メニューアイテムを追加",
+      "removeMenuItem": "削除",
+      "amenities": "アメニティ",
+      "amenitiesPlaceholder": "どのようなサービスを提供していますか？",
+      "addAmenity": "アメニティを追加",
+      "removeAmenity": "削除",
+      "vibe": "雰囲気",
+      "vibeDescription": "バラカが提供する雰囲気のタイプを選択してください",
+      "customVibe": "カスタム雰囲気タイプ",
+      "customVibePlaceholder": "カスタム雰囲気タイプ",
+      "addCustomVibe": "カスタム雰囲気タイプを追加",
+      "remove": "削除",
+      "defaultPhoto": "デフォルト写真",
+      "defaultPhotoDescription": "バラカの魅力を最大限に示す高解像度の写真をアップロードしてください",
+      "partnership": "パートナーシップの機会",
+      "partnershipDescription": "任意：興味のあるパートナーシップをお知らせください",
+      "qrCodes": "家具へのQRコード",
+      "qrCodesDescription": "チェアやテーブルに当サイトのQRコードを追加していただけますか？",
+      "repeatDiscounts": "リピーター割引",
+      "repeatDiscountsDescription": "当プラットフォームを通じてリピーター向けの割引を提供していただけますか？",
+      "hotelPartnerships": "ホテルパートナーシップ",
+      "hotelPartnershipsDescription": "ホテルのゲスト向けに特別料金でパートナーシップを結んでいただけますか？",
+      "contentCreation": "コンテンツ制作",
+      "contentCreationDescription": "Instagram/TikTok向けのコンテンツを共同制作していただけますか？",
+      "onlineOrders": "オンライン注文",
+      "onlineOrdersDescription": "当サイト経由での注文（あなたのWhatsAppに送信）を受け付けていただけますか？",
+      "selectAllPartnerships": "全てのパートナーシップを選択",
+      "clearAllPartnerships": "全てのパートナーシップをクリア",
+      "contactPreferences": "連絡先の設定",
+      "contactPreferencesDescription": "任意：写真やステータス更新のための連絡を受け付けるかをお知らせください",
+      "contactForPhotos": "写真のための連絡",
+      "contactForPhotosDescription": "バラカの写真収集のためにWhatsAppまたはInstagramで連絡してもよいですか？",
+      "contactForStatus": "ステータス更新のための連絡",
+      "contactForStatusDescription": "開店・閉店ステータスの更新のために連絡してもよいですか？",
+      "selectAllPreferences": "全ての設定を選択",
+      "clearAllPreferences": "全ての設定をクリア",
+      "partnershipsSelected": "5つ中{{count}}つのパートナーシップを選択済み",
+      "preferencesSelected": "2つ中{{count}}つの設定を選択済み",
+      "clickToChangePhoto": "クリックして写真を変更",
+      "clickToUpload": "クリックしてアップロード",
+      "dragAndDrop": "またはドラッグ＆ドロップ",
+      "fileTypes": "PNG、JPG、GIF（最大10MB）",
+      "fileSizeError": "ファイルサイズは10MB未満にしてください",
+      "preferredContactMethod": "希望する連絡方法",
+      "selectContactMethod": "希望する連絡方法を選択してください",
+      "whatsapp": "WhatsApp",
+      "englishFluency": "英語力",
+      "englishFluencyDescription": "英語が堪能なスタッフはいますか？",
+      "englishFluencyNo": "いいえ",
+      "englishFluencyNotFluent": "堪能ではない",
+      "englishFluencyFluent": "堪能",
+      "englishSpeakerNames": "英語話者の名前",
+      "englishSpeakerNamesPlaceholder": "英語を話すスタッフの名前を入力してください",
+      "tabSystem": "タブシステム",
+      "tabSystemDescription": "人またはグループの注文をどのように管理していますか？",
+      "tabSystemNameOnly": "名前のみ",
+      "tabSystemIndividualPaper": "個別の紙タブ",
+      "tabSystemNumberOnChair": "チェアの番号",
+      "tabSystemDigital": "デジタル（アプリまたはシステムによる管理）",
+      "additionalInfo": "追加情報",
+      "additionalInfoPlaceholder": "その他共有したい情報があればご記入ください",
+      "submit": "登録を送信する",
+      "submitting": "送信中...",
+      "success": "登録が正常に送信されました！",
+      "successMessage": "バラカのご登録ありがとうございます！内容を確認後、ご連絡いたします。",
+      "error": "登録に失敗しました",
+      "errorMessage": "登録の送信に失敗しました。もう一度お試しください。",
+      "required": "この項目は必須です",
+      "invalidEmail": "有効なメールアドレスを入力してください",
+      "invalidPhone": "有効な電話番号を入力してください"
+    },
+    "neighborhoods": {
+      "copacabana": "コパカバーナ",
+      "ipanema": "イパネマ",
+      "leblon": "レブロン",
+      "barra": "バーハ・ダ・チジュカ",
+      "recreio": "レクレイオ・ドス・バンデイランテス",
+      "other": "その他"
+    },
+    "amenities": {
+      "chairs": "ビーチチェア",
+      "umbrellas": "パラソル",
+      "food": "フードサービス",
+      "drinks": "ドリンク",
+      "music": "生演奏",
+      "wifi": "Wi-Fi",
+      "parking": "駐車場",
+      "shower": "シャワー",
+      "bathroom": "トイレ",
+      "creditCard": "クレジットカード利用可",
+      "delivery": "デリバリーサービス",
+      "reservations": "予約",
+      "WiFi": "Wi-Fi",
+      "Shower": "シャワー",
+      "Food": "フード",
+      "Lockers": "ロッカー"
+    },
+    "vibes": {
+      "familyFriendly": "ファミリー向け",
+      "lgbtq": "LGBTQ+",
+      "relaxed": "リラックス",
+      "volleyball": "バレーボール",
+      "frescoball": "フレスコボール",
+      "party": "パーティー",
+      "sports": "スポーツ",
+      "romantic": "ロマンチック",
+      "quiet": "静か",
+      "beachGames": "ビーチゲーム",
+      "fitness": "フィットネス"
+    }
+  },
+  "jobsPage": {
+    "seo": {
+      "title": "求人情報 | KRL Closet Club",
+      "description": "リオデジャネイロの大学生と若手人材向けのKRL Closet Clubの募集職種。"
+    },
+    "hero": {
+      "badge": "リオの大学生向けの機会",
+      "title": "CCクラブに参加しよう",
+      "description": "リオでやる気のある若者を募集しています。このページの全てのポジションはエントリーレベルで、実践的な責任、メンタリング、学生生活に合わせた柔軟なスケジュールが用意されています。",
+      "highlight": "リオ在住の候補者を特に歓迎します。ブラジル人で現在大学に在籍していることは、これらの募集において大きなアドバンテージになります。"
+    },
+    "labels": {
+      "entryLevel": "エントリーレベル",
+      "rioPreferred": "リオ在住の応募者優遇",
+      "whatYouWillDo": "担当業務",
+      "idealCandidate": "理想的な候補者"
+    },
+    "whatsapp": {
+      "intro": "こんにちは KRL Closet Club、{{jobTitle}}のポジションに応募したいです。",
+      "name": "名前",
+      "university": "大学",
+      "age": "年齢",
+      "interestOptional": "関心（任意）",
+      "background": "経歴"
+    },
+    "roles": {
+      "executiveAssistant": {
+        "title": "CEOエグゼクティブアシスタント",
+        "commitment": "パートタイム、フレックスタイム（リオ在住）",
+        "pay": "エントリーレベルの給与＋有給トライアル課題",
+        "summary": "スケジュール管理、フォローアップ、実行支援を通じて、創業者と直接連携してオペレーションを推進します。",
+        "responsibilities": [
+          "カレンダー、メッセージ、日次優先事項の管理",
+          "週次アクションサマリーの作成とタスク整理",
+          "パートナーとのアウトリーチおよびコーディネーション支援"
+        ],
+        "idealFor": [
+          "リオ在住の候補者；ブラジル人で大学在籍は大きなアドバンテージ",
+          "ポルトガル語での強いライティング力；英語はプラス",
+          "スタートアップ環境での作業に慣れている方"
+        ],
+        "applyLabel": "エグゼクティブアシスタントに応募"
+      },
+      "socialMediaAssistant": {
+        "title": "ソーシャルメディア（Instagram）マーケティングアシスタント",
+        "commitment": "パートタイム、現場＋リモートの組み合わせ",
+        "pay": "基本給与＋パフォーマンスに基づく成長ボーナス",
+        "summary": "一貫したコンテンツとローカルストーリーテリングでInstagramの認知度とエンゲージメントの向上を支援します。",
+        "responsibilities": [
+          "ビーチロケーションでのショートフォームコンテンツの撮影と編集",
+          "週次投稿カレンダーとキャプション草案の計画",
+          "フォロワー増加、保存数、シェア数、キャンペーン結果の追跡"
+        ],
+        "idealFor": [
+          "リオ在住の候補者；ブラジル人で大学在籍は大きなアドバンテージ",
+          "InstagramやReelsでコンテンツを作成している学生",
+          "優れた視覚センスと信頼性の高い投稿習慣",
+          "人と話したり公共の場で撮影することに慣れている方"
+        ],
+        "applyLabel": "Instagramマーケティングに応募"
+      },
+      "customerRelationships": {
+        "title": "カスタマーリレーションシップ担当",
+        "commitment": "パートタイム、主に対面（リオのビーチ）",
+        "pay": "基本給与＋登録ボーナスインセンティブ",
+        "summary": "バラカチームと直接会い、KRL Closet Clubのサービスを説明し、新しいパートナーのオンボーディングを支援します。",
+        "responsibilities": [
+          "バラカを訪問し、信頼関係を築き、パートナーシップの利点を紹介する",
+          "登録会話とオンボーディングフォローアップのサポート",
+          "オペレーターからフィードバックを収集してサービスを改善する"
+        ],
+        "idealFor": [
+          "リオ在住の候補者；ブラジル人で大学在籍は大きなアドバンテージ",
+          "対面コミュニケーションや営業スタイルのアウトリーチが得意な学生",
+          "自信があり、フレンドリーで、フォローアップにおいて粘り強い方",
+          "ポルトガル語必須；英語は混合オーディエンスに役立つ"
+        ],
+        "applyLabel": "カスタマーリレーションシップに応募"
+      },
+      "streetActivation": {
+        "title": "ストリートアクティベーション＆QRアウトリーチアンバサダー",
+        "commitment": "パートタイム、対面アクティベーションシフト（リオのビーチ）",
+        "pay": "エントリーレベルの給与＋パフォーマンスインセンティブ",
+        "summary": "交通量の多いビーチエリアで人々と交流し、QRコードのスキャンに誘い、自信とエネルギーを持ってKRL Closet Clubのミッションを代表します。",
+        "responsibilities": [
+          "ビーチ利用者にアプローチしてKRL Closet ClubのQRコードをスキャンする価値を説明する",
+          "ブランドのミッションを明確に伝え、よくある質問に答える",
+          "日次スキャン活動と会話からのフィードバックを追跡する"
+        ],
+        "idealFor": [
+          "リオ在住の候補者；ブラジル人で大学在籍は大きなアドバンテージ",
+          "新しい人と話すことや前向きなエネルギーを保つことに慣れている方",
+          "信頼性が高く、指導を受け入れ、測定可能なアウトリーチ結果にやりがいを感じる方"
+        ],
+        "applyLabel": "QRアウトリーチに応募"
+      },
+      "engineeringIntern": {
+        "title": "ソフトウェアエンジニアリングインターン（Mission AI）",
+        "commitment": "パートタイム、リモートファーストで柔軟なスケジュール",
+        "pay": "エントリーレベルの給与",
+        "summary": "コーディングタスク、小機能の実装、バグ修正、プラットフォーム全体の実装サポートを通じてMission AIと製品開発を支援します。",
+        "responsibilities": [
+          "チームからの明確なガイダンスのもと実践的なコーディングタスクに取り組む",
+          "ウェブ製品の小機能と修正のリリースを支援する",
+          "進捗を文書化し、早期にブロッカーを伝える"
+        ],
+        "idealFor": [
+          "職務経験不問",
+          "ソフトウェアエンジニアリングへの関心と素早い学習意欲",
+          "自分のコンピューターを持ち、信頼性が高く誠実な人"
+        ],
+        "applyLabel": "エンジニアリングインターンに応募"
+      }
+    }
+  },
+  "hostingGuidelines": {
+    "seoTitle": "ホスティングガイドライン | Carioca Coastal Club",
+    "seoDescription": "CCクラブホスト向けガイドライン — 時間厳守、支払い、ファシリテーション、バラカパートナーシップ。",
+    "hero": {
+      "title": "Carioca Coastal Club ホスティングガイドライン",
+      "subtitle": "あなたの仕事はシンプルです：信頼性があり、歓迎される体験を作ること。"
+    },
+    "g1": {
+      "title": "時間を守る（絶対条件）",
+      "intro": "ある時間に行くと言ったら、行ってください。",
+      "lateOk": "5〜10分の遅刻 = 許容範囲",
+      "lateBad": "それ以上 = 許容できない",
+      "noEta": "曖昧なETA（到着予定時刻）なし",
+      "rule": "一度時間を決めたら、来ることはあなたの責任です。"
+    },
+    "g2": {
+      "title": "「オンライン」になる — ライブ中シグナルを出す",
+      "intro": "到着したら：",
+      "dropPin": "ライブ位置情報ピンを投稿する",
+      "takePhoto": "セットアップの写真を撮る",
+      "sendToMe": "私に送る → 私が投稿します",
+      "signal": "「Carioca Coastal Club is online」と使う",
+      "noPin": "ピンなし = 開催されていない。"
+    },
+    "g3": {
+      "title": "コミュニケーションのルール — 簡潔に",
+      "before": "到着前 → 明確な時間と場所",
+      "after": "到着後 → メッセージをやめる",
+      "rule1": "あなたはテキストをするために来ているのではありません。",
+      "rule2": "あなたはホストするために来ています。"
+    },
+    "g4": {
+      "title": "RSVPカルチャーなし",
+      "doNot": "RSVPの回答、リアクション、参加確認を人々に求めないでください。",
+      "why": "理由：",
+      "reason1": "他の人がすでにしていない限り、人々は参加しない",
+      "reason2": "何も起きていないような印象を与える",
+      "reason3": "グループに不必要なノイズを加える",
+      "reality": "現実：",
+      "ifComing": "誰かが来るなら、直接メッセージしてきます。",
+      "job1": "あなたの仕事は参加者を追いかけることではありません。",
+      "job2": "あなたの仕事は確実にそこにいることです。"
+    },
+    "g5": {
+      "title": "ホストエネルギー — ファシリテーション",
+      "youAre": "あなたはコネクターです。",
+      "greet": "人々に挨拶する",
+      "pull": "迷っている人を引き込む",
+      "introduce": "人々を紹介する",
+      "invite": "アウトサイダーを招待する",
+      "phrase": "「Carioca Coastal Clubへようこそ — 一緒に参加しませんか。」"
+    },
+    "g6": {
+      "title": "チェアとセットアップ",
+      "chairs": "CCクラブのチェア8脚 = 無料",
+      "firstCome": "先着順",
+      "notResponsible": "価格設定はあなたの責任ではありません",
+      "ifOff": "何か問題があれば → 私にメッセージしてください"
+    },
+    "g7": {
+      "title": "支払い",
+      "ownTab": "各自が自分のタブを支払う",
+      "noGroup": "グループタブなし",
+      "noSplit": "後割り勘なし",
+      "order": "人々に伝える：注文 → 待つ → 支払う → 戻る",
+      "warning": "これを徹底しないと → 請求書を抱えることになります"
+    },
+    "g8": {
+      "title": "アクティビティ = より良いイベント",
+      "energy": "エネルギーを持ってこよう：",
+      "music": "音楽（理想的）",
+      "games": "ゲーム・カード",
+      "speaker": "スピーカー・ギター",
+      "icebreakers": "アイスブレイカー",
+      "optional": "任意：",
+      "potluck": "ポットラック",
+      "themes": "テーマ（サンセット、ソーシャルなど）"
+    },
+    "g9": {
+      "title": "ホスティング構造",
+      "primary": "プライマリホスト = 運営する",
+      "secondary": "セカンダリ = サポートする",
+      "mustBePhysical": "少なくとも一人のホストが物理的にそこにいなければならない",
+      "noIndirect": "間接的なコーディネーションなし"
+    },
+    "g10": {
+      "title": "グループをクリーンに保つ",
+      "assigning": "各ロケーションにバラカパートナーシップマネージャーを割り当てています。",
+      "responsible": "各人が責任を持つこと：",
+      "dayToDay": "バラカとの日常的なコミュニケーション",
+      "negotiate": "価格と契約の交渉",
+      "manage": "全体的な関係の管理",
+      "ideally": "できれば自分が住んでいる場所の近くのバラカを選ぼう — パートナーシップから個人的にも恩恵を受けられる。",
+      "commission": "あなたが仲介するパートナーシップや取引 = 100%のコミッションはあなたのもの。私は一銭も取りません。",
+      "bigGoal": "大きな目標：コパ、レブロン、イパネマに複数、アルポアドール、その他の主要エリア全体にCCクラブを拡大すること。これが本物の存在感と一貫性を築く方法です。",
+      "suggestions": "現在のエリア別バラカ提案",
+      "onePerBarraca": "今のところ1人につき1バラカ。適した友人がいれば、グループに追加して一緒に調整しましょう。"
+    },
+    "areas": {
+      "leme": "レメ",
+      "copa": "コパ",
+      "arpoador": "アルポアドール",
+      "ipanema": "イパネマ",
+      "leblon": "レブロン",
+      "saoConrado": "サン・コンラード"
+    },
+    "critical": "重要"
   }
 }
