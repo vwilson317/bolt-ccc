@@ -27,6 +27,48 @@ export interface StatusUpdate {
 
 export const statusUpdates: StatusUpdate[] = [
   {
+    id: 'april-13-2026',
+    weekLabel: 'April 13 (Monday)',
+    date: '2026-04-13',
+    headline: '🌴 Carioca Coastal Club — Update',
+    sections: [
+      {
+        category: 'Meetups',
+        items: [
+          "Two meetups this weekend, run by different hosts at different barracas. That's the model working. More consistency, more variety, more people getting to experience what this community is about.",
+        ],
+      },
+      {
+        category: 'Instagram',
+        items: [
+          'Followers are up to 2300+ Growth is steady and the content is connecting.',
+        ],
+      },
+      {
+        category: 'Jamie Woods Interview',
+        items: [
+          "Dropping this week. We'll share the link across channels as soon as it's live.",
+        ],
+      },
+      {
+        category: "Ryan's Going-Away Party",
+        items: [
+          "Ticket sales are kicking off this week. If you've been waiting — now's the time. We'll be pushing details out to the community soon, so keep an eye out.",
+        ],
+      },
+      {
+        category: 'Community',
+        items: [
+          "Over 250 members and counting. We're optimistic about where this is headed — genuinely. To everyone who's shown up, spent time, and made the weekends what they've been: thank you.",
+        ],
+      },
+    ],
+    metrics: [
+      { label: 'Instagram Followers', value: '2300+', positive: true },
+      { label: 'Community Members', value: '250+', positive: true },
+    ],
+  },
+  {
     id: 'april-6-2026',
     weekLabel: 'April 6',
     date: '2026-04-06',
