@@ -280,6 +280,10 @@ export default function RyanFarewellParty() {
           <div className="relative flex flex-col justify-end h-full px-4 pb-12 pt-24" style={{ minHeight: '85vh' }}>
             <div className="max-w-2xl mx-auto w-full text-center text-white">
 
+              <h1 className="font-display font-black text-4xl sm:text-5xl mb-6 drop-shadow-lg">
+                Sayonara Ryan 🌸
+              </h1>
+
               {/* Date pill */}
               <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-5 py-2 text-sm font-semibold mb-6 border border-white/30">
                 <Calendar className="w-4 h-4" />
