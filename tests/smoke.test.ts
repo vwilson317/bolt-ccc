@@ -9,7 +9,7 @@ test('home page renders content after loading screen', async ({ page }) => {
   const heading = page.getByRole('heading', { level: 1 });
   await expect(heading).toBeVisible({ timeout: 20000 });
 
-  // A WhatsApp join button should be present (rendered by CommunityHome)
-  const whatsappButton = page.getByRole('link', { name: /join the whatsapp group/i }).first();
-  await expect(whatsappButton).toBeVisible();
+  // A ticket CTA should be present (rendered by RyanFarewellParty)
+  const ticketButton = page.getByRole('link', { name: /get your ticket/i }).first();
+  await expect(ticketButton).toBeVisible();
 });
