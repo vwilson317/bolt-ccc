@@ -449,7 +449,8 @@ export default function RyanFarewellParty() {
               Ryan has been part of the Carioca Coastal Club family, living the true carioca life of surf, sun, and saudade.
               As he heads to Japan, we celebrate the friendships, memories, and legendary beach days.
             </p>
-            <p className="text-gray-500 text-sm leading-relaxed mt-4 italic">
+            <p className="text-beach-400 text-xs font-semibold uppercase tracking-widest mt-4">収益の一部はライアンの引越しを応援するために</p>
+            <p className="text-gray-500 text-sm leading-relaxed mt-1 italic">
               A portion of the proceeds from ticket sales goes directly to Ryan to help with his move. 🌸
             </p>
           </div>
