@@ -667,7 +667,7 @@ export default function RyanFarewellParty() {
                         <button onClick={handleStripeCheckout} disabled={loading}
                           className="w-full py-4 rounded-2xl font-display font-black text-lg flex items-center justify-center gap-2 disabled:opacity-50 transition-all hover:scale-[1.02] active:scale-95"
                           style={{ background: 'linear-gradient(135deg, #f59e0b, #d97706)', color: '#0f172a' }}>
-                          {loading ? <Loader2 className="w-5 h-5 animate-spin text-slate-900" /> : <><CreditCard className="w-5 h-5" />{t('ryanParty.payByCard')} R${totalPriceBrl}</>
+                          {loading ? <Loader2 className="w-5 h-5 animate-spin text-slate-900" /> : <><CreditCard className="w-5 h-5" />{t('ryanParty.payByCard')} R${totalPriceBrl}</>}
                         </button>
                         <p className="text-xs text-center text-white/30">{t('ryanParty.stripeNote')}</p>
                       </div>
