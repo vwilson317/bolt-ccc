@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { MapPin, Calendar, Clock, Ticket, Waves, Music, Copy, CheckCircle2, MessageCircle, ExternalLink, Instagram, Tag, User, Phone, CreditCard, AlertCircle, ChevronRight, Loader2, Users } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import { trackEvent, trackPageView, trackCTAClick } from '../services/posthogAnalyticsService';
@@ -24,7 +25,7 @@ const PIX_NAME    = 'Ryan Ferrari de Castro Pires';
 const WA_NUMBER   = '5521990532728';
 
 // ── Tier config ────────────────────────────────────────────────────
-type Tier = 'general' | 'guest' | 'vip' | 'premium';
+type Tier = 'general' | 'guest' | 'vip';
 interface TierInfo {
   tier: Tier;
   priceBrl: number;    // centavos
@@ -39,6 +40,7 @@ const DEFAULT_TIER: TierInfo = { tier: 'general', priceBrl: 10000, label: 'Gener
 type CheckoutStep = 'form' | 'payment' | 'confirming' | 'success';
 
 export default function RyanFarewellParty() {
+  const { t } = useTranslation();
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [pixCopied, setPixCopied] = useState(false);
 
@@ -250,8 +252,8 @@ export default function RyanFarewellParty() {
   return (
     <>
       <SEOHead
-        title="Ryan's Going Away Party · May 3, 2026 · Ipanema"
-        description="Join us at 120 Escritócarioca, Ipanema for Ryan's going away party! Sunday May 3, 2026. R$100 includes entry + welcome drink. Live jazz band + DJ."
+        title={t('ryanParty.seoTitle')}
+        description={t('ryanParty.seoDescription')}
       />
 
       {/* Subtle sakura petals */}
@@ -287,16 +289,16 @@ export default function RyanFarewellParty() {
               {/* Date pill */}
               <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-5 py-2 text-sm font-semibold mb-6 border border-white/30">
                 <Calendar className="w-4 h-4" />
-                Sunday, May 3, 2026 · Ipanema Beach, Posto 10
+                {t('ryanParty.datePill')}
               </div>
 
               {/* Countdown */}
               <div className="flex justify-center gap-6 sm:gap-10 mb-6">
                 {[
-                  { val: timeLeft.days,    label: 'Days' },
-                  { val: timeLeft.hours,   label: 'Hours' },
-                  { val: timeLeft.minutes, label: 'Min' },
-                  { val: timeLeft.seconds, label: 'Sec' },
+                  { val: timeLeft.days,    label: t('ryanParty.days') },
+                  { val: timeLeft.hours,   label: t('ryanParty.hours') },
+                  { val: timeLeft.minutes, label: t('ryanParty.min') },
+                  { val: timeLeft.seconds, label: t('ryanParty.sec') },
                 ].map(({ val, label }) => (
                   <div key={label} className="flex flex-col items-center">
                     <span className="font-display font-black text-3xl sm:text-4xl tabular-nums drop-shadow-lg">
@@ -309,7 +311,7 @@ export default function RyanFarewellParty() {
 
               {/* Social proof */}
               <div className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm rounded-full px-4 py-1.5 text-sm font-semibold mb-8 border border-white/20">
-                🔥 46 people are going
+                🔥 {t('ryanParty.peopleComing')}
               </div>
 
               <div>
@@ -318,7 +320,7 @@ export default function RyanFarewellParty() {
                   className="inline-flex items-center gap-2 bg-white text-beach-700 font-display font-black px-8 py-4 rounded-2xl text-lg shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-200 active:scale-95"
                 >
                   <Ticket className="w-5 h-5" />
-                  Get Your Ticket · チケット
+                  {t('ryanParty.getTicket')} · チケット
                 </a>
               </div>
             </div>
@@ -329,21 +331,21 @@ export default function RyanFarewellParty() {
         <section className="py-16 px-4 bg-gray-50">
           <div className="max-w-4xl mx-auto">
             <p className="text-xs font-bold tracking-[0.3em] uppercase text-beach-500 text-center mb-2">イベント詳細</p>
-            <h2 className="font-display font-black text-3xl sm:text-4xl text-center text-gray-900 mb-10">The Big Day</h2>
+            <h2 className="font-display font-black text-3xl sm:text-4xl text-center text-gray-900 mb-10">{t('ryanParty.theBigDay')}</h2>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {[
-                { icon: <Calendar className="w-6 h-6" />, label: 'Date', value: 'Sunday, May 3', sub: '2026', color: 'beach' },
-                { icon: <Clock className="w-6 h-6" />,    label: 'Time', value: '2:00 PM', sub: 'until sunset 🌅', color: 'sunset' },
+                { icon: <Calendar className="w-6 h-6" />, label: t('ryanParty.date'), value: t('ryanParty.sundayMay3'), sub: '2026', color: 'beach' },
+                { icon: <Clock className="w-6 h-6" />,    label: t('ryanParty.time'), value: '2:00 PM', sub: t('ryanParty.untilSunset'), color: 'sunset' },
                 {
                   icon: <MapPin className="w-6 h-6" />,
-                  label: 'Location',
+                  label: t('ryanParty.location'),
                   value: 'Posto 10',
-                  sub: 'Tap for directions 📍',
+                  sub: t('ryanParty.tapDirections'),
                   color: 'ocean',
                   href: 'https://maps.google.com/?q=Posto+10+Ipanema+Rio+de+Janeiro',
                 },
-                { icon: <Music className="w-6 h-6" />,    label: 'Vibe', value: 'Beach + Tokyo', sub: 'your best look ✨', color: 'beach' },
+                { icon: <Music className="w-6 h-6" />,    label: t('ryanParty.vibe'), value: t('ryanParty.beachTokyo'), sub: t('ryanParty.bestLook'), color: 'beach' },
               ].map((card: any, i) => (
                 <div
                   key={i}
@@ -366,16 +368,16 @@ export default function RyanFarewellParty() {
         <section className="py-16 px-4 bg-white">
           <div className="max-w-4xl mx-auto">
             <p className="text-xs font-bold tracking-[0.3em] uppercase text-beach-500 text-center mb-2">場所とエンタメ</p>
-            <h2 className="font-display font-black text-3xl sm:text-4xl text-center text-gray-900 mb-10">Venue & Entertainment</h2>
+            <h2 className="font-display font-black text-3xl sm:text-4xl text-center text-gray-900 mb-10">{t('ryanParty.venueAndEntertainment')}</h2>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               {/* Venue */}
               <div className="bg-gray-50 rounded-2xl border border-gray-100 p-6">
-                <p className="text-xs font-bold uppercase tracking-widest text-beach-500 mb-3">📍 Venue</p>
+                <p className="text-xs font-bold uppercase tracking-widest text-beach-500 mb-3">📍 {t('ryanParty.venue')}</p>
                 <h3 className="font-display font-black text-xl text-gray-900 mb-1">Barraca 120</h3>
                 <p className="text-beach-600 font-semibold text-sm mb-3">Escritório Carioca</p>
                 <p className="text-sm text-gray-600 mb-4 leading-relaxed">
-                  Ipanema Beach, Posto 10. Our favourite barraca and the perfect backdrop for the best sendoff in Zona Sul history.
+                  {t('ryanParty.venueDesc')}
                 </p>
                 <button
                   onClick={() => {
@@ -390,38 +392,25 @@ export default function RyanFarewellParty() {
                 </button>
               </div>
 
-              {/* Live music */}
+              {/* DJ */}
               <div className="bg-gray-50 rounded-2xl border border-gray-100 p-6">
-                <p className="text-xs font-bold uppercase tracking-widest text-sunset-500 mb-3">🎵 Live Music</p>
-                <h3 className="font-display font-black text-xl text-gray-900 mb-1">Sunset Jazz Session</h3>
-                <p className="text-sunset-600 font-semibold text-sm mb-3">Live jazz (3 hrs) · DJ sunset set</p>
+                <p className="text-xs font-bold uppercase tracking-widest text-sunset-500 mb-3">🎵 {t('ryanParty.music')}</p>
+                <h3 className="font-display font-black text-xl text-gray-900 mb-1">{t('ryanParty.sunsetDJSet')}</h3>
+                <p className="text-sunset-600 font-semibold text-sm mb-3">DJ Lavinia Aune</p>
                 <p className="text-sm text-gray-600 mb-4 leading-relaxed">
-                  Quartetinho Jazz sets the mood for the afternoon — a rare live jazz experience right on Ipanema. Then DJ Lavinia Aune takes over into sunset.
+                  {t('ryanParty.djDesc')}
                 </p>
-                <div className="flex flex-col gap-2">
-                  <button
-                    onClick={() => {
-                      trackEvent('band_instagram_clicked', { category: 'Event' });
-                      openLink('https://www.instagram.com/quartetinhojazz?igsh=dHlia2I4ZGRqZ2x3');
-                    }}
-                    className="inline-flex items-center gap-2 text-sm font-semibold text-sunset-600 hover:text-sunset-700 transition-colors"
-                  >
-                    <Instagram className="w-4 h-4" />
-                    @quartetinhojazz
-                    <ExternalLink className="w-3 h-3" />
-                  </button>
-                  <button
-                    onClick={() => {
-                      trackEvent('dj_instagram_clicked', { category: 'Event' });
-                      openLink('https://www.instagram.com/laviniaaune');
-                    }}
-                    className="inline-flex items-center gap-2 text-sm font-semibold text-sunset-600 hover:text-sunset-700 transition-colors"
-                  >
-                    <Instagram className="w-4 h-4" />
-                    @laviniaaune
-                    <ExternalLink className="w-3 h-3" />
-                  </button>
-                </div>
+                <button
+                  onClick={() => {
+                    trackEvent('dj_instagram_clicked', { category: 'Event' });
+                    openLink('https://www.instagram.com/laviniaaune');
+                  }}
+                  className="inline-flex items-center gap-2 text-sm font-semibold text-sunset-600 hover:text-sunset-700 transition-colors"
+                >
+                  <Instagram className="w-4 h-4" />
+                  @laviniaaune
+                  <ExternalLink className="w-3 h-3" />
+                </button>
               </div>
             </div>
           </div>
@@ -431,14 +420,20 @@ export default function RyanFarewellParty() {
         <section className="py-16 px-4 bg-gray-50">
           <div className="max-w-4xl mx-auto">
             <p className="text-xs font-bold tracking-[0.3em] uppercase text-beach-500 text-center mb-2">含まれるもの</p>
-            <h2 className="font-display font-black text-3xl sm:text-4xl text-center text-gray-900 mb-10">Your ticket covers</h2>
+            <h2 className="font-display font-black text-3xl sm:text-4xl text-center text-gray-900 mb-10">{t('ryanParty.yourTicketCovers')}</h2>
 
-            <div className="flex justify-center">
+            <div className="flex justify-center gap-4 flex-wrap">
+              <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-8 text-center hover:-translate-y-1 hover:shadow-md transition-all duration-200 max-w-xs w-full">
+                <span className="text-5xl block mb-4 animate-float">🪑</span>
+                <h3 className="font-display font-black text-gray-900 text-xl mb-1">{t('ryanParty.reservedChair')}</h3>
+                <p className="text-xs text-beach-500 font-semibold mb-2">予約席</p>
+                <p className="text-sm text-gray-500 leading-relaxed">{t('ryanParty.reservedChairDesc')}</p>
+              </div>
               <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-8 text-center hover:-translate-y-1 hover:shadow-md transition-all duration-200 max-w-xs w-full">
                 <span className="text-5xl block mb-4 animate-float">🍹</span>
-                <h3 className="font-display font-black text-gray-900 text-xl mb-1">Welcome Drink</h3>
+                <h3 className="font-display font-black text-gray-900 text-xl mb-1">{t('ryanParty.welcomeDrink')}</h3>
                 <p className="text-xs text-beach-500 font-semibold mb-2">ウェルカムドリンク</p>
-                <p className="text-sm text-gray-500 leading-relaxed">One drink of your choice: caipirinha, cerveja, whatever calls your name.</p>
+                <p className="text-sm text-gray-500 leading-relaxed">{t('ryanParty.welcomeDrinkDesc')}</p>
               </div>
             </div>
           </div>
@@ -449,18 +444,21 @@ export default function RyanFarewellParty() {
           <div className="max-w-2xl mx-auto text-center">
             <p className="text-xs font-bold tracking-[0.3em] uppercase text-beach-500 mb-4">ライアンへ · For Ryan</p>
             <blockquote className="font-display font-black text-2xl sm:text-3xl text-gray-900 leading-snug mb-6">
-              "You came for the beach.<br />You stayed for the people.<br />
-              <span className="text-beach-500">Now you take both to Tokyo."</span>
+              "{t('ryanParty.quote1')}<br />{t('ryanParty.quote2')}<br />
+              <span className="text-beach-500">{t('ryanParty.quote3')}"</span>
             </blockquote>
             <div className="inline-block bg-beach-50 border border-beach-100 rounded-2xl px-8 py-5 mb-6">
               <p className="text-beach-700 font-display text-lg leading-relaxed">
                 波の音、覚えてね
-                <span className="block text-sm text-beach-400 font-normal mt-1">remember the sound of the waves</span>
+                <span className="block text-sm text-beach-400 font-normal mt-1">{t('ryanParty.waveTranslation')}</span>
               </p>
             </div>
             <p className="text-gray-500 text-base leading-relaxed">
-              Ryan has been part of the Carioca Coastal Club family, living the true carioca life of surf, sun, and saudade.
-              As he heads to Japan, we celebrate the friendships, memories, and legendary beach days.
+              {t('ryanParty.ryanDesc')}
+            </p>
+            <p className="text-beach-400 text-xs font-semibold uppercase tracking-widest mt-4">収益の一部はライアンの引越しを応援するために</p>
+            <p className="text-gray-500 text-sm leading-relaxed mt-1 italic">
+              {t('ryanParty.proceedsNote')}
             </p>
           </div>
         </section>
@@ -469,8 +467,8 @@ export default function RyanFarewellParty() {
         <section id="rsvp" className="py-16 px-4" style={{ background: 'linear-gradient(160deg, #0f172a 0%, #1e3a2f 60%, #0f172a 100%)' }}>
           <div className="max-w-lg mx-auto">
             <p className="text-xs font-bold tracking-[0.3em] uppercase text-amber-400 text-center mb-2">🎫 RSVP · チケット</p>
-            <h2 className="font-display font-black text-3xl sm:text-4xl text-center text-white mb-2">Secure Your Spot</h2>
-            <p className="text-center text-amber-200/60 text-sm mb-8">席を確保する · Limited to 100 tickets</p>
+            <h2 className="font-display font-black text-3xl sm:text-4xl text-center text-white mb-2">{t('ryanParty.secureYourSpot')}</h2>
+            <p className="text-center text-amber-200/60 text-sm mb-8">席を確保する · {t('ryanParty.limitedTickets')}</p>
 
 
             {/* Main checkout card */}
@@ -484,36 +482,10 @@ export default function RyanFarewellParty() {
                 {step === 'form' && (
                   <div className="space-y-5">
 
-                    {/* Tier picker — only when no promo code is locked in */}
-                    {!promoMsg?.ok && (
-                      <div>
-                        <label className="block text-amber-200/70 text-xs font-semibold uppercase tracking-widest mb-2">Choose Your Ticket</label>
-                        <div className="flex rounded-xl overflow-hidden" style={{ border: '1px solid rgba(255,255,255,0.1)' }}>
-                          <button
-                            onClick={() => setTierInfo(DEFAULT_TIER)}
-                            className={`flex-1 py-3 text-sm font-bold transition-colors ${tierInfo.tier !== 'premium' ? 'text-slate-900' : 'text-white/50 hover:text-white/70'}`}
-                            style={tierInfo.tier !== 'premium' ? { background: 'linear-gradient(135deg, #f59e0b, #d97706)' } : { background: 'transparent' }}
-                          >
-                            🎫 General · R$100
-                          </button>
-                          <button
-                            onClick={() => setTierInfo({ tier: 'premium', priceBrl: 20000, label: 'VIP Premium', badge: 'R$200' })}
-                            className={`flex-1 py-3 text-sm font-bold transition-colors ${tierInfo.tier === 'premium' ? 'text-slate-900' : 'text-white/50 hover:text-white/70'}`}
-                            style={tierInfo.tier === 'premium' ? { background: 'linear-gradient(135deg, #f59e0b, #d97706)' } : { background: 'transparent' }}
-                          >
-                            ⭐ VIP Premium · R$200
-                          </button>
-                        </div>
-                        {tierInfo.tier === 'premium' && (
-                          <p className="text-amber-300/60 text-xs mt-1.5">Chair + umbrella · preferred seating right by the DJ · welcome drink</p>
-                        )}
-                      </div>
-                    )}
-
                     {/* Active tier display */}
                     <div className="flex items-center justify-between rounded-2xl px-5 py-4" style={{ background: 'rgba(251,191,36,0.08)', border: '1px solid rgba(251,191,36,0.25)' }}>
                       <div>
-                        <p className="text-amber-300 text-xs font-semibold uppercase tracking-widest mb-0.5">Your Ticket</p>
+                        <p className="text-amber-300 text-xs font-semibold uppercase tracking-widest mb-0.5">{t('ryanParty.yourTicket')}</p>
                         <p className="text-white font-display font-black text-lg">{tierInfo.label}</p>
                         {tierInfo.promoterName && <p className="text-amber-200/70 text-xs mt-0.5">via {tierInfo.promoterName}</p>}
                       </div>
@@ -531,7 +503,7 @@ export default function RyanFarewellParty() {
                     {/* Quantity */}
                     <div>
                       <label className="block text-amber-200/70 text-xs font-semibold uppercase tracking-widest mb-2">
-                        <Users className="w-3 h-3 inline mr-1" />Quantity
+                        <Users className="w-3 h-3 inline mr-1" />{t('ryanParty.quantity')}
                       </label>
                       <div className="flex items-center gap-3">
                         {[1,2,3,4,5].map(n => (
@@ -546,11 +518,11 @@ export default function RyanFarewellParty() {
                     {/* Full name */}
                     <div>
                       <label className="block text-amber-200/70 text-xs font-semibold uppercase tracking-widest mb-2">
-                        <User className="w-3 h-3 inline mr-1" />Full Name *
+                        <User className="w-3 h-3 inline mr-1" />{t('ryanParty.fullNameLabel')}
                       </label>
                       <input
                         type="text" value={fullName} onChange={e => setFullName(e.target.value)}
-                        placeholder="Your full name"
+                        placeholder={t('ryanParty.fullNamePlaceholder')}
                         className="w-full rounded-xl px-4 py-3 text-white placeholder-white/30 text-sm font-medium outline-none focus:ring-2 focus:ring-amber-400/50 transition-all"
                         style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)' }}
                       />
@@ -559,7 +531,7 @@ export default function RyanFarewellParty() {
                     {/* Contact — CPF / WhatsApp / Email — single identifier field */}
                     <div>
                       <label className="block text-amber-200/70 text-xs font-semibold uppercase tracking-widest mb-2">
-                        <Phone className="w-3 h-3 inline mr-1" />CPF, WhatsApp or Email *
+                        <Phone className="w-3 h-3 inline mr-1" />{t('ryanParty.contactLabel')}
                       </label>
                       <input
                         type="text" value={whatsapp} onChange={e => setWhatsapp(e.target.value)}
@@ -567,7 +539,7 @@ export default function RyanFarewellParty() {
                         className="w-full rounded-xl px-4 py-3 text-white placeholder-white/30 text-sm font-medium outline-none focus:ring-2 focus:ring-amber-400/50 transition-all"
                         style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)' }}
                       />
-                      <p className="text-white/25 text-xs mt-1.5">Used to look up your badge at the door</p>
+                      <p className="text-white/25 text-xs mt-1.5">{t('ryanParty.contactHint')}</p>
                     </div>
 
                     {/* Promo code — hidden when pre-filled from URL */}
@@ -582,7 +554,7 @@ export default function RyanFarewellParty() {
                     ) : (
                     <div>
                       <label className="block text-amber-200/70 text-xs font-semibold uppercase tracking-widest mb-2">
-                        <Tag className="w-3 h-3 inline mr-1" />Promo / Invite Code <span className="normal-case text-white/30 font-normal">(optional)</span>
+                        <Tag className="w-3 h-3 inline mr-1" />{t('ryanParty.promoLabel')} <span className="normal-case text-white/30 font-normal">{t('ryanParty.promoOptional')}</span>
                       </label>
                       <div className="relative">
                         <input
@@ -614,14 +586,14 @@ export default function RyanFarewellParty() {
                       style={{ background: formValid ? 'linear-gradient(135deg, #f59e0b, #d97706)' : undefined, color: formValid ? '#0f172a' : '#9ca3af', border: formValid ? 'none' : '1px solid rgba(255,255,255,0.1)' }}
                     >
                       {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : isFree ? (
-                        <><CheckCircle2 className="w-5 h-5" />Claim Free Ticket</>
+                        <><CheckCircle2 className="w-5 h-5" />{t('ryanParty.claimFree')}</>
                       ) : (
-                        <>Continue to Payment · {tierInfo.badge}{quantity > 1 ? ` × ${quantity}` : ''} <ChevronRight className="w-5 h-5" /></>
+                        <>{t('ryanParty.continuePayment')} · {tierInfo.badge}{quantity > 1 ? ` × ${quantity}` : ''} <ChevronRight className="w-5 h-5" /></>
                       )}
                     </button>
 
                     {!formValid && (
-                      <p className="text-xs text-center text-white/30">* Full name and WhatsApp are required</p>
+                      <p className="text-xs text-center text-white/30">{t('ryanParty.formRequired')}</p>
                     )}
 
                     {error && <p className="text-red-400 text-sm text-center flex items-center justify-center gap-1"><AlertCircle className="w-4 h-4" />{error}</p>}
@@ -634,13 +606,13 @@ export default function RyanFarewellParty() {
                     {/* Summary */}
                     <div className="rounded-xl px-4 py-3 flex items-center justify-between" style={{ background: 'rgba(251,191,36,0.08)', border: '1px solid rgba(251,191,36,0.2)' }}>
                       <div>
-                        <p className="text-white/60 text-xs">Ticket for</p>
+                        <p className="text-white/60 text-xs">{t('ryanParty.ticketFor')}</p>
                         <p className="text-white font-bold text-sm">{fullName}</p>
                         <p className="text-white/40 text-xs">{tierInfo.label}{quantity > 1 ? ` × ${quantity}` : ''}</p>
                       </div>
                       <div className="text-right">
                         <p className="text-amber-300 font-black text-2xl">R${totalPriceBrl}</p>
-                        <button onClick={() => setStep('form')} className="text-white/30 text-xs hover:text-white/60 underline">Edit</button>
+                        <button onClick={() => setStep('form')} className="text-white/30 text-xs hover:text-white/60 underline">{t('ryanParty.editBtn')}</button>
                       </div>
                     </div>
 
@@ -663,7 +635,7 @@ export default function RyanFarewellParty() {
                             <QRCodeSVG value={PIX_KEY} size={156} fgColor="#0f172a" bgColor="#ffffff" level="M" />
                           </div>
                         </div>
-                        <p className="text-center text-white/50 text-xs">Send <span className="text-amber-300 font-bold">R${totalPriceBrl}</span> to the PIX key below</p>
+                        <p className="text-center text-white/50 text-xs">{t('ryanParty.sendPixPrefix')} <span className="text-amber-300 font-bold">R${totalPriceBrl}</span> {t('ryanParty.sendPixSuffix')}</p>
                         <button onClick={handleCopyPix}
                           className="w-full flex items-center justify-between px-4 py-3 rounded-xl transition-colors text-sm"
                           style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)' }}>
@@ -672,20 +644,20 @@ export default function RyanFarewellParty() {
                             <span className="text-white/35 text-xs">{PIX_NAME}</span>
                           </div>
                           <span className="flex items-center gap-1.5 font-semibold text-amber-400 flex-shrink-0 ml-3">
-                            {pixCopied ? <><CheckCircle2 className="w-4 h-4" />Copied!</> : <><Copy className="w-4 h-4" />Copy</>}
+                            {pixCopied ? <><CheckCircle2 className="w-4 h-4" />{t('ryanParty.copied')}</> : <><Copy className="w-4 h-4" />{t('ryanParty.copy')}</>}
                           </span>
                         </button>
                         <button onClick={handleWhatsAppReceipt}
                           className="w-full py-3 rounded-2xl font-semibold text-white flex items-center justify-center gap-2 text-sm"
                           style={{ background: 'linear-gradient(135deg, #25d366, #128c7e)' }}>
-                          <MessageCircle className="w-4 h-4" /> Send Receipt on WhatsApp
+                          <MessageCircle className="w-4 h-4" /> {t('ryanParty.sendReceiptWa')}
                         </button>
                         <button onClick={handlePixSubmitted} disabled={loading}
                           className="w-full py-4 rounded-2xl font-display font-black text-lg flex items-center justify-center gap-2 disabled:opacity-50 transition-all hover:scale-[1.02] active:scale-95"
                           style={{ background: 'linear-gradient(135deg, #f59e0b, #d97706)', color: '#0f172a' }}>
-                          {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <><CheckCircle2 className="w-5 h-5" />I've Paid — Confirm Spot</>}
+                          {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <><CheckCircle2 className="w-5 h-5" />{t('ryanParty.confirmPaid')}</>}
                         </button>
-                        <p className="text-xs text-center text-white/30">Pay PIX → tap "I've Paid" → we'll confirm your ticket</p>
+                        <p className="text-xs text-center text-white/30">{t('ryanParty.pixInstructions')}</p>
                       </div>
                     )}
 
@@ -695,14 +667,14 @@ export default function RyanFarewellParty() {
                         <button onClick={handleStripeCheckout} disabled={loading}
                           className="w-full py-4 rounded-2xl font-display font-black text-lg flex items-center justify-center gap-2 disabled:opacity-50 transition-all hover:scale-[1.02] active:scale-95"
                           style={{ background: 'linear-gradient(135deg, #f59e0b, #d97706)', color: '#0f172a' }}>
-                          {loading ? <Loader2 className="w-5 h-5 animate-spin text-slate-900" /> : <><CreditCard className="w-5 h-5" />Pay R${totalPriceBrl} by Card</>
+                          {loading ? <Loader2 className="w-5 h-5 animate-spin text-slate-900" /> : <><CreditCard className="w-5 h-5" />{t('ryanParty.payByCard')} R${totalPriceBrl}</>
                         </button>
-                        <p className="text-xs text-center text-white/30">Secure checkout via Stripe</p>
+                        <p className="text-xs text-center text-white/30">{t('ryanParty.stripeNote')}</p>
                       </div>
                     )}
 
                     {error && <p className="text-red-400 text-sm text-center flex items-center justify-center gap-1"><AlertCircle className="w-4 h-4" />{error}</p>}
-                    {cancelled && <p className="text-white/30 text-xs text-center">Payment cancelled — tap above to try again.</p>}
+                    {cancelled && <p className="text-white/30 text-xs text-center">{t('ryanParty.paymentCancelled')}</p>}
                   </div>
                 )}
 
@@ -711,30 +683,28 @@ export default function RyanFarewellParty() {
                   <div className="text-center py-4 space-y-5">
                     <div className="text-6xl animate-bounce">🎉</div>
                     <div>
-                      <p className="text-white font-display font-black text-2xl mb-1">You're in!</p>
+                      <p className="text-white font-display font-black text-2xl mb-1">{t('ryanParty.youreIn')}</p>
                       <p className="text-amber-200/70 text-sm">
-                        {tierInfo.tier === 'vip' ? 'VIP ticket confirmed — see you at Ipanema 🌴' :
-                         tierInfo.tier === 'guest' ? "Ryan's Guest ticket confirmed — see you on May 3 🌸" :
-                         'Payment received — we\'ll confirm your spot shortly 🌊'}
+                        {isFree ? t('ryanParty.ticketConfirmed') : t('ryanParty.paymentPending')}
                       </p>
                     </div>
                     <div className="rounded-xl px-4 py-3 text-left space-y-1" style={{ background: 'rgba(251,191,36,0.08)', border: '1px solid rgba(251,191,36,0.2)' }}>
-                      <p className="text-white/40 text-xs">Your ticket details</p>
+                      <p className="text-white/40 text-xs">{t('ryanParty.ticketDetailsLabel')}</p>
                       <p className="text-white font-semibold">{fullName || 'See you there!'}</p>
                       <p className="text-amber-300 text-sm">{tierInfo.label} · May 3, 2026 · 120 Escritócarioca</p>
                     </div>
                     <div className="rounded-xl px-4 py-4 space-y-2" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
-                      <p className="text-white/50 text-xs uppercase tracking-widest font-semibold">Your badge = your ticket</p>
+                      <p className="text-white/50 text-xs uppercase tracking-widest font-semibold">{t('ryanParty.badgeIsTicket')}</p>
                       <p className="text-white/40 text-xs leading-relaxed">
-                        Look up your digital badge at the door — it has your entry details, tier, and entitlements.
+                        {t('ryanParty.badgeDesc')}
                       </p>
                       <a href="/ryans-party-ticket"
                         className="block w-full py-3 rounded-xl font-bold text-slate-900 text-sm text-center transition-all hover:scale-[1.02]"
                         style={{ background: 'linear-gradient(135deg, #f59e0b, #d97706)' }}>
-                        🎫 View My Badge
+                        {t('ryanParty.viewBadge')}
                       </a>
                     </div>
-                    <p className="text-white/20 text-xs">See you at Ipanema on May 3 · またね！</p>
+                    <p className="text-white/20 text-xs">{t('ryanParty.seeYouMay3')} · またね！</p>
                   </div>
                 )}
 
@@ -754,7 +724,7 @@ export default function RyanFarewellParty() {
               }}
               className="flex-1 flex items-center justify-center gap-2 py-3 rounded-2xl font-semibold text-sm border border-green-200 text-green-700 bg-green-50 hover:bg-green-100 transition-colors"
             >
-              <MessageCircle className="w-4 h-4" /> Tell a friend
+              <MessageCircle className="w-4 h-4" /> {t('ryanParty.tellFriend')}
             </button>
             <a
               href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Ryan%27s+Farewell+Party&dates=20260503T170000Z/20260503T230000Z&details=Farewell+party+at+Ipanema+Beach+Posto+10+-+R%24100+includes+entry+%26+welcome+drink&location=Posto+10+Ipanema+Rio+de+Janeiro"
@@ -763,7 +733,7 @@ export default function RyanFarewellParty() {
               onClick={() => trackEvent('add_to_calendar_clicked', { category: 'Event' })}
               className="flex-1 flex items-center justify-center gap-2 py-3 rounded-2xl font-semibold text-sm border border-beach-200 text-beach-600 bg-beach-50 hover:bg-beach-100 transition-colors"
             >
-              <Calendar className="w-4 h-4" /> Add to Calendar
+              <Calendar className="w-4 h-4" /> {t('ryanParty.addToCalendar')}
             </a>
           </div>
         </section>
@@ -777,13 +747,13 @@ export default function RyanFarewellParty() {
             <span className="animate-float" style={{ animationDelay: '0.9s' }}>🌊</span>
           </div>
           <p className="font-display font-black text-xl text-gray-900 mb-1">またね、ライアン！</p>
-          <p className="text-sm text-gray-400 mb-6">See you at the beach before Tokyo calls. 🍹</p>
+          <p className="text-sm text-gray-400 mb-6">{t('ryanParty.footerTagline')}</p>
           <div className="flex items-center justify-center gap-2 text-xs text-gray-300">
             <Waves className="w-4 h-4 text-beach-300" />
             <span>Carioca Coastal Club · Rio de Janeiro</span>
             <Waves className="w-4 h-4 text-beach-300" />
           </div>
-          <p className="mt-3 text-xs text-gray-300">© 2026 Carioca Coastal Club. All rights reserved.</p>
+          <p className="mt-3 text-xs text-gray-300">{t('ryanParty.copyright')}</p>
         </footer>
 
       </div>
