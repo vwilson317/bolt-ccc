@@ -189,7 +189,7 @@ export default function RyanPartyTicket() {
                       <Music className="w-4 h-4 text-amber-400 flex-shrink-0 mt-0.5" />
                       <div>
                         <p className="text-white/30 text-xs">Entertainment</p>
-                        <p className="text-white text-sm">Live jazz band (3 hrs) · DJ Lavinia Aune</p>
+                        <p className="text-white text-sm">DJ Lavinia Aune</p>
                       </div>
                     </div>
 

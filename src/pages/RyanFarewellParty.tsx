@@ -251,7 +251,7 @@ export default function RyanFarewellParty() {
     <>
       <SEOHead
         title="Ryan's Going Away Party · May 3, 2026 · Ipanema"
-        description="Join us at 120 Escritócarioca, Ipanema for Ryan's going away party! Sunday May 3, 2026. R$100 includes entry + welcome drink. Live jazz band + DJ."
+        description="Join us at 120 Escritócarioca, Ipanema for Ryan's going away party! Sunday May 3, 2026. R$100 includes entry + welcome drink. DJ at sunset."
       />
 
       {/* Subtle sakura petals */}
@@ -390,38 +390,25 @@ export default function RyanFarewellParty() {
                 </button>
               </div>
 
-              {/* Live music */}
+              {/* DJ */}
               <div className="bg-gray-50 rounded-2xl border border-gray-100 p-6">
-                <p className="text-xs font-bold uppercase tracking-widest text-sunset-500 mb-3">🎵 Live Music</p>
-                <h3 className="font-display font-black text-xl text-gray-900 mb-1">Sunset Jazz Session</h3>
-                <p className="text-sunset-600 font-semibold text-sm mb-3">Live jazz (3 hrs) · DJ sunset set</p>
+                <p className="text-xs font-bold uppercase tracking-widest text-sunset-500 mb-3">🎵 Music</p>
+                <h3 className="font-display font-black text-xl text-gray-900 mb-1">Sunset DJ Set</h3>
+                <p className="text-sunset-600 font-semibold text-sm mb-3">DJ Lavinia Aune</p>
                 <p className="text-sm text-gray-600 mb-4 leading-relaxed">
-                  Quartetinho Jazz sets the mood for the afternoon — a rare live jazz experience right on Ipanema. Then DJ Lavinia Aune takes over into sunset.
+                  DJ Lavinia Aune takes us into sunset with the perfect soundtrack for Ryan's sendoff.
                 </p>
-                <div className="flex flex-col gap-2">
-                  <button
-                    onClick={() => {
-                      trackEvent('band_instagram_clicked', { category: 'Event' });
-                      openLink('https://www.instagram.com/quartetinhojazz?igsh=dHlia2I4ZGRqZ2x3');
-                    }}
-                    className="inline-flex items-center gap-2 text-sm font-semibold text-sunset-600 hover:text-sunset-700 transition-colors"
-                  >
-                    <Instagram className="w-4 h-4" />
-                    @quartetinhojazz
-                    <ExternalLink className="w-3 h-3" />
-                  </button>
-                  <button
-                    onClick={() => {
-                      trackEvent('dj_instagram_clicked', { category: 'Event' });
-                      openLink('https://www.instagram.com/laviniaaune');
-                    }}
-                    className="inline-flex items-center gap-2 text-sm font-semibold text-sunset-600 hover:text-sunset-700 transition-colors"
-                  >
-                    <Instagram className="w-4 h-4" />
-                    @laviniaaune
-                    <ExternalLink className="w-3 h-3" />
-                  </button>
-                </div>
+                <button
+                  onClick={() => {
+                    trackEvent('dj_instagram_clicked', { category: 'Event' });
+                    openLink('https://www.instagram.com/laviniaaune');
+                  }}
+                  className="inline-flex items-center gap-2 text-sm font-semibold text-sunset-600 hover:text-sunset-700 transition-colors"
+                >
+                  <Instagram className="w-4 h-4" />
+                  @laviniaaune
+                  <ExternalLink className="w-3 h-3" />
+                </button>
               </div>
             </div>
           </div>
@@ -461,6 +448,9 @@ export default function RyanFarewellParty() {
             <p className="text-gray-500 text-base leading-relaxed">
               Ryan has been part of the Carioca Coastal Club family, living the true carioca life of surf, sun, and saudade.
               As he heads to Japan, we celebrate the friendships, memories, and legendary beach days.
+            </p>
+            <p className="text-gray-500 text-sm leading-relaxed mt-4 italic">
+              A portion of the proceeds from ticket sales goes directly to Ryan to help with his move. 🌸
             </p>
           </div>
         </section>

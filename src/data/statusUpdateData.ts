@@ -95,7 +95,6 @@ export const statusUpdates: StatusUpdate[] = [
       {
         category: "Ryan's Going-Away Party",
         items: [
-          'Decided on a live jazz band for the event.',
           'Tickets are now available on the website — details on the events page.',
         ],
       },
