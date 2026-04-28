@@ -91,10 +91,8 @@ export const handler: Handler = async (event) => {
         };
       }
 
-      const remaining = maxUses !== null ? maxUses - usedCount : null;
       const type      = promoCode.type as string;
       const isVip        = type === 'vip';
-      const isGuest      = type === 'guest';
       const isEarlyBird  = type === 'early_bird';
       const isFree       = isVip || isEarlyBird;
 
@@ -115,7 +113,7 @@ export const handler: Handler = async (event) => {
         body: JSON.stringify({
           valid:     true,
           type,
-          tier:      isFree ? 'vip' : 'guest',
+          tier:      type,           // store the real tier: 'vip', 'guest', or 'early_bird'
           priceBrl:  isFree ? 0 : 5000,
           remaining,
           message,
