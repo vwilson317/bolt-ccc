@@ -132,7 +132,7 @@ export default function EventTicketConfirmPage() {
                       <p className="text-white/50 text-sm mt-1">
                         {result.ticket.paymentStatus === 'confirmed'
                           ? 'Payment confirmed. See you at the party!'
-                          : 'PIX received — we'll verify and confirm shortly.'}
+                          : "PIX received — we'll verify and confirm shortly."}
                       </p>
                     </div>
                   </>
