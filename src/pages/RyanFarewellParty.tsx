@@ -210,6 +210,7 @@ export default function RyanFarewellParty() {
 
   const handleWhatsAppReceipt = () => {
     trackEvent('whatsapp_receipt_clicked', { event_name: 'ryans_going_away_party', category: 'Event' });
+    setToast('Awaiting confirmation');
     const priceFmt = tierInfo.priceBrl === 0 ? 'Free' : `R$${(tierInfo.priceBrl * quantity) / 100}`;
     const lines = [
       `🎫 Ticket — Ryan's Going Away Party (May 3)`,
@@ -287,7 +288,6 @@ export default function RyanFarewellParty() {
       if (data.adminConfirmUrl) setAdminConfirmUrl(data.adminConfirmUrl);
 
       setStep('success');
-      setToast('Awaiting confirmation');
       trackEvent('ticket_pix_submitted', { event_name: 'ryans_going_away_party', tier: tierInfo.tier, category: 'Event' });
     } catch (err: any) {
       setError(err.message || 'Something went wrong. Please try again.');
