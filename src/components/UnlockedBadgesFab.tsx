@@ -14,7 +14,7 @@
  */
 import React, { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { Award, CheckCircle2, Sparkles, Wallet, X } from 'lucide-react';
+import { Award, CheckCircle2, Sparkles, Wallet, X, Ticket } from 'lucide-react';
 import { BARRACA_PROMOS, type BarracaPromoConfig } from '../data/barracaPromos';
 import { CCC_PASS_CONFIG, CCC_PASS_ID } from '../data/cccPass';
 import { useBadgeContext } from '../contexts/BadgeContext';
@@ -125,8 +125,26 @@ interface BadgeLightboxProps {
   onClose: () => void;
 }
 
+const TIER_DISPLAY: Record<string, string> = {
+  general:    'General Admission',
+  guest:      "Ryan's Guest",
+  vip:        "VIP",
+  promoter:   'Promoter',
+  early_bird: 'Early Bird',
+};
+
+interface EventTicketMeta { eventName: string; eventDate: string; tier: string; quantity: number; }
+
+function readEventTicket(storageKey: string): EventTicketMeta | null {
+  try {
+    const raw = localStorage.getItem(`${storageKey}_ticket`);
+    return raw ? JSON.parse(raw) : null;
+  } catch { return null; }
+}
+
 const BadgeLightbox: React.FC<BadgeLightboxProps> = ({ barraca, onClose }) => {
   const [walletMessage, setWalletMessage] = useState('');
+  const eventTicket = readEventTicket(barraca.storageKey);
   const isIOS = detectIOS();
 
   const handleWallet = async () => {
@@ -186,26 +204,51 @@ const BadgeLightbox: React.FC<BadgeLightboxProps> = ({ barraca, onClose }) => {
         </button>
 
         <div className="mx-auto mb-5 flex h-24 w-24 items-center justify-center rounded-full bg-white/20 ring-4 ring-white/40">
-          <CheckCircle2 className="h-14 w-14 text-white" strokeWidth={1.5} />
+          {eventTicket ? (
+            <Ticket className="h-14 w-14 text-white" strokeWidth={1.5} />
+          ) : (
+            <CheckCircle2 className="h-14 w-14 text-white" strokeWidth={1.5} />
+          )}
         </div>
 
         <div className="inline-flex items-center rounded-full bg-white/20 px-3 py-1 text-xs font-bold uppercase tracking-widest mb-3">
           <Sparkles className="mr-1.5 h-3 w-3" />
-          VERIFIED SUPPORTER
+          {eventTicket ? 'EVENT TICKET' : 'VERIFIED SUPPORTER'}
         </div>
 
-        <p className="text-lg font-bold mb-1">@{barraca.instagramHandle}</p>
+        <p className="text-lg font-bold mb-1">{barraca.name}</p>
 
-        <div className="my-5 rounded-2xl bg-white/20 px-6 py-4">
-          <p className="text-xs font-semibold uppercase tracking-widest opacity-80 mb-1">
-            Discount Code
-          </p>
-          <p className="text-5xl font-black tracking-wider">{barraca.discountCode}</p>
-        </div>
-
-        <p className="text-sm opacity-80">
-          Show this code at {barraca.name}'s barraca in {barraca.barracaLocation}.
-        </p>
+        {/* Event ticket info — shown when badge was claimed via ticket purchase */}
+        {eventTicket ? (
+          <>
+            <div className="my-4 rounded-2xl bg-white/20 px-5 py-4 text-left space-y-1">
+              <p className="text-xs font-semibold uppercase tracking-widest opacity-70 mb-2">🎉 {eventTicket.eventName}</p>
+              <p className="text-sm font-bold opacity-90">
+                {new Date(eventTicket.eventDate + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}
+              </p>
+              <p className="text-sm opacity-80">
+                {TIER_DISPLAY[eventTicket.tier] ?? eventTicket.tier}
+                {eventTicket.quantity > 1 && ` · ${eventTicket.quantity} tickets`}
+              </p>
+            </div>
+            <div className="rounded-2xl bg-white/10 px-5 py-3">
+              <p className="text-xs opacity-60 mb-0.5">Discount Code</p>
+              <p className="text-2xl font-black tracking-wider">{barraca.discountCode}</p>
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="my-5 rounded-2xl bg-white/20 px-6 py-4">
+              <p className="text-xs font-semibold uppercase tracking-widest opacity-80 mb-1">
+                Discount Code
+              </p>
+              <p className="text-5xl font-black tracking-wider">{barraca.discountCode}</p>
+            </div>
+            <p className="text-sm opacity-80">
+              Show this code at {barraca.name}'s barraca in {barraca.barracaLocation}.
+            </p>
+          </>
+        )}
 
         <button
           onClick={handleWallet}
