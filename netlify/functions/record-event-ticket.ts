@@ -129,6 +129,7 @@ export const handler: Handler = async (event) => {
       }
 
       const confirmationToken = randomUUID();
+      const adminToken        = randomUUID();
 
       const { data: ticket, error } = await supabase
         .from('event_tickets')
@@ -146,6 +147,7 @@ export const handler: Handler = async (event) => {
           payment_status:     'confirmed',
           stripe_session_id:  sessionId,
           confirmation_token: confirmationToken,
+          admin_token:        adminToken,
           promo_id:           EVENT_PROMO_ID,
         })
         .select('id')
@@ -166,6 +168,8 @@ export const handler: Handler = async (event) => {
           badgeUrl:         `${origin}/ryans-party-ticket`,
           confirmationToken,
           confirmationUrl:  `${origin}/confirm-ticket?token=${confirmationToken}`,
+          adminToken,
+          adminConfirmUrl:  `${origin}/admin-confirm?token=${adminToken}`,
         }),
       };
     }
@@ -187,6 +191,7 @@ export const handler: Handler = async (event) => {
 
     const status            = paymentMethod === 'free' ? 'confirmed' : 'pending';
     const confirmationToken = randomUUID();
+    const adminToken        = randomUUID();
 
     const { data: ticket, error } = await supabase
       .from('event_tickets')
@@ -203,6 +208,7 @@ export const handler: Handler = async (event) => {
         payment_method:     paymentMethod,
         payment_status:     status,
         confirmation_token: confirmationToken,
+        admin_token:        adminToken,
         promo_id:           EVENT_PROMO_ID,
       })
       .select('id')
@@ -223,6 +229,8 @@ export const handler: Handler = async (event) => {
         badgeUrl:         `${origin}/ryans-party-ticket`,
         confirmationToken,
         confirmationUrl:  `${origin}/confirm-ticket?token=${confirmationToken}`,
+        adminToken,
+        adminConfirmUrl:  `${origin}/admin-confirm?token=${adminToken}`,
       }),
     };
 

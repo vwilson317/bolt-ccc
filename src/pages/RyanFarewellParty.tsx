@@ -22,7 +22,8 @@ const PETALS = [
 const PIX_KEY     = '155.438.587-36';
 const PIX_DISPLAY = '155.438.587-36';
 const PIX_NAME    = 'Ryan Ferrari de Castro Pires';
-const WA_NUMBER   = '5521990532728';
+// Admin WhatsApp — PIX receipts go here so the owner can confirm payments
+const ADMIN_WA    = '16789826137';
 
 // ── Tier config ────────────────────────────────────────────────────
 type Tier = 'general' | 'guest' | 'vip';
@@ -49,7 +50,8 @@ export default function RyanFarewellParty() {
   const [payTab, setPayTab]           = useState<'pix' | 'card'>('pix');
   const [loading, setLoading]         = useState(false);
   const [error, setError]             = useState<string | null>(null);
-  const [confirmationUrl, setConfirmationUrl] = useState<string | null>(null);
+  const [confirmationUrl, setConfirmationUrl]   = useState<string | null>(null);
+  const [adminConfirmUrl, setAdminConfirmUrl]   = useState<string | null>(null);
 
   // Attendee form
   const params   = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '');
@@ -103,6 +105,7 @@ export default function RyanFarewellParty() {
       .then(r => r.json())
       .then(data => {
         if (data.confirmationUrl) setConfirmationUrl(data.confirmationUrl);
+        if (data.adminConfirmUrl) setAdminConfirmUrl(data.adminConfirmUrl);
         setStep('success');
         setLoading(false);
       })
@@ -165,11 +168,18 @@ export default function RyanFarewellParty() {
     trackEvent('pix_key_copied', { event_name: 'ryans_going_away_party', category: 'Event' });
   };
 
-  const handleWhatsAppReceipt = () => {
+  const handleWhatsAppReceipt = (confirmUrl: string | null) => {
     trackEvent('whatsapp_receipt_clicked', { event_name: 'ryans_going_away_party', category: 'Event' });
-    const priceFmt = tierInfo.priceBrl === 0 ? 'R$0 (VIP)' : `R$${tierInfo.priceBrl / 100}`;
-    const msg = encodeURIComponent(`Oi! Acabei de pagar ${priceFmt} via PIX para o Going Away Party do Ryan (3 de maio).\nNome: ${fullName}\nSegue o comprovante 👇`);
-    openLink(`https://wa.me/${WA_NUMBER}?text=${msg}`);
+    const priceFmt = tierInfo.priceBrl === 0 ? 'Free' : `R$${(tierInfo.priceBrl * quantity) / 100}`;
+    const lines = [
+      `🎉 New ticket — Ryan's Going Away Party (May 3)`,
+      `👤 ${fullName}`,
+      `🎫 ${tierInfo.label} · ${priceFmt} via PIX`,
+      `📱 ${whatsapp}`,
+    ];
+    if (confirmUrl) lines.push(`\n✅ Confirm payment:\n${confirmUrl}`);
+    const msg = encodeURIComponent(lines.join('\n'));
+    openLink(`https://wa.me/${ADMIN_WA}?text=${msg}`);
   };
 
   // Validate form fields
@@ -202,6 +212,7 @@ export default function RyanFarewellParty() {
       const data = await res.json();
       if (!res.ok || !data.success) throw new Error(data.error || 'Could not register ticket');
       if (data.confirmationUrl) setConfirmationUrl(data.confirmationUrl);
+      if (data.adminConfirmUrl) setAdminConfirmUrl(data.adminConfirmUrl);
       setStep('success');
     } catch (err: any) {
       setError(err.message || 'Something went wrong. Please try again.');
@@ -225,6 +236,7 @@ export default function RyanFarewellParty() {
       const data = await res.json();
       if (!res.ok || !data.success) throw new Error(data.error || 'Could not record ticket');
       if (data.confirmationUrl) setConfirmationUrl(data.confirmationUrl);
+      if (data.adminConfirmUrl) setAdminConfirmUrl(data.adminConfirmUrl);
       setStep('success');
       trackEvent('ticket_pix_submitted', { event_name: 'ryans_going_away_party', tier: tierInfo.tier, category: 'Event' });
     } catch (err: any) {
@@ -655,11 +667,6 @@ export default function RyanFarewellParty() {
                             {pixCopied ? <><CheckCircle2 className="w-4 h-4" />{t('ryanParty.copied')}</> : <><Copy className="w-4 h-4" />{t('ryanParty.copy')}</>}
                           </span>
                         </button>
-                        <button onClick={handleWhatsAppReceipt}
-                          className="w-full py-3 rounded-2xl font-semibold text-white flex items-center justify-center gap-2 text-sm"
-                          style={{ background: 'linear-gradient(135deg, #25d366, #128c7e)' }}>
-                          <MessageCircle className="w-4 h-4" /> {t('ryanParty.sendReceiptWa')}
-                        </button>
                         <button onClick={handlePixSubmitted} disabled={loading}
                           className="w-full py-4 rounded-2xl font-display font-black text-lg flex items-center justify-center gap-2 disabled:opacity-50 transition-all hover:scale-[1.02] active:scale-95"
                           style={{ background: 'linear-gradient(135deg, #f59e0b, #d97706)', color: '#0f172a' }}>
@@ -701,6 +708,17 @@ export default function RyanFarewellParty() {
                       <p className="text-white font-semibold">{fullName || 'See you there!'}</p>
                       <p className="text-amber-300 text-sm">{tierInfo.label} · May 3, 2026 · 120 Escritócarioca</p>
                     </div>
+
+                    {/* WhatsApp receipt → admin (PIX only, so the owner can confirm) */}
+                    {payTab === 'pix' && !isFree && (
+                      <button
+                        onClick={() => handleWhatsAppReceipt(adminConfirmUrl)}
+                        className="w-full py-3 rounded-2xl font-semibold text-white flex items-center justify-center gap-2 text-sm"
+                        style={{ background: 'linear-gradient(135deg, #25d366, #128c7e)' }}
+                      >
+                        <MessageCircle className="w-4 h-4" /> {t('ryanParty.sendReceiptWa')}
+                      </button>
+                    )}
 
                     {/* Badge claim CTA — prominently shown for all payment methods */}
                     {confirmationUrl && (
