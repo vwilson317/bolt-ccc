@@ -37,8 +37,8 @@ const CORS = {
   'Access-Control-Allow-Methods': 'GET, OPTIONS',
 };
 
-// Mirrors PromoClaimService.normalizeIdentifier — kept in sync manually
-// since Netlify functions can't import frontend services.
+// Phone is the preferred PII (see CLAUDE.md). Priority: phone → CPF → email.
+// Mirrors PromoClaimService.normalizeIdentifier — kept in sync manually.
 function normalizePhone(value: string): string {
   return value.replace(/[^\d+]/g, '').replace(/(?!^)\+/g, '');
 }

@@ -21,55 +21,38 @@ const cpfFormattedRegex = /^\d{3}\.\d{3}\.\d{3}-\d{2}$/;
 const normalizePhone = (value: string): string => value.replace(/[^\d+]/g, '').replace(/(?!^)\+/g, '');
 
 export class PromoClaimService {
+  // Phone is the preferred PII — see CLAUDE.md "PII / Identifier Priority".
+  // CPF is only recognised when explicitly formatted as XXX.XXX.XXX-XX.
+  // Ambiguous 11-digit numbers default to phone, not CPF.
+  // options.preferCpf is retained for backwards-compat but no longer promotes
+  // bare 11-digit strings to CPF.
   static normalizeIdentifier(
     rawInput: string,
     options?: { preferCpf?: boolean }
   ): NormalizedIdentifier | null {
     const trimmed = rawInput.trim();
-    if (!trimmed) {
-      return null;
-    }
+    if (!trimmed) return null;
 
+    // Email — unambiguous: must contain @
     if (trimmed.includes('@')) {
       const lowered = trimmed.toLowerCase();
-      if (!emailRegex.test(lowered)) {
-        return null;
-      }
-
-      return {
-        type: 'email',
-        inputValue: trimmed,
-        normalizedValue: lowered
-      };
+      return emailRegex.test(lowered)
+        ? { type: 'email', inputValue: trimmed, normalizedValue: lowered }
+        : null;
     }
 
+    // CPF — only when strictly formatted as XXX.XXX.XXX-XX
     const digitsOnly = trimmed.replace(/\D/g, '');
-    const hasPlusPrefix = trimmed.startsWith('+');
-
-    // CPF: exactly 11 digits, either strictly formatted (XXX.XXX.XXX-XX)
-    // or bare digits when the caller signals Brazil context via preferCpf.
-    if (!hasPlusPrefix && digitsOnly.length === 11) {
-      if (cpfFormattedRegex.test(trimmed) || options?.preferCpf) {
-        return {
-          type: 'cpf',
-          inputValue: trimmed,
-          normalizedValue: digitsOnly
-        };
-      }
+    if (cpfFormattedRegex.test(trimmed)) {
+      return { type: 'cpf', inputValue: trimmed, normalizedValue: digitsOnly };
     }
 
+    // Phone — default (includes bare 11-digit numbers that could be BR mobile)
     const normalizedPhone = normalizePhone(trimmed);
     const phoneDigits = normalizedPhone.replace(/\D/g, '');
+    if (phoneDigits.length < 8) return null;
 
-    if (phoneDigits.length < 8) {
-      return null;
-    }
-
-    return {
-      type: 'phone',
-      inputValue: trimmed,
-      normalizedValue: normalizedPhone
-    };
+    return { type: 'phone', inputValue: trimmed, normalizedValue: normalizedPhone };
   }
 
   static async findByIdentifier(
