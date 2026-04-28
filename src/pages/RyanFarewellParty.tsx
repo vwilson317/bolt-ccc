@@ -1,8 +1,9 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useCallback, useEffect, useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MapPin, Calendar, Clock, Ticket, Waves, Music, Copy, CheckCircle2, MessageCircle, ExternalLink, Instagram, Tag, User, Phone, CreditCard, AlertCircle, ChevronRight, Loader2, Users } from 'lucide-react';
+import { MapPin, Calendar, Clock, Ticket, Waves, Music, Copy, CheckCircle2, MessageCircle, ExternalLink, Instagram, Tag, User, Phone, CreditCard, AlertCircle, ChevronRight, Loader2, Users, Star } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import { trackEvent, trackPageView, trackCTAClick } from '../services/posthogAnalyticsService';
+import { useBadgeContext } from '../contexts/BadgeContext';
 import SEOHead from '../components/SEOHead';
 
 // ── Sakura petals (subtle on white) ───────────────────────────────
@@ -46,12 +47,15 @@ export default function RyanFarewellParty() {
   const [pixCopied, setPixCopied] = useState(false);
 
   // Checkout state
-  const [step, setStep]               = useState<CheckoutStep>('form');
-  const [payTab, setPayTab]           = useState<'pix' | 'card'>('pix');
-  const [loading, setLoading]         = useState(false);
-  const [error, setError]             = useState<string | null>(null);
-  const [confirmationUrl, setConfirmationUrl]   = useState<string | null>(null);
-  const [adminConfirmUrl, setAdminConfirmUrl]   = useState<string | null>(null);
+  const [step, setStep]           = useState<CheckoutStep>('form');
+  const [payTab, setPayTab]       = useState<'pix' | 'card'>('pix');
+  const [loading, setLoading]     = useState(false);
+  const [error, setError]         = useState<string | null>(null);
+  const [confirmationToken, setConfirmationToken] = useState<string | null>(null);
+  const [adminConfirmUrl, setAdminConfirmUrl]     = useState<string | null>(null);
+  const [badgeClaimed, setBadgeClaimed]           = useState(false);
+
+  const { unlockBadge } = useBadgeContext();
 
   // Attendee form
   const params   = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '');
@@ -67,6 +71,31 @@ export default function RyanFarewellParty() {
   const sessionSuccess = params.get('success') === 'true';
   const sessionId      = params.get('session_id') || '';
   const cancelled      = params.get('cancelled') === 'true';
+
+  // Claims the badge in the background — stores it in localStorage so the FAB
+  // appears immediately, and writes ticket metadata for the badge lightbox to show.
+  const claimBadge = useCallback(async (token: string) => {
+    try {
+      const res  = await fetch(`/.netlify/functions/claim-event-badge?token=${encodeURIComponent(token)}`);
+      const data = await res.json();
+      if (!data.success) return;
+      localStorage.setItem(data.badge.storageKey, 'true');
+      if (data.badge.identifier) {
+        localStorage.setItem(data.badge.identifierStorageKey, data.badge.identifier);
+      }
+      // Store event ticket info so the badge lightbox can display it
+      localStorage.setItem(`${data.badge.storageKey}_ticket`, JSON.stringify({
+        eventName: data.ticket.eventName,
+        eventDate: data.ticket.eventDate,
+        tier:      data.ticket.tier,
+        quantity:  data.ticket.quantity,
+      }));
+      unlockBadge(data.badge.promoId);
+      setBadgeClaimed(true);
+    } catch {
+      // Badge claim failing silently is acceptable — user can re-claim from /confirm-ticket
+    }
+  }, [unlockBadge]);
 
   // Countdown to May 3 2026 2PM BRT
   useEffect(() => {
@@ -104,7 +133,10 @@ export default function RyanFarewellParty() {
     })
       .then(r => r.json())
       .then(data => {
-        if (data.confirmationUrl) setConfirmationUrl(data.confirmationUrl);
+        if (data.confirmationToken) {
+          setConfirmationToken(data.confirmationToken);
+          claimBadge(data.confirmationToken);   // auto-claim — payment already confirmed
+        }
         if (data.adminConfirmUrl) setAdminConfirmUrl(data.adminConfirmUrl);
         setStep('success');
         setLoading(false);
@@ -168,8 +200,14 @@ export default function RyanFarewellParty() {
     trackEvent('pix_key_copied', { event_name: 'ryans_going_away_party', category: 'Event' });
   };
 
-  const handleWhatsAppReceipt = (confirmUrl: string | null) => {
+  const handleWhatsAppReceipt = async () => {
     trackEvent('whatsapp_receipt_clicked', { event_name: 'ryans_going_away_party', category: 'Event' });
+
+    // Claim the badge as soon as they tap "Send Receipt" — this is the PIX confirmation moment
+    if (confirmationToken && !badgeClaimed) {
+      await claimBadge(confirmationToken);
+    }
+
     const priceFmt = tierInfo.priceBrl === 0 ? 'Free' : `R$${(tierInfo.priceBrl * quantity) / 100}`;
     const lines = [
       `🎉 New ticket — Ryan's Going Away Party (May 3)`,
@@ -177,7 +215,7 @@ export default function RyanFarewellParty() {
       `🎫 ${tierInfo.label} · ${priceFmt} via PIX`,
       `📱 ${whatsapp}`,
     ];
-    if (confirmUrl) lines.push(`\n✅ Confirm payment:\n${confirmUrl}`);
+    if (adminConfirmUrl) lines.push(`\n✅ Confirm payment:\n${adminConfirmUrl}`);
     const msg = encodeURIComponent(lines.join('\n'));
     openLink(`https://wa.me/${ADMIN_WA}?text=${msg}`);
   };
@@ -211,7 +249,10 @@ export default function RyanFarewellParty() {
       });
       const data = await res.json();
       if (!res.ok || !data.success) throw new Error(data.error || 'Could not register ticket');
-      if (data.confirmationUrl) setConfirmationUrl(data.confirmationUrl);
+      if (data.confirmationToken) {
+        setConfirmationToken(data.confirmationToken);
+        claimBadge(data.confirmationToken);   // auto-claim — free ticket, no payment needed
+      }
       if (data.adminConfirmUrl) setAdminConfirmUrl(data.adminConfirmUrl);
       setStep('success');
     } catch (err: any) {
@@ -235,8 +276,8 @@ export default function RyanFarewellParty() {
       });
       const data = await res.json();
       if (!res.ok || !data.success) throw new Error(data.error || 'Could not record ticket');
-      if (data.confirmationUrl) setConfirmationUrl(data.confirmationUrl);
-      if (data.adminConfirmUrl) setAdminConfirmUrl(data.adminConfirmUrl);
+      if (data.confirmationToken) setConfirmationToken(data.confirmationToken);
+      if (data.adminConfirmUrl)   setAdminConfirmUrl(data.adminConfirmUrl);
       setStep('success');
       trackEvent('ticket_pix_submitted', { event_name: 'ryans_going_away_party', tier: tierInfo.tier, category: 'Event' });
     } catch (err: any) {
@@ -700,61 +741,49 @@ export default function RyanFarewellParty() {
                     <div>
                       <p className="text-white font-display font-black text-2xl mb-1">{t('ryanParty.youreIn')}</p>
                       <p className="text-amber-200/70 text-sm">
-                        {isFree ? t('ryanParty.ticketConfirmed') : t('ryanParty.paymentPending')}
+                        {isFree || payTab === 'card' ? t('ryanParty.ticketConfirmed') : t('ryanParty.paymentPending')}
                       </p>
                     </div>
+
+                    {/* Ticket summary */}
                     <div className="rounded-xl px-4 py-3 text-left space-y-1" style={{ background: 'rgba(251,191,36,0.08)', border: '1px solid rgba(251,191,36,0.2)' }}>
                       <p className="text-white/40 text-xs">{t('ryanParty.ticketDetailsLabel')}</p>
                       <p className="text-white font-semibold">{fullName || 'See you there!'}</p>
-                      <p className="text-amber-300 text-sm">{tierInfo.label} · May 3, 2026 · 120 Escritócarioca</p>
+                      <p className="text-amber-300 text-sm">{tierInfo.label} · May 3, 2026 · Escritório Carioca</p>
                     </div>
 
-                    {/* WhatsApp receipt → admin (PIX only, so the owner can confirm) */}
-                    {payTab === 'pix' && !isFree && (
-                      <button
-                        onClick={() => handleWhatsAppReceipt(adminConfirmUrl)}
-                        className="w-full py-3 rounded-2xl font-semibold text-white flex items-center justify-center gap-2 text-sm"
-                        style={{ background: 'linear-gradient(135deg, #25d366, #128c7e)' }}
-                      >
-                        <MessageCircle className="w-4 h-4" /> {t('ryanParty.sendReceiptWa')}
-                      </button>
-                    )}
-
-                    {/* Badge claim CTA — prominently shown for all payment methods */}
-                    {confirmationUrl && (
-                      <div className="rounded-xl px-4 py-4 space-y-3" style={{ background: 'rgba(59,130,246,0.12)', border: '1px solid rgba(99,179,237,0.3)' }}>
-                        <div className="flex items-start gap-3 text-left">
-                          <span className="text-2xl flex-shrink-0">🏅</span>
-                          <div>
-                            <p className="text-blue-300 text-xs font-bold uppercase tracking-widest mb-0.5">Get your loyalty badge</p>
-                            <p className="text-white/60 text-xs leading-relaxed">
-                              {isFree
-                                ? 'Tap below to add this event to your Escritório Carioca loyalty card.'
-                                : 'After sending your PIX, tap below to confirm your payment and unlock your Escritório Carioca loyalty badge.'}
-                            </p>
-                          </div>
-                        </div>
-                        <a
-                          href={confirmationUrl}
-                          className="block w-full py-3 rounded-xl font-bold text-white text-sm text-center transition-all hover:scale-[1.02] active:scale-95"
-                          style={{ background: 'linear-gradient(135deg, #3b82f6, #4f46e5)' }}
+                    {/* PIX: Send Receipt button = the badge-claim trigger */}
+                    {payTab === 'pix' && !isFree && !badgeClaimed && (
+                      <div className="space-y-2">
+                        <p className="text-white/50 text-xs">Send your PIX proof to get your badge instantly</p>
+                        <button
+                          onClick={handleWhatsAppReceipt}
+                          className="w-full py-4 rounded-2xl font-display font-black text-lg text-white flex items-center justify-center gap-2 transition-all hover:scale-[1.02] active:scale-95"
+                          style={{ background: 'linear-gradient(135deg, #25d366, #128c7e)' }}
                         >
-                          {isFree ? '🏅 Claim my badge' : '✅ Confirm payment & get badge'}
-                        </a>
+                          <MessageCircle className="w-5 h-5" /> Send Receipt & Get Badge
+                        </button>
                       </div>
                     )}
 
-                    <div className="rounded-xl px-4 py-4 space-y-2" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
-                      <p className="text-white/50 text-xs uppercase tracking-widest font-semibold">{t('ryanParty.badgeIsTicket')}</p>
-                      <p className="text-white/40 text-xs leading-relaxed">
-                        {t('ryanParty.badgeDesc')}
-                      </p>
-                      <a href="/ryans-party-ticket"
-                        className="block w-full py-3 rounded-xl font-bold text-slate-900 text-sm text-center transition-all hover:scale-[1.02]"
-                        style={{ background: 'linear-gradient(135deg, #f59e0b, #d97706)' }}>
-                        {t('ryanParty.viewBadge')}
-                      </a>
-                    </div>
+                    {/* Badge ready — shown once badge is claimed (auto for Stripe/Free, after WA for PIX) */}
+                    {badgeClaimed && (
+                      <div className="rounded-xl px-4 py-4 flex items-center gap-3" style={{ background: 'rgba(59,130,246,0.12)', border: '1px solid rgba(99,179,237,0.3)' }}>
+                        <Star className="w-6 h-6 text-blue-300 flex-shrink-0" />
+                        <div className="text-left">
+                          <p className="text-blue-300 text-xs font-bold uppercase tracking-widest">Badge active</p>
+                          <p className="text-white/70 text-xs mt-0.5">Your Escritório Carioca loyalty card now includes this event. Tap the badge button below.</p>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* View ticket badge */}
+                    <a href="/ryans-party-ticket"
+                      className="block w-full py-3 rounded-xl font-bold text-slate-900 text-sm text-center transition-all hover:scale-[1.02]"
+                      style={{ background: 'linear-gradient(135deg, #f59e0b, #d97706)' }}>
+                      {t('ryanParty.viewBadge')}
+                    </a>
+
                     <p className="text-white/20 text-xs">{t('ryanParty.seeYouMay3')} · またね！</p>
                   </div>
                 )}

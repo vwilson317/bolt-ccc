@@ -189,6 +189,8 @@ export const handler: Handler = async (event) => {
           tier:          ticket.tier,
           quantity:      ticket.quantity,
           paymentStatus: ticket.payment_status,
+          eventName:     "Ryan's Going Away Party",
+          eventDate:     '2026-05-03',
         },
         badge: {
           promoId,
