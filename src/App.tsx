@@ -35,6 +35,7 @@ const StatusUpdatePage = lazy(() => import('./pages/StatusUpdatePage'));
 const PromoterDashboard = lazy(() => import('./pages/PromoterDashboard'));
 const EventAdminDashboard = lazy(() => import('./pages/EventAdminDashboard'));
 const RyanPartyTicket = lazy(() => import('./pages/RyanPartyTicket'));
+const EventTicketConfirmPage = lazy(() => import('./pages/EventTicketConfirmPage'));
 
 // Lazy-load heavy overlay components that are not needed at initial paint
 // StoryViewer removed: StoryProvider is disabled and StoryViewer would throw without it
@@ -99,6 +100,7 @@ function AppContent() {
             <Route path="/promoter" element={<PromoterDashboard />} />
             <Route path="/event-admin" element={<EventAdminDashboard />} />
             <Route path="/ryans-party-ticket" element={<RyanPartyTicket />} />
+            <Route path="/confirm-ticket" element={<EventTicketConfirmPage />} />
             <Route path="/content-professionals" element={<PhotographerShowcase />} />
             <Route path="/videography" element={<Navigate to="/content-professionals" replace />} />
             <Route path="/hosting-guidelines" element={<HostingGuidelines />} />

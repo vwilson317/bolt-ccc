@@ -45,10 +45,11 @@ export default function RyanFarewellParty() {
   const [pixCopied, setPixCopied] = useState(false);
 
   // Checkout state
-  const [step, setStep]           = useState<CheckoutStep>('form');
-  const [payTab, setPayTab]       = useState<'pix' | 'card'>('pix');
-  const [loading, setLoading]     = useState(false);
-  const [error, setError]         = useState<string | null>(null);
+  const [step, setStep]               = useState<CheckoutStep>('form');
+  const [payTab, setPayTab]           = useState<'pix' | 'card'>('pix');
+  const [loading, setLoading]         = useState(false);
+  const [error, setError]             = useState<string | null>(null);
+  const [confirmationUrl, setConfirmationUrl] = useState<string | null>(null);
 
   // Attendee form
   const params   = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '');
@@ -100,7 +101,11 @@ export default function RyanFarewellParty() {
       body: JSON.stringify({ paymentMethod: 'stripe', sessionId }),
     })
       .then(r => r.json())
-      .then(() => { setStep('success'); setLoading(false); })
+      .then(data => {
+        if (data.confirmationUrl) setConfirmationUrl(data.confirmationUrl);
+        setStep('success');
+        setLoading(false);
+      })
       .catch(() => { setStep('success'); setLoading(false); });
   }, [sessionSuccess, sessionId]);
 
@@ -195,6 +200,7 @@ export default function RyanFarewellParty() {
       });
       const data = await res.json();
       if (!res.ok || !data.success) throw new Error(data.error || 'Could not register ticket');
+      if (data.confirmationUrl) setConfirmationUrl(data.confirmationUrl);
       setStep('success');
     } catch (err: any) {
       setError(err.message || 'Something went wrong. Please try again.');
@@ -217,6 +223,7 @@ export default function RyanFarewellParty() {
       });
       const data = await res.json();
       if (!res.ok || !data.success) throw new Error(data.error || 'Could not record ticket');
+      if (data.confirmationUrl) setConfirmationUrl(data.confirmationUrl);
       setStep('success');
       trackEvent('ticket_pix_submitted', { event_name: 'ryans_going_away_party', tier: tierInfo.tier, category: 'Event' });
     } catch (err: any) {
@@ -693,6 +700,31 @@ export default function RyanFarewellParty() {
                       <p className="text-white font-semibold">{fullName || 'See you there!'}</p>
                       <p className="text-amber-300 text-sm">{tierInfo.label} · May 3, 2026 · 120 Escritócarioca</p>
                     </div>
+
+                    {/* Badge claim CTA — prominently shown for all payment methods */}
+                    {confirmationUrl && (
+                      <div className="rounded-xl px-4 py-4 space-y-3" style={{ background: 'rgba(59,130,246,0.12)', border: '1px solid rgba(99,179,237,0.3)' }}>
+                        <div className="flex items-start gap-3 text-left">
+                          <span className="text-2xl flex-shrink-0">🏅</span>
+                          <div>
+                            <p className="text-blue-300 text-xs font-bold uppercase tracking-widest mb-0.5">Get your loyalty badge</p>
+                            <p className="text-white/60 text-xs leading-relaxed">
+                              {isFree
+                                ? 'Tap below to add this event to your Escritório Carioca loyalty card.'
+                                : 'After sending your PIX, tap below to confirm your payment and unlock your Escritório Carioca loyalty badge.'}
+                            </p>
+                          </div>
+                        </div>
+                        <a
+                          href={confirmationUrl}
+                          className="block w-full py-3 rounded-xl font-bold text-white text-sm text-center transition-all hover:scale-[1.02] active:scale-95"
+                          style={{ background: 'linear-gradient(135deg, #3b82f6, #4f46e5)' }}
+                        >
+                          {isFree ? '🏅 Claim my badge' : '✅ Confirm payment & get badge'}
+                        </a>
+                      </div>
+                    )}
+
                     <div className="rounded-xl px-4 py-4 space-y-2" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
                       <p className="text-white/50 text-xs uppercase tracking-widest font-semibold">{t('ryanParty.badgeIsTicket')}</p>
                       <p className="text-white/40 text-xs leading-relaxed">
