@@ -91,6 +91,8 @@ export const handler: Handler = async (event) => {
         };
       }
 
+      const remaining = maxUses !== null ? maxUses - usedCount : null;
+
       const type      = promoCode.type as string;
       const isVip        = type === 'vip';
       const isEarlyBird  = type === 'early_bird';
