@@ -225,8 +225,8 @@ export default function RyanFarewellParty() {
 
   const handleContinueToPayment = () => {
     if (!formValid) return;
-    // VIP tier → no payment needed
-    if (tierInfo.tier === 'vip') {
+    // VIP and Early Bird are both free — skip payment step
+    if (tierInfo.tier === 'vip' || tierInfo.promoType === 'early_bird') {
       handleFreeTicket();
       return;
     }
