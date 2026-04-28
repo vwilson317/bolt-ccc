@@ -39,6 +39,20 @@ interface TierInfo {
 }
 const DEFAULT_TIER: TierInfo = { tier: 'general', priceBrl: 10000, label: 'General Public', badge: 'R$100' };
 
+// Returns an error string if the contact value is invalid, null if valid.
+// Accepts email, phone number (8-15 digits), or CPF (11 digits).
+function validateContact(value: string): string | null {
+  const v = value.trim();
+  if (!v) return null;
+  if (v.includes('@')) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ? null : 'Enter a valid email address (e.g. you@example.com)';
+  }
+  const digits = v.replace(/\D/g, '');
+  if (digits.length < 8)  return 'Phone number must have at least 8 digits';
+  if (digits.length > 15) return 'Phone number is too long';
+  return null;
+}
+
 type CheckoutStep = 'form' | 'payment' | 'confirming' | 'success';
 
 export default function RyanFarewellParty() {
@@ -224,7 +238,8 @@ export default function RyanFarewellParty() {
   };
 
   // Validate form fields
-  const formValid = fullName.trim().length >= 2 && whatsapp.trim().length >= 8;
+  const contactError = whatsapp.trim() ? validateContact(whatsapp) : null;
+  const formValid    = fullName.trim().length >= 2 && whatsapp.trim().length > 0 && !contactError;
 
   const handleContinueToPayment = () => {
     if (!formValid) return;
@@ -607,9 +622,12 @@ export default function RyanFarewellParty() {
                         type="text" value={whatsapp} onChange={e => setWhatsapp(e.target.value)}
                         placeholder="000.000.000-00 · +55 21 99999 · email"
                         className="w-full rounded-xl px-4 py-3 text-white placeholder-white/30 text-sm font-medium outline-none focus:ring-2 focus:ring-amber-400/50 transition-all"
-                        style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)' }}
+                        style={{ background: 'rgba(255,255,255,0.08)', border: `1px solid ${contactError ? 'rgba(239,68,68,0.5)' : 'rgba(255,255,255,0.15)'}` }}
                       />
-                      <p className="text-white/25 text-xs mt-1.5">{t('ryanParty.contactHint')}</p>
+                      {contactError
+                        ? <p className="text-red-400 text-xs mt-1.5 flex items-center gap-1"><AlertCircle className="w-3.5 h-3.5 flex-shrink-0" />{contactError}</p>
+                        : <p className="text-white/25 text-xs mt-1.5">{t('ryanParty.contactHint')}</p>
+                      }
                     </div>
 
                     {/* Promo code — hidden when pre-filled from URL */}
