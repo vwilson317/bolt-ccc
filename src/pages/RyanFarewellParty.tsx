@@ -132,10 +132,11 @@ export default function RyanFarewellParty() {
       });
       const data = await res.json();
       if (data.valid) {
+        const isEarlyBird = data.type === 'early_bird';
         setTierInfo({
           tier:        data.tier,
           priceBrl:    data.priceBrl,
-          label:       data.type === 'promoter' ? 'General Public' : data.type === 'guest' ? "Ryan's Guest" : "Ryan's VIP",
+          label:       isEarlyBird ? 'Early Bird' : data.type === 'promoter' ? 'General Public' : data.type === 'guest' ? "Ryan's Guest" : "Ryan's VIP",
           badge:       data.priceBrl === 0 ? 'FREE' : `R$${data.priceBrl / 100}`,
           promoterName: data.promoterName,
           promoterId:  data.promoterId,

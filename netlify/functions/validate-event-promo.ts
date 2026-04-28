@@ -71,26 +71,54 @@ export const handler: Handler = async (event) => {
       };
     }
 
-    // 2. Check guest/VIP unlock codes
+    // 2. Check guest/VIP/early-bird unlock codes
     const { data: promoCode } = await supabase
       .from('event_promo_codes')
-      .select('code, type')
+      .select('code, type, max_uses, used_count')
       .eq('code', code)
       .eq('is_active', true)
       .single();
 
     if (promoCode) {
-      const isVip   = promoCode.type === 'vip';
-      const isGuest = promoCode.type === 'guest';
+      // Enforce per-code usage cap
+      const maxUses   = promoCode.max_uses as number | null;
+      const usedCount = (promoCode.used_count as number) ?? 0;
+      if (maxUses !== null && usedCount >= maxUses) {
+        return {
+          statusCode: 200,
+          headers: CORS,
+          body: JSON.stringify({ valid: false, error: 'All spots for this promo have been claimed' }),
+        };
+      }
+
+      const remaining = maxUses !== null ? maxUses - usedCount : null;
+      const type      = promoCode.type as string;
+      const isVip        = type === 'vip';
+      const isGuest      = type === 'guest';
+      const isEarlyBird  = type === 'early_bird';
+      const isFree       = isVip || isEarlyBird;
+
+      let message: string;
+      if (isEarlyBird) {
+        message = remaining !== null && remaining <= 3
+          ? `Early Bird — free ticket! Only ${remaining} left`
+          : 'Early Bird — free ticket!';
+      } else if (isVip) {
+        message = 'VIP code — free entry!';
+      } else {
+        message = "Guest code — R$50 ticket";
+      }
+
       return {
         statusCode: 200,
         headers: CORS,
         body: JSON.stringify({
-          valid:    true,
-          type:     promoCode.type,
-          tier:     isVip ? 'vip' : 'guest',
-          priceBrl: isVip ? 0 : 5000,   // R$0 or R$50
-          message:  isVip ? "VIP code — free entry!" : "Guest code — R$50 ticket",
+          valid:     true,
+          type,
+          tier:      isFree ? 'vip' : 'guest',
+          priceBrl:  isFree ? 0 : 5000,
+          remaining,
+          message,
         }),
       };
     }

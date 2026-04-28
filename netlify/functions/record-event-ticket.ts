@@ -34,6 +34,23 @@ function getClient() {
   return createClient(url, key, { auth: { persistSession: false } });
 }
 
+// Increment used_count for codes with a usage cap (e.g. EARLYBIRD).
+// Calls increment_promo_used_count() which does an atomic conditional UPDATE
+// and returns false if the cap has already been reached.
+async function incrementPromoUsage(
+  supabase: ReturnType<typeof getClient>,
+  code: string | null
+): Promise<boolean> {
+  if (!code) return true;
+  const { data, error } = await (supabase.rpc as any)('increment_promo_used_count', { p_code: code });
+  if (error) {
+    // If the function doesn't exist (e.g. migration not yet run), fail open
+    console.warn('increment_promo_used_count rpc error:', error.message);
+    return true;
+  }
+  return data !== false;
+}
+
 const CORS = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'Content-Type',
@@ -136,6 +153,9 @@ export const handler: Handler = async (event) => {
 
       if (error) throw error;
 
+      // Increment usage counter for capped promo codes (e.g. EARLYBIRD)
+      await incrementPromoUsage(supabase, promo || null);
+
       const origin = event.headers.origin || 'https://cariocacoastalclub.com';
       return {
         statusCode: 200,
@@ -189,6 +209,9 @@ export const handler: Handler = async (event) => {
       .single();
 
     if (error) throw error;
+
+    // Increment usage counter for capped promo codes (e.g. EARLYBIRD)
+    await incrementPromoUsage(supabase, promoCode);
 
     const origin = event.headers.origin || 'https://cariocacoastalclub.com';
     return {
