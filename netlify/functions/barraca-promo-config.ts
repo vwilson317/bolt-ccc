@@ -29,8 +29,7 @@
  *
  *  ADMIN_API_KEY              Secret bearer token for the admin app
  *  SUPABASE_URL               Project URL  (same value as VITE_SUPABASE_URL)
- *  SUPABASE_SERVICE_ROLE_KEY  Service-role key from Supabase Settings → API
- *                             (NOT the anon key — this bypasses Row Level Security)
+ *  SUPABASE_ANON_KEY          Anon key (or VITE_SUPABASE_ANON_KEY as fallback)
  *  ADMIN_CORS_ORIGIN          (optional) Restrict CORS to a specific admin domain,
  *                             e.g. https://admin.cariocacoastalclub.com
  *                             Defaults to * when unset.
@@ -45,15 +44,15 @@ import { createClient } from '@supabase/supabase-js';
 import { BARRACA_PROMOS } from '../../src/data/barracaPromos';
 
 // ---------------------------------------------------------------------------
-// Supabase admin client (service role — bypasses RLS for write operations)
+// Supabase client
 // ---------------------------------------------------------------------------
 function getAdminClient() {
   const url = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const key = process.env.SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY;
 
   if (!url || !key) {
     throw new Error(
-      'Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY environment variables.',
+      'Missing SUPABASE_URL or SUPABASE_ANON_KEY environment variables.',
     );
   }
 
