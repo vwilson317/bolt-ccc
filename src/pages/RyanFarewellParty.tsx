@@ -39,6 +39,20 @@ interface TierInfo {
 }
 const DEFAULT_TIER: TierInfo = { tier: 'general', priceBrl: 10000, label: 'General Public', badge: 'R$100' };
 
+// Returns an error string if the contact value is invalid, null if valid.
+// Accepts email, phone number (8-15 digits), or CPF (11 digits).
+function validateContact(value: string): string | null {
+  const v = value.trim();
+  if (!v) return null;
+  if (v.includes('@')) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ? null : 'Enter a valid email address (e.g. you@example.com)';
+  }
+  const digits = v.replace(/\D/g, '');
+  if (digits.length < 8)  return 'Phone number must have at least 8 digits';
+  if (digits.length > 15) return 'Phone number is too long';
+  return null;
+}
+
 type CheckoutStep = 'form' | 'payment' | 'confirming' | 'success';
 
 export default function RyanFarewellParty() {
@@ -54,6 +68,7 @@ export default function RyanFarewellParty() {
   const [confirmationToken, setConfirmationToken] = useState<string | null>(null);
   const [adminConfirmUrl, setAdminConfirmUrl]     = useState<string | null>(null);
   const [badgeClaimed, setBadgeClaimed]           = useState(false);
+  const [toast, setToast]                         = useState<string | null>(null);
 
   const { unlockBadge } = useBadgeContext();
 
@@ -114,6 +129,13 @@ export default function RyanFarewellParty() {
     const id = setInterval(tick, 1000);
     return () => clearInterval(id);
   }, []);
+
+  // Auto-dismiss toast after 5 s
+  useEffect(() => {
+    if (!toast) return;
+    const id = setTimeout(() => setToast(null), 5000);
+    return () => clearTimeout(id);
+  }, [toast]);
 
   // PostHog page view
   useEffect(() => {
@@ -200,19 +222,14 @@ export default function RyanFarewellParty() {
     trackEvent('pix_key_copied', { event_name: 'ryans_going_away_party', category: 'Event' });
   };
 
-  const handleWhatsAppReceipt = async () => {
+  const handleWhatsAppReceipt = () => {
     trackEvent('whatsapp_receipt_clicked', { event_name: 'ryans_going_away_party', category: 'Event' });
-
-    // Claim the badge as soon as they tap "Send Receipt" — this is the PIX confirmation moment
-    if (confirmationToken && !badgeClaimed) {
-      await claimBadge(confirmationToken);
-    }
-
+    setToast('Awaiting confirmation');
     const priceFmt = tierInfo.priceBrl === 0 ? 'Free' : `R$${(tierInfo.priceBrl * quantity) / 100}`;
     const lines = [
-      `🎉 New ticket — Ryan's Going Away Party (May 3)`,
+      `🎫 Ticket — Ryan's Going Away Party (May 3)`,
       `👤 ${fullName}`,
-      `🎫 ${tierInfo.label} · ${priceFmt} via PIX`,
+      `🎟️ ${tierInfo.label} · ${priceFmt} via PIX`,
       `📱 ${whatsapp}`,
     ];
     if (adminConfirmUrl) lines.push(`\n✅ Confirm payment:\n${adminConfirmUrl}`);
@@ -221,7 +238,8 @@ export default function RyanFarewellParty() {
   };
 
   // Validate form fields
-  const formValid = fullName.trim().length >= 2 && whatsapp.trim().length >= 8;
+  const contactError = whatsapp.trim() ? validateContact(whatsapp) : null;
+  const formValid    = fullName.trim().length >= 2 && whatsapp.trim().length > 0 && !contactError;
 
   const handleContinueToPayment = () => {
     if (!formValid) return;
@@ -276,8 +294,14 @@ export default function RyanFarewellParty() {
       });
       const data = await res.json();
       if (!res.ok || !data.success) throw new Error(data.error || 'Could not record ticket');
-      if (data.confirmationToken) setConfirmationToken(data.confirmationToken);
-      if (data.adminConfirmUrl)   setAdminConfirmUrl(data.adminConfirmUrl);
+
+      const token = data.confirmationToken as string | undefined;
+      if (token) {
+        setConfirmationToken(token);
+        await claimBadge(token);   // claim badge immediately — no need to wait for receipt
+      }
+      if (data.adminConfirmUrl) setAdminConfirmUrl(data.adminConfirmUrl);
+
       setStep('success');
       trackEvent('ticket_pix_submitted', { event_name: 'ryans_going_away_party', tier: tierInfo.tier, category: 'Event' });
     } catch (err: any) {
@@ -598,9 +622,12 @@ export default function RyanFarewellParty() {
                         type="text" value={whatsapp} onChange={e => setWhatsapp(e.target.value)}
                         placeholder="000.000.000-00 · +55 21 99999 · email"
                         className="w-full rounded-xl px-4 py-3 text-white placeholder-white/30 text-sm font-medium outline-none focus:ring-2 focus:ring-amber-400/50 transition-all"
-                        style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)' }}
+                        style={{ background: 'rgba(255,255,255,0.08)', border: `1px solid ${contactError ? 'rgba(239,68,68,0.5)' : 'rgba(255,255,255,0.15)'}` }}
                       />
-                      <p className="text-white/25 text-xs mt-1.5">{t('ryanParty.contactHint')}</p>
+                      {contactError
+                        ? <p className="text-red-400 text-xs mt-1.5 flex items-center gap-1"><AlertCircle className="w-3.5 h-3.5 flex-shrink-0" />{contactError}</p>
+                        : <p className="text-white/25 text-xs mt-1.5">{t('ryanParty.contactHint')}</p>
+                      }
                     </div>
 
                     {/* Promo code — hidden when pre-filled from URL */}
@@ -737,6 +764,15 @@ export default function RyanFarewellParty() {
                 {/* ── STEP: SUCCESS ──────────────────────────────────── */}
                 {(step === 'success' || (sessionSuccess && loading === false && step !== 'form' && step !== 'payment')) && (
                   <div className="text-center py-4 space-y-5">
+
+                    {/* Toast — "Awaiting confirmation" */}
+                    {toast && (
+                      <div className="rounded-xl px-4 py-3 flex items-center gap-2" style={{ background: 'rgba(52,211,153,0.12)', border: '1px solid rgba(52,211,153,0.3)' }}>
+                        <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+                        <p className="text-emerald-300 text-sm font-semibold">{toast}</p>
+                      </div>
+                    )}
+
                     <div className="text-6xl animate-bounce">🎉</div>
                     <div>
                       <p className="text-white font-display font-black text-2xl mb-1">{t('ryanParty.youreIn')}</p>
@@ -752,28 +788,28 @@ export default function RyanFarewellParty() {
                       <p className="text-amber-300 text-sm">{tierInfo.label} · May 3, 2026 · Escritório Carioca</p>
                     </div>
 
-                    {/* PIX: Send Receipt button = the badge-claim trigger */}
-                    {payTab === 'pix' && !isFree && !badgeClaimed && (
-                      <div className="space-y-2">
-                        <p className="text-white/50 text-xs">Send your PIX proof to get your badge instantly</p>
-                        <button
-                          onClick={handleWhatsAppReceipt}
-                          className="w-full py-4 rounded-2xl font-display font-black text-lg text-white flex items-center justify-center gap-2 transition-all hover:scale-[1.02] active:scale-95"
-                          style={{ background: 'linear-gradient(135deg, #25d366, #128c7e)' }}
-                        >
-                          <MessageCircle className="w-5 h-5" /> Send Receipt & Get Badge
-                        </button>
-                      </div>
-                    )}
-
-                    {/* Badge ready — shown once badge is claimed (auto for Stripe/Free, after WA for PIX) */}
+                    {/* Badge active indicator */}
                     {badgeClaimed && (
                       <div className="rounded-xl px-4 py-4 flex items-center gap-3" style={{ background: 'rgba(59,130,246,0.12)', border: '1px solid rgba(99,179,237,0.3)' }}>
                         <Star className="w-6 h-6 text-blue-300 flex-shrink-0" />
                         <div className="text-left">
                           <p className="text-blue-300 text-xs font-bold uppercase tracking-widest">Badge active</p>
-                          <p className="text-white/70 text-xs mt-0.5">Your Escritório Carioca loyalty card now includes this event. Tap the badge button below.</p>
+                          <p className="text-white/70 text-xs mt-0.5">Your Escritório Carioca loyalty card now includes this event.</p>
                         </div>
+                      </div>
+                    )}
+
+                    {/* PIX: send receipt photo to admin */}
+                    {payTab === 'pix' && !isFree && (
+                      <div className="space-y-2">
+                        <p className="text-white/50 text-xs">Send your PIX receipt photo to complete confirmation</p>
+                        <button
+                          onClick={handleWhatsAppReceipt}
+                          className="w-full py-4 rounded-2xl font-display font-black text-lg text-white flex items-center justify-center gap-2 transition-all hover:scale-[1.02] active:scale-95"
+                          style={{ background: 'linear-gradient(135deg, #25d366, #128c7e)' }}
+                        >
+                          <MessageCircle className="w-5 h-5" /> Send Receipt Photo
+                        </button>
                       </div>
                     )}
 

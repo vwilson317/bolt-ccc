@@ -36,6 +36,9 @@ export const handler: Handler = async (event) => {
 
   try {
     const supabase = getClient();
+    // Phone is the preferred PII (see CLAUDE.md).
+    // For 11-digit inputs (ambiguous: BR mobile without country code OR CPF)
+    // we try both phone and CPF columns so neither registration path is lost.
     const digits   = raw.replace(/\D/g, '');
     const isEmail  = raw.includes('@');
 
@@ -47,10 +50,10 @@ export const handler: Handler = async (event) => {
     if (isEmail) {
       query = query.eq('email', raw.toLowerCase());
     } else if (digits.length === 11) {
-      // CPF
-      query = query.eq('cpf', digits);
+      // Could be a Brazilian mobile (11 digits without country code) OR a CPF — try both
+      query = query.or(`whatsapp.eq.${raw},whatsapp.eq.${digits},whatsapp.eq.+${digits},cpf.eq.${digits}`);
     } else {
-      // WhatsApp — match raw or digits-only or +digits
+      // Phone — match raw or digits-only or +digits
       query = query.or(`whatsapp.eq.${raw},whatsapp.eq.${digits},whatsapp.eq.+${digits}`);
     }
 
