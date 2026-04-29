@@ -25,6 +25,12 @@ const PIX_NAME    = 'Ryan Ferrari de Castro Pires';
 // Admin WhatsApp — PIX receipts go here so the owner can confirm payments
 const ADMIN_WA    = '16789826137';
 
+// Exchange rate used for card payments (Stripe charges in USD).
+// Update this constant when the rate drifts significantly.
+const BRL_PER_USD = 5.70;
+const brlCentavosToUsdCents = (centavos: number) =>
+  Math.max(50, Math.round(centavos / BRL_PER_USD)); // Stripe min = $0.50
+
 // ── Tier config ────────────────────────────────────────────────────
 type Tier = 'general' | 'guest' | 'vip' | 'early_bird';
 interface TierInfo {
@@ -323,11 +329,12 @@ export default function RyanFarewellParty() {
     setLoading(true); setError(null);
     trackCTAClick('ticket_purchase', 'Pay by Card', '/ryans-farewell-party');
     try {
+      const priceUsd = brlCentavosToUsdCents(tierInfo.priceBrl * quantity);
       const res  = await fetch('/.netlify/functions/create-stripe-checkout', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           fullName, whatsapp,
-          tier: tierInfo.tier, priceBrl: tierInfo.priceBrl, quantity,
+          tier: tierInfo.tier, priceBrl: tierInfo.priceBrl, priceUsd, quantity,
           promoCode: promoCode.trim().toUpperCase() || '',
         }),
       });
@@ -757,9 +764,9 @@ export default function RyanFarewellParty() {
                         <button onClick={handleStripeCheckout} disabled={loading}
                           className="w-full py-4 rounded-2xl font-display font-black text-lg flex items-center justify-center gap-2 disabled:opacity-50 transition-all hover:scale-[1.02] active:scale-95"
                           style={{ background: 'linear-gradient(135deg, #f59e0b, #d97706)', color: '#0f172a' }}>
-                          {loading ? <Loader2 className="w-5 h-5 animate-spin text-slate-900" /> : <><CreditCard className="w-5 h-5" />{t('ryanParty.payByCard')} R${totalPriceBrl}</>}
+                          {loading ? <Loader2 className="w-5 h-5 animate-spin text-slate-900" /> : <><CreditCard className="w-5 h-5" />{t('ryanParty.payByCard')} · ~${(brlCentavosToUsdCents(tierInfo.priceBrl * quantity) / 100).toFixed(2)} USD</>}
                         </button>
-                        <p className="text-xs text-center text-white/30">{t('ryanParty.stripeNote')}</p>
+                        <p className="text-xs text-center text-white/30">{t('ryanParty.stripeNote')} · R${totalPriceBrl} ≈ USD at checkout</p>
                       </div>
                     )}
 

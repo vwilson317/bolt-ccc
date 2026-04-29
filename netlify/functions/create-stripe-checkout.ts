@@ -40,7 +40,8 @@ export const handler: Handler = async (event) => {
   let email = '';
   let promoCode = '';
   let tier = 'general';
-  let priceBrl = 10000; // R$100.00 default
+  let priceBrl = 10000; // R$100.00 default (centavos, for metadata only)
+  let priceUsd = 1754;  // ~$17.54 default (USD cents, charged by Stripe)
   let quantity = 1;
 
   try {
@@ -52,6 +53,7 @@ export const handler: Handler = async (event) => {
     promoCode  = (body.promoCode || '').trim().toUpperCase();
     tier       = body.tier       || 'general';
     priceBrl   = typeof body.priceBrl === 'number' ? body.priceBrl : 10000;
+    priceUsd   = typeof body.priceUsd === 'number' ? body.priceUsd : priceUsd;
     quantity   = Math.min(Math.max(parseInt(body.quantity) || 1, 1), 10);
   } catch {
     // use defaults if body is missing / malformed
@@ -85,12 +87,12 @@ export const handler: Handler = async (event) => {
       line_items: [
         {
           price_data: {
-            currency: 'brl',
+            currency: 'usd',
             product_data: {
               name: `Ryan's Going Away Party — ${tierLabel} Ticket`,
               description: tierDescription,
             },
-            unit_amount: priceBrl,
+            unit_amount: priceUsd,
           },
           quantity,
         },
@@ -107,6 +109,7 @@ export const handler: Handler = async (event) => {
         tier,
         promo_code: promoCode.substring(0, 50),
         quantity:   String(quantity),
+        price_brl:  String(priceBrl),
       },
       custom_text: {
         submit: {
