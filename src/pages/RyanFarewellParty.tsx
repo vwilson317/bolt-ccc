@@ -58,7 +58,12 @@ function validateContact(value: string): string | null {
   return null;
 }
 
-type CheckoutStep = 'form' | 'payment' | 'confirming' | 'success';
+// Client-side promo codes — no DB lookup needed, just attribution tracking.
+const CLIENT_PROMOS: Record<string, { label: string; message: string }> = {
+  LAVI: { label: 'General Public', message: 'Code applied — see you there! 🎶' },
+};
+
+
 
 export default function RyanFarewellParty() {
   const { t } = useTranslation();
@@ -184,10 +189,19 @@ export default function RyanFarewellParty() {
     else window.open(url, '_blank', 'noopener,noreferrer');
   };
 
-  // Validate promo code against API
+  // Validate promo code — checks client-side codes first, then the API
   const validatePromoCode = async (code: string) => {
     const trimmed = code.trim().toUpperCase();
     if (!trimmed) { setTierInfo(DEFAULT_TIER); setPromoMsg(null); return; }
+
+    const clientPromo = CLIENT_PROMOS[trimmed];
+    if (clientPromo) {
+      setTierInfo({ ...DEFAULT_TIER, label: clientPromo.label });
+      setPromoMsg({ ok: true, text: clientPromo.message });
+      setValidatingPromo(false);
+      return;
+    }
+
     setValidatingPromo(true);
     try {
       const res  = await fetch('/.netlify/functions/validate-event-promo', {
@@ -239,6 +253,7 @@ export default function RyanFarewellParty() {
       `🎟️ ${tierInfo.label} · ${priceFmt} via PIX`,
       `📱 ${whatsapp}`,
     ];
+    if (promoCode.trim()) lines.push(`🏷️ Code: ${promoCode.trim().toUpperCase()}`);
     if (adminUrl) lines.push(`\n✅ Confirm payment:\n${adminUrl}`);
     const msg = encodeURIComponent(lines.join('\n'));
     openLink(`https://wa.me/${ADMIN_WA}?text=${msg}`);
