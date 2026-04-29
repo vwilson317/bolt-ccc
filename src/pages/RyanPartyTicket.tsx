@@ -59,7 +59,7 @@ export default function RyanPartyTicket() {
     <>
       <SEOHead
         title="Your Ticket Badge — Ryan's Going Away Party"
-        description="Look up your entry badge for Ryan's Going Away Party. May 3, 2026 · 120 Escritócarioca, Ipanema."
+        description="Look up your entry badge for Ryan's Going Away Party. May 1, 2026 · 120 Escritócarioca, Ipanema."
       />
 
       <div className="min-h-screen pt-16" style={{ background: 'linear-gradient(160deg, #0f172a 0%, #1e3a2f 55%, #0f172a 100%)' }}>
@@ -171,7 +171,7 @@ export default function RyanPartyTicket() {
                         <Calendar className="w-4 h-4 text-amber-400 flex-shrink-0 mt-0.5" />
                         <div>
                           <p className="text-white/30 text-xs">Date</p>
-                          <p className="text-white text-sm font-semibold">Sunday, May 3</p>
+                          <p className="text-white text-sm font-semibold">Friday, May 1</p>
                           <p className="text-white/40 text-xs">2026 · 2PM+</p>
                         </div>
                       </div>
@@ -208,7 +208,7 @@ export default function RyanPartyTicket() {
           </div>
 
           {tickets.length > 0 && (
-            <p className="text-center text-white/20 text-xs mt-8">Show this badge at the door on May 3 · またね！🌴</p>
+            <p className="text-center text-white/20 text-xs mt-8">Show this badge at the door on May 1 · またね！🌴</p>
           )}
         </div>
       </div>

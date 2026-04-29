@@ -147,7 +147,7 @@ export const handler: Handler = async (event) => {
       // Upsert the promo_claims row — this is what "updates the loyalty card"
       const metadata = {
         event_name:   "Ryan's Going Away Party",
-        event_date:   '2026-05-03',
+        event_date:   '2026-05-01',
         event_slug:   'ryans-farewell-party',
         tier:         ticket.tier,
         ticket_id:    ticket.id,
@@ -190,7 +190,7 @@ export const handler: Handler = async (event) => {
           quantity:      ticket.quantity,
           paymentStatus: ticket.payment_status,
           eventName:     "Ryan's Going Away Party",
-          eventDate:     '2026-05-03',
+          eventDate:     '2026-05-01',
         },
         badge: {
           promoId,
