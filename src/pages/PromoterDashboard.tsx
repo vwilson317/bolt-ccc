@@ -107,7 +107,7 @@ export default function PromoterDashboard() {
               {/* Event info */}
               <div className="rounded-2xl px-5 py-4 space-y-1.5" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
                 <p className="text-amber-400 font-bold text-sm">Ryan's Going Away Party</p>
-                <p className="text-white/50 text-xs">📅 Sunday, May 3, 2026 · 2PM onwards</p>
+                <p className="text-white/50 text-xs">📅 Friday, May 1, 2026 · 2PM onwards</p>
                 <p className="text-white/50 text-xs">📍 120 Escritócarioca, Ipanema Beach</p>
                 <p className="text-white/50 text-xs">🎟️ General ticket: R$200 · You enter free</p>
               </div>

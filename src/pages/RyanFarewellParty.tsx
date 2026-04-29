@@ -112,9 +112,9 @@ export default function RyanFarewellParty() {
     }
   }, [unlockBadge]);
 
-  // Countdown to May 3 2026 2PM BRT
+  // Countdown to May 1 2026 2PM BRT
   useEffect(() => {
-    const target = new Date('2026-05-03T14:00:00-03:00').getTime();
+    const target = new Date('2026-05-01T14:00:00-03:00').getTime();
     const tick = () => {
       const diff = target - Date.now();
       if (diff <= 0) { setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 }); return; }
@@ -140,7 +140,7 @@ export default function RyanFarewellParty() {
   // PostHog page view
   useEffect(() => {
     trackPageView('/ryans-farewell-party', "Ryan's Farewell Party");
-    trackEvent('event_landing_page_viewed', { event_name: 'ryans_going_away_party', event_date: '2026-05-03', category: 'Event' });
+    trackEvent('event_landing_page_viewed', { event_name: 'ryans_going_away_party', event_date: '2026-05-01', category: 'Event' });
   }, []);
 
   // Handle Stripe return: record ticket then show success
@@ -222,20 +222,22 @@ export default function RyanFarewellParty() {
     trackEvent('pix_key_copied', { event_name: 'ryans_going_away_party', category: 'Event' });
   };
 
-  const handleWhatsAppReceipt = () => {
+  const openWhatsAppReceipt = (adminUrl?: string) => {
     trackEvent('whatsapp_receipt_clicked', { event_name: 'ryans_going_away_party', category: 'Event' });
     setToast('Awaiting confirmation');
     const priceFmt = tierInfo.priceBrl === 0 ? 'Free' : `R$${(tierInfo.priceBrl * quantity) / 100}`;
     const lines = [
-      `🎫 Ticket — Ryan's Going Away Party (May 3)`,
+      `🎫 Ticket — Ryan's Going Away Party (May 1)`,
       `👤 ${fullName}`,
       `🎟️ ${tierInfo.label} · ${priceFmt} via PIX`,
       `📱 ${whatsapp}`,
     ];
-    if (adminConfirmUrl) lines.push(`\n✅ Confirm payment:\n${adminConfirmUrl}`);
+    if (adminUrl) lines.push(`\n✅ Confirm payment:\n${adminUrl}`);
     const msg = encodeURIComponent(lines.join('\n'));
     openLink(`https://wa.me/${ADMIN_WA}?text=${msg}`);
   };
+
+  const handleWhatsAppReceipt = () => openWhatsAppReceipt(adminConfirmUrl);
 
   // Validate form fields
   const contactError = whatsapp.trim() ? validateContact(whatsapp) : null;
@@ -281,6 +283,7 @@ export default function RyanFarewellParty() {
   const handlePixSubmitted = async () => {
     if (!formValid) return;
     setLoading(true); setError(null);
+    let resolvedAdminUrl: string | undefined;
     try {
       const res  = await fetch('/.netlify/functions/record-event-ticket', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
@@ -300,13 +303,19 @@ export default function RyanFarewellParty() {
         setConfirmationToken(token);
         await claimBadge(token);   // claim badge immediately — no need to wait for receipt
       }
-      if (data.adminConfirmUrl) setAdminConfirmUrl(data.adminConfirmUrl);
+      if (data.adminConfirmUrl) {
+        setAdminConfirmUrl(data.adminConfirmUrl);
+        resolvedAdminUrl = data.adminConfirmUrl;
+      }
 
       setStep('success');
       trackEvent('ticket_pix_submitted', { event_name: 'ryans_going_away_party', tier: tierInfo.tier, category: 'Event' });
     } catch (err: any) {
       setError(err.message || 'Something went wrong. Please try again.');
-    } finally { setLoading(false); }
+    } finally {
+      setLoading(false);
+      openWhatsAppReceipt(resolvedAdminUrl);
+    }
   };
 
   const handleStripeCheckout = async () => {
@@ -785,7 +794,7 @@ export default function RyanFarewellParty() {
                     <div className="rounded-xl px-4 py-3 text-left space-y-1" style={{ background: 'rgba(251,191,36,0.08)', border: '1px solid rgba(251,191,36,0.2)' }}>
                       <p className="text-white/40 text-xs">{t('ryanParty.ticketDetailsLabel')}</p>
                       <p className="text-white font-semibold">{fullName || 'See you there!'}</p>
-                      <p className="text-amber-300 text-sm">{tierInfo.label} · May 3, 2026 · Escritório Carioca</p>
+                      <p className="text-amber-300 text-sm">{tierInfo.label} · May 1, 2026 · Escritório Carioca</p>
                     </div>
 
                     {/* Badge active indicator */}
@@ -834,7 +843,7 @@ export default function RyanFarewellParty() {
           <div className="max-w-md mx-auto flex flex-col sm:flex-row gap-3">
             <button
               onClick={() => {
-                const msg = encodeURIComponent(`🌴 Ryan's Going Away Party, May 3, Ipanema! Tickets from R$100: ${window.location.origin}/ryans-farewell-party`);
+                const msg = encodeURIComponent(`🌴 Ryan's Going Away Party, May 1, Ipanema! Tickets from R$100: ${window.location.origin}/ryans-farewell-party`);
                 openLink(`https://wa.me/?text=${msg}`);
                 trackEvent('event_shared', { method: 'whatsapp', category: 'Event' });
               }}

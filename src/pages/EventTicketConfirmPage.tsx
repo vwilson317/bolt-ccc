@@ -154,7 +154,7 @@ export default function EventTicketConfirmPage() {
                   <p className="text-amber-300 text-sm">
                     {TIER_LABELS[result.ticket.tier] ?? result.ticket.tier}
                     {result.ticket.quantity > 1 && ` × ${result.ticket.quantity}`}
-                    {' · '} May 3, 2026
+                    {' · '} May 1, 2026
                   </p>
                   <p className="text-white/40 text-xs">📍 Escritório Carioca · Barraca 120, Ipanema</p>
                 </div>

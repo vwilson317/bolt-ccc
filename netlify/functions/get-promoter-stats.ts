@@ -68,7 +68,7 @@ export const handler: Handler = async (event) => {
     const origin = event.headers.origin || event.headers.referer?.replace(/\/$/, '') || 'https://cariocacoastalclub.com';
     const eventUrl = `${origin}/?promo=${encodeURIComponent(code)}`;
     const shareMessage =
-      `🌴 Ryan's Going Away Party — May 3, Ipanema!\n` +
+      `🌴 Ryan's Going Away Party — May 1, Ipanema!\n` +
       `Get your ticket here 👇\n${eventUrl}\n` +
       `Use code *${code}* at checkout 🎉`;
 

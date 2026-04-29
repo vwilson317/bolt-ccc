@@ -73,10 +73,10 @@ export const handler: Handler = async (event) => {
     premium: 'VIP Premium',
   };
   const tierDescriptions: Record<string, string> = {
-    premium: 'Includes beach chair + umbrella, preferred seating right by the DJ, and a welcome drink · Sunday, May 3, 2026 · 120 Escritócarioca, Ipanema',
+    premium: 'Includes beach chair + umbrella, preferred seating right by the DJ, and a welcome drink · Friday, May 1, 2026 · 120 Escritócarioca, Ipanema',
   };
   const tierLabel = tierLabels[tier] || 'General Public';
-  const tierDescription = tierDescriptions[tier] || 'Includes: entry + welcome drink · Sunday, May 3, 2026 · 120 Escritócarioca, Ipanema';
+  const tierDescription = tierDescriptions[tier] || 'Includes: entry + welcome drink · Friday, May 1, 2026 · 120 Escritócarioca, Ipanema';
 
   try {
     const session = await stripe.checkout.sessions.create({
@@ -100,7 +100,7 @@ export const handler: Handler = async (event) => {
       cancel_url:  `${origin}/ryans-farewell-party?cancelled=true`,
       metadata: {
         event:      'ryans_going_away_party',
-        event_date: '2026-05-03',
+        event_date: '2026-05-01',
         full_name:  fullName.substring(0, 500),
         cpf:        cpf.substring(0, 11),
         whatsapp:   whatsapp.substring(0, 20),
