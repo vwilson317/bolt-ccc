@@ -74,7 +74,7 @@ export const handler: Handler = async (event) => {
     // 2. Check guest/VIP/early-bird unlock codes
     const { data: promoCode } = await supabase
       .from('event_promo_codes')
-      .select('code, type, max_uses, used_count')
+      .select('code, type, max_uses, used_count, price_brl')
       .eq('code', code)
       .eq('is_active', true)
       .single();
@@ -93,10 +93,15 @@ export const handler: Handler = async (event) => {
 
       const remaining = maxUses !== null ? maxUses - usedCount : null;
 
-      const type      = promoCode.type as string;
+      const type         = promoCode.type as string;
       const isVip        = type === 'vip';
       const isEarlyBird  = type === 'early_bird';
       const isFree       = isVip || isEarlyBird;
+
+      // Use per-code price override when set, otherwise fall back to type defaults
+      const defaultGuestPrice = 5000; // R$50
+      const priceBrl = isFree ? 0 : ((promoCode.price_brl as number | null) ?? defaultGuestPrice);
+      const priceDisplay = `R$${priceBrl / 100}`;
 
       let message: string;
       if (isEarlyBird) {
@@ -106,7 +111,7 @@ export const handler: Handler = async (event) => {
       } else if (isVip) {
         message = 'VIP code — free entry!';
       } else {
-        message = "Guest code — R$50 ticket";
+        message = `Guest code — ${priceDisplay} ticket`;
       }
 
       return {
@@ -115,8 +120,8 @@ export const handler: Handler = async (event) => {
         body: JSON.stringify({
           valid:     true,
           type,
-          tier:      type,           // store the real tier: 'vip', 'guest', or 'early_bird'
-          priceBrl:  isFree ? 0 : 5000,
+          tier:      type,
+          priceBrl,
           remaining,
           message,
         }),
