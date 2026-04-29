@@ -27,7 +27,7 @@ const PIX_NAME    = 'Ryan Ferrari de Castro Pires';
 const ADMIN_WA    = '16789826137';
 
 // ── Tier config ────────────────────────────────────────────────────
-type Tier = 'general' | 'guest' | 'vip';
+type Tier = 'general' | 'guest' | 'vip' | 'early_bird';
 interface TierInfo {
   tier: Tier;
   priceBrl: number;    // centavos
@@ -35,7 +35,7 @@ interface TierInfo {
   badge: string;
   promoterName?: string;
   promoterId?: string;
-  promoType?: 'promoter' | 'guest' | 'vip';
+  promoType?: 'promoter' | 'guest' | 'vip' | 'early_bird';
 }
 const DEFAULT_TIER: TierInfo = { tier: 'general', priceBrl: 10000, label: 'General Public', badge: 'R$100' };
 
@@ -173,7 +173,8 @@ export default function RyanFarewellParty() {
 
   const openLink = (url: string) => {
     const isIG = /Instagram/.test(navigator.userAgent);
-    if (isIG) window.location.href = url;
+    const isDeepLink = url.startsWith('https://wa.me/') || url.startsWith('whatsapp://');
+    if (isIG || isDeepLink) window.location.href = url;
     else window.open(url, '_blank', 'noopener,noreferrer');
   };
 
@@ -246,7 +247,7 @@ export default function RyanFarewellParty() {
   const handleContinueToPayment = () => {
     if (!formValid) return;
     // VIP and Early Bird are both free — skip payment step
-    if (tierInfo.tier === 'vip' || tierInfo.promoType === 'early_bird') {
+    if (tierInfo.tier === 'vip' || tierInfo.tier === 'early_bird' || tierInfo.promoType === 'early_bird') {
       handleFreeTicket();
       return;
     }

@@ -236,11 +236,11 @@ export const handler: Handler = async (event) => {
 
   } catch (err: any) {
     console.error('record-event-ticket error:', err);
-    const msg = err?.message || err?.code || (typeof err === 'object' ? JSON.stringify(err) : String(err));
+    const msg = String(err?.message || err?.details || err?.code || err?.hint || 'Failed to record ticket — please contact us');
     return {
       statusCode: 500,
       headers: CORS,
-      body: JSON.stringify({ error: msg || 'Failed to record ticket' }),
+      body: JSON.stringify({ error: msg }),
     };
   }
 };
