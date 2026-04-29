@@ -58,7 +58,12 @@ function validateContact(value: string): string | null {
   return null;
 }
 
-type CheckoutStep = 'form' | 'payment' | 'confirming' | 'success';
+// Client-side promo codes — no DB lookup needed, just attribution tracking.
+const CLIENT_PROMOS: Record<string, { label: string; message: string }> = {
+  LAVI: { label: 'General Public', message: 'Code applied — see you there! 🎶' },
+};
+
+
 
 export default function RyanFarewellParty() {
   const { t } = useTranslation();
@@ -149,6 +154,15 @@ export default function RyanFarewellParty() {
     trackEvent('event_landing_page_viewed', { event_name: 'ryans_going_away_party', event_date: '2026-05-01', category: 'Event' });
   }, []);
 
+  // Scroll to hash anchor after page renders (fixed header offset handled by scroll-mt-16)
+  useEffect(() => {
+    if (window.location.hash === '#rsvp') {
+      setTimeout(() => {
+        document.getElementById('rsvp')?.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    }
+  }, []);
+
   // Handle Stripe return: record ticket then show success
   useEffect(() => {
     if (!sessionSuccess || !sessionId) return;
@@ -184,10 +198,19 @@ export default function RyanFarewellParty() {
     else window.open(url, '_blank', 'noopener,noreferrer');
   };
 
-  // Validate promo code against API
+  // Validate promo code — checks client-side codes first, then the API
   const validatePromoCode = async (code: string) => {
     const trimmed = code.trim().toUpperCase();
     if (!trimmed) { setTierInfo(DEFAULT_TIER); setPromoMsg(null); return; }
+
+    const clientPromo = CLIENT_PROMOS[trimmed];
+    if (clientPromo) {
+      setTierInfo({ ...DEFAULT_TIER, label: clientPromo.label });
+      setPromoMsg({ ok: true, text: clientPromo.message });
+      setValidatingPromo(false);
+      return;
+    }
+
     setValidatingPromo(true);
     try {
       const res  = await fetch('/.netlify/functions/validate-event-promo', {
@@ -239,6 +262,7 @@ export default function RyanFarewellParty() {
       `🎟️ ${tierInfo.label} · ${priceFmt} via PIX`,
       `📱 ${whatsapp}`,
     ];
+    if (promoCode.trim()) lines.push(`🏷️ Code: ${promoCode.trim().toUpperCase()}`);
     if (adminUrl) lines.push(`\n✅ Confirm payment:\n${adminUrl}`);
     const msg = encodeURIComponent(lines.join('\n'));
     openLink(`https://wa.me/${ADMIN_WA}?text=${msg}`);
@@ -566,7 +590,7 @@ export default function RyanFarewellParty() {
         </section>
 
         {/* ══════════════ TICKET / RSVP ═════════════════════════ */}
-        <section id="rsvp" className="py-16 px-4" style={{ background: 'linear-gradient(160deg, #0f172a 0%, #1e3a2f 60%, #0f172a 100%)' }}>
+        <section id="rsvp" className="py-16 px-4 scroll-mt-16" style={{ background: 'linear-gradient(160deg, #0f172a 0%, #1e3a2f 60%, #0f172a 100%)' }}>
           <div className="max-w-lg mx-auto">
             <p className="text-xs font-bold tracking-[0.3em] uppercase text-amber-400 text-center mb-2">🎫 RSVP · チケット</p>
             <h2 className="font-display font-black text-3xl sm:text-4xl text-center text-white mb-2">{t('ryanParty.secureYourSpot')}</h2>
