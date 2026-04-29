@@ -159,6 +159,7 @@ export const handler: Handler = async (event) => {
       await incrementPromoUsage(supabase, promo || null);
 
       const origin = event.headers.origin || 'https://cariocacoastalclub.com';
+      const adminOrigin = 'https://admin.cariocacoastalclub.com';
       return {
         statusCode: 200,
         headers: CORS,
@@ -169,7 +170,7 @@ export const handler: Handler = async (event) => {
           confirmationToken,
           confirmationUrl:  `${origin}/confirm-ticket?token=${confirmationToken}`,
           adminToken,
-          adminConfirmUrl:  `${origin}/admin-confirm?token=${adminToken}`,
+          adminConfirmUrl:  `${adminOrigin}/admin-confirm?token=${adminToken}`,
         }),
       };
     }
@@ -219,7 +220,8 @@ export const handler: Handler = async (event) => {
     // Increment usage counter for capped promo codes (e.g. EARLYBIRD)
     await incrementPromoUsage(supabase, promoCode);
 
-    const origin = event.headers.origin || 'https://cariocacoastalclub.com';
+    const origin      = event.headers.origin || 'https://cariocacoastalclub.com';
+    const adminOrigin = 'https://admin.cariocacoastalclub.com';
     return {
       statusCode: 200,
       headers: CORS,
@@ -230,7 +232,7 @@ export const handler: Handler = async (event) => {
         confirmationToken,
         confirmationUrl:  `${origin}/confirm-ticket?token=${confirmationToken}`,
         adminToken,
-        adminConfirmUrl:  `${origin}/admin-confirm?token=${adminToken}`,
+        adminConfirmUrl:  `${adminOrigin}/admin-confirm?token=${adminToken}`,
       }),
     };
 
