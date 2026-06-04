@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { MapPin, Calendar, Clock, Ticket, Waves, Music, ChevronDown, Copy, CheckCircle2, MessageCircle, ExternalLink, Instagram } from 'lucide-react';
-import { QRCodeSVG } from 'qrcode.react';
+import { MapPin, Calendar, Clock, Ticket, Waves, Music, Copy, CheckCircle2, MessageCircle, ExternalLink, Instagram } from 'lucide-react';
 import { trackEvent, trackPageView, trackCTAClick } from '../services/posthogAnalyticsService';
 import SEOHead from '../components/SEOHead';
 
-const PIX_KEY     = '+5521990532728';
-const PIX_DISPLAY = '(21) 99053-2728';
-const WA_NUMBER   = '5521990532728';
+const PIX_KEY     = '038.914.767-28';
+const PIX_DISPLAY = '038.914.767-28';
+const WA_NUMBER   = '16789826137';
 
-export default function RyanFarewellParty() {
+export default function PartyPromoLanding() {
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [loading, setLoading]   = useState(false);
   const [error, setError]       = useState<string | null>(null);
@@ -61,7 +60,7 @@ export default function RyanFarewellParty() {
 
   const handleWhatsAppReceipt = () => {
     trackEvent('whatsapp_receipt_clicked', { event_name: 'beach_party_june7', category: 'Event' });
-    const msg = encodeURIComponent('Oi! Acabei de pagar R$25 via PIX para o Beach Party no Escritório Carioca (7 de junho). Segue o comprovante 👇');
+    const msg = encodeURIComponent('Oi! Acabei de pagar R$20 via PIX para o Beach Party no Escritório Carioca (7 de junho). Segue o comprovante 👇');
     openLink(`https://wa.me/${WA_NUMBER}?text=${msg}`);
   };
 
@@ -92,13 +91,17 @@ export default function RyanFarewellParty() {
 
         {/* ══════════════ HERO ════════════════════════════════════ */}
         <section className="relative overflow-hidden" style={{ minHeight: '85vh' }}>
-          {/* Gradient background */}
+          {/* Mobile: flyer image — place beach-party-flyer.jpg in /public */}
+          <img
+            src="/beach-party-flyer.jpg"
+            alt="Beach Party flyer"
+            className="absolute inset-0 w-full h-full object-cover object-top sm:hidden"
+          />
+          {/* Desktop: gradient background */}
           <div
-            className="absolute inset-0"
+            className="absolute inset-0 hidden sm:block"
             style={{ background: 'linear-gradient(135deg, #f59e0b 0%, #f97316 35%, #ec4899 65%, #a855f7 100%)' }}
           />
-          {/* Texture overlay */}
-          <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")' }} />
           {/* Bottom gradient for text readability */}
           <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.1) 40%, rgba(0,0,0,0.65) 75%, rgba(0,0,0,0.82) 100%)' }} />
 
@@ -291,11 +294,6 @@ export default function RyanFarewellParty() {
                     {/* PIX tab */}
                     {payTab === 'pix' && (
                       <div className="space-y-3">
-                        <div className="flex justify-center">
-                          <div className="rounded-2xl border-2 border-pink-100 p-4 bg-white shadow-inner">
-                            <QRCodeSVG value={PIX_KEY} size={160} fgColor="#ec4899" bgColor="#ffffff" level="M" />
-                          </div>
-                        </div>
                         <button
                           onClick={handleCopyPix}
                           className="w-full flex items-center justify-between px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 hover:bg-pink-50 hover:border-pink-200 transition-colors text-sm"
@@ -313,7 +311,7 @@ export default function RyanFarewellParty() {
                           <MessageCircle className="w-5 h-5" />
                           Send Receipt on WhatsApp
                         </button>
-                        <p className="text-xs text-center text-gray-400">Pay R$25 PIX → screenshot receipt → tap button above</p>
+                        <p className="text-xs text-center text-gray-400">Pay R$20 PIX → screenshot receipt → tap button above</p>
                       </div>
                     )}
 
@@ -365,15 +363,15 @@ export default function RyanFarewellParty() {
             >
               <MessageCircle className="w-4 h-4" /> Tell a friend
             </button>
-            <a
-              href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Beach+Party+%40+Escrit%C3%B3rio+Carioca&dates=20260607T160000Z/20260607T220000Z&details=Beach+Party+at+Barraca+120%2C+Posto+10+Ipanema+-+%245+entry.+Live+music+%26+DJ+set+by+%40lavinia.aune&location=Posto+10+Ipanema+Rio+de+Janeiro"
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => trackEvent('add_to_calendar_clicked', { category: 'Event' })}
+            <button
+              onClick={() => {
+                trackEvent('add_to_calendar_clicked', { category: 'Event' });
+                openLink('https://calendar.google.com/calendar/render?action=TEMPLATE&text=Beach+Party+%40+Escrit%C3%B3rio+Carioca&dates=20260607T160000Z/20260607T220000Z&details=Beach+Party+at+Barraca+120%2C+Posto+10+Ipanema+-+%245+entry.+Live+music+%26+DJ+set+by+%40lavinia.aune&location=Posto+10+Ipanema+Rio+de+Janeiro');
+              }}
               className="flex-1 flex items-center justify-center gap-2 py-3 rounded-2xl font-semibold text-sm border border-beach-200 text-beach-600 bg-beach-50 hover:bg-beach-100 transition-colors"
             >
               <Calendar className="w-4 h-4" /> Add to Calendar
-            </a>
+            </button>
           </div>
         </section>
 
