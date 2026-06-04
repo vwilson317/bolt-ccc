@@ -93,7 +93,7 @@ export default function PartyPromoLanding() {
         <section className="relative overflow-hidden" style={{ minHeight: '85vh' }}>
           {/* Mobile: flyer image — place beach-party-flyer.jpg in /public */}
           <img
-            src="/beach-party-flyer.jpg"
+            src="/beach-party-flyer.png"
             alt="Beach Party flyer"
             className="absolute inset-0 w-full h-full object-cover object-top sm:hidden"
           />
