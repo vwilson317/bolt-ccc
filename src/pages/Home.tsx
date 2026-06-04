@@ -188,10 +188,7 @@ const Home: React.FC = () => {
                 <div className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-0.5">Entry</div>
                 <div className="text-5xl font-black text-pink-500 leading-none" data-lingo-skip>$5</div>
               </div>
-              <a
-                href="https://instagram.com/Carioca_Coastal_Club"
-                target="_blank"
-                rel="noopener noreferrer"
+              <button
                 className="bg-white text-pink-600 font-bold px-6 py-3 rounded-xl shadow-lg hover:bg-pink-50 transition-colors text-sm flex items-center gap-2"
                 onClick={() => {
                   if (window.gtag) {
@@ -200,11 +197,14 @@ const Home: React.FC = () => {
                       event_label: 'Beach Party June 7'
                     });
                   }
+                  const isIG = /Instagram/.test(navigator.userAgent);
+                  if (isIG) window.location.href = 'https://instagram.com/Carioca_Coastal_Club';
+                  else window.open('https://instagram.com/Carioca_Coastal_Club', '_blank', 'noopener,noreferrer');
                 }}
               >
                 <Instagram className="h-4 w-4" />
                 Follow for details
-              </a>
+              </button>
             </div>
           </div>
         </div>
