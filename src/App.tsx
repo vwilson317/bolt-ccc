@@ -1,7 +1,7 @@
 import React, { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Navigate, Routes, Route, useLocation } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
-import { HelmetProvider } from 'react-helmet-async';
+import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { AppProvider, useApp } from './contexts/AppContext';
 // import { StoryProvider } from './contexts/StoryContext';
 import { WeatherProvider } from './contexts/WeatherContext';
@@ -80,6 +80,26 @@ function AppContent() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Favicon/manifest swap — the FLOW. community project ships its own icon set.
+          Centralized here (rather than per-page) so it reliably reverts to the site
+          default the moment the visitor navigates away from /projects/flow. */}
+      <Helmet>
+        {isFlowRoute ? (
+          <>
+            <link rel="icon" type="image/x-icon" href="/flow/favicon.ico" />
+            <link rel="icon" type="image/png" sizes="32x32" href="/flow/favicon-32x32.png" />
+            <link rel="icon" type="image/png" sizes="16x16" href="/flow/favicon-16x16.png" />
+            <link rel="apple-touch-icon" href="/flow/apple-touch-icon.png" />
+            <link rel="manifest" href="/flow/site.webmanifest" />
+          </>
+        ) : (
+          <>
+            <link rel="icon" type="image/png" href="/logo-icon-color.png" />
+            <link rel="apple-touch-icon" href="/logo_320x320.png" />
+            <link rel="manifest" href="/manifest.json" />
+          </>
+        )}
+      </Helmet>
       {!isMinimalRoute && <Header />}
       <main>
         <Suspense fallback={<LoadingPage />}>
