@@ -67,8 +67,8 @@ const isBarracaSubdomain =
 function AppContent() {
   const { selectedBarraca, closeBarracaModal, weatherOverride, isInitialLoading } = useApp();
   const location = useLocation();
-  const isMinimalRoute =
-    location.pathname === '/language-exchange' || location.pathname.startsWith('/projects/flow');
+  const isFlowRoute = location.pathname.startsWith('/projects/flow');
+  const isMinimalRoute = location.pathname === '/language-exchange' || isFlowRoute;
   
   // Initialize PostHog analytics
   usePostHogAnalytics();
@@ -166,6 +166,10 @@ function AppContent() {
           },
         }}
       />
+
+      {/* Global feedback FAB — visible on every page except the FLOW. community project,
+          which ships its own self-contained chrome and doesn't use the main site's feedback flow */}
+      {!isFlowRoute && <FeedbackFab />}
     </div>
   );
 }
@@ -183,8 +187,6 @@ function App() {
                 <AppContent />
                 {/* Global multi-badge FAB — shown whenever any badge is unlocked */}
                 <UnlockedBadgesFab />
-                {/* Global feedback FAB — always visible on every page */}
-                <FeedbackFab />
               </Router>
             </BadgeProvider>
           </WeatherProvider>
