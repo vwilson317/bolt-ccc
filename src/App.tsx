@@ -38,6 +38,11 @@ const RyanPartyTicket = lazy(() => import('./pages/RyanPartyTicket'));
 const EventTicketConfirmPage = lazy(() => import('./pages/EventTicketConfirmPage'));
 const AdminTicketConfirmPage = lazy(() => import('./pages/AdminTicketConfirmPage'));
 
+// FLOW. community project — lives at /projects/flow for now
+const FlowHome = lazy(() => import('./pages/flow/FlowHome'));
+const FlowCitySelection = lazy(() => import('./pages/flow/FlowCitySelection'));
+const FlowEventsCalendar = lazy(() => import('./pages/flow/FlowEventsCalendar'));
+
 // Lazy-load heavy overlay components that are not needed at initial paint
 // StoryViewer removed: StoryProvider is disabled and StoryViewer would throw without it
 const BarracaDetail = lazy(() => import('./components/BarracaDetail'));
@@ -62,7 +67,8 @@ const isBarracaSubdomain =
 function AppContent() {
   const { selectedBarraca, closeBarracaModal, weatherOverride, isInitialLoading } = useApp();
   const location = useLocation();
-  const isMinimalRoute = location.pathname === '/language-exchange';
+  const isMinimalRoute =
+    location.pathname === '/language-exchange' || location.pathname.startsWith('/projects/flow');
   
   // Initialize PostHog analytics
   usePostHogAnalytics();
@@ -107,6 +113,10 @@ function AppContent() {
             <Route path="/videography" element={<Navigate to="/content-professionals" replace />} />
             <Route path="/hosting-guidelines" element={<HostingGuidelines />} />
             <Route path="/status" element={<StatusUpdatePage />} />
+            {/* FLOW. community project — self-contained mini-app, ships its own header/footer */}
+            <Route path="/projects/flow" element={<FlowHome />} />
+            <Route path="/projects/flow/cities" element={<FlowCitySelection />} />
+            <Route path="/projects/flow/events" element={<FlowEventsCalendar />} />
             {/* <Route path="/translation-demo" element={<TranslationDemo />} /> */}
           </Routes>
         </Suspense>

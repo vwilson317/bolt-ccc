@@ -1,0 +1,5 @@
+Case_ID,Area,Preconditions,Steps,Expected,Actual,Status,Severity,Owner,Evidence,Retest
+PV-01,Pricing,Price table approved,Compare landing vs checkout vs confirmation,Exact match,,,P0,QA,,
+SC-01,Scripts,Script source frozen,Diff all claims against source,No contradictions,,,P1,QA,,
+KF-01,KPI,QA sheet copy created,Attempt edit on protected formula cells,Formula cells protected,,,P1,QA,,
+RP-01,Policy,Policy text approved,Compare refund terms across surfaces,Terms match across channels,,,P0,QA,,

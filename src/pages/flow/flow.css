@@ -1,0 +1,20 @@
+/* Styles for the FLOW. community project (/projects/flow).
+   Kept intentionally small — all layout/color comes from Tailwind's
+   namespaced `flow-*` tokens in tailwind.config.js. This file only
+   covers what Tailwind can't express: web font loading and a couple
+   of tiny scrollbar/safe-area utilities used across FLOW pages. */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,700;0,800;1,700&family=Hanken+Grotesk:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+
+.flow-hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.flow-hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.flow-safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
