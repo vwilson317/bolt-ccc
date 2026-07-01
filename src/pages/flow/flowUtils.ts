@@ -15,6 +15,14 @@ export const FLOW_HOST_WHATSAPP = '5521989743770';
 export const FLOW_WHATSAPP_GROUP_URL = 'https://chat.whatsapp.com/ISMGlHBmvmjJQh9dgKrZaR?s=sh&p=i&mlu=2';
 
 /**
+ * Social share image (og:image / twitter:image) for FLOW. community pages —
+ * shown as the preview photo when a /projects/flow link is shared in
+ * WhatsApp, iMessage, etc. Same artwork as the FLOW favicon.
+ */
+export const FLOW_SHARE_IMAGE = '/flow/android-chrome-512x512.png';
+export const FLOW_SHARE_IMAGE_SIZE = 512;
+
+/**
  * Instagram's in-app browser blocks window.open() silently (pages fail to
  * load with no error), so WhatsApp deep links — and any link at all while
  * inside Instagram's WebView — must navigate via window.location.href

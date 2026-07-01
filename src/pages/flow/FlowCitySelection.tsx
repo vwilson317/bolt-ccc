@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import SEOHead from '../../components/SEOHead';
 import FlowShell from './FlowShell';
 import FlowIcon from './FlowIcon';
-import { flowComingSoon } from './flowUtils';
+import { flowComingSoon, FLOW_SHARE_IMAGE, FLOW_SHARE_IMAGE_SIZE } from './flowUtils';
 
 const RIO_IMAGE =
   'https://lh3.googleusercontent.com/aida-public/AB6AXuCxq-Sf7tJFFROVQShVMZodTo-ivQptf0XIpKB5i-o_GR1xAC4CKox9LhKJIWWw34bwEWpXGJf1r4HG-f_WrMCXFejIOLdpxpTUdTSXKuHm-7MWb63_M4vVNK0_gR_ys19tG5JY-nrBk0P65zTy9nYUusBb9IBjAKJUakhlfsX7tuyANUbuSHGqLPG-u0L1JeztZW4OO4YaPbs9CTM3VkTnvoYkD4h22jLiBpn0L2MnIAHPPYpG14Oxrp_6m7DvlerKnfNVbirRvdk';
@@ -37,6 +37,10 @@ const FlowCitySelection: React.FC = () => {
       <SEOHead
         title="FLOW. community | Join Your City"
         description="Select a city to explore curated experiences and connect with a vetted local community."
+        image={FLOW_SHARE_IMAGE}
+        imageWidth={FLOW_SHARE_IMAGE_SIZE}
+        imageHeight={FLOW_SHARE_IMAGE_SIZE}
+        siteName="FLOW. community"
       />
       <div className="px-4 md:px-10 py-12 max-w-7xl mx-auto">
         <section className="w-full text-center mb-12 md:mb-16">

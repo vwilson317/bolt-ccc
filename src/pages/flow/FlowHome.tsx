@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import SEOHead from '../../components/SEOHead';
 import FlowShell from './FlowShell';
 import FlowIcon from './FlowIcon';
-import { flowComingSoon, openFlowCommunityWhatsApp } from './flowUtils';
+import { flowComingSoon, openFlowCommunityWhatsApp, FLOW_SHARE_IMAGE, FLOW_SHARE_IMAGE_SIZE } from './flowUtils';
 import { experiences, communityEvents } from './flowData';
 
 const HERO_IMAGE =
@@ -21,6 +21,10 @@ const FlowHome: React.FC = () => {
       <SEOHead
         title="FLOW. community - Rio de Janeiro"
         description="Your gateway to Rio de Janeiro's most vibrant professional and social community. Curated experiences, events, and connections."
+        image={FLOW_SHARE_IMAGE}
+        imageWidth={FLOW_SHARE_IMAGE_SIZE}
+        imageHeight={FLOW_SHARE_IMAGE_SIZE}
+        siteName="FLOW. community"
       />
 
       {/* Desktop hero */}

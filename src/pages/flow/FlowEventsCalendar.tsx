@@ -3,7 +3,7 @@ import SEOHead from '../../components/SEOHead';
 import FlowShell from './FlowShell';
 import FlowIcon from './FlowIcon';
 import FlowBookingModal, { type FlowBookingDetails } from './FlowBookingModal';
-import { openFlowCommunityWhatsApp } from './flowUtils';
+import { openFlowCommunityWhatsApp, FLOW_SHARE_IMAGE, FLOW_SHARE_IMAGE_SIZE } from './flowUtils';
 import { communityEvents, experiences, type FlowCommunityEvent } from './flowData';
 
 const WEEKDAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
@@ -93,6 +93,10 @@ const FlowEventsCalendar: React.FC = () => {
       <SEOHead
         title="Events | FLOW. community"
         description="Discover tours, meetups, and parties happening this month in Rio de Janeiro."
+        image={FLOW_SHARE_IMAGE}
+        imageWidth={FLOW_SHARE_IMAGE_SIZE}
+        imageHeight={FLOW_SHARE_IMAGE_SIZE}
+        siteName="FLOW. community"
       />
       <div className="max-w-7xl mx-auto px-4 md:px-10 py-8 md:py-12">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
