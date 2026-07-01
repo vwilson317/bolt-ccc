@@ -156,6 +156,60 @@ const Home: React.FC = () => {
       {/* <WeatherMarquee colorScheme="white" useDefaultBorders={false} className="border-t-4 border-pink-500" /> */}
       <div className="sticky top-16 z-30 border-t-4 border-pink-500" />
 
+      {/* Beach Party Promo Banner */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-yellow-400 via-orange-400 to-pink-500 z-10">
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4wOCI+PHBhdGggZD0iTTM2IDM0djZoNnYtNmgtNnptNiA2djZoNnYtNmgtNnptLTEyIDB2NmgsNnYtNmgtNnoiLz48L2c+PC9nPjwvc3ZnPg==')] opacity-30" />
+        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-10">
+          <div className="flex flex-col md:flex-row items-center gap-6 md:gap-10">
+            {/* Left: Eyebrow + Title */}
+            <div className="flex-1 text-center md:text-left">
+              <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm text-white text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-3">
+                🌊 Escritório Carioca · Barraca 120 · Posto 10
+              </div>
+              <h2 className="text-4xl md:text-5xl font-black text-white drop-shadow-md leading-tight mb-1">
+                BEACH PARTY
+              </h2>
+              <p className="text-white/90 text-lg font-semibold mb-4">
+                Sunday, June 7th &nbsp;·&nbsp; 1PM until Sunset
+              </p>
+              <div className="flex flex-wrap gap-3 justify-center md:justify-start text-sm font-semibold">
+                <span className="bg-white/20 backdrop-blur-sm text-white px-3 py-1.5 rounded-lg flex items-center gap-1.5">
+                  🎵 Live Music &amp; DJ Set · <span data-lingo-skip>@lavinia.aune</span>
+                </span>
+                <span className="bg-white/20 backdrop-blur-sm text-white px-3 py-1.5 rounded-lg flex items-center gap-1.5">
+                  📍 Posto 10, Ipanema
+                </span>
+              </div>
+            </div>
+
+            {/* Right: Price + CTA */}
+            <div className="flex flex-col items-center gap-3">
+              <div className="bg-white rounded-2xl px-6 py-4 text-center shadow-xl">
+                <div className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-0.5">Entry</div>
+                <div className="text-5xl font-black text-pink-500 leading-none" data-lingo-skip>$5</div>
+              </div>
+              <button
+                className="bg-white text-pink-600 font-bold px-6 py-3 rounded-xl shadow-lg hover:bg-pink-50 transition-colors text-sm flex items-center gap-2"
+                onClick={() => {
+                  if (window.gtag) {
+                    window.gtag('event', 'beach_party_cta_clicked', {
+                      event_category: 'Event',
+                      event_label: 'Beach Party June 7'
+                    });
+                  }
+                  const isIG = /Instagram/.test(navigator.userAgent);
+                  if (isIG) window.location.href = 'https://instagram.com/Carioca_Coastal_Club';
+                  else window.open('https://instagram.com/Carioca_Coastal_Club', '_blank', 'noopener,noreferrer');
+                }}
+              >
+                <Instagram className="h-4 w-4" />
+                Follow for details
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {isJota86xPromoActive && (
         <section className="bg-gradient-to-r from-amber-100 via-rose-50 to-white border-y border-amber-200 relative z-10">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">

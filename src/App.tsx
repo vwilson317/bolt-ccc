@@ -29,7 +29,7 @@ const BarracaPromoPage = lazy(() => import('./pages/BarracaPromoPage'));
 const CoastalClubPassPage = lazy(() => import('./pages/CoastalClubPassPage'));
 const ActivePromosPage = lazy(() => import('./pages/ActivePromosPage'));
 const PhotographerShowcase = lazy(() => import('./pages/PhotographerShowcase'));
-const RyanFarewellParty = lazy(() => import('./pages/RyanFarewellParty'));
+const PartyPromoLanding = lazy(() => import('./pages/PartyPromoLanding'));
 const HostingGuidelines = lazy(() => import('./pages/HostingGuidelines'));
 const StatusUpdatePage = lazy(() => import('./pages/StatusUpdatePage'));
 const PromoterDashboard = lazy(() => import('./pages/PromoterDashboard'));
@@ -84,7 +84,7 @@ function AppContent() {
       <main>
         <Suspense fallback={<LoadingPage />}>
           <Routes>
-            <Route path="/" element={isBarracaSubdomain ? <Home /> : <RyanFarewellParty />} />
+            <Route path="/" element={isBarracaSubdomain ? <Home /> : <PartyPromoLanding />} />
             <Route path="/projects/carioca-coastal-club" element={<Home />} />
             <Route path="/discover" element={<Discover />} />
             <Route path="/about" element={<About />} />
@@ -102,7 +102,7 @@ function AppContent() {
             {/* Loyalty promo pages at /loyalty/:slug for SEO-friendly URLs */}
             <Route path="/loyalty/:slug" element={<BarracaPromoPage />} />
             <Route path="/videography" element={<PhotographerShowcase />} />
-            <Route path="/ryans-farewell-party" element={<RyanFarewellParty />} />
+            <Route path="/ryans-farewell-party" element={<PartyPromoLanding />} />
             <Route path="/promoter/:code" element={<PromoterDashboard />} />
             <Route path="/promoter" element={<PromoterDashboard />} />
             <Route path="/event-admin" element={<EventAdminDashboard />} />
