@@ -1,0 +1,26 @@
+{
+  "badge": "Río de Janeiro",
+  "cta": "Únete a nosotros en WhatsApp",
+  "whatItIs": {
+    "heading": "Qué es",
+    "body": "Alva es una instalación matutina en la playa para quienes hacen ejercicio y remo al amanecer. Termina tu entrenamiento y siéntate en una silla gratuita en la arena — sin reserva, sin prisa. Tendremos café y cocos frescos esperando para que te recuperes antes de que la ciudad despierte.",
+    "chip1": "Amanecer en la arena",
+    "chip2": "Café y coco",
+    "chip3": "Silla gratis, sin reserva"
+  },
+  "whenWhere": {
+    "heading": "Cuándo y dónde",
+    "schedule": "Sábados por la mañana",
+    "route": "Amanecer en Copacabana → media mañana en Ipanema"
+  },
+  "follow": {
+    "heading": "Síguenos",
+    "body": "Mira dónde montamos la próxima parada, fotos del amanecer y actualizaciones de horario."
+  },
+  "footer": {
+    "location": "Río de Janeiro",
+    "whatsapp": "WhatsApp",
+    "instagram": "Instagram",
+    "blog": "Blog"
+  }
+}

@@ -1,4 +1,5 @@
 import toast from 'react-hot-toast';
+import { trackCTAClick } from '../../services/posthogAnalyticsService';
 
 /**
  * FLOW. community has no backend wiring yet — every button that would
@@ -6,7 +7,10 @@ import toast from 'react-hot-toast';
  * etc.) surfaces a friendly toast instead of pretending to do something it
  * can't.
  */
-export const flowComingSoon = (label: string) => () => toast(`${label} — coming soon`);
+export const flowComingSoon = (label: string) => () => {
+  trackCTAClick(label, `${label} — coming soon`, '/projects/flow');
+  toast(`${label} — coming soon`);
+};
 
 /** Juan is the FLOW. community host — event booking requests go straight to him on WhatsApp. */
 export const FLOW_HOST_WHATSAPP = '5521989743770';
@@ -39,7 +43,10 @@ export const openFlowExternalLink = (url: string): void => {
 };
 
 /** Opens the FLOW. community WhatsApp group invite link. */
-export const openFlowCommunityWhatsApp = (): void => openFlowExternalLink(FLOW_WHATSAPP_GROUP_URL);
+export const openFlowCommunityWhatsApp = (): void => {
+  trackCTAClick('join_whatsapp_group', 'Join WhatsApp', '/projects/flow');
+  openFlowExternalLink(FLOW_WHATSAPP_GROUP_URL);
+};
 
 export interface FlowBookingMessageDetails {
   title: string;
@@ -51,6 +58,7 @@ export interface FlowBookingMessageDetails {
 
 /** Builds a wa.me link pre-filled with the booking details and opens it. */
 export const openFlowBookingWhatsApp = (details: FlowBookingMessageDetails): void => {
+  trackCTAClick('book_whatsapp', `Book: ${details.title}`, '/projects/flow');
   const lines = [
     "Hi Juan! I'd like to book this on FLOW. community:",
     `📌 ${details.title}`,

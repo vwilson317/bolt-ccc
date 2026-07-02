@@ -1,6 +1,63 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@config "../tailwind.config.js";
+
+/* ── Blog post content (rendered markdown) ──────────────────────── */
+/* Hand-rolled instead of pulling in @tailwindcss/typography for what's a
+   small, well-defined content shape: headings, paragraphs, lists, images. */
+.alva-prose {
+  color: theme('colors.sand.700');
+  font-size: 1.0625rem;
+  line-height: 1.75;
+}
+.alva-prose > * + * {
+  margin-top: 1.5em;
+}
+.alva-prose h2 {
+  font-family: theme('fontFamily.display');
+  font-weight: 800;
+  font-size: 1.5rem;
+  color: theme('colors.sand.900');
+  margin-top: 2.25em;
+}
+.alva-prose h3 {
+  font-family: theme('fontFamily.display');
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: theme('colors.sand.900');
+  margin-top: 2em;
+}
+.alva-prose p {
+  margin-top: 1.5em;
+}
+.alva-prose ul,
+.alva-prose ol {
+  padding-left: 1.25em;
+  margin-top: 1.5em;
+}
+.alva-prose ul {
+  list-style: disc;
+}
+.alva-prose ol {
+  list-style: decimal;
+}
+.alva-prose li + li {
+  margin-top: 0.5em;
+}
+.alva-prose a {
+  color: theme('colors.beach.600');
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.alva-prose img {
+  width: 100%;
+  height: auto;
+  border-radius: 1rem;
+  margin-top: 2em;
+}
+.alva-prose strong {
+  color: theme('colors.sand.900');
+  font-weight: 700;
+}
 
 /* ── Sakura / Farewell Party animations ─────────────────────────── */
 @keyframes sakura-fall {

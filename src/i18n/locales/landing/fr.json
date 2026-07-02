@@ -1,0 +1,26 @@
+{
+  "badge": "Rio de Janeiro",
+  "cta": "Rejoignez-nous sur WhatsApp",
+  "whatItIs": {
+    "heading": "Le concept",
+    "body": "Alva est une installation matinale sur la plage pour les amateurs de sport et de paddle au lever du soleil. Terminez votre entraînement et installez-vous gratuitement sur une chaise dans le sable — sans réservation, sans précipitation. Café et noix de coco fraîches vous attendent pour récupérer avant que la ville ne se réveille.",
+    "chip1": "Lever du soleil sur le sable",
+    "chip2": "Café et noix de coco",
+    "chip3": "Chaise gratuite, sans réservation"
+  },
+  "whenWhere": {
+    "heading": "Quand et où",
+    "schedule": "Le samedi matin",
+    "route": "Lever du soleil à Copacabana → fin de matinée à Ipanema"
+  },
+  "follow": {
+    "heading": "Suivez-nous",
+    "body": "Découvrez notre prochain emplacement, des photos du lever du soleil et les mises à jour d'horaires."
+  },
+  "footer": {
+    "location": "Rio de Janeiro",
+    "whatsapp": "WhatsApp",
+    "instagram": "Instagram",
+    "blog": "Blog"
+  }
+}

@@ -38,6 +38,9 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
+        // Archived party-era flyer, unused by the live app, exceeds workbox's
+        // default 2 MiB precache limit and fails the build otherwise.
+        globIgnores: ['**/beach-party-flyer.png'],
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/api\.openweathermap\.org\/.*/i,
@@ -79,19 +82,11 @@ export default defineConfig({
 
   build: {
     sourcemap: true,
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          // Core React runtime — tiny, always needed
-          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
-          // Supabase client is large; isolate so it can be cached independently
-          'vendor-supabase': ['@supabase/supabase-js'],
-          // Analytics SDKs are non-critical; defer their cache invalidation
-          'vendor-analytics': ['posthog-js', '@sentry/react'],
-          // i18n libraries
-          'vendor-i18n': ['i18next', 'react-i18next'],
-        },
-      },
-    },
+    // No manual vendor chunking: the live app is now just the landing page,
+    // the blog, and FLOW. (self-contained). There's no heavy shared vendor
+    // (like the old Supabase data layer) left to isolate, so the bundler's
+    // automatic chunking is sufficient — and it sidesteps Rolldown-vite's
+    // different manualChunks API (object form isn't supported the way
+    // Rollup's was).
   }
 });

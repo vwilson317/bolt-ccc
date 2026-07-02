@@ -1,11 +1,15 @@
 /* Styles for the FLOW. community project (/projects/flow).
    Kept intentionally small — all layout/color comes from Tailwind's
    namespaced `flow-*` tokens in tailwind.config.js. This file only
-   covers what Tailwind can't express: web font loading and a couple
-   of tiny scrollbar/safe-area utilities used across FLOW pages. */
-
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,700;0,800;1,700&family=Hanken+Grotesk:wght@400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+   covers what Tailwind can't express: a couple of tiny scrollbar/safe-area
+   utilities used across FLOW pages.
+   Web fonts are loaded via a <link> tag (see App.tsx's route-conditional
+   Helmet block) rather than @import here — an @import'd stylesheet blocks
+   this file's own load event, which in turn blocks Vite's dynamic import()
+   of every FLOW page (it awaits the chunk's CSS <link> loading) until the
+   Google Fonts request resolves. On a slow or blocked connection that never
+   resolves, the whole FLOW app hangs forever instead of just rendering with
+   fallback fonts. */
 
 .flow-hide-scrollbar::-webkit-scrollbar {
   display: none;

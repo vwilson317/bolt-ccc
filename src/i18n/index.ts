@@ -1,3 +1,8 @@
+// Legacy CCC i18n bootstrap — not imported by the live app anymore (see
+// ./landing.ts for the lightweight setup the current site uses). Kept as-is,
+// unimported, for the archived Carioca Coastal Club pages in
+// src/_deprecated, which still call useTranslation() against these keys and
+// would need this re-wired if ever reinstated.
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
