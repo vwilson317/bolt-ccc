@@ -1,5 +1,6 @@
 {
   "badge": "Rio de Janeiro",
+  "tagline": "Sunrise, coffee, and recovery on the sand",
   "cta": "Join us on WhatsApp",
   "whatItIs": {
     "heading": "What it is",
@@ -21,6 +22,7 @@
     "location": "Rio de Janeiro",
     "whatsapp": "WhatsApp",
     "instagram": "Instagram",
-    "blog": "Blog"
+    "blog": "Blog",
+    "language": "Language"
   }
 }

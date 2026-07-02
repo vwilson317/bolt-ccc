@@ -1,5 +1,6 @@
 {
   "badge": "Rio de Janeiro",
+  "tagline": "Lever du soleil, café et récupération sur le sable",
   "cta": "Rejoignez-nous sur WhatsApp",
   "whatItIs": {
     "heading": "Le concept",
@@ -21,6 +22,7 @@
     "location": "Rio de Janeiro",
     "whatsapp": "WhatsApp",
     "instagram": "Instagram",
-    "blog": "Blog"
+    "blog": "Blog",
+    "language": "Langue"
   }
 }

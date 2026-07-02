@@ -1,5 +1,6 @@
 {
   "badge": "Río de Janeiro",
+  "tagline": "Amanecer, café y recuperación en la arena",
   "cta": "Únete a nosotros en WhatsApp",
   "whatItIs": {
     "heading": "Qué es",
@@ -21,6 +22,7 @@
     "location": "Río de Janeiro",
     "whatsapp": "WhatsApp",
     "instagram": "Instagram",
-    "blog": "Blog"
+    "blog": "Blog",
+    "language": "Idioma"
   }
 }

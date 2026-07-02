@@ -2,9 +2,10 @@ import React from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import SEOHead from '../components/SEOHead';
+import SiteHeader from '../components/alva/SiteHeader';
+import { BRAND_NAME } from '../lib/alva';
 import { blogPosts } from '../content/blogPosts.generated';
 
-const BRAND_NAME = 'Alva';
 const SITE_ORIGIN = 'https://cariocacoastalclub.com';
 const DEFAULT_OG_IMAGE = '/logo-sq.jpeg';
 
@@ -21,12 +22,15 @@ const BlogPost: React.FC = () => {
 
   if (!post) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-sand-50 px-6 text-center">
+      <div className="flex min-h-screen flex-col bg-gradient-to-b from-sunset-200 via-beach-100 to-sand-50 font-sans text-sand-800">
         <SEOHead title={`Not found — ${BRAND_NAME}`} description="This post doesn't exist." />
-        <p className="font-display text-2xl font-bold text-sand-900">[TODO: post not found]</p>
-        <Link to="/blog" className="text-beach-600 underline underline-offset-2">
-          ← Back to Diário da Alva
-        </Link>
+        <SiteHeader variant="full" />
+        <div className="flex flex-1 flex-col items-center justify-center gap-4 px-6 text-center">
+          <p className="font-display text-2xl font-bold text-sand-900">[TODO: post not found]</p>
+          <Link to="/blog" className="text-beach-600 underline underline-offset-2">
+            ← Back to Diário da Alva
+          </Link>
+        </div>
       </div>
     );
   }
@@ -65,17 +69,20 @@ const BlogPost: React.FC = () => {
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       </Helmet>
 
-      <header className="border-b border-sand-200 bg-gradient-to-b from-sunset-100 to-sand-50 px-6 py-10 text-center sm:py-14">
-        <Link to="/blog" className="text-xs font-semibold uppercase tracking-widest text-beach-600">
-          ← Diário da Alva
-        </Link>
-        <h1 className="mx-auto mt-3 max-w-2xl font-display text-3xl font-extrabold tracking-tight text-sand-900 sm:text-4xl">
-          {post.title}
-        </h1>
-        <time dateTime={post.dateISO} className="mt-3 block text-sm text-sand-500">
-          {formatDate(post.dateISO, post.lang)}
-        </time>
-      </header>
+      <div className="bg-gradient-to-b from-sunset-200 via-beach-100 to-sand-50">
+        <SiteHeader variant="full" />
+        <header className="px-6 pb-10 text-center sm:pb-14">
+          <Link to="/blog" className="text-xs font-semibold uppercase tracking-widest text-beach-600">
+            ← Diário da {BRAND_NAME}
+          </Link>
+          <h1 className="mx-auto mt-3 max-w-2xl font-display text-3xl font-extrabold tracking-tight text-sand-900 sm:text-4xl">
+            {post.title}
+          </h1>
+          <time dateTime={post.dateISO} className="mt-3 block text-sm text-sand-600">
+            {formatDate(post.dateISO, post.lang)}
+          </time>
+        </header>
+      </div>
 
       <main className="mx-auto max-w-2xl px-6 py-12 sm:py-16">
         {post.image && (

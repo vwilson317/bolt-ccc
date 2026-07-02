@@ -1,5 +1,6 @@
 {
   "badge": "Rio de Janeiro",
+  "tagline": "Nascer do sol, café e recuperação na areia",
   "cta": "Fale com a gente no WhatsApp",
   "whatItIs": {
     "heading": "O que é",
@@ -21,6 +22,7 @@
     "location": "Rio de Janeiro",
     "whatsapp": "WhatsApp",
     "instagram": "Instagram",
-    "blog": "Blog"
+    "blog": "Blog",
+    "language": "Idioma"
   }
 }
