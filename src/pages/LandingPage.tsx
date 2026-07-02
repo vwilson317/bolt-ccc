@@ -1,7 +1,10 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { MessageCircle, Sun, Coffee, Users } from 'lucide-react';
 import SEOHead from '../components/SEOHead';
 import { trackCTAClick } from '../services/posthogAnalyticsService';
+import { SUPPORTED_LANGUAGES, type SupportedLanguage } from '../i18n/landing';
 
 // lucide-react dropped brand/logo icons (Instagram included), so this is a
 // small inline replacement instead of pulling in a new icon dependency.
@@ -42,6 +45,13 @@ const handleCTAClick = (ctaType: string, ctaText: string, url: string): void => 
 };
 
 const LandingPage: React.FC = () => {
+  const { t, i18n } = useTranslation();
+
+  const changeLanguage = (lang: SupportedLanguage) => {
+    trackCTAClick('language_switch', lang, '/');
+    i18n.changeLanguage(lang);
+  };
+
   return (
     <div className="min-h-screen bg-sand-50 font-sans text-sand-800">
       <SEOHead
@@ -65,7 +75,7 @@ const LandingPage: React.FC = () => {
         <div className="relative mx-auto flex max-w-3xl flex-col items-center px-6 pt-20 pb-24 text-center sm:pt-28 sm:pb-32">
           <span className="mb-6 inline-flex items-center gap-2 rounded-full bg-white/70 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-beach-600">
             <Sun className="h-3.5 w-3.5" />
-            Rio de Janeiro
+            {t('badge')}
           </span>
           <h1 className="font-display text-5xl font-extrabold tracking-tight text-sand-900 sm:text-6xl">
             {BRAND_NAME}
@@ -79,37 +89,33 @@ const LandingPage: React.FC = () => {
             className="mt-9 inline-flex items-center gap-2 rounded-full bg-beach-500 px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-beach-500/30 transition-transform active:scale-95 sm:hover:scale-105"
           >
             <MessageCircle className="h-5 w-5" />
-            Join us on WhatsApp
+            {t('cta')}
           </button>
         </div>
       </header>
 
       {/* What it is */}
       <section className="mx-auto max-w-2xl px-6 py-16 text-center sm:py-20">
-        <h2 className="font-display text-2xl font-bold text-sand-900 sm:text-3xl">What it is</h2>
-        <p className="mt-4 text-base leading-relaxed text-sand-600 sm:text-lg">
-          Alva is an early-morning beach setup for the sunrise fitness and paddle crowd. Finish your
-          workout and drop into a free chair on the sand — no reservation, no rush. We'll have coffee
-          and fresh coconuts waiting so you can recover before the city wakes up.
-        </p>
+        <h2 className="font-display text-2xl font-bold text-sand-900 sm:text-3xl">{t('whatItIs.heading')}</h2>
+        <p className="mt-4 text-base leading-relaxed text-sand-600 sm:text-lg">{t('whatItIs.body')}</p>
         <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-3">
           <div className="flex flex-col items-center gap-2">
             <span className="flex h-12 w-12 items-center justify-center rounded-full bg-beach-50 text-beach-500">
               <Sun className="h-6 w-6" />
             </span>
-            <p className="text-sm font-medium text-sand-700">Sunrise on the sand</p>
+            <p className="text-sm font-medium text-sand-700">{t('whatItIs.chip1')}</p>
           </div>
           <div className="flex flex-col items-center gap-2">
             <span className="flex h-12 w-12 items-center justify-center rounded-full bg-beach-50 text-beach-500">
               <Coffee className="h-6 w-6" />
             </span>
-            <p className="text-sm font-medium text-sand-700">Coffee &amp; coconuts</p>
+            <p className="text-sm font-medium text-sand-700">{t('whatItIs.chip2')}</p>
           </div>
           <div className="flex flex-col items-center gap-2">
             <span className="flex h-12 w-12 items-center justify-center rounded-full bg-beach-50 text-beach-500">
               <Users className="h-6 w-6" />
             </span>
-            <p className="text-sm font-medium text-sand-700">Free chair, no reservation</p>
+            <p className="text-sm font-medium text-sand-700">{t('whatItIs.chip3')}</p>
           </div>
         </div>
       </section>
@@ -117,12 +123,12 @@ const LandingPage: React.FC = () => {
       {/* When & where */}
       <section className="bg-white/60 px-6 py-16 sm:py-20">
         <div className="mx-auto max-w-2xl text-center">
-          <h2 className="font-display text-2xl font-bold text-sand-900 sm:text-3xl">When &amp; where</h2>
+          <h2 className="font-display text-2xl font-bold text-sand-900 sm:text-3xl">{t('whenWhere.heading')}</h2>
           <div className="mt-6 inline-flex flex-col gap-3 rounded-2xl border border-sand-200 bg-white px-8 py-6 text-left shadow-sm">
             <p className="text-base text-sand-700">
-              <span className="font-semibold text-sand-900">Saturday mornings</span>
+              <span className="font-semibold text-sand-900">{t('whenWhere.schedule')}</span>
               <br />
-              [TODO: confirm start time] · Sunrise at Copacabana → late morning at Ipanema
+              [TODO: confirm start time] · {t('whenWhere.route')}
             </p>
             <p className="text-sm text-sand-400">[TODO: exact chair location / meeting point]</p>
           </div>
@@ -131,10 +137,8 @@ const LandingPage: React.FC = () => {
 
       {/* Instagram */}
       <section className="mx-auto max-w-2xl px-6 py-16 text-center sm:py-20">
-        <h2 className="font-display text-2xl font-bold text-sand-900 sm:text-3xl">Follow along</h2>
-        <p className="mt-4 text-base text-sand-600">
-          See where we set up next, sunrise photos, and schedule updates.
-        </p>
+        <h2 className="font-display text-2xl font-bold text-sand-900 sm:text-3xl">{t('follow.heading')}</h2>
+        <p className="mt-4 text-base text-sand-600">{t('follow.body')}</p>
         <button
           type="button"
           onClick={() => handleCTAClick('instagram_follow', 'Follow on Instagram', INSTAGRAM_URL)}
@@ -148,14 +152,14 @@ const LandingPage: React.FC = () => {
       {/* Footer */}
       <footer className="border-t border-sand-200 px-6 py-10 text-center">
         <p className="font-display text-lg font-bold text-sand-800">{BRAND_NAME}</p>
-        <div className="mt-4 flex items-center justify-center gap-6 text-sm text-sand-500">
+        <div className="mt-4 flex flex-wrap items-center justify-center gap-6 text-sm text-sand-500">
           <button
             type="button"
             onClick={() => handleCTAClick('footer_whatsapp', 'WhatsApp', WHATSAPP_URL)}
             className="inline-flex items-center gap-1.5 hover:text-beach-600"
           >
             <MessageCircle className="h-4 w-4" />
-            WhatsApp
+            {t('footer.whatsapp')}
           </button>
           <button
             type="button"
@@ -163,11 +167,32 @@ const LandingPage: React.FC = () => {
             className="inline-flex items-center gap-1.5 hover:text-beach-600"
           >
             <InstagramGlyph className="h-4 w-4" />
-            Instagram
+            {t('footer.instagram')}
           </button>
+          <Link to="/blog" className="inline-flex items-center gap-1.5 hover:text-beach-600">
+            {t('footer.blog')}
+          </Link>
         </div>
+
+        {/* Language switcher */}
+        <div className="mt-6 flex items-center justify-center gap-3 text-xs font-semibold uppercase tracking-widest text-sand-400">
+          {SUPPORTED_LANGUAGES.map((lang) => (
+            <button
+              key={lang}
+              type="button"
+              onClick={() => changeLanguage(lang)}
+              aria-current={i18n.resolvedLanguage === lang}
+              className={`transition-colors hover:text-beach-600 ${
+                i18n.resolvedLanguage === lang ? 'text-beach-600' : ''
+              }`}
+            >
+              {lang}
+            </button>
+          ))}
+        </div>
+
         <p className="mt-6 text-xs text-sand-400">
-          &copy; {new Date().getFullYear()} {BRAND_NAME}. Rio de Janeiro.
+          &copy; {new Date().getFullYear()} {BRAND_NAME}. {t('footer.location')}.
         </p>
       </footer>
     </div>

@@ -1,0 +1,26 @@
+{
+  "badge": "Rio de Janeiro",
+  "cta": "Join us on WhatsApp",
+  "whatItIs": {
+    "heading": "What it is",
+    "body": "Alva is an early-morning beach setup for the sunrise fitness and paddle crowd. Finish your workout and drop into a free chair on the sand — no reservation, no rush. We'll have coffee and fresh coconuts waiting so you can recover before the city wakes up.",
+    "chip1": "Sunrise on the sand",
+    "chip2": "Coffee & coconuts",
+    "chip3": "Free chair, no reservation"
+  },
+  "whenWhere": {
+    "heading": "When & where",
+    "schedule": "Saturday mornings",
+    "route": "Sunrise at Copacabana → late morning at Ipanema"
+  },
+  "follow": {
+    "heading": "Follow along",
+    "body": "See where we set up next, sunrise photos, and schedule updates."
+  },
+  "footer": {
+    "location": "Rio de Janeiro",
+    "whatsapp": "WhatsApp",
+    "instagram": "Instagram",
+    "blog": "Blog"
+  }
+}

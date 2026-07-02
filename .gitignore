@@ -12,6 +12,9 @@ dist
 dist-ssr
 *.local
 
+# Generated from content/blog/*.md by scripts/build-blog-content.mjs
+src/content/blogPosts.generated.ts
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

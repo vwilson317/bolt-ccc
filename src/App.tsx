@@ -4,9 +4,11 @@ import { Helmet, HelmetProvider } from 'react-helmet-async';
 import ErrorBoundary from './components/ErrorBoundary';
 import LoadingPage from './components/LoadingPage';
 import { usePostHogAnalytics } from './hooks/usePostHogAnalytics';
-import './i18n';
+import './i18n/landing';
 
 const LandingPage = lazy(() => import('./pages/LandingPage'));
+const BlogIndex = lazy(() => import('./pages/BlogIndex'));
+const BlogPost = lazy(() => import('./pages/BlogPost'));
 
 // FLOW. community project — self-contained mini-app, ships its own header/footer/favicons.
 // Hidden from all navigation on the main site; only reachable by direct URL.
@@ -52,6 +54,8 @@ function AppContent() {
         <Suspense fallback={<LoadingPage />}>
           <Routes>
             <Route path="/" element={<LandingPage />} />
+            <Route path="/blog" element={<BlogIndex />} />
+            <Route path="/blog/:slug" element={<BlogPost />} />
             {/* FLOW. community project — self-contained mini-app, ships its own header/footer */}
             <Route path="/projects/flow" element={<FlowHome />} />
             <Route path="/projects/flow/cities" element={<FlowCitySelection />} />

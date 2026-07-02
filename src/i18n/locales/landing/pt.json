@@ -1,0 +1,26 @@
+{
+  "badge": "Rio de Janeiro",
+  "cta": "Fale com a gente no WhatsApp",
+  "whatItIs": {
+    "heading": "O que é",
+    "body": "A Alva é uma estrutura matinal na praia para quem pratica esporte e stand-up paddle ao nascer do sol. Termine o treino e sente numa cadeira gratuita na areia — sem reserva, sem pressa. Vamos ter café e coco gelado esperando por você para recuperar as energias antes da cidade acordar.",
+    "chip1": "Nascer do sol na areia",
+    "chip2": "Café & coco",
+    "chip3": "Cadeira grátis, sem reserva"
+  },
+  "whenWhere": {
+    "heading": "Quando & onde",
+    "schedule": "Manhãs de sábado",
+    "route": "Nascer do sol em Copacabana → fim de manhã em Ipanema"
+  },
+  "follow": {
+    "heading": "Acompanhe",
+    "body": "Veja onde vamos montar a próxima estrutura, fotos do nascer do sol e atualizações de horário."
+  },
+  "footer": {
+    "location": "Rio de Janeiro",
+    "whatsapp": "WhatsApp",
+    "instagram": "Instagram",
+    "blog": "Blog"
+  }
+}

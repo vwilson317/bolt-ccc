@@ -42,6 +42,19 @@
   to = "/projects/flow/events/index.html"
   status = 200
 
+# Blog routes get real static HTML (post content baked in, not just meta
+# tags) from scripts/generate-blog-static-html.mjs, so crawlers can index
+# post content without executing JS. Must come before the SPA catch-all.
+[[redirects]]
+  from = "/blog"
+  to = "/blog/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/blog/:slug"
+  to = "/blog/:slug/index.html"
+  status = 200
+
 [[redirects]]
   from = "/*"
   to = "/index.html"
