@@ -17,6 +17,8 @@ const brandName = 'Alva';
 const defaultOgImage = '/logo-sq.jpeg';
 
 const posts = loadBlogPosts(path.join(rootDir, 'content', 'blog'));
+const whatsappUrl = 'https://chat.whatsapp.com/FVLJK8eqKzUKY7oUfnymD5?mode=gi_t';
+const parentBrandName = 'Carioca Coastal Club';
 
 function escapeHtml(str) {
   return String(str)
@@ -73,21 +75,37 @@ function injectRoot(baseHtml, innerHtml, extraHead = '') {
   return html;
 }
 
+/** Mirrors src/components/alva/SiteHeader.tsx's "full" variant. */
+function renderSiteHeader(activeIsBlog) {
+  return `
+      <header class="relative z-10 mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-6">
+        <a href="/" class="flex-shrink-0"><img src="/logo-text-pink.png" alt="${parentBrandName}" class="h-8 w-auto sm:h-9" /></a>
+        <nav class="hidden items-center gap-8 text-sm font-semibold sm:flex">
+          <a href="/" class="transition-colors hover:text-beach-600 ${activeIsBlog ? 'text-sand-800' : 'text-beach-600'}">Home</a>
+          <a href="/blog" class="transition-colors hover:text-beach-600 ${activeIsBlog ? 'text-beach-600' : 'text-sand-800'}">Blog</a>
+        </nav>
+        <a href="${whatsappUrl}" target="_blank" rel="noopener noreferrer" class="inline-flex flex-shrink-0 items-center gap-2 rounded-full bg-beach-500 px-4 py-2 text-sm font-semibold text-white shadow-md shadow-beach-500/30">
+          <span class="hidden sm:inline">Join us on WhatsApp</span>
+        </a>
+      </header>`;
+}
+
 function renderBlogIndexHtml() {
   const items = posts
     .map(
       (post) => `
-        <li>
-          <a href="/blog/${post.slug}" class="group flex flex-col overflow-hidden rounded-2xl border border-sand-200 bg-white shadow-sm transition-shadow hover:shadow-md sm:flex-row">
+        <li class="flex">
+          <a href="/blog/${post.slug}" class="group flex w-full flex-col overflow-hidden rounded-2xl bg-white shadow-sm transition-shadow hover:shadow-lg">
             ${
               post.image
-                ? `<div class="aspect-[16/9] w-full flex-shrink-0 overflow-hidden bg-sand-100 sm:aspect-square sm:w-48"><img src="${post.image}" alt="" loading="lazy" decoding="async" class="h-full w-full object-cover" /></div>`
+                ? `<div class="aspect-[16/10] w-full overflow-hidden bg-sand-100"><img src="${post.image}" alt="" loading="lazy" decoding="async" class="h-full w-full object-cover" /></div>`
                 : ''
             }
-            <div class="flex flex-1 flex-col justify-center gap-2 p-6">
+            <div class="flex flex-1 flex-col gap-2 p-6">
               <time datetime="${post.dateISO}" class="text-xs font-semibold uppercase tracking-widest text-beach-600">${formatDate(post.dateISO, post.lang)}</time>
-              <h2 class="font-display text-xl font-bold text-sand-900">${escapeHtml(post.title)}</h2>
-              <p class="text-sm leading-relaxed text-sand-600">${escapeHtml(post.description)}</p>
+              <h2 class="font-display text-lg font-bold text-sand-900">${escapeHtml(post.title)}</h2>
+              <p class="line-clamp-2 text-sm leading-relaxed text-sand-600">${escapeHtml(post.description)}</p>
+              <span class="mt-2 text-sm font-semibold text-beach-600 group-hover:underline">Read More</span>
             </div>
           </a>
         </li>`
@@ -95,26 +113,35 @@ function renderBlogIndexHtml() {
     .join('\n');
 
   return `
-    <div class="min-h-screen bg-sand-50 font-sans text-sand-800">
-      <header class="border-b border-sand-200 bg-gradient-to-b from-sunset-100 to-sand-50 px-6 py-10 text-center sm:py-14">
-        <a href="/" class="font-display text-sm font-bold uppercase tracking-widest text-beach-600">${brandName}</a>
-        <h1 class="mt-3 font-display text-3xl font-extrabold tracking-tight text-sand-900 sm:text-4xl">Diário da Alva</h1>
-        <p class="mx-auto mt-3 max-w-xl text-sand-600">Milestones, pilots, and learnings — building Alva in public.</p>
-      </header>
-      <main class="mx-auto max-w-2xl px-6 py-12 sm:py-16">
-        <ul class="flex flex-col gap-8">${items}</ul>
+    <div class="min-h-screen bg-gradient-to-b from-sunset-200 via-beach-100 to-sand-50 font-sans text-sand-800">
+      <div class="relative overflow-hidden">
+        ${renderSiteHeader(true)}
+        <div class="relative mx-auto max-w-2xl px-6 pb-10 pt-4 text-center sm:pb-14">
+          <h1 class="font-display text-4xl font-extrabold tracking-tight text-beach-600 sm:text-5xl">Diário da ${brandName}</h1>
+          <p class="mx-auto mt-3 max-w-xl text-sand-700">Milestones, pilots, and learnings — building ${brandName} in public.</p>
+        </div>
+      </div>
+      <main class="mx-auto max-w-6xl px-6 pb-16 sm:pb-20">
+        <ul class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">${items}</ul>
       </main>
+      <footer class="border-t border-sand-200 bg-white/60 px-6 py-10 text-center">
+        <a href="/" class="text-sm font-semibold text-beach-600 hover:underline">← Back to Home</a>
+        <p class="mt-6 text-xs text-sand-400">&copy; ${new Date().getFullYear()} ${brandName}. ${parentBrandName}. Rio de Janeiro.</p>
+      </footer>
     </div>`;
 }
 
 function renderBlogPostHtml(post) {
   return `
     <div class="min-h-screen bg-sand-50 font-sans text-sand-800">
-      <header class="border-b border-sand-200 bg-gradient-to-b from-sunset-100 to-sand-50 px-6 py-10 text-center sm:py-14">
-        <a href="/blog" class="text-xs font-semibold uppercase tracking-widest text-beach-600">← Diário da Alva</a>
-        <h1 class="mx-auto mt-3 max-w-2xl font-display text-3xl font-extrabold tracking-tight text-sand-900 sm:text-4xl">${escapeHtml(post.title)}</h1>
-        <time datetime="${post.dateISO}" class="mt-3 block text-sm text-sand-500">${formatDate(post.dateISO, post.lang)}</time>
-      </header>
+      <div class="bg-gradient-to-b from-sunset-200 via-beach-100 to-sand-50">
+        ${renderSiteHeader(true)}
+        <header class="px-6 pb-10 text-center sm:pb-14">
+          <a href="/blog" class="text-xs font-semibold uppercase tracking-widest text-beach-600">← Diário da ${brandName}</a>
+          <h1 class="mx-auto mt-3 max-w-2xl font-display text-3xl font-extrabold tracking-tight text-sand-900 sm:text-4xl">${escapeHtml(post.title)}</h1>
+          <time datetime="${post.dateISO}" class="mt-3 block text-sm text-sand-600">${formatDate(post.dateISO, post.lang)}</time>
+        </header>
+      </div>
       <main class="mx-auto max-w-2xl px-6 py-12 sm:py-16">
         ${post.image ? `<img src="${post.image}" alt="" loading="eager" decoding="async" class="w-full rounded-2xl" />` : ''}
         <article class="alva-prose">${post.contentHtml}</article>
