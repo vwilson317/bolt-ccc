@@ -38,6 +38,9 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
+        // Archived party-era flyer, unused by the live app, exceeds workbox's
+        // default 2 MiB precache limit and fails the build otherwise.
+        globIgnores: ['**/beach-party-flyer.png'],
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/api\.openweathermap\.org\/.*/i,

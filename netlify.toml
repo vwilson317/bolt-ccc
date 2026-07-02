@@ -22,6 +22,26 @@
   to = "/.netlify/functions/:splat"
   status = 200
 
+# FLOW. community routes get their own statically-generated index.html (see
+# scripts/generate-flow-static-html.mjs) so link-preview crawlers — which
+# don't execute JS — see FLOW.'s own title/description/OG image instead of
+# falling through to the site-wide index.html. Must come before the SPA
+# catch-all below.
+[[redirects]]
+  from = "/projects/flow"
+  to = "/projects/flow/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/projects/flow/cities"
+  to = "/projects/flow/cities/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/projects/flow/events"
+  to = "/projects/flow/events/index.html"
+  status = 200
+
 [[redirects]]
   from = "/*"
   to = "/index.html"

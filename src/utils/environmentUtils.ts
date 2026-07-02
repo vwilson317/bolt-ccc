@@ -1,4 +1,4 @@
-import { environmentInfo } from '../lib/supabase'
+import { runtimeEnv } from '../lib/runtimeEnv'
 
 export interface EnvironmentConfig {
   name: string
@@ -22,7 +22,7 @@ export interface EnvironmentConfig {
 }
 
 export const getEnvironmentConfig = (): EnvironmentConfig => {
-  const env = environmentInfo.environment
+  const env = runtimeEnv
 
   const configs: Record<string, EnvironmentConfig> = {
     dev: {
