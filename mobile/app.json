@@ -1,0 +1,35 @@
+{
+  "expo": {
+    "name": "Carioca Coastal Club",
+    "slug": "carioca-coastal-club",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "scheme": "cariocacoastalclub",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0f172a"
+    },
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.cariocacoastalclub.loyalty"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#0f172a"
+      },
+      "package": "com.cariocacoastalclub.loyalty"
+    },
+    "plugins": [
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow Carioca Coastal Club to access your camera to scan QR codes for badge and ticket claims."
+        }
+      ]
+    ]
+  }
+}
